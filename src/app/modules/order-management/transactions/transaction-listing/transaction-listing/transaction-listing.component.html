@@ -1,0 +1,252 @@
+<div class="page-wrap">
+    <div class="search-panel-block">
+        <div class="bredcrumb-title-wrap">
+            <div class="search-container-block">
+                <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+                <div class="search-list">
+                    <form class="filter-wrap" [formGroup]="searchTransactionsFormGroup" (submit)="searchKey()">
+                        <div class="row title-search-row">
+                            <div class="col-md-4 title-search-col">
+                                <div class="title">
+                                    <h1>Search Transaction</h1>
+                                </div>
+                            </div>
+                            <div class="col-md-5 title-search-col">
+                                <div class="searchform-block">
+                                    <div class="common-search">
+                                        <input type="text" formControlName="searchVal" placeholder="Search Transactions" />
+                                        <span class="search-btn" (click)="searchKey()"></span>
+                                        <div class="filter-btn-wrap">
+                                            <span class="filter-btn" (click)="openFilter();" [ngClass]="status ? 'open' : 'close'"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 title-search-col">
+                            </div>
+                        </div>
+                        <div class="feild-search" *ngIf="!status">
+                            <div class="row feild-search-inner">
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput placeholder="Transaction Id" formControlName="txnId">
+                                        <mat-error *ngIf="searchTransactionsFormGroup.get('txnId').hasError('pattern')">Please enter valid Transaction Id.</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="select-tags">
+                                        <mat-form-field>
+                                            <mat-select placeholder="Order Type" formControlName="orderType">
+                                                <mat-option value="DELIVERY">DELIVERY</mat-option>
+                                                <mat-option value="PICKUP">PICKUP</mat-option>
+                                                <!-- <mat-option value="SHIPPING">SHIPPING</mat-option> -->
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <mat-checkbox formControlName="isScheduled">Scheduled</mat-checkbox>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="select-tags">
+                                        <mat-form-field>
+                                            <mat-select placeholder="Order Day" formControlName="orderDay">
+                                                <mat-option value="Today">TODAY</mat-option>
+                                                <mat-option value="Yesterday">YESTERDAY</mat-option>
+                                                <mat-option value="This week">THIS WEEK</mat-option>
+                                                <mat-option value="This Month">THIS MONTH</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="select-tags">
+                                        <mat-form-field>
+                                            <mat-select placeholder="Source Type" formControlName="omniChannel">
+                                                <mat-option value="APP">APP</mat-option>
+                                                <mat-option value="POS">POS</mat-option>
+                                                <mat-option value="SMO">SMO</mat-option>
+                                                <mat-option value="WEBSITE">WEBSITE</mat-option>
+                                                <mat-option value="SWIGGY">SWIGGY</mat-option>
+                                                <mat-option value="ZOMATO">ZOMATO</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput formControlName="phoneNumber" autocomplete="off" OnlyNumber="true" maxlength="15" placeholder="Member Phone Number">
+                                        <span style="transition: 5s;position: absolute; width: 100%;left: 0;top: 39px;font-size: 10px;" *ngIf="searchTransactionsFormGroup.get('phoneNumber').hasError('pattern') && this.searchTransactionsFormGroup.get('phoneNumber').invalid">
+                                         <mat-error>Please enter valid mobile number.</mat-error>
+                                         </span>
+                                        <mat-error *ngIf="searchTransactionsFormGroup.get('phoneNumber').hasError('minlength')">Minimum 8 digit required.</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput placeholder="Select Brand" aria-label="brand" [matAutocomplete]="brandAutoComplete" [formControl]="brandCtrl">
+                                        <mat-autocomplete #brandAutoComplete="matAutocomplete">
+                                            <mat-option *ngFor="let brand of filteredBrands | async" [value]="brand.brandName" (click)="getAllBrand(brand.brandId)" #brandInput>
+                                                <span>{{brand.brandName}}</span>
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput placeholder="Store" aria-label="store" [matAutocomplete]="storeAutoComplete" [formControl]="storeCtrl">
+                                        <mat-autocomplete #storeAutoComplete="matAutocomplete">
+                                            <mat-option *ngFor="let store of filteredStores | async" [value]="store.storeName" (click)="getAllStore(store.storeOid)" #storeInput>
+                                                <span>{{store.storeName}}</span>
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="select-tags">
+                                        <mat-form-field>
+                                            <input matInput [matDatepicker]="picker1" [OnlyNumber]="true" placeholder="Start Date" formControlName="startDate">
+                                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker1></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput [matDatepicker]="picker2" [OnlyNumber]="true" placeholder="End Date" formControlName="endDate">
+                                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker2></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="select-tags">
+                                        <mat-form-field>
+                                            <mat-select placeholder="Delivery Boy Assigned" formControlName="deliveryBoyAssigned">
+                                                <mat-option value="YES">YES</mat-option>
+                                                <mat-option value="NO">NO</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-select placeholder="Status" formControlName="status">
+                                            <mat-option>Select Option</mat-option>
+                                            <mat-option *ngFor="let status of transactionstatusList" [value]="status.value">
+                                                {{status.viewValue}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="button-wrap">
+                                    <div class="">
+                                        <button class='button reset-btn' type="button" (click)="resetForm()">RESET</button>
+                                        <button class='button apply-btn' type="submit">APPLY</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="form-wrap">
+            <div class="table-wrap">
+                <div class="table-wrap-inner">
+                    <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)" *ngIf="dataSource">
+                        <ng-container matColumnDef="txnId">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="txnId" class="padlr-10"> TT TRANSACTION ID </th>
+                            <td mat-cell (click)="viewTxnDetails(row.orderId,row.customerOid)" *matCellDef="let row" class="padlr-10">
+                                <u><a class="text-blue">{{ row.txnId }}</a></u>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="storeName">
+                            <th mat-header-cell *matHeaderCellDef class="padlr-10"> STORE NAME </th>
+                            <td mat-cell *matCellDef="let row" class="padlr-10"> {{ row.storeName }} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="noOfItems">
+                            <th mat-header-cell *matHeaderCellDef class="padlr-10"> NO. OF ITEMS </th>
+                            <td mat-cell *matCellDef="let row" class="padlr-10"> {{row.noOfItems}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="totalAmount">
+                            <th mat-header-cell *matHeaderCellDef class="padlr-10"> TOTAL AMOUNT </th>
+                            <td mat-cell *matCellDef="let row" class="padlr-10"> {{ row.totalAmount }} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="productName">
+                            <th mat-header-cell *matHeaderCellDef class="padlr-10"> PRODUCT NAME </th>
+                            <td mat-cell *matCellDef="let row" class="padlr-10"> {{ row.productName != null ? row.productName : '-'}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="orderType">
+                            <th mat-header-cell *matHeaderCellDef class="padlr-10"> ORDER TYPE </th>
+                            <td mat-cell *matCellDef="let row" class="padlr-10"> {{ row.orderType != null ? row.orderType : '-' }} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="omniChannel">
+                            <th mat-header-cell *matHeaderCellDef class="padlr-10"> SOURCE TYPE </th>
+                            <td mat-cell *matCellDef="let row" class="padlr-10"> {{ row.orderSource != null ? row.orderSource : '-' }} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="phoneNumber">
+                            <th mat-header-cell *matHeaderCellDef class="padlr-10"> PHONE NUMBER </th>
+                            <td mat-cell *matCellDef="let row" class="padlr-10"> {{ row.customerPhNo != null ? row.customerPhNo : '-' }} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="txnReqDate">
+                            <th mat-header-cell *matHeaderCellDef class="padlr-10"> DATE & TIME</th>
+                            <td mat-cell *matCellDef="let row" style="white-space: nowrap;" class="padlr-10">
+                                {{row.txnTime === null ? '-' : row.txnTime }} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="deliveryBoyAssigned">
+                            <th mat-header-cell *matHeaderCellDef class="padlr-10"> DELIVERY BOY ASSIGNED </th>
+                            <td mat-cell *matCellDef="let row" class="padlr-10"> {{ row.isdeliveryPersionAssigned != null ? row.isdeliveryPersionAssigned : '-' }} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="orderStatus">
+                            <th mat-header-cell *matHeaderCellDef class="padlr-10"> ORDER STATUS </th>
+                            <!-- <td mat-cell *matCellDef="let row">
+                                <div class="flex-align">
+                                    <div class="mr-12px">
+                                        {{row.orderStatus}}
+                                    </div>
+                                    <div class="mr-12px" *ngIf="row.orderStatus != 'COMPLETED'">
+                                        <span (click)="edit(row.txnId)"><img (click)="getOrderStatusList(row.orderId,row.orderStatus)" src="assets/images/edit.png" alt="edit_icon"></span>
+                                    </div>
+                                    <div *ngIf="row.txnId === editRowId" class="mr-12px">
+                                        <div *ngIf="hideStatusDropdown == false && row.orderStatus != 'COMPLETED'">
+                                            <mat-form-field>
+                                                <mat-select placeholder="Status" [(ngModel)]="selectedValue" (selectionChange)="changeStatus(row.orderId)">
+                                                    <mat-option *ngFor="let status of statusList;let i = index" [value]="status" [disabled]="i != 0"> {{ status }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td> -->
+                            <td mat-cell *matCellDef="let row" class="padlr-10">
+                                {{row.orderStatus}}
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                        </tr>
+                    </table>
+                    <div *ngIf="searchPageLoader" class="full-page-loader">
+                        <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                    </div>
+                    <div class="no-records" *ngIf="noRecords">
+                        No Records Found!
+                    </div>
+                </div>
+                <mat-paginator [length]="resultsLength" (change)="searchVal()" #paginator (page)="getUpdate($event)" [pageSize]="10" [pageSizeOptions]="[10,20,50,100]">
+                </mat-paginator>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,158 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container">
+        <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          [routerLink]="['/search-add-ons']"></span>View Add-ons</h1>
+        <div class="slider">
+            <mat-slide-toggle class="mat-slide-toggle" [checked]="checked" [disabled]="true">{{productAddonData.status}}
+            </mat-slide-toggle>
+        </div>
+    </div>
+</div>
+
+<div class="page-wrap">
+    <form #addOnsForm="ngForm">
+        <div class="row">
+            <div class="col-md-12">
+                <mat-card class="mb-20px">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="block">Category</label>
+                            <p class="chips-card" *ngFor="let cat of productAddonData.categories">{{cat?.categoryName}}</p>
+                        </div>
+                        <div class="col-md-4">
+                            <label>Delivery Charges</label>
+                            <p>{{productAddonData.deliveryCharge}}</p>
+                        </div>
+                        <div class="col-md-4">
+                            <label>Packing Charges</label>
+                            <p>{{productAddonData.packingCharge}}</p>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="master-fieldSet">
+                                <fieldset class="language-fieldset" required>
+                                    <legend class="fieldset-heading">Add-on Name</legend>
+                                    <div class="multi-fieldset">
+                                        <div *ngFor="let c of productAddonData.productAddonLocales; let i=index">
+                                            <div class="{{alignCss[i]}} {{languageDirection[i]}} view-label">
+                                                <label>{{c.languageName}}</label>
+                                                <p>{{c.addonName}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="master-fieldSet">
+                                <fieldset class="language-fieldset" required>
+                                    <legend class="fieldset-heading">Display Price</legend>
+                                    <div class="multi-fieldset">
+                                        <div *ngFor="let a of productAddonData.productAddonDisplayPrices; let i=index">
+                                            <div class="view-label">
+                                                <label>{{a.currencyCode}}</label>
+                                                <p>{{a.displayPrice}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="add-on-type">
+                                <div class="display-price-euro">
+                                    <label>Add-on Type</label>
+                                    <p *ngIf="productAddonData.addonType == 'ADDON'">Cross Sell</p>
+                                    <p *ngIf="productAddonData.addonType == 'CUSTOMISATION'">Customize Add ons</p>
+                                </div>
+                            </div>
+                            <div class="add-on-image">
+                                <label>Add-on Image</label>
+                                <div class="grid img-block">
+                                    <div class="avatar-zone">
+                                        <img class="upload-img" [src]="filePathUrl+imagePath" [class.uploaded-img]="imgUpload" width="80px">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <mat-card>
+                    <div class="flex-center mb-10px">
+                        <div>
+                            <h6>SKU Details</h6>
+                        </div>
+                    </div>
+                    <div class="sku-table">
+                        <div class="">
+                            <table class="GeneratedTable">
+                                <thead>
+                                    <tr>
+                                        <th>SKU CODE</th>
+                                        <th>COST PRICE</th>
+                                        <th>INVENTORY</th>
+                                        <th>MINIMUM INVENTORY</th>
+                                        <th>TAX RATES</th>
+                                        <th>WEIGHT</th>
+                                        <th *ngFor="let i of productAddonData.addonCols; let ind=index">
+                                            <div class="table-input">
+                                                <p class="padSpace">{{i.label}}</p>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="table-input">
+                                                <p>{{productAddonData.skuCode}}</p>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="table-input">
+                                                <p>{{productAddonData.costPrice}}</p>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="table-input">
+                                                <p>{{productAddonData.inventory}}</p>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="table-input">
+                                                <p>{{productAddonData.minimumInventory}}</p>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="table-input">
+                                                <p>{{productAddonData.taxRates}}</p>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="table-input">
+                                                <p>{{productAddonData.weights}}</p>
+                                            </div>
+                                        </td>
+                                        <td *ngFor="let i of productAddonData.addonCols; let ind=index">
+                                            <div class="table-input">
+                                                <p>{{i.value}}</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+        </div>
+    </form>
+    <div class="btm-button-wrap">
+        <button type="button" class="button secondary-btn" [routerLink]="['/search-add-ons']">CANCEL</button>
+        <button class="button primary-btn" type="button" [routerLink]="['/edit-add-ons/'+addonOid]">EDIT</button>
+    </div>
+</div>

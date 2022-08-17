@@ -1,0 +1,154 @@
+<div class="page-wrap enquiry-component">
+  <div class="enquiry-details">
+    <mat-card class="enquiry-details-card">
+      <form class="filter-wrap" [formGroup]="viewEnquiryFormGroup" #viewEnquiryForm="ngForm" *ngIf="buildFlag">
+        <div class="header flex-center">
+          <div class="left-side">
+            <span class="title">
+              Enquiry Reference ID
+              <span class="ref-id">{{enquiryData.enquiryId}} </span>
+            </span>
+            <span class="vl">
+            </span>
+            <span class="title">
+              Status
+              <span
+                class="ref-id">{{enquiryData.enquiryStatus == 'INPROGRESS'?'In Progress':enquiryData.enquiryStatus=='OPEN'?'Open':enquiryData.enquiryStatus=='REOPEN'?'Reopen':'Close'}}</span>
+            </span>
+          </div>
+          <div class="right-side flex">
+            <mat-form-field>
+              <mat-select placeholder="Change Status" formControlName="enquiryStatus">
+                <mat-option value="CLOSE">Close</mat-option>
+                <mat-option value="INPROGRESS">In Progress</mat-option>
+                <mat-option value="OPEN">Open</mat-option>
+                <mat-option value="REOPEN">Reopen</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="details">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="view-mode">
+                <label>Enquiry Date</label>
+                <p>{{enquiryData.enquiryDate | date:'M/d/yyyy'}}</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="view-mode">
+                <label>Internal Enquiry Type</label>
+                <p>{{enquiryData.internalEnquiryType != null && enquiryData.internalEnquiryType != '' ? enquiryData.internalEnquiryType : '-'}}
+                </p>
+              </div>
+            </div>
+            <!-- <div class="col-md-3">
+              <div class="view-mode">
+                <label>Description</label>
+                <p>{{enquiryData.description !=null && enquiryData.description != '' ? enquiryData.description : '-'}}
+                </p>
+              </div>
+            </div> -->
+            <!-- <div class="col-md-3">
+              <mat-form-field>
+                <mat-select placeholder="Change Internal Enquiry Type" formControlName="internalEnquiryId" required>
+                  <mat-option *ngFor="let enquiryType of enquiryTypeList" value="{{enquiryType.enquiryTypeId}}">
+                    {{enquiryType.enquiryTitle}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div> -->
+          </div>
+          <div class="button-wrap">
+            <button type="button" class="button primary-btn"
+              (click)="updateEnquiry(viewEnquiryFormGroup.value)">UPDATE</button>
+          </div>
+        </div>
+      </form>
+    </mat-card>
+  </div>
+  <div class="representative-response">
+    <mat-tab-group animationDuration="0ms" class="tabs-align" [selectedIndex]="seletedTabIndex"
+      (selectedTabChange)="tabChanged($event)">
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <span class="enq-label">Internal Notes</span>
+        </ng-template>
+        <ng-template matTabContent>
+          <form class="filter-wrap" [formGroup]="createInternalNotesFormGroup" #enquiryInternalNotesForm="ngForm"
+            (submit)="createInternalNotes(createInternalNotesFormGroup.value, enquiryInternalNotesForm)">
+            <div class="comment_section">
+              <div class="row input-comment-block align-center">
+                <div class="col-md-11">
+                  <mat-form-field class="field-width">
+                    <textarea matInput placeholder="Comments" formControlName="internalComment" (keydown)="removeValidation()"></textarea>
+                    <mat-error *ngIf="createInternalNotesFormGroup.get('internalComment').hasError('pattern')">This special
+                      character(s) is not allowed</mat-error>
+                  </mat-form-field>
+                  <p style="color:red; font-size: 10px;" *ngIf="internalReplyRequired">Please Enter value</p>
+                </div>
+                <div class="col-md-1 button-wrap">
+                  <button type="submit" class="button primary-btn">ADD</button>
+                </div>
+              </div>
+            </div>
+            <div class="previous-comments" *ngFor="let response of responseData;let i = index;">
+            <div *ngIf="response.postTo == 'INTERNAL'">
+                <p>{{response.createdBy}}<span> {{response.createdTime}}</span> </p>
+                <div class="comment" *ngFor="let locale of response.enquiryResponseLocales;let j = index;">
+                  <p>{{response.enquiryResponseLocales[j].response}}</p>
+                </div>
+              </div>
+            </div>
+          </form>
+        </ng-template>
+      </mat-tab>
+
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <span class="enq-label">Customer Reply</span>
+        </ng-template>
+        <ng-template matTabContent>
+          <form [formGroup]="createCustomerReplyFormGroup" #enquiryCustomerReplyForm="ngForm" (submit)="createCustomerReply(createCustomerReplyFormGroup.value, enquiryCustomerReplyForm)">
+            <div class="comment_section">
+              <div class="communication-types">
+                <mat-checkbox name="Post As" *ngFor="let option of channelsList" [checked]="option.checked"
+                  value="{{option.value}}" (change)="selectedChannel(option)">{{option.label}}
+                </mat-checkbox>
+                <p class="mat-err" *ngIf="channelErrorMsg">Please Select the option</p>
+              </div>
+              <div class="row input-comment-block align-center">
+                <div class="col-md-10">
+                  <mat-form-field class="field-width">
+                    <textarea matInput placeholder="Comments" formControlName="enquiryCustomerComment" (keydown)="removeValidation()"></textarea>
+                    <mat-error *ngIf="createCustomerReplyFormGroup.get('enquiryCustomerComment').hasError('pattern')">Please enter
+                      comment
+                    </mat-error>
+                  </mat-form-field>
+                  <p style="color:red; font-size: 10px;" *ngIf="customerReplyRequired">Please Enter value</p>
+                </div>
+                <div class="col-md-2 button-wrap">
+                  <button type="submit" class="button primary-btn"
+                    >REPLY</button>
+                </div>
+              </div>
+            </div>
+          </form>
+          <div class="previous-comments" *ngFor="let response of responseData;let i = index;">
+            <div *ngIf="response.postTo == 'USER'">
+              <p>{{response.createdBy}}</p> 
+              <div class="channel">
+                <label>{{response.postAs}}  {{response.createdTime}}</label>
+              </div>
+              <div class="comment" *ngFor="let locale of response.enquiryResponseLocales;let j = index;">
+                <p>{{response.enquiryResponseLocales[j].response}}</p>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>
+<div *ngIf="pageLoader" class="page-loader-block full-page-loader">
+  <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+</div>

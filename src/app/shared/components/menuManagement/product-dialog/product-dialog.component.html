@@ -1,0 +1,188 @@
+<form [formGroup]="modifyOrderFormGroup" #modifyOrderForm="ngForm">
+  <div *ngIf="contentLoader" class="page-loader-block full-page-loader">
+      <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+    </div>
+<div class="flex">
+  <div class="left-column-cotent">
+    <div  *ngIf="isProduct" class="page-title">
+      <div class="header flex-container">
+        <h3>Product List</h3>
+        <div class="close-icon">
+          <img src="assets/images/icons/filter_close_ico.png" alt="" (click)="onCloseClick()">
+        </div>
+      </div>
+    </div>
+    <div  *ngIf="!isProduct" class="page-title">
+        <div class="header flex-container">
+          <h3>No Products Mapped</h3>
+          <div class="close-icon">
+            <img src="assets/images/icons/filter_close_ico.png" alt="" (click)="onCloseClick()">
+          </div>
+        </div>
+      </div>
+
+    <div *ngIf="isProduct" class="page-content">
+      <!-- <mat-accordion>
+        <mat-expansion-panel > -->
+          <!-- <mat-expansion-panel-header>
+            <mat-panel-title>
+              {{categoryName}}
+            </mat-panel-title>
+          </mat-expansion-panel-header> -->
+          <div class="products-list">
+            <ul>
+              <li *ngFor="let product of formattedData[0].products">
+                <div class="flex-container pb-1em">
+                  <div class="flex"> 
+                    <div *ngIf="product.productImage != ''" class="product-img-block">
+                      <img [src]="filePathUrl+product.productImage" alt="item_ico">
+                    </div>
+                    <div *ngIf="product.productImage == ''" class="product-img-block">
+                      <img src="assets/images/no_image.png" alt="item_ico">
+                    </div>
+                    <div>
+                      <div *ngIf="product.productType == 'VEG'" class="flex-center mr-5px">
+                          <img src="assets/images/svg-icons/veg_ico.svg" width="12px" alt="">&nbsp;&nbsp;  {{ product.productName }}
+                      </div>
+                      <div *ngIf="product.productType == 'NONVEG'" class="flex-center mr-5px">
+                          <img src="assets/images/svg-icons/nonveg_ico.svg" width="12px" alt=""> &nbsp;&nbsp; {{ product.productName }}
+                      </div>
+                      <div *ngIf="product.productType == 'EGG'" class="flex-center mr-5px">
+                          <img src="assets/images/icons/Egg_1x.png" width="12px" alt=""> &nbsp;&nbsp; {{ product.productName }}
+                      </div>
+                      <!-- <span class="flex-center mr-5px">
+                        <span [ngClass]="{'veg-icon': product.productType === 'VEG'}"></span>
+                        <span [ngClass]="{'nonVeg-icon': product.productType === 'NONVEG'}"></span>
+                        <span [ngClass]="{'egg-icon': product.productType === 'EGG'}"></span>
+
+                        {{ product.productName }}
+                      </span>  -->
+                      <p class="price"><span class="currency-label">Price: </span>{{ product.productPrice }} </p>
+                    </div>
+                  </div>
+                  <!-- <div class="modify-buttons" *ngIf="product.selectedQty !== 0">
+                    <label class="subtract-btn" (click)="itemDecrement(product)">-</label>
+                    <p>{{product.selectedQty}}</p>
+                    <label class="add-btn" (click)="itemIncrement(product)">+</label>
+                  </div> -->
+                  <!-- <div class="button-container" *ngIf="product.selectedQty === 0">
+                    <button class="button tertiary-btn" type="button" (click)="addItem(product)">Check</button>
+                    <div class="small-font" *ngIf="isCustomizable(product)">Customization</div>
+                  </div> -->
+                </div>
+
+              </li>
+            </ul>
+            <div *ngFor="let subCat of formattedData[0].subCategories">
+              <mat-panel-title class="sub-category-title">
+                {{subCat.categoryName}}
+              </mat-panel-title>
+              <div class="products-list subCat">
+                <ul>
+                  <li *ngFor="let product of subCat.products">
+                    <div class="flex-container pb-1em">
+                      <div class="flex"> 
+                        <div *ngIf="product.productImage != ''" class="product-img-block">
+                          <img [src]="filePathUrl+product.productImage" alt="item_ico">
+                        </div>
+                        <div *ngIf="product.productImage == ''" class="product-img-block">
+                          <img src="assets/images/no_image.png" alt="item_ico">
+                        </div>
+                        <div>
+                          <div *ngIf="product.productType == 'VEG'" class="flex-center mr-5px">
+                              <img src="assets/images/svg-icons/veg_ico.svg" width="12px" alt="">&nbsp;&nbsp;  {{ product.productName }}
+                          </div>
+                          <div *ngIf="product.productType == 'NONVEG'" class="flex-center mr-5px">
+                              <img src="assets/images/svg-icons/nonveg_ico.svg" width="12px" alt=""> &nbsp;&nbsp; {{ product.productName }}
+                          </div>
+                          <div *ngIf="product.productType == 'EGG'" class="flex-center mr-5px">
+                              <img src="assets/images/icons/Egg_1x.png" width="12px" alt=""> &nbsp;&nbsp; {{ product.productName }}
+                          </div>
+                          <p class="price"><span class="currency-label">Price: </span>{{ product.productPrice }} </p>
+                        </div>
+                      </div>
+                    
+                    
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+        
+        <!-- </mat-expansion-panel>
+      </mat-accordion> -->
+    </div>
+    <!-- <div class="page-footer flex-container">
+      <div class="price-details">
+        <div class="total-items-selected white-color-text">{{ totalItemsSelected }} item selected</div>
+        <div class="total-price white-color-text">{{ currency }} {{ totalPrice }}</div>
+      </div>
+      <button class="button primary-btn" type="button" (click)="addtoCart()">ADD TO CART</button>
+    </div> -->
+  </div>
+  <!-- <div class="right-column-cotent" *ngIf="showCustomizationList">
+    <div class="flex-container">
+      <h6 class="header-title">Customise Options</h6>
+      <button class="button primary-btn" type="button" (click)="addVariantDetails(customizableProduct)">ADD</button>
+    </div>
+
+    <p class="sub-title">{{ customizableProduct.productVariant.variantName }}</p>
+    <div class="customize-options flex-container"
+      *ngFor="let variant of customizableProduct.productVariant.productVariants">
+      <mat-checkbox>
+      <div class="row flex-center" style="width: 100%;">
+        <div class="col-md-7">
+          <span>{{variant.variantName}}</span>
+        </div>
+        <div class="col-md-5 pad-0 text-right">
+          <div class="flex-center">
+            <span>{{ currency }} {{variant.displayPrice}}</span>
+            <div>
+              <span><button class="button tertiary-btn" type="button"
+                *ngIf="customizableProduct.productVariant.selectedVariantQty === 0 ||
+                customizableProduct.productVariant.selectedVariant !== variant.skuCode"
+                (click)="addVariant(customizableProduct,variant)">ADD</button></span>
+            <span>
+              <div class="modify-buttons"
+                *ngIf="customizableProduct.productVariant.selectedVariantQty !== 0 &&
+                customizableProduct.productVariant.selectedVariant === variant.skuCode">
+                <label class="subtract-btn" (click)="variantDecrement(customizableProduct,variant)">-</label>
+                <p>{{customizableProduct.productVariant.selectedVariantQty}}</p>
+                <label class="add-btn" (click)="variantIncrement(customizableProduct,variant)">+</label>
+              </div>
+            </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div >
+      </div>
+
+      </mat-checkbox>
+    </div>
+    <div *ngFor="let customizeAddon of customizableProduct.customizeAddons">
+      <div *ngIf="customizeAddon.addons.length > 0">
+        <p class="sub-title">{{ customizeAddon.labelName }}</p>
+        <div class="customize-options" *ngFor="let addOn of customizeAddon.addons">
+          <mat-checkbox [checked]="isSelectedAddOn(customizableProduct,addOn)"
+            (change)="addOnSelected($event,customizableProduct,addOn)">
+            <div class="row">
+              <div class="col-md-7">
+                <span>{{ addOn.addonName }}</span>
+              </div>
+              <div class="col-md-5">
+                <span>{{ currency }} {{ addOn.displayPrice }}</span>
+              </div>
+            </div>
+          </mat-checkbox>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+</div>
+
+</form>
+

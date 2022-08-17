@@ -1,0 +1,60 @@
+table {
+    width: 100%;
+    .mat-cell {
+      border-bottom-style: none !important;
+    }
+    .mat-header-cell {
+      border-bottom-color: rgb(227, 236, 248);
+    }
+  }
+  
+  .mat-elevation-z8 {
+    box-shadow: none;
+  }
+  
+  .page-wrap {
+    margin: 20px 20px 20px 20px;
+  }
+  .primary-btn{
+      float: right;
+  }
+  .secondary-btn{
+    float: right;
+}
+
+  .btn-light{
+    border: 1px solid orange;
+    line-height: 1.1!important
+  }
+
+  h5{
+    margin-top:30px;
+  }
+
+  .mat-card{
+    box-shadow: none;
+  }
+  .addCardKeywords{
+    padding: 0 1em;
+    p{
+        margin-right: 1em;
+        background-color: #F2F2F2;
+        border-radius: 2px;
+        padding: 1px 5px;
+        img{
+            padding: 0 5px;
+        }
+    }
+}
+.value-selection{
+  position: relative;
+  margin: 1rem 0rem 0rem 0rem;
+  .value-input{ 
+      margin-bottom: 0px !important; 
+  }
+  .add-button{
+      position: absolute;
+      right:0rem;
+      width: 2rem;
+  }
+}

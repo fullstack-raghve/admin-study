@@ -1,0 +1,108 @@
+.page-title{
+    color: #000;
+    font-size: 17px;
+  }
+  .addtier-block {
+    display: flex;
+  
+    p {
+      margin: 0;
+    }
+  
+    .title {
+      align-items: center;
+      padding: 0;
+    }
+  
+    .primary-btn {
+      color: #fff;
+    }
+  }
+  
+  .bredcrumb-title-wrap {
+    padding: 1rem;
+  
+    /deep/ .breadcrumb {
+      padding: 0 !important;
+    }
+  }
+  .stamp-details {
+    color: #ADADAD;
+  
+    label {
+      font-size: 13px;
+      color: #ADADAD;
+    }
+  
+    p {
+      margin: 0;
+      font-family: 'mulibold';
+      font-size: 14px;
+      color: #2F2F2F;
+      word-break: break-all;
+    }
+  }
+  .form-wrap{
+    padding:1rem 2rem;
+}
+
+.mat-card{
+    padding: 1rem 1rem;
+    margin-bottom: 1.25rem;
+}
+.checkbox{
+    margin-top: 1rem;
+}
+.tier-checkbox{
+    text-align: right;
+}
+.member-top-block{
+border-bottom: 1px solid lightgrey;
+}
+.tier-block-content{
+    margin:0;
+    padding: 1rem 0;
+    border: 1px solid lightgray;
+    border-radius: 0.5rem;
+}
+
+.tier-block-row,
+.tier-inner-row{
+    margin: 0;
+}
+.tier-block-inner{
+    p{
+        padding: 15px 15px 0px;
+        margin: 0;
+    }
+    .view-label{
+        padding: 0;
+    }
+    border-bottom: 1px solid lightgray;
+}
+.tier-block{
+    margin: 1rem 0;
+}
+.tier-val{
+    padding: 0!important;
+}
+ .tier-block-inner-bottom{
+        p{
+            padding: 15px 15px 0px;
+            margin: 0;
+        }
+        border-bottom:none;
+    }
+
+.bttn-block-bottom {
+    text-align: right;
+      
+    button {
+          color: #fff;
+    }
+      
+    .bttn-grey {
+          background-color: #838383;
+          margin-left: 10px;
+    }
+}

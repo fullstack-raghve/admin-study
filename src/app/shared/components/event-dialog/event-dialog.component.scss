@@ -1,0 +1,48 @@
+.page-wrap-se {
+  .table-wrap-inner {
+      // max-height: 300px;
+    //   overflow-y: scroll;
+       th.mat-header-cell {
+       //    padding: 3px 20px;
+           font-family: "muliregular" !important;
+       }
+       td.mat-cell,
+       td.mat-footer-cell,
+       th.mat-header-cell {
+         //  padding: 3px 20px;
+           font-family: "muliregular" !important;
+       }
+        tr.mat-header-row {
+           height: 56px;
+       }
+    
+   }
+   .no-padd{
+       padding: 0px;
+   }
+   .fw-custom{
+      margin-bottom: 75px;
+      background: #fff;
+      max-width: 98%;
+      position: relative;
+      top: -57px;
+      padding: 1px;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+      margin: 0 auto;
+      width: 100%;
+   }
+   .plus-icon {
+      width: 9px;
+      margin-bottom: 4px;
+      margin-right: 5px;
+      color: #fff !important;
+  }
+  .pb-50{
+      padding-bottom: 50px;
+  }
+  .mat-paginator-page-size-select{
+      margin: 6px 4px 0 4px!important;
+      width: 56px!important;
+    }
+  }

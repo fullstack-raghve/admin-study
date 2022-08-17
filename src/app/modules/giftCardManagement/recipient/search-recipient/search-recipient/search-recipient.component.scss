@@ -1,0 +1,19 @@
+.btn-light{
+    border: 1px solid orange;
+    line-height: 1.2;
+}
+/deep/.dialogAddReciStyleChange{
+    max-width: 20vw!important;
+    /deep/ .mat-dialog-container{
+        min-width: 20vw!important;
+    }
+}
+
+
+/deep/.dialogBulkStyleChange{
+    max-width: 16vw!important;
+    /deep/ .mat-dialog-container{
+        min-width: 16vw!important;
+    }
+}
+.nodatafound table td { border:0; } 

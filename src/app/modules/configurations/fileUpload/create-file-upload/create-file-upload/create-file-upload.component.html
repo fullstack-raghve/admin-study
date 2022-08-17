@@ -1,0 +1,285 @@
+<div class="bredcrumb-title-wrap">
+  <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+  <div class="title flex-container">
+    <h1>
+      <!-- <span class="left-arrow">
+      <img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          [routerLink]="['/']">
+        </span> -->
+      Upload</h1>
+  </div>
+</div>
+<form [formGroup]="fileUploadFormGroup" #fileUploadForm="ngForm" (submit)="createFileUpload(fileUploadFormGroup.value)">
+  <div class="page-wrap">
+    <mat-card class="card">
+      <div class="inlne-grid">
+        <mat-radio-group name="File Upload" formControlName="fileuploadOptions" (change)="changeValidation($event)">
+          <mat-radio-button *ngFor="let option of fileuploadOptionVals" [checked]="option.checked"
+            value="{{option.value}}">{{option.label}}
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <div *ngIf="manualList || scheduledList">
+        <div class="row upload-row">
+          <div class="col-md-4 upload-col" *ngIf="fileNameVal == 'Store Staff FlatFile'">
+            <mat-form-field>
+              <input matInput placeholder="Title" formControlName="fileUploadTitle" required>
+              <mat-error *ngIf="fileUploadFormGroup.get('fileUploadTitle').hasError('required')">Please enter value
+              </mat-error>
+            </mat-form-field>
+            <!-- <p *ngIf="errorTitle">{{}}</p> -->
+          </div>
+          <div class="col-md-4 upload-col">
+            <mat-form-field>
+              <mat-select placeholder="File Type" formControlName="fileUploadType" required>
+                <mat-option *ngFor="let file of fileTypes " [value]="file.fileId" (click)="getFileTypeStatus(file)">
+                  {{file.fileName}}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="fileUploadFormGroup.get('fileUploadType').hasError('required')">
+                Please select value
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row  upload-row">
+          <div class="col-md-4 upload-col fileupload-block" *ngIf="fileNameVal == 'Bonus'">
+            <div class="choosefile-upload">
+              <div class="fileupload">
+                <input type="file" accept=".txt" (change)="fileChange($event.target.files)" />
+                <span *ngIf="errorMes" class="errormes">Please upload a file</span>
+              </div>
+              <div class="fileupload activity-type">
+                <label>Activity Type</label>
+                <mat-radio-group class="radio-bttn" name="processScheduled" formControlName="processScheduledCtrl"
+                  (change)="processScheduledValidation($event)">
+                  <mat-radio-button *ngFor="let processScheduledoption of processScheduledoptions"
+                    [checked]="processScheduledoption.checked" value="{{processScheduledoption.value}}">
+                    {{processScheduledoption.label}}
+                  </mat-radio-button>
+                </mat-radio-group>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 upload-col" *ngIf="fileNameVal == 'Store Staff FlatFile'">
+            <input type="file" accept=".txt" (change)="fileChange($event.target.files)" />
+          </div>
+          <div class="col-md-4 upload-col" *ngIf="fileNameVal == 'Bonus'">
+            <div class="bonus-option rulename-option">
+              <mat-form-field>
+                <input matInput placeholder="Accrual Rule Name" formControlName="accrualRuleName" required>
+                <mat-error *ngIf="fileUploadFormGroup.get('accrualRuleName').hasError('required')">Please enter value
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="fileupload">
+              <mat-radio-group class="radio-bttn" name="By Team" formControlName="teamOptions"
+                (change)="teamValidation($event)">
+                <mat-radio-button *ngFor="let teamOption of teamOptionsVal" 
+                  value="{{teamOption.value}}">{{teamOption.label}} 
+                </mat-radio-button>
+              </mat-radio-group>
+            </div>
+          </div>
+          <div class="col-md-4 upload-col" *ngIf="fileNameVal == 'Bonus'">
+            <div class="bonus-option">
+              <mat-form-field>
+                <textarea matInput placeholder="Accrual Description" formControlName="accrualDescription"
+                  maxlength="200" required></textarea>
+                <mat-error *ngIf="fileUploadFormGroup.get('accrualDescription').hasError('required')">Please enter value
+                </mat-error>
+                <mat-error *ngIf="fileUploadFormGroup.get('accrualDescription').hasError('pattern')">Invalid characters
+                  entered</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="row" *ngIf="regionProgram == true">
+              <div class="col-md-6">
+                  <mat-form-field>
+                      <mat-select placeholder="Region" formControlName="productRegionCtrl" (selectionChange)="changeProductRegion(productRegionInput.value)" #productRegionInput required>
+                          <mat-option value="INDIA">INDIA</mat-option>
+                          <!-- <mat-option value="GCC">GCC</mat-option> -->
+                      </mat-select>
+                      <mat-error *ngIf="fileUploadForm.submitted && fileUploadFormGroup.get('productRegionCtrl').hasError('required')">Please enter value
+                      </mat-error>
+                  </mat-form-field>
+              </div>
+              <div class="col-md-6">
+                  <mat-form-field>
+                      <mat-select placeholder="Select Program" formControlName="programOid" #programInput required>
+                          <mat-option *ngFor="let program of programList" [value]="program.programId">
+                              {{program.prgmBrand}}</mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="fileUploadForm.submitted && fileUploadFormGroup.get('programOid').hasError('required')">Please enter value
+                      </mat-error>
+                  </mat-form-field>
+              </div>
+          </div>
+          </div>
+          <div class="col-md-4 upload-col" *ngIf="fileNameVal == 'Store Staff FlatFile'">
+            <div class="bonus-option">
+              <mat-form-field>
+                <textarea matInput placeholder="Accrual Description" formControlName="accrualDescription"
+                  maxlength="200" required></textarea>
+                <mat-error *ngIf="fileUploadFormGroup.get('accrualDescription').hasError('required')">Please enter value
+                </mat-error>
+                <mat-error *ngIf="fileUploadFormGroup.get('accrualDescription').hasError('pattern')">Invalid characters
+                  entered</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+
+        <div class="row upload-row" *ngIf="fileNameVal == 'Bonus'">
+          <div class="col-md-4 upload-col" *ngIf="eventTimeScheduled">
+              <!-- <label class="timer-label">
+                  Everyday Scheduled upload at <img src="assets/images/icons/time_ico.svg" width="20px"
+                  alt="">
+                  <mat-form-field class="field-width">
+                    <input matInput class="time-picker wid" placeholder="Everyday Scheduled upload at"
+                      [owlDateTimeTrigger]="dtsuno" [owlDateTime]="dtsuno">
+                    <owl-date-time [pickerType]="'timer'" #dtsuno></owl-date-time>
+                  </mat-form-field>
+              </label> -->
+              <div class="timings-row">
+                <label class="timer-label">
+                    Everyday Scheduled upload at <img src="assets/images/icons/time_ico.svg" width="20px"
+                        alt="">
+                    <input readonly class="time-picker" [owlDateTimeTrigger]="bhsuno"
+                        [owlDateTime]="bhsuno" formControlName="eventTimeScheduledCtrl">
+                    <owl-date-time [pickerType]="'timer'"
+                        #bhsuno>
+                    </owl-date-time>
+                </label>
+              </div>
+          </div>
+          <div class="col-md-4 upload-col">
+            <h5>Points Expiry</h5>
+            <div class="row upload-row">
+              <div class="col-md-4 upload-col bonus-option" [class.disabledday]="diableDay">
+                <mat-form-field>
+                  <input matInput placeholder="Days" OnlyNumber="true" formControlName="daysVal"
+                    (keyup)=onKeydownEvent($event)>
+                  <!-- <mat-error *ngIf="fileUploadFormGroup.get('daysVal').hasError('required')">Please Enter a Days
+                  </mat-error> -->
+                </mat-form-field>
+              </div>
+              <div class="col-md-2 upload-col or-option">
+                <p>
+                  ( OR )
+                </p>
+              </div>
+              <div class="col-md-6 bonus-option" [class.disableddate]="diableDate">
+                <mat-form-field>
+                  <input matInput [matDatepicker]="picker" [min]="minDate" (dateInput)="addEvent('input', $event)"
+                    (dateChange)="addEvent('change', $event)" placeholder="Expiry Date" #startDate
+                    formControlName="expiryDate" OnlyNumber="true" (click)='openCalendarev(picker,$event)'
+                    (focus)="openCalendar(picker,$event)">
+                  <mat-datepicker-toggle matSuffix [for]="picker" (keyup)=onKeydowndate(picker,$event)>
+                  </mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                  <!-- <mat-error *ngIf="fileUploadFormGroup.get('expiryDate').hasError('required')">Please select value
+                  </mat-error> -->
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div *ngIf="scheduledList && !manualList">
+        <div class="row upload-row">
+          <div class="col-md-4 upload-col">
+            <mat-form-field>
+              <input matInput placeholder="Title" OnlyNumber="true" formControlName="fileUploadTitle" required>
+              <mat-error *ngIf="fileUploadFormGroup.get('fileUploadTitle').hasError('required')">Please enter value
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-md-4 upload-col">
+            <mat-form-field>
+              <mat-select placeholder="File Type" formControlName="fileUploadType">
+                <mat-option *ngFor="let file of fileTypes " [value]="file.fileId" (click)="getFileTypeStatus(file)">
+                  {{file.fileName}}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="fileUploadFormGroup.get('fileUploadType').hasError('required')">
+                Please select value
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row upload-row">
+          <div class="col-md-4 upload-col">
+            <div class="row upload-row">
+              <div class="col-md-6 time-fix">
+                <mat-form-field class="field-width">
+                  <input matInput class="time-picker wid" placeholder="Everyday Scheduled upload at"
+                    [owlDateTimeTrigger]="dtsuno" [owlDateTime]="dtsuno">
+                  <img src="assets/images/icons/time_ico.svg" width="20px" alt="">
+                  <owl-date-time [pickerType]="'timer'" #dtsuno></owl-date-time>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row upload-row">
+          <div class="col-md-4 upload-col" *ngIf="fileNameVal == 'Bonus'">
+            <div class="bonus-option rulename-option">
+              <mat-form-field>
+                <input matInput placeholder="Accrual Rule Name" OnlyNumber="true" formControlName="accrualRuleName"
+                  required>
+                <mat-error *ngIf="fileUploadFormGroup.get('accrualRuleName').hasError('required')">Please enter value
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-md-4 upload-col" *ngIf="fileNameVal == 'Bonus'">
+            <div class="bonus-option">
+              <mat-form-field>
+                <textarea matInput placeholder="Accrual Description" formControlName="accrualDescription"
+                  maxlength="200" required></textarea>
+                <mat-error *ngIf="fileUploadFormGroup.get('accrualDescription').hasError('required')">Please enter value
+                </mat-error>
+                <mat-error *ngIf="fileUploadFormGroup.get('accrualDescription').hasError('pattern')">Invalid characters
+                  entered</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="row upload-row" *ngIf="fileNameVal == 'Bonus'">
+          <div class="col-md-4 upload-col">
+            <h5>Points Expiry</h5>
+            <div class="row upload-row">
+              <div class="col-md-4 upload-col bonus-option">
+                <mat-form-field>
+                  <input matInput placeholder="Days" OnlyNumber="true" formControlName="daysVal" required>
+                  <mat-error *ngIf="fileUploadFormGroup.get('daysVal').hasError('required')">Please enter value
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6 bonus-option">
+                <mat-form-field>
+                  <input matInput [matDatepicker]="picker" OnlyNumber="true" [min]="minDate" placeholder="Expiry Date" #startDate
+                    formControlName="expiryDate" required  (click)='openCalendar(picker)' (focus)="openCalendar(picker)">
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                  <mat-error *ngIf="fileUploadFormGroup.get('expiryDate').hasError('required')">Please select value
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> -->
+    </mat-card>
+    <div class="btm-button-wrap">
+      <button type="button" class="button secondary-btn" [routerLink]="['/view-upload']">CANCEL</button>
+      <button class="button primary-btn"  type="submit"
+        [class.disablebtn]="loadingResponse">UPLOAD
+        <span class="loading-img-hide" *ngIf="loadingResponse">
+          <img src="assets/images/loader-icons/White-loading-200px.svg" alt="loader">
+        </span></button>
+    </div>
+  </div>
+</form>

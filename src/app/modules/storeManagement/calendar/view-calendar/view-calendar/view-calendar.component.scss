@@ -1,0 +1,109 @@
+.calender-page-wrap {
+    padding: 1.5rem;
+    .calendar-details-card {
+        .business-delivery-block {
+            .button.tertiary-btn {
+                font-size: 8px;
+                line-height: 19px;
+            }
+            .group-heading {
+                font-size: 10px;
+                font-weight: 600;
+                margin-bottom: 15px;
+                color: rgb(118, 118, 118);
+            }
+            .timings-block {
+                padding: 3px;
+                .daily{
+                    margin-bottom: 20px;
+                    /deep/.mat-checkbox-inner-container {
+                        height: 15px;
+                        width: 15px;
+                    }
+                    .button.primary-btn, .button.secondary-btn{
+                        padding: 1px 6px;
+                        line-height: 19px;
+                        img {
+                            width: 9px;
+                            margin-bottom: 5px;
+                        }
+                    }
+                    .holiday-text{
+                        margin-bottom: 5px;
+                        color: #fa8d47;
+                    }
+                    .timings-row {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-around;
+                        background-color: rgb(244, 244, 244);
+                    }
+                }
+            }
+        }
+    }
+    .store-access-card {
+        padding: 0;
+        .table-top-section {
+            background-color: #f5f5f5;
+            padding: 0.75rem 1.0625rem 5em;
+            border-top-left-radius: 7px;
+            border-top-right-radius: 7px;
+            p {
+                font-size: 15px;
+                color: #000;
+            }
+        }
+    }
+}
+tr {
+    border: 1px solid #e1e1e1!important;
+}
+.time-picker {
+    width: 100%;
+    border-bottom: 1px solid #f2eded;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    outline: none;
+    border-radius: 0px;
+    padding: 0;
+    font-size: 10px;
+    background-color: transparent;
+}
+.timer-label {
+    width: 35%;
+    color: #7C7B7B;
+    font-size: 10px;
+}
+.timer-label-to {
+    color: #7C7B7B;
+    font-size: 10px;
+    padding-bottom: 0.9em;
+    margin-bottom: 10px;
+}
+.vl {
+    border-left: 1px solid #d1d1d1;
+}
+.timer-clone {
+    border-bottom: 1px solid #7C7B7B;
+}
+.view-timer-block {
+    label {
+        font-size:10px;
+        color: #7C7B7B;
+        margin-bottom: 0;
+    }
+    p {
+        font-size:11px;
+        color:#000;
+        margin-bottom: 4px;
+    }
+}
+.days {
+    font-size: 12px;
+    margin-bottom: 0;
+    color: #a4a4a4;
+    font-weight: 600;
+    
+}

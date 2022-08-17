@@ -1,0 +1,66 @@
+@import "../../../../assets/css/shared/theme";
+:host {
+  display: block;
+  outline: none;
+  .mat-list-item.active {
+    background-color: mat-color($app-primary, 50);
+  }
+  &:hover,
+  &:focus {
+    > .mat-list-item:not(.expanded) {
+      background-color: mat-color($app-primary, 100) !important;
+    }
+  }
+}
+
+.routeIcon {
+  margin: 0 13px 0 2px;
+  width: 20px;
+}
+.mat-icon {
+  background-repeat: no-repeat;
+  display: inline-block;
+  fill: currentColor;
+  height: 24px;
+  width: 24px;
+  color: #ffff;
+  transform: rotate(270deg);
+}
+
+a:not([href]):not([tabindex]) {
+  color: rgb(255, 255, 255);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.sideNav-list {
+  display: flex;
+  align-items: center;
+  padding: 10px 5px;
+  justify-content: space-between;
+}
+.list-dropdown-icon {
+  transform: rotate(270deg) !important;
+  transition: 0.4s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.expanded {
+  .list-dropdown-icon {
+    transform: rotate(360deg) !important;
+  }
+}
+
+.submenu {
+  a {
+    padding-left: 35px !important;
+  }
+}
+
+.submenu-container {
+  background-color: #000;
+  .sideNav-list.color, .sideNav-list.activeColor {
+    color: #ff8e48;
+  }
+}

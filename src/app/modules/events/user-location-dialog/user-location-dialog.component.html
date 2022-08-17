@@ -1,0 +1,550 @@
+<div class="page-wrap-users">
+  <div class="search-panel-block">
+      <div class="bredcrumb-title-wrap">
+          <div class="search-container-block">
+              <!-- <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb> -->
+              <div class="search-list">
+                  <!-- <form class="filter-wrap" [formGroup]="searchUserForm" (submit)="indexResetFormdataSearch();searchKey();"> -->
+                    <form class="filter-wrap" [formGroup]="searchUserForm" (submit)="searchVal()">
+
+                      <div class="row title-search-row">
+                          <div class="col-md-4 title-search-col">
+                              <div class="title">
+                                  <h3 class="card-title">Search Users</h3>
+                                  
+                              </div>
+                          </div>
+                          <div class="col-md-5 title-search-col">
+                              <div class="searchform-block">
+                                  <div class="common-search">
+                                      <input type="text" spaceTrim="searchUserForm.valuesearchVal" formControlName="searchVal" placeholder="Search User" />
+                                      <!-- <span class="search-btn" (click)="indexResetFormdataSearch();searchKey();"></span> -->
+                                      <span class="search-btn" (click)="searchVal()"></span>
+
+                                      <div class="filter-btn-wrap">
+                                          <span class="filter-btn" (click)="openFilter();" [ngClass]="status ? 'open' : 'close'"></span>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="col-md-3 title-search-col">
+                            <div class="close-icon text-right">
+                                <img src="assets/images/icons/filter_close_ico.png" (click)="onCloseClick()" alt="">
+                            </div>
+                          </div>
+                      </div>
+                      <div class="feild-search" *ngIf="!status">
+                          <div class="row feild-search-inner">
+                            <!-- <div class="col-md-4">
+                                <mat-form-field>
+                                    <input matInput type="text" formControlName="userid" placeholder="User Id" />
+                                   
+                                </mat-form-field>
+                            </div> -->
+                              <div class="col-md-4">
+                                  <mat-form-field>
+                                      <input matInput type="text" formControlName="fullName" placeholder="Full Name" />
+                                      <mat-error *ngIf="searchUserForm.get('fullName').hasError('minlength')">Minimum 3 character(s) required
+                                      </mat-error>
+                                  </mat-form-field>
+                              </div>
+   
+                              <div class="col-md-4">
+                                  <mat-form-field>
+                                      <input matInput type="email" formControlName="emailId" placeholder="Email ID" />
+                                      <mat-error *ngIf="searchUserForm.get('emailId').hasError('pattern')">Please enter valid email id
+                                      </mat-error>
+                                  </mat-form-field>
+                              </div>
+                              <div class="col-md-4">
+                                  <mat-form-field>
+                                      <input matInput OnlyNumber="true" maxLength="10" type="text" formControlName="phoneNumber" placeholder="Phone Number" />
+                                      <mat-error *ngIf="searchUserForm.get('phoneNumber').hasError('pattern')">Invalid charecters entered
+                                      </mat-error>
+                                  </mat-form-field>
+                              </div>
+                              <div class="col-md-4">
+                                  <!-- <mat-form-field>
+                  <mat-select placeholder="Role" formControlName="roles">
+                    <mat-option value="{{i.roleName}}" *ngFor=" let i of roleId">{{i.roleName}}</mat-option>
+                  </mat-select>
+                </mat-form-field> -->
+                                  <mat-form-field class="example-full-width">
+                                      <input matInput placeholder="Role" aria-label="Role" [matAutocomplete]="roleAutoComplete" [formControl]="roleCtrl">
+                                      <mat-autocomplete #roleAutoComplete="matAutocomplete">
+                                          <mat-option *ngFor="let role of filteredRoles | async" [value]="role.roleName" #roleInput (click)="getRoleId(role.roleId)">
+                                              <span>{{role.roleName}}</span>
+                                          </mat-option>
+                                      </mat-autocomplete>
+                                  </mat-form-field>
+                              </div>
+                              <div class="col-md-4">
+                                  <!-- <mat-form-field class="example-full-width">
+                  <input type="text" placeholder="Store Name" matInput formControlName="storeName"
+                    [matAutocomplete]="auto">
+                  <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngFor="let stores of storeValList" value="{{stores.storeName}}">
+                      {{stores.storeName}}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field> -->
+                                  <!-- <mat-form-field class="example-full-width">
+                    <input type="text" placeholder="Pick one" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto">
+                    <mat-autocomplete #auto="matAutocomplete">
+                      <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                        {{option}}
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field> -->
+                                  <!-- <mat-form-field>
+                  <mat-select placeholder="Store Name" formControlName="storeName">
+                    <mat-option value="{{stores.storeId}}" *ngFor="let stores of storeValList">{{stores.storeName}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field> -->
+                                  <mat-form-field>
+                                      <input matInput type="text" formControlName="storeName" placeholder="Store Name" />
+                                  </mat-form-field>
+                              </div>
+                              <!-- <div class="col-md-3">
+                                  <mat-form-field>
+                                      <mat-select placeholder="Status" formControlName="status">
+                                          <mat-option value="Offline">Offline</mat-option>
+                                          <mat-option value="Online">Online</mat-option>
+                                      </mat-select>
+                                  </mat-form-field>
+                              </div> -->
+                              <div class="button-wrap">
+                                  <div class="">
+                                      <button class='button quaternary-btn' type="button" (click)="resetForm()">RESET</button>
+                                      <button class='button tertiary-btn' type="submit" [class.disablebtn]="loadingResponse">APPLY
+                                          <span class="loading-img-hide" *ngIf="loadingResponse">
+                                              <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="loader" style="width: 30px;">
+                                            </span>
+                                      </button>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </form>
+              </div>
+          </div>
+      </div>
+      <div class="form-wrap" *ngIf="dataSource">
+          <div class="table-wrap">
+              <div class="table-wrap-inner ht-scroll">
+                  <table mat-table [dataSource] = "dataSource" matSort (matSortChange)="sortData($event)">
+                  
+                    <!-- <ng-container matColumnDef="select">
+                        <th mat-header-cell *matHeaderCellDef>
+                            <mat-checkbox (change)="$event ? masterToggle() : null" 
+                            [checked]="selection.hasValue() && isAllSelected()" 
+                            [indeterminate]="selection.hasValue() && !isAllSelected()"
+                             disabled="{{isDisabled}}">
+                            </mat-checkbox> ALL
+                        </th>
+                        <td mat-cell *matCellDef="let row">
+                            <mat-checkbox (click)="$event.stopPropagation()"
+                             (change)="$event ? selection.toggle(row) : null"
+                              [checked]="selection.isSelected(row)" disabled="{{isDisabled}}">
+                            </mat-checkbox>
+                        </td>
+                    </ng-container> -->
+
+
+                    <ng-container matColumnDef="select">
+                        <th mat-header-cell *matHeaderCellDef>
+                          <mat-checkbox (change)="$event ? masterToggle() : null"
+                                        [checked]="selection.hasValue() && isAllSelected()"
+                                        [indeterminate]="selection.hasValue() && !isAllSelected()">
+                          </mat-checkbox>
+                        </th>
+                        <td mat-cell *matCellDef="let row">
+                          <mat-checkbox (click)="$event.stopPropagation()"
+                                        (change)="$event ? selection.toggle(row) : null"
+                                        [checked]="selection.isSelected(row)">
+                          </mat-checkbox>
+                        </td>
+                      </ng-container>
+
+                      <!-- <ng-container matColumnDef="userName">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header="user.userName"> USER NAME </th>
+                          <td mat-cell *matCellDef="let row"> {{ row.userName }} </td>
+                      </ng-container> -->
+
+                      <ng-container matColumnDef="userId">
+                        <th mat-header-cell *matHeaderCellDef> USER ID </th>
+                        <td mat-cell *matCellDef="let row"> {{ row.userId }} </td>
+                    </ng-container> 
+
+                      <ng-container matColumnDef="fullName">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> FULL NAME </th>
+                          <td mat-cell  *matCellDef="let row"><u><a 
+                    class="text-blue">{{row.fullName}}</a></u></td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="ROLE_OID">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> ROLE </th>
+                          <td mat-cell *matCellDef="let row"> {{row.roleTitle}} </td>
+                      </ng-container>
+                      <!-- <ng-container matColumnDef="phoneNumber">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> PHONE NUMBER </th>
+                          <td mat-cell *matCellDef="let row"> {{row.phoneNumber}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="emailId">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> EMAIL ID </th>
+                          <td mat-cell *matCellDef="let row"> {{row.emailId}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="createdTime">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> CREATED ON </th>
+                          <td mat-cell *matCellDef="let row"> {{row.createdTime}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="createdUserName">
+                          <th mat-header-cell *matHeaderCellDef> CREATED BY </th>
+                          <td mat-cell *matCellDef="let row"> {{row.createdUserName}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="status">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> STATUS </th>
+                          <td mat-cell *matCellDef="let row"> {{row.status}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="resetPin">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> RESET PIN </th>
+                          <td mat-cell *matCellDef="let row">
+                              <div (click)="resetPin(row.emailId,row.userName)" style="cursor: pointer;">
+                                  <img src="assets/images/flow_icons/ResetPIN.png" alt="reset_icon">
+                              </div>
+                          </td>
+                      </ng-container> -->
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                      </tr>
+                  </table>
+
+                 
+                  <div *ngIf="searchStoreVal" class="select-store-block">
+          <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+        </div>
+                  <div class="no-records" *ngIf="noRecords">
+                      No Records Found!
+                  </div>
+              </div>
+              <mat-paginator [length]="resultsLength" (change)="searchVal()" #paginator (page)="getUpdate($event)" [pageSize]="paginationData.pageSize" [pageSizeOptions]="[5,10,20,100]">
+              </mat-paginator>
+              <span style="position: relative; top: -34px; left: 20px;
+              color: #292929;
+              font-size: 14px;">
+              {{selection.selected.length}} User Selected 
+               <span style= "color: #7d7d7d;
+               font-size: 12px;">
+               of {{resultsLength}} Users
+              </span></span>
+          </div>
+
+
+
+
+      </div>
+       <div class="form-wrap" *ngIf="!dataSource">
+        <span class="loading-img-hide">
+            <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="loader">
+            Loading
+          </span>
+        </div>
+      <!--tabs start-->
+      <div>
+        <div class="tab-demo mb-20px" style="border: 1px solid #e8e8e8;">
+            <form [formGroup]="myForm"  #myFormnew ="ngForm">
+          <!-- <button mat-raised-button (click)="demo1BtnClick()">Tab Demo 1!</button> -->
+          <mat-tab-group [(selectedIndex)]="demo1TabIndex"  (selectedTabChange)="giftingType($event)">
+           
+            <!-- <mat-tab label="Coupons"  *ngIf = "popupdata.getCoupons.length>0"> -->
+
+                <mat-tab *ngIf = "popupdata.getCoupons.length>0">
+                    <ng-template mat-tab-label>
+                      <span>Coupons</span>
+                      <img  class="err-icon" 
+                      *ngIf="myForm.controls['myCouponArray'].invalid && submitform" 
+                      src="assets/images/multiply.png">
+
+                      <img  class="err-icon" 
+                      *ngIf="myForm.controls['myCouponArray'].valid" 
+                      src="assets/images/tickk.svg">
+                  </ng-template>
+
+
+
+                <div class="mypanel">
+                <div class="row">
+                    <div class="col-md-6">
+                    <p>GIFT NAME</p>
+                    </div>
+                    <div class="col-md-3">
+                     <p>MAX GIFT PER CUSTOMERS</p>
+                        </div>
+                    <div class="col-md-3">
+                     <p>MAX GIFT PER EVENT</p>
+                    </div>
+                   </div>
+                </div>
+                     <div  formArrayName="myCouponArray">
+
+                     
+                    <div
+                     *ngFor="let item of myForm['controls']['myCouponArray'].controls; let i = index;">
+                        <div [formGroupName]="i">
+                              <div class="row">
+                             <div class="col-md-6">
+                                        <mat-form-field>
+                                            <input matInput formControlName="couponName" 
+                                              readonly>
+                                        </mat-form-field>      
+                                   </div>
+                                <div class="col-md-3">
+                                        <mat-form-field>
+                                            <input matInput  formControlName="maxGiftPerCustomer"
+                                            OnlyNumber="true"
+                                            maxlength="4"
+                                            (keypress)="numberOnly($event)"
+                                              placeholder="Max Gift Per Customer">
+
+                                              <!-- <mat-error
+                                              *ngIf= "item.controls.maxGiftPerCustomer.hasError('required') && ( item.controls.maxGiftPerCustomer.dirty || item.controls.maxGiftPerCustomer.touched)">
+                                             Please eneter value!
+                                            </mat-error> -->
+
+                                            <mat-error *ngIf="(item.controls.maxGiftPerCustomer.hasError('required') && ( item.controls.maxGiftPerCustomer.dirty || item.controls.maxGiftPerCustomer.touched)) || submitform">
+                                                Please enter value
+                                            </mat-error>
+
+                                            <!-- <mat-error *ngIf="item.controls.maxGiftPerCustomer?.hasError('max') && ( item.controls.maxGiftPerCustomer.dirty || item.controls.maxGiftPerCustomer.touched)">
+                                                Must be less than 10
+                                            </mat-error> -->
+
+                                        </mat-form-field>                                      
+                                </div>
+                                <div class="col-md-3">
+                                        <mat-form-field>
+                                            <input matInput formControlName="maxGiftPerEvent"
+                                            OnlyNumber="true"
+                                            maxlength="4"
+                                            (keypress)="numberOnly($event)"
+                                            placeholder="Max Gift Per Event">   
+                                            <!-- <mat-error
+                                            *ngIf= "item.controls.maxGiftPerCustomer.hasError('required') && ( item.controls.maxGiftPerCustomer.dirty || item.controls.maxGiftPerCustomer.touched)">
+                                           Please eneter value!
+                                          </mat-error> -->
+
+                                          <mat-error *ngIf="item.controls.maxGiftPerEvent.hasError('required') && ( item.controls.maxGiftPerEvent.dirty || item.controls.maxGiftPerEvent.touched)">
+                                            Please enter value
+                                        </mat-error>
+                                                                 
+                                          </mat-form-field>
+                                </div>
+                                </div>                
+                  </div>
+                  </div>
+                </div>
+           
+
+                <!-- <pre>{{myForm.value | json}}</pre> -->
+            </mat-tab>
+
+
+
+                <mat-tab *ngIf = "popupdata.getProgram.length>0">
+                    <ng-template mat-tab-label>
+                      <span>Program</span>
+                      <img  class="err-icon" 
+                      *ngIf="myForm.controls['myProgramArray'].invalid && submitform" 
+                      src="assets/images/multiply.png">
+                      <img  class="err-icon" 
+                      *ngIf="myForm.controls['myProgramArray'].valid" 
+                      src="assets/images/tickk.svg">
+                  </ng-template>
+                 
+                    <div class="mypanel">
+                    <div class="row">
+                        <div class="col-md-6">
+                        <p>GIFT NAME</p>
+                        </div>
+                        <div class="col-md-3">
+                         <p>MAX GIFT PER CUSTOMERS</p>
+                            </div>
+                        <div class="col-md-3">
+                         <p>MAX GIFT PER EVENT</p>
+                        </div>
+                       </div>
+                    </div>
+                    <div formArrayName="myProgramArray">
+
+                  
+                        <div  *ngFor="let item of myForm['controls']['myProgramArray'].controls; let i = index;">
+                            <div [formGroupName]="i">
+                                  <div class="row">
+                                 <div class="col-md-6">
+                                            <mat-form-field>
+                                                <input matInput formControlName="programName" 
+                                                  readonly>
+                                            </mat-form-field>      
+                                       </div>
+                                    <div class="col-md-3">
+                                            <mat-form-field>
+                                                <input matInput  formControlName="maxGiftPerCustomer"
+                                                OnlyNumber="true"
+                                                maxlength="4"
+                                                (keypress)="numberOnly($event)"
+                                                  placeholder="Max Gift Per Customer">
+                                            </mat-form-field>   
+                                            
+
+                                            <mat-error *ngIf="item.controls.maxGiftPerCustomer.hasError('required') && ( item.controls.maxGiftPerCustomer.dirty || item.controls.maxGiftPerCustomer.touched)">
+                                                Please enter value
+                                            </mat-error>
+                                   
+                                    </div>
+                                    <div class="col-md-3">
+                                            <mat-form-field>
+                                                <input matInput formControlName="maxGiftPerEvent"
+                                                OnlyNumber="true"
+                                                maxlength="4"
+                                                (keypress)="numberOnly($event)"
+                                                placeholder="Max Gift Per Event">                          
+                                              </mat-form-field>
+
+                                              <mat-error *ngIf="item.controls.maxGiftPerEvent.hasError('required') && ( item.controls.maxGiftPerEvent.dirty || item.controls.maxGiftPerEvent.touched)">
+                                                Please enter value
+                                            </mat-error>
+                                              <!-- <mat-error *ngIf="item.get('maxGiftPerEvent').hasError('required')">
+                                                Please enter max gift per event
+                                            </mat-error> -->
+                                    </div>
+                                    </div>                
+                      </div>
+
+                    </div>
+                      </div>
+                    
+               
+    
+                </mat-tab>
+               
+                        
+                  
+            <!-- <mat-tab label="Product" *ngIf = "popupdata.getProduct.length>0"> -->
+
+                <mat-tab *ngIf = "popupdata.getProduct.length>0">
+                    <ng-template mat-tab-label>
+                      <span>Product</span>
+                      <img  class="err-icon" 
+                      *ngIf="myForm.controls['myProductArray'].invalid && submitform" 
+                      src="assets/images/multiply.png">
+                      <img  class="err-icon" 
+                      *ngIf="myForm.controls['myProductArray'].valid" 
+                      src="assets/images/tickk.svg">
+                  </ng-template>
+               
+                    <div class="mypanel">
+                    <div class="row">
+                        <div class="col-md-6">
+                        <p>GIFT NAME</p>
+                        </div>
+                        <div class="col-md-3">
+                         <p>MAX GIFT PER CUSTOMERS</p>
+                            </div>
+                        <div class="col-md-3">
+                         <p>MAX GIFT PER EVENT</p>
+                        </div>
+                        </div>
+                    </div>
+                     <div  formArrayName="myProductArray">
+
+                  
+                        <div *ngFor="let item of myForm['controls']['myProductArray'].controls; let i = index;">
+                            <div [formGroupName]="i">
+                                  <div class="row">
+                                 <div class="col-md-6">
+                                            <mat-form-field>
+                                                <input matInput formControlName="productName" 
+                                                  readonly>
+                                            </mat-form-field>      
+                                       </div>
+                                    <div class="col-md-3">
+                                            <mat-form-field>
+                                                <input matInput  formControlName="maxGiftPerCustomer"
+                                                OnlyNumber="true"
+                                                maxlength="4"
+                                                (keypress)="numberOnly($event)"
+                                                  placeholder="Max Gift Per Customer">
+                                                  <!-- <mat-error *ngIf="item.get('maxGiftPerEvent').hasError('required')">
+                                                    Please enter max gift per customer
+                                                </mat-error> -->
+                                                <mat-error *ngIf="item.controls.maxGiftPerCustomer.hasError('required') && ( item.controls.maxGiftPerCustomer.dirty || item.controls.maxGiftPerCustomer.touched)">
+                                                    Please enter value
+                                                </mat-error>
+                                            
+                                            </mat-form-field>                                      
+                                    </div>
+                                    <div class="col-md-3">
+                                            <mat-form-field>
+                                                <input matInput formControlName="maxGiftPerEvent"
+                                                OnlyNumber="true"
+                                                maxlength="4"
+                                                (keypress)="numberOnly($event)"
+                                                placeholder="Max Gift Per Event">    
+                                                <!-- <mat-error *ngIf="item.get('maxGiftPerEvent').hasError('required')">
+                                                    Please enter max gift per event
+                                                </mat-error>       -->
+                                                <mat-error *ngIf="item.controls.maxGiftPerEvent.hasError('required') && ( item.controls.maxGiftPerEvent.dirty || item.controls.maxGiftPerEvent.touched)">
+                                                    Please enter value
+                                                </mat-error>                
+                                              </mat-form-field>
+                                    </div>
+                                    </div>                
+                      </div>
+                      </div>
+                    </div> 
+               
+    
+                </mat-tab>      
+          
+          </mat-tab-group>
+        </form>
+      </div>
+      <!--tabs end-->
+  </div>
+  <div class="container">
+      <!-- <pre>{{popupdata.selectedUsers}}</pre>
+      <pre>{{popupdata.selectedUsers.length}}</pre>
+      <pre>{{selection.selected.length}}</pre>
+
+      <pre>{{selection.selected | json}}</pre>
+                 <pre>{{myForm.value | json}}</pre>  -->
+
+<!-- <pre>submit >> {{myFormnew.submitted}}</pre>
+<pre>myCouponArray  invalid>>> {{myForm.controls['myCouponArray'].invalid}}</pre>
+<pre>myProgramArray  invalid>>> {{myForm.controls['myProgramArray'].invalid}}</pre>
+<pre>myProductArray invalid>>> {{myForm.controls['myProductArray'].invalid}}</pre> -->
+
+<!-- <pre>myCouponArray >>> {{myForm.controls['myCouponArray'].value | json}}</pre> -->
+
+<div class="row">
+    <div class="col-12">
+        <div class="button-wrap-section">
+            <div class="device-specific-mar">
+                <button class="button secondary-btn" [mat-dialog-close]="{
+            'buttonName': 'CANCEL'}">CANCEL</button>
+            <button matRipple class="button primary-btn" (click)="closeDialog()"
+            [disabled] = "selection.selected.length === 0"
+            >SELECT</button>
+
+                <!-- <button class="button primary-btn" (click) = "onSelect()" [mat-dialog-close]="{
+            'buttonName': 'SELECT',
+            'tableData': selection.selected,
+            'totalCount':resultsLength
+          }">SELECT</button> -->
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>

@@ -1,0 +1,134 @@
+.page-wrap {
+  padding: 1.8em 1.8em 4em 1.8em;
+}
+.img-block {
+  .avatar-zone {
+    width: 100px;
+    height: 100px;
+    background-color: #f2f2f2;
+    text-align: center;
+    border: 1px dashed #dbdbdb;
+    margin-bottom: 10px;
+  }
+  .upload-img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .upload-icon {
+    width: 12px;
+    height: 12px;
+    margin-right: 5px;
+  }
+}
+.lang-bg {
+  background-color: grey;
+}
+
+.select-date {
+  input {
+    border-left: 0;
+    outline: none;
+    border-right: 0;
+    border-top: 0;
+    border-bottom-width: thin;
+  }
+  label {
+    color: #a5a5a5;
+    cursor: pointer;
+  }
+}
+
+.faq-card {
+  background-color: #f8f8f8;
+  position: relative;
+  .lang-field {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background-color: #c3c3c3;
+    p {
+      margin-bottom: 0px;
+      margin: 10px;
+    }
+  }
+  .text-fields {
+    left: 40px;
+    .field-container {
+      .mat-form-field {
+        display: block;
+      }
+    }
+  }
+  .img-container {
+    left: 37px;
+  }
+}
+.flex-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.mat-form-field {
+  display: block;
+}
+.select-date {
+  width: 100%;
+  input {
+    width: 100%;
+  }
+}
+
+.placeholder-img {
+  display: none;
+}
+.placeholder-imgArabic {
+  display: none;
+}
+.remove-img {
+  display: flex;
+  justify-content: center;
+  width: 75%;
+  cursor: pointer;
+  img {
+    width: 14px;
+  }
+  label {
+    font-size: 12px;
+    color: grey;
+    padding-left: 5px;
+    cursor: pointer;
+  }
+}
+.image-error {
+  color: red;
+  padding-top: 1em;
+  font-size: 11px;
+  // padding-left: 1em;
+}
+.press-details {
+  display: flex;
+  align-items: baseline;
+}
+.upload-btn-text {
+  font-size: 11px;
+  color: #095bd0;
+  cursor: pointer;
+}
+/deep/ .cdk-overlay-pane .mat-autocomplete-panel {
+  .mat-option {
+    height: 27px !important;
+    font-size: 13px !important;
+  }
+}
+.time {
+  color: #949494;
+  font-size: 10px;
+}
+.lang-name-right{
+  left: auto!important;
+  right: 0;
+}
+.fieldtop{
+  margin-top: 2.5rem;
+}

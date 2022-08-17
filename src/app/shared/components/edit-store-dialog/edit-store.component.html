@@ -1,0 +1,110 @@
+<div class="page-wrap">
+    <div class="bredcrumb-title-wrap">
+      <!-- <form class="filter-wrap" [formGroup]="searchUserForm" (submit)="searchVal(searchUserForm.value)"> -->
+      <form class="search-wrap filter-wrap"  [formGroup]="searchStoreForm" (submit)="getStoreList(searchStoreForm.value)">
+        <div class="row common-search">
+            <div class="col-md-2 store-title">
+              <h6>Select Stores</h6>
+            </div>
+            <div class="col-md-10">
+                <input type="text" formControlName="searchtxt" placeholder="Search Store"/>
+                <span class="search-btn"></span>
+                <div class="filter-btn-wrap">
+                    <span class="filter-btn" (click)="openFilter();"
+                    [ngClass]="status ? 'open' : 'close'"></span>
+                  </div>
+            </div>
+        </div>
+        <div class="feild-search" *ngIf="!status">
+          <div class="row feild-search-inner">
+              <div class="col-md-4">
+                <mat-form-field>
+                  <mat-select placeholder="CITY" formControlName="roles">
+                    <mat-option value="Admin">Admin</mat-option>
+                    <mat-option value="Manager">Manager</mat-option>
+                    <mat-option value="User">User</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <mat-form-field>
+                  <mat-select placeholder="COUNTRY" formControlName="storeName">
+                    <mat-option value="Store1">Store 1 </mat-option>
+                    <mat-option value="Store2">Store 2 </mat-option>
+                    <mat-option value="Store3">Store 3 </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            <div class="filter-btn-wrap">
+              <div class="">
+                <button class='button quaternary-btn' (click)="resetForm()">RESET</button>
+                <button class='button tertiary-btn' type="submit">APPLY</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="form-wrap">
+        <div class="no-records" *ngIf="dataSource === undefined">
+            No Records Found!
+        </div>
+        <div class="table-wrap">
+          <div class="table-wrap-inner flex-container"  malihu-scrollbar [scrollbarOptions]="scrollbarOptions">
+            <table mat-table [dataSource]="dataSource" matSort>
+              <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef>
+                  <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()">
+                  </mat-checkbox> ALL
+                </th>
+                <td mat-cell *matCellDef="let row">
+                  <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
+                  </mat-checkbox>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="storeId">
+                <th mat-header-cell *matHeaderCellDef>STORE ID</th>
+                <td mat-cell *matCellDef="let row">{{ row.storeId }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="storeName">
+                <th mat-header-cell *matHeaderCellDef>STORE NAME</th>
+                <td mat-cell *matCellDef="let row">{{ row.storeName }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="address">
+                <th mat-header-cell *matHeaderCellDef>ADDRESS</th>
+                <td mat-cell *matCellDef="let row">{{ row.storeAddress }}</td>
+              </ng-container>
+              <ng-container matColumnDef="city">
+                <th mat-header-cell *matHeaderCellDef>CITY</th>
+                <td mat-cell *matCellDef="let row">{{ row.cityName }}</td>
+              </ng-container>
+              <ng-container matColumnDef="country">
+                <th mat-header-cell *matHeaderCellDef>COUNTRY</th>
+                <td mat-cell *matCellDef="let row">{{ row.countryName }}</td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+          </div>
+          <mat-paginator  (click)="getStoreList(searchStoreForm.value)"
+          [length]="resultsLength"
+          (change)="getStoreList(searchStoreForm.value)"
+          #paginator
+          (page)="getUpdate($event)"
+          [pageSize]="10"
+          [pageSizeOptions]="[10,20,30,40]"></mat-paginator>
+        </div>
+        <div class="button-wrap">
+          <div class="">
+            <button class="button secondary-btn">CANCEL</button>
+            <button class="button primary-btn" [mat-dialog-close]="{
+              'tableData': selection.selected,
+              'totalCount':resultsLength
+          }">SELECT</button>
+          </div>
+        </div>
+    </div>
+  </div>

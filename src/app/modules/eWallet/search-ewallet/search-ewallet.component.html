@@ -1,0 +1,110 @@
+<div class="page-wrap">
+  <div class="search-panel-block">
+    <div class="bredcrumb-title-wrap">
+      <div class="search-container-block">
+        <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+        <div class="search-list">
+          <form class="filter-wrap" [formGroup]="searchEwalletFormGroup" (submit)="searchVal()">
+            <div class="row title-search-row">
+              <div class="col-md-4 title-search-col">
+                <div class="title">
+                  <h1>Search Wallets</h1>
+                </div>
+              </div>
+              <div class="col-md-5 title-search-col"> 
+                <div class="searchform-block">
+                <div class="common-search">
+                  <input type="text" formControlName="searchVal" placeholder="Search By Wallet Name" />
+                  <span class="search-btn" (click)="searchVal()"></span>
+                  <div class="filter-btn-wrap" *ngIf="false">
+                    <span class="filter-btn" (click)="openFilter();" [ngClass]="status ? 'open' : 'close'"></span>
+                  </div>
+                </div>
+              </div>
+            </div>             
+              <div class="col-md-3 title-search-col ">
+                <button type="button" class="button primary-btn float-right" [ngStyle]="{'cursor': regionCurrencies.length == 0 ? 'none' : 'pointer'}"
+                (click)="showAlertMsg()">CREATE NEW WALLET
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="form-wrap">
+      <div class="table-wrap">
+        <div class="table-wrap-inner">
+          <table mat-table [dataSource]="dataSource" matSort>
+            <ng-container matColumnDef="srNo">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header="srNo"> SR NO </th>
+              <td mat-cell *matCellDef="let element;let i = index;"> {{i+1}}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="walletName">
+              <th mat-header-cell *matHeaderCellDef> WALLET NAME </th>
+              <td mat-cell  (click)="goToviewEWallet(row.walletName)" *matCellDef="let row"><u><a
+                class="text-blue"> {{ row.walletName }}</a></u> </td>
+            </ng-container>
+
+            <ng-container matColumnDef="currencyCode">
+              <th mat-header-cell *matHeaderCellDef> CURRENCY </th>
+              <td mat-cell *matCellDef="let row"> {{row.currencyCode}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="minBalance">
+              <th mat-header-cell *matHeaderCellDef> MINIMUM BALANCE </th>
+              <td mat-cell *matCellDef="let row"> {{ row.minBalance }} </td>
+            </ng-container>
+            <ng-container matColumnDef="maxBalance">
+              <th mat-header-cell *matHeaderCellDef> MAXIMUM BALANCE </th>
+              <td mat-cell *matCellDef="let row"> {{ row.maxBalance != null ? row.maxBalance : '-'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="maxAmountLoad">
+              <th mat-header-cell *matHeaderCellDef> MAXIMUM SINGLE AMOUNT LOADING </th>
+              <td mat-cell *matCellDef="let row"> {{ row.maxAmountLoad != null ? row.maxAmountLoad : '-' }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="perDayCap">
+              <th mat-header-cell *matHeaderCellDef> PER DAY CAP </th>
+              <td mat-cell *matCellDef="let row"> {{ row.perDayCap != null ? row.perDayCap : '-' }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef> STATUS </th>
+              <td mat-cell *matCellDef="let row"> {{ row.status != null ? row.status : '-' }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="createdOn">
+              <th mat-header-cell *matHeaderCellDef> CREATED ON</th>
+              <td mat-cell *matCellDef="let row">
+                {{row.createdTime === null ? '-' : row.createdTime | ddmmyyyy}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="createdBy">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header="createdBy"> CREATED BY </th>
+              <td mat-cell *matCellDef="let row"> {{row.createdBy}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+            </tr>
+          </table>
+          <div *ngIf="searchPageLoader" class="full-page-loader">
+            <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+          </div>
+          <div class="no-records" *ngIf="resultsLength == 0">
+            No Records Found!
+          </div>
+          <mat-paginator [length]="resultsLength" #paginator
+          [pageSize]="10" [pageSizeOptions]="[10,20,50,100]"></mat-paginator>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="pageLoader" class="page-loader-block full-page-loader">
+  <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+</div>

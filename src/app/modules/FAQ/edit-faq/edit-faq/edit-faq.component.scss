@@ -1,0 +1,58 @@
+.page-wrap {
+    padding: 25px;
+}
+.lang-bg {
+    background-color: grey;
+}
+.select-date {
+    input {
+        border-left-style: none;
+        border-right-style: none;
+        border-top-style: none;
+        border-bottom-style: groove;
+        outline: none;
+    }
+}
+
+.faq-card {
+    background-color: #F8F8F8;
+    position: relative;
+    margin-bottom: 15px;
+    .lang-field {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        background-color: #c3c3c3;
+        p {
+            margin-bottom: 0px;
+            margin: 10px;
+        }
+    }
+    .text-fields {
+        left: 40px;
+        top: 40px;
+        padding-bottom: 30px;
+        .field-container{
+            .mat-form-field {
+                display: block;
+            }
+        }
+    }
+}
+.flex-container{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.mat-form-field {
+    display: block;
+}
+.button-wrap {
+    margin-bottom: 50px;
+    text-align: right;
+    margin-right: 20px;
+}
+.lang-field-right{
+    left: auto!important;
+    right: 0;
+}

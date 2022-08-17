@@ -1,0 +1,83 @@
+<form [formGroup]="corporateAddDialogForm" (submit)="createCorporateAddDialogForm(corporateAddDialogForm.value)"
+    #selectedAddDialogForm="ngForm">
+    <mat-card>
+        <div class="close-icon text-right">
+            <img src="assets/images/icons/filter_close_ico.png" (click)="onCloseClick()" alt="">
+        </div>
+        <h6>Add Denominations</h6>
+        <div class="row">
+            <div class="col-md-3">
+                <mat-form-field>
+                    <mat-select #countryInput (selectionChange)="checkCurrencyCode(countryInput.value)" placeholder="Currency" formControlName="currency" required>
+                        <mat-option *ngFor="let currency of currencies" [value]="currency">
+                            {{ currency }}
+                        </mat-option>
+
+                    </mat-select>
+                    <mat-error *ngIf="corporateAddDialogForm.get('currency').hasError('required')">Please select
+                        currency</mat-error>
+                </mat-form-field>
+            </div>
+            <!-- <div class="col-md-7">
+            <mat-form-field>
+                <input placeholder="Keywords*" maxlength="4"  [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="addKeyword($event,i)" >
+                <mat-chip-list #chipList>
+                </mat-chip-list>
+              </mat-form-field>
+              <mat-chip *ngFor="let key of keywordArray" [selectable]="selectable" [removable]="removable" (removed)="removeKeyword(key, i)">
+                  {{key}}
+                  <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+              </mat-chip>
+        </div> -->
+            <div class="chip-list col-md-9">
+                <div class="chipset-block" >
+                    <mat-form-field>
+                        <input placeholder="Enter Amount" [matChipInputFor]="chipList"
+                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+                            (matChipInputTokenEnd)="addKeyword($event)" maxlength="4" OnlyNumber="true" required>
+                        <mat-chip-list #chipList>
+                        </mat-chip-list>
+                    </mat-form-field>
+                    <!-- <div class="add-icon" style="    position: absolute;
+                    top: 10px;
+                    right: 10px;">
+                        <img src="assets/images/icons/add_ico.png" alt="" style="width: 15px;">
+                    </div> -->
+                    <div class="add-icon" >
+                        <button type="button" class="button primary-btn m-0px" >
+                            <span class="add-plus">
+                              <img src="assets/images/svg-icons/add_ico.svg" alt="add" class="plus-icon">
+                            </span>
+                          </button>
+                    </div>
+                   
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div *ngIf="keywordErrorMsg"
+                            style="color:red;font-size:10px;margin-top: -1em; margin-bottom: 1rem;">
+                            {{ErrorMessage}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="added-value" >
+                <mat-chip *ngFor="let key of keywordArray" [selectable]="selectable" [removable]="removable"
+                    (removed)="removeKeyword(key)" >
+                    {{key}}
+                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                </mat-chip>
+            </div>
+        </div>
+
+        <div class="btm-button-wrap">
+            <button class="button secondary-btn" (click)="onCloseClick()">CANCEL</button>
+            <button class="button primary-btn" type="button" type="submit">ADD</button>
+        </div>
+        <!-- <div class="row">
+        <div class="col align-self-end">
+          <button type="button" class="button primary-btn btn1"  type="submit">ADD</button>
+        </div>
+      </div> -->
+    </mat-card>
+</form>

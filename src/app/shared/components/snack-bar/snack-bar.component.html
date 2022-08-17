@@ -1,0 +1,16 @@
+<div class="snakbody success" *ngIf="data.status == 'success'">
+    <!-- <img src="assets/images/svg-icons/checked.svg" alt="" /> -->
+    {{ data.message }}
+</div>
+<div class="snakbody failure" *ngIf="data.status == 'failure'">
+    <!-- <img src="assets/images/svg-icons/cancel.svg" alt="" /> -->
+    {{ data.message }}
+</div>
+<div class="snakbody logout" *ngIf="data.status == 'logout'">
+    <!-- <img src="assets/images/svg-icons/cancel.svg" alt="" /> -->
+    {{ data.message }}
+</div>
+<div class="snakbody login-failure" *ngIf="data.status == 'loginFailure'">
+    <!-- <img src="assets/images/svg-icons/cancel.svg" alt="" /> -->
+    {{ data.message }}
+</div>

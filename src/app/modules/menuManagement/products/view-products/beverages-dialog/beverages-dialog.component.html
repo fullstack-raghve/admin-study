@@ -1,0 +1,31 @@
+<div class="page-wrap">
+        <div class="header flex-container">
+            <h5>Select Add-ons</h5>
+            <div class="close-icon">
+              <img src="assets/images/icons/filter_close_ico.png" alt="" (click)="onCloseClick()">
+            </div>
+        </div>
+        <div class="message">
+                    <div class="add-ons">
+                        <div class="img-layout">
+                            <div class="grid img-block">
+                                <div class="images-placeholder"
+                                    *ngFor="let img of viewData['add-ons'];">
+                                    <img class="upload-img" [src]="filePathUrl+img.imgPathDesserts"
+                                        width="80px" [class.uploaded-img]="imgUploadDesserts">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="select-addons pt-15px">
+                            <mat-checkbox><p>{{addOnName}}</p></mat-checkbox>
+                            <p>{{price}}</p>
+                        </div>
+                    </div>
+            <div class="btm-button-wrap">
+                <button class="button primary-btn" type="button"
+                    [routerLink]="['/view-products/'+id+'/view']">ADD</button>
+            </div>
+        </div>
+    </div>
+    
+    

@@ -1,0 +1,407 @@
+<div class="page-wrap">
+  <div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container">
+      <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg"
+            alt="leftArrow" [routerLink]="['/search-cart-configuration']"></span>Edit Cart Configuration</h1>
+            <div class="slider">
+              <mat-slide-toggle class="mat-slide-toggle" [checked]="checked" (change)="toggleStatus($event)">{{statusValue}}
+              </mat-slide-toggle>
+          </div>
+    </div>
+  </div>
+  <div>
+    <form id="addCartForm1" (submit)="createCart(cartFormGroup.value)" [formGroup]="cartFormGroup"
+      #createcartFormGroup="ngForm">
+      <mat-card class="card">
+        <div class="row">
+          <div class="col-md-3 top">
+            <mat-form-field class="field-width">
+              <input matInput placeholder="Configuration Title" formControlName="configurationTitle" maxlength="80">
+              <mat-error *ngIf="cartFormGroup.get('configurationTitle').hasError('required')">Please enter configuration
+                Name
+              </mat-error>
+              <mat-error *ngIf="cartFormGroup.get('configurationTitle').hasError('minlength')">Minimum 5 characters
+                required</mat-error>
+              <mat-error *ngIf="cartFormGroup.get('configurationTitle').hasError('pattern')">Invalid characters
+                entered
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <!-- {{cartFormGroup.get('configurationTitle').value}} -->
+          <div class="col-md-3 top">
+            <mat-form-field>
+              <mat-select (selectionChange)="getAllCountries(brandInput.value)" #brandInput placeholder="Brand"
+                formControlName="brandOid">
+                <mat-option *ngFor="let brand of brandList" [value]="brand.brandId">
+                  {{ brand.brandName }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="cartFormGroup.get('brandOid').hasError('required')"> Please select value
+              </mat-error>
+            </mat-form-field>
+
+          </div>
+          <div class="col-md-3">
+            <mat-select-autocomplete name="Country" ngDefaultControl [placeholder]="'COUNTRY'" [options]="countryList"
+              [display]="'countryName'" [value]="'value'" [multiple]='true' [labelCount]="1"
+              [formControl]="cartFormGroup.controls['countryOid']" #countryInput>
+            </mat-select-autocomplete>
+            <mat-error *ngIf="cartFormGroup.get('countryOid').hasError('required') && createcartFormGroup.submitted">
+              Please select value
+            </mat-error>
+          </div>
+
+          <div class="col-md-3 top">
+            <div class="flex  flex-col">
+              <div class="">
+                <button class='button tertiary-btn' type="button" (click)="openDialog()">SELECT
+                  STORES</button>
+                  <input formControlName="storeField" type="text" [hidden]="true">
+
+              </div>
+             
+              <br>
+              <div class=" select-store-block">
+                <div *ngIf="selectStoreVal">
+                  <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                </div>
+                <div class="view-details">
+                  <p *ngIf="dataStore">{{selectedStorearray.length}}</p>
+                  <span>Stores Selected</span>
+                </div>
+              </div>
+              
+
+            </div>
+            <p   style="color:red;font-size:10px;" *ngIf="selectedCount == 0 && createcartFormGroup.submitted">Please select Stores</p>
+            
+            
+          </div>
+
+
+        </div>
+
+      </mat-card>
+
+       <mat-card class="card">
+        <div class=" row">
+          <div class="col-md-8">
+            <h3 class="card-title ">Instructions</h3>
+
+          </div>
+          <div class="col-md-4 btm-button-wrap">
+            <button (click)="instructionFormAray(false)" class="button primary-btn" type="button"> ADD INSTRUCTION</button>
+
+          </div>
+
+        </div>
+       
+
+        
+        <div formArrayName="instructionArray">
+          <div *ngFor="let ln of cartFormGroup['controls']['instructionArray']['controls'];let i = index;"
+            [formGroupName]="i" class="row cart-config-row">
+            <mat-card class="col-md-12 cart-config-card">
+              <div class="close-icon text-right">
+                <img src="assets/images/icons/delete_new.png" alt="close_icon"
+                  (click)="onCloseClick(i,'instructionArray')">
+              </div>
+              <br>
+              <div class="row">
+                <div class="col-md-3">
+
+                  <div class="grid img-block">
+                    <div class="avatar-zone">
+                      <label class="upload-text" *ngIf="ln.get('imagePath').value ==''"
+                        [class.placeholder-img]="imgUpload">Upload Image
+                      </label>
+                      <img class="upload-img" *ngIf="ln.get('imagePath').value!=''"
+                        [src]="filePathUrl+ln.get('imagePath').value" [class.uploaded-img]="imgUpload" width="300px">
+                    </div>
+                    <div (click)="removeImage(i,'instructionArray')" class="remove-img"
+                      *ngIf="ln.get('imagePath').value!=''">
+                      <span> <img src="assets/images/icons/filter_close_ico.png" alt=""><label>Remove</label></span>
+                    </div>
+                    <input style="display:none;" type="file" class="upload_btn"
+                      (change)="uploadImage($event.target.files,i,'instructionArray')" #addOnsImgFile />
+                    <span class="upload-btn-text" (click)='addOnsImgFile.click()'>
+                      <div class="text-center" *ngIf="ln.get('imagePath').value==''">
+                        <span class="upload-icon">
+                          <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px" alt="Img">
+                        </span>Upload Image
+                      </div>
+                    </span>
+                  </div>
+                  <div class="row">
+                    <label class="col-md-12">Instructions For</label>
+
+
+                    <div class="col-md-6">
+                      <mat-checkbox formControlName="deliveryPartner">Delivery Partner</mat-checkbox>
+                    </div>
+                    <div class="col-md-6">
+                      <mat-checkbox class="mandatory" formControlName="store">Store</mat-checkbox>
+
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <mat-form-field>
+                        <input matInput #startDate [matDatepicker]="picker1" [OnlyNumber]="true" readonly
+                          placeholder="Start Date" [min]="minDate" formControlName="startDate">
+                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-6">
+                      <mat-form-field>
+                        <input matInput [matDatepicker]="picker2" [OnlyNumber]="true" readonly placeholder="To Date"
+                          formControlName="endDate" [min]="startDate.value=='' ? '' : ln.get('startDate').value">
+                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker #picker2></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="col-md-3">
+                  <div class="master-fieldSet" formArrayName="labelLocale">
+                    <fieldset class="language-fieldset">
+                      <legend class="fieldset-heading">Name*</legend>
+                      <div *ngFor="let locale of ln['controls']['labelLocale']['controls'];let j = index;"
+                        [formGroupName]="j">
+                        <div class="example-container">
+                          <mat-form-field  [class.text-right]="languageList[j].languageName == 'Arabic'" >
+                            <input matInput placeholder="{{languageList[j].languageName}}" maxlength="80"
+                              formControlName="labelName" required>
+                            <mat-error *ngIf="locale.get('labelName').hasError('required')">Please enter value
+                            </mat-error>
+                            <mat-error *ngIf="locale.get('labelName').hasError('minlength')">Minimum 5 characters
+                              required</mat-error>
+                            <mat-error *ngIf="locale.get('labelName').hasError('pattern')">Invalid characters entered
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </fieldset>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="master-fieldSet" formArrayName="descriptionLocale">
+                    <fieldset class="language-fieldset">
+                      <legend class="fieldset-heading">Description*</legend>
+                      <div *ngFor="let locale of ln['controls']['descriptionLocale']['controls'];let j = index;"
+                        [formGroupName]="j">
+                        <div class="example-container">
+                          <mat-form-field [class.text-right]="languageList[j].languageName == 'Arabic'" >
+                            <input matInput placeholder="{{languageList[j].languageName}}" maxlength="200"
+                              formControlName="descriptionName" required>
+                            <mat-error *ngIf="locale.get('descriptionName').hasError('required')">Please enter value
+                            </mat-error>
+                            <mat-error *ngIf="locale.get('descriptionName').hasError('minlength')">Minimum 5 characters
+                              required</mat-error>
+                            <mat-error *ngIf="locale.get('descriptionName').hasError('pattern')">Invalid characters
+                              entered
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </fieldset>
+                  </div>
+                </div>
+              </div>
+
+            </mat-card>
+          
+          </div>
+        </div>
+    
+      </mat-card> 
+
+
+
+
+       <mat-card class="card">
+        <div class="row">
+          <div class="col-md-8">
+            <h3 class="card-title ">Tips/Donations</h3>
+
+          </div>
+          <div class="col-md-4 btm-button-wrap">
+            <button (click)="tipsFormArray(false)" class="button primary-btn" type="button">ADD Tips/Donations</button>
+
+          </div>
+
+        </div>
+       
+
+       
+            <div formArrayName="tipsArray">
+                <div *ngFor="let lnn of cartFormGroup['controls']['tipsArray']['controls'];let i = index;" [formGroupName]="i" class="row cart-config-row">
+                    <mat-card class="col-md-12 cart-config-card">
+                        <div class="close-icon text-right">
+                            <img src="assets/images/icons/delete_new.png" alt="close_icon" (click)="onCloseClick(i,'tipsArray')">
+                        </div>
+                        <br>
+                        <div class="row">
+    
+                    <div  class="col-md-3">
+                       
+                          <div class="grid img-block">
+                                <div class="avatar-zone">
+                                  <label class="upload-text" *ngIf="lnn.get('imagePath').value ==''" [class.placeholder-img]="imgUpload">Upload Image
+                                  </label>
+                                  <img class="upload-img" *ngIf="lnn.get('imagePath').value!=''" [src]="filePathUrl+lnn.get('imagePath').value"
+                                    [class.uploaded-img]="imgUpload" width="300px">
+                                </div>
+                                <div  (click)="removeImage(i,'tipsArray')" class="remove-img" *ngIf="lnn.get('imagePath').value!=''">
+                                  <span> <img src="assets/images/icons/filter_close_ico.png" alt=""
+                                     ><label>Remove</label></span>
+                                </div>
+                                <input style="display:none;" type="file" class="upload_btn"
+                                  (change)="uploadImage($event.target.files,i,'tipsArray')" #addOnsImgFile />
+                                <span class="upload-btn-text" (click)='addOnsImgFile.click()'>
+                                  <div class="text-center" *ngIf="lnn.get('imagePath').value==''">
+                                    <span class="upload-icon">
+                                      <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px" alt="Img">
+                                    </span>Upload Image
+                                  </div>
+                                </span>
+                              </div>
+                      <div class="row">
+                         <div class="col-md-12">
+                            <mat-checkbox  formControlName="deliveryPartner">Pass to Delivery Partner</mat-checkbox>
+    
+                         </div>
+               
+                   
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                    <mat-form-field>
+                                        <input matInput #startDate [matDatepicker]="picker1" [OnlyNumber]="true" readonly
+                                            placeholder="Start Date" [min]="minDate"  formControlName="startDate">
+                                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker1></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-6">
+                                        <mat-form-field>
+                                            <input matInput [matDatepicker]="picker2" [OnlyNumber]="true" readonly
+                                                placeholder="To Date" formControlName="endDate" [min]="startDate.value=='' ? '' : lnn.get('startDate').value">
+                                            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker2></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                        </div>
+                      </div>
+                    
+          <div  class="col-md-3">
+                      <div class="master-fieldSet" formArrayName="tipslabelLocale">
+                          <fieldset class="language-fieldset">
+                              <legend class="fieldset-heading">Name*</legend>
+                              <div *ngFor="let locale of lnn['controls']['tipslabelLocale']['controls'];let j = index;" [formGroupName]="j">
+                                  <div class="example-container">
+                                      <mat-form-field [class.text-right]="languageList[j].languageName == 'Arabic'">
+                                          <input matInput placeholder="{{languageList[j].languageName}}" maxlength="80" formControlName="labelName" required>
+                                          <mat-error *ngIf="locale.get('labelName').hasError('required')">Please enter value
+                                          </mat-error>
+                                          <mat-error *ngIf="locale.get('labelName').hasError('minlength')">Minimum 5 characters required</mat-error>
+                                          <mat-error *ngIf="locale.get('labelName').hasError('pattern')">Invalid characters entered
+                                          </mat-error>
+                                      </mat-form-field>
+                                  </div>
+                              </div>
+                          </fieldset>
+                      </div>
+                  </div>
+                   <div  class="col-md-6">
+                          <div class="master-fieldSet" formArrayName="tipsdescriptionLocale">
+                              <fieldset class="language-fieldset">
+                                  <legend class="fieldset-heading">Description*</legend>
+                                  <div *ngFor="let locale of lnn['controls']['tipsdescriptionLocale']['controls'];let j = index;" [formGroupName]="j">
+                                      <div class="example-container">
+                                          <mat-form-field [class.text-right]="languageList[j].languageName == 'Arabic'">
+                                              <input matInput placeholder="{{languageList[j].languageName}}" maxlength="200" formControlName="descriptionName" required>
+                                              <mat-error *ngIf="locale.get('descriptionName').hasError('required')">Please enter value
+                                              </mat-error>
+                                              <mat-error *ngIf="locale.get('descriptionName').hasError('minlength')">Minimum 5 characters required</mat-error>
+                                              <mat-error *ngIf="locale.get('descriptionName').hasError('pattern')">Invalid characters entered
+                                              </mat-error>
+                                          </mat-form-field>
+                                      </div>
+                                  </div>
+                              </fieldset>
+                          </div>
+                      </div> 
+                        <div class="col-md-12">
+                            <button (click)="addDecuctDialog(lnn,i)" class='button tertiary-btn text-right' type="button">Add Denominations</button>
+            
+                        </div>
+                        <div class="row row-denomination" formArrayName="denominationArray" >
+                          <div class="col-md-4 col-denomination"
+                            *ngFor="let locale of lnn['controls']['denominationArray']['controls'];let k = index;"
+                            [formGroupName]="k" >
+        
+                            <div class="denomination-data" >
+                              <div class="close-icon text-right">
+                                <img src="assets/images/icons/filter_close_ico.png" alt="close_icon"
+                                  (click)="removeDenomination(i,k)" >
+                              </div>
+                              <div class="chip-list">
+                                {{locale.get('currencyCode').value}}
+                                <div formArrayName="keyNumber">
+                                  <mat-chip *ngFor="let key of locale['controls']['keyNumber']['controls'];let p = index;"
+                                    [formGroupName]="p" >
+                                    {{key.get('key').value}}
+                                  </mat-chip>
+                                </div>
+        
+        
+        
+                              </div>
+                            </div>
+        
+                          </div>
+                        </div>
+                          <!-- <div class="col-md-12" formArrayName="denominationArray">
+                                <div class="row" *ngFor="let locale of lnn['controls']['denominationArray']['controls'];let k = index;" [formGroupName]="k">
+                               
+                                  <div class="col-md-4">
+                                      <div class="close-icon text-right">
+                                          <img src="assets/images/icons/filter_close_ico.png" alt="close_icon" (click)="removeDenomination(i,k)">
+                                      </div>
+                                        <div class="chip-list">
+                                                {{locale.get('currencyCode').value}}
+                                            <div formArrayName="keyNumber">
+                                                    <mat-chip *ngFor="let key of locale['controls']['keyNumber']['controls'];let p = index;" [formGroupName]="p" >
+                                                              {{key.get('key').value}}                                          
+                                                      </mat-chip>
+                                            </div>
+                                      
+                                             
+                                             
+                                          </div>
+                                </div>
+                                       
+                                      </div>
+                          </div> -->
+                        </div>
+                    </mat-card>
+                    </div>
+                  </div>
+      
+
+      </mat-card> 
+      <div *ngIf="loading" class="page-loader-block full-page-loader">
+        <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+      </div>
+      <div class="btm-button-wrap">
+        <button [routerLink]="['/search-cart-configuration']" class="button secondary-btn">CANCEL</button>
+        <button class="button primary-btn" type="submit">UPDATE</button>
+      </div>
+    </form>
+  </div>
+
+</div>

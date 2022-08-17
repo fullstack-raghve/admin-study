@@ -1,0 +1,28 @@
+.page-wrap {
+    padding: 1.3rem;
+    .store-select-btn{
+        justify-content: space-between;
+             text-align: left;
+        padding: 1em 0 0 0;
+        .primary-btn{
+            background: #ffffff;
+            color: #000000;
+            font-size: 11px;
+        }
+    }
+    .stores-selected{
+        color:#2EBCE6
+      }
+}
+
+.terms-conditions{
+    /deep/ .expansion-panel .mat-expansion-panel-header {
+        background-color: #eaeaea !important;
+    }
+    /deep/.expansion-panel .mat-expansion-panel-header-title {
+        color: #000 !important;
+    }
+    /deep/.expansion-panel .mat-expansion-indicator::after {
+        color: #000 !important;
+    }
+}

@@ -1,0 +1,1444 @@
+<div class="bredcrumb-title-wrap">
+  <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+  <div class="title flex-container">
+    <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          [routerLink]="['/search-combo']"></span>Edit Combos</h1>
+    <div class="slider">
+      <mat-slide-toggle [(ngModel)]="toggleVal" class="example-margin text-right">
+        {{toggleVal==true ? "ONLINE" : "OFFLINE"}}
+      </mat-slide-toggle>
+    </div>
+  </div>
+</div>
+<div class="page-wrap">
+
+<mat-tab-group animationDuration="0ms" class="tabs-align" [selectedIndex]="selectedIndex" (selectedTabChange)="tabChanged($event)">
+  <mat-tab label="Basic Details">
+      <ng-template matTabContent>
+
+
+            <form  (ngSubmit)="nextStep(createComboFormGroup.value)" [formGroup]="createComboFormGroup" #addComboForm="ngForm">
+                <mat-card class="mb-20px">
+                  <div class="row">
+                    <div class="master-fieldSet col-md-3">
+                      <fieldset class="language-fieldset">
+                        <legend class="fieldset-heading">Combo Name*</legend>
+                        <div formArrayName="comboLocales">
+                          <div *ngFor="let combo of createComboFormGroup['controls']['comboLocales']['controls'];let i = index;"
+                            [formGroupName]="i">
+                            <mat-form-field class="{{alignCss[i]}}">
+                              <input matInput placeholder="{{languageList[i].languageName}}" required formControlName="comboName"
+                                maxlength="200">
+                              <mat-error *ngIf="combo.get('comboName').hasError('required')">
+                                Please enter value</mat-error>
+                              <mat-error *ngIf="combo.get('comboName').hasError('pattern')">
+                                Please enter valid value</mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </fieldset>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="brand">
+            
+                        <mat-form-field>
+                          <mat-select placeholder="Select Brand" formControlName="brand" #brandInput
+                            (selectionChange)="getParentList(brandInput.value);getAllCountries(brandInput.value)" required>
+                            <mat-option value="">Select Brand</mat-option>
+                            <mat-option *ngFor="let p of brandList" [value]="p.brandId">
+                              {{ p.brandName }}
+                            </mat-option>
+                          </mat-select>
+                          <mat-error *ngIf="createComboFormGroup.get('brand').hasError('required')">Please select value</mat-error>
+                        </mat-form-field>
+                      </div>
+                      <div>
+                                                  <!-- [selectedOptions]="selectedCategoryOptions" -->
+
+                        <mat-select-autocomplete name="Category" ngDefaultControl [placeholder]="'Select Category*'"
+                          [options]="categoriesList" [display]="'categoryName'" [value]="'value'" #categoryInput [multiple]='true'
+                          [labelCount]="1" [selectedOptions]="selectedCategoryOptions"
+                          [formControl]="createComboFormGroup.controls['categoryOids']"
+                          [class.auto-select-errMsg]="addComboForm.submitted && createComboFormGroup.get('categoryOids').hasError('required')">
+                        </mat-select-autocomplete>
+                        <mat-error style="margin-top: -25px;font-size: 10px;"
+                          *ngIf="addComboForm.submitted && createComboFormGroup.get('categoryOids').hasError('required')">
+                          Please select value</mat-error>
+            
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <label class="example-input-wrapper timer-label">
+                            Available From* <img src="assets/images/icons/time_ico.svg" width="20px" alt="">
+                            <mat-form-field>
+                              <input matInput [owlDateTimeTrigger]="dt2" class="available-input" [owlDateTime]="dt2"
+                                formControlName="availFrom" required>
+                              <owl-date-time [pickerType]="'timer'" #dt2>
+                              </owl-date-time>
+                              <mat-error style="font-size: 10px;"
+                                *ngIf="createComboFormGroup.get('availFrom').hasError('required')">
+                                Please enter value</mat-error>
+                            </mat-form-field>
+            
+                          </label>
+                        </div>
+                        <div class="col-md-6">
+                          <label class="example-input-wrapper timer-label-to">
+                            Available To* <img src="assets/images/icons/time_ico.svg" width="20px" alt="">
+                            <mat-form-field>
+                              <input matInput [owlDateTimeTrigger]="dt" [owlDateTime]="dt" class="available-input"
+                                formControlName="availTo" required>
+                              <owl-date-time [pickerType]="'timer'" #dt>
+                              </owl-date-time>
+                              <mat-error style="font-size: 10px;" *ngIf="createComboFormGroup.get('availTo').hasError('required')">
+                                Please enter value</mat-error>
+                            </mat-form-field>
+                          </label>
+                        </div>
+                      </div>
+                      <!-- <div class="row">
+                        <div>
+                          <mat-form-field>
+                            <input matInput readonly placeholder="Number of Steps in Combo" maxlength="5" OnlyNumber="true"
+                              formControlName="noOfStep" required>
+                          </mat-form-field>
+                        </div>
+                        <div>
+                          <button [disabled]="createComboFormGroup.get('comboType').value == 'FIXED'" type="button" (click)="titleData()" class="button primary-btn">ADD</button>
+                        </div>
+            
+                      </div> -->
+                    </div>
+                    <div class="col-md-3">
+            
+                      <div>
+                          <!-- [selectedOptions]="selectedCountryOptions" -->
+
+                        <mat-select-autocomplete  name="Country" ngDefaultControl [placeholder]="'COUNTRY'" [options]="countries"
+                          [display]="'countryName'" [value]="'value'" [multiple]='true' [labelCount]="1" 
+                          [selectedOptions]="selectedCountryOptions"
+                           [formControl]="createComboFormGroup.controls['country']"
+                          #countryInput>
+                        </mat-select-autocomplete>
+                        <mat-error *ngIf="createComboFormGroup.get('country').hasError('required') && addComboForm.submitted">
+                          Please select value
+                        </mat-error>
+                      </div>
+                      <div class="brand">
+                        <mat-form-field>
+                          <input matInput placeholder="Sort Order" maxlength="5" OnlyNumber="true" formControlName="sortOrder"
+                            required>
+                          <mat-error *ngIf="createComboFormGroup.get('sortOrder').hasError('required')">Please enter value
+                          </mat-error>
+                          <mat-error *ngIf="createComboFormGroup.get('sortOrder').hasError('max')">Please enter sort order less than
+                            suggested</mat-error>
+                        </mat-form-field>
+                      </div>
+                      <div class="row">
+                        <mat-radio-group name="comboType1" formControlName="comboType">
+                          <mat-radio-button value="SELECTABLE" name="SelectableCombo" (click)="updateValidation('SELECTABLE', false)"
+                            class="setting-radio">Selectable Combo &nbsp;&nbsp;
+                          </mat-radio-button>
+                          <mat-radio-button value="FIXED" name="fixedCombo" (click)="updateValidation('FIXED', false)"
+                            class="setting-radio"> Fixed Combo
+                          </mat-radio-button>
+                        </mat-radio-group>
+                      </div>
+                      <!-- <div class="row" > -->
+                      <div *ngIf="createComboFormGroup.get('comboType').value != 'FIXED' " class="row ">
+                        <label>Display Price</label>
+                      </div>
+                      <div *ngIf="createComboFormGroup.get('comboType').value != 'FIXED' "  class="row ">
+                        <mat-radio-group formControlName="displayPriceType" name="comboType2">
+                          <mat-radio-button value="AUTO_CALCULATE" name="SelectableCombo"
+                            (click)="updateValidatiopn('AUTO_CALCULATE')" class="setting-radio">Auto Calculate &nbsp;&nbsp;
+                          </mat-radio-button>
+                          <mat-radio-button *ngIf="createComboFormGroup.get('comboType').value != 'FIXED' " value="FIXED_PRICE"
+                            name="fixedCombo" (click)="updateValidatiopn('FIXED_PRICE')" class="setting-radio"> Fixed Price
+                          </mat-radio-button>
+                        </mat-radio-group>
+                      </div>
+                    
+                    </div>
+                    <div class="col-md-3">
+                        <mat-card class="add-images add-card">
+                            <div class="card-title">
+                                <h6>Combo Image</h6>
+                                <div class="add-btn text-right" *ngIf="imagePath.length < 5">
+                                    <input style='display: none;' type='file' (change)="uploadImage($event.target.files)" #selectFile>
+                                    <button type="button" class="btn primary-button m-0px" (click)='selectFile.click()'>
+                        <span class="add-plus">
+                          <img src="assets/images/svg-icons/add_ico.svg" alt="add" class="plus-icon">
+                        </span>ADD
+                      </button>
+                                </div>
+                            </div>
+                            <mat-divider></mat-divider>
+                            <div class="centered-text" *ngIf="imagePath.length == 0">
+                                <p>Upload Images</p>
+                            </div>
+                            <div class="img-layout1 mostly-customized-scrollbar" *ngIf="imagePath.length > 0" >
+                                <div class="grid img-block1" *ngFor="let img of imagePath;let i = index;" >
+                                    <div class="images-placeholder" *ngIf="imagePath[i]!=''">
+                                       
+                                        <div class="img-container">
+                                            <span class="close_combo" (click)="removeImage(i)">
+                                                <img class="close-img" src="assets/images/icons/filter_close_ico.png"
+                                                  alt="close_icon"></span>
+                                            <img class="uploaded-image" [src]="filePathUrl+imagePath[i]" [class.uploaded-img]="imgUpload">
+                                        </div>
+                                        <mat-radio-button [value]="i" (change)="onChange($event)" class="pt-8px text-center" [class.placeholder-img]="imgUpload">Default
+                                        </mat-radio-button>
+                                        <!-- <div class="remove-img">
+                                            <span (click)="removeImage(i)"> <img src="assets/images/icons/filter_close_ico.png"
+                              alt=""><label>Remove</label></span>
+                                        </div> -->
+                                    </div>
+        
+                                </div>
+        
+                            </div>
+                        
+                            <div class="flex-class">
+                                <p class="first-flex-child">Upload format: PNG,JPG,JPEG</p>
+                                <p class="second-flex-child">Image size: 1125x750</p>
+                            </div>
+                            <div *ngIf="imageErr" style="color:red; font-size: 10px;">{{imageErrMsg}}</div>
+                        </mat-card>
+                      
+                      </div>
+                    
+                    <!-- <div class="col-md-3">
+                      <div>
+                        <p>Combo Image</p>
+                      </div>
+            
+                      <div class="grid img-block">
+                        <div class="avatar-zone">
+                          <label class="upload-text" *ngIf="imagePath ==''" [class.placeholder-img]="imgUpload">Combo Image
+                          </label>
+                          <img class="upload-img" *ngIf="imagePath!=''" [src]="filePathUrl+imagePath"
+                            [class.uploaded-img]="imgUpload" width="300px">
+                        </div>
+                        <div class="remove-img" *ngIf="imagePath!=''">
+                          <span> <img src="assets/images/icons/filter_close_ico.png" alt=""
+                              (click)="removeImage()"><label>Remove</label></span>
+                        </div>
+                        <input style="display:none;" type="file" class="upload_btn" (change)="uploadImage($event.target.files)"
+                          #addOnsImgFile />
+                        <span class="upload-btn-text" (click)='addOnsImgFile.click()'>
+                          <div class="text-center" *ngIf="imagePath==''">
+                            <span class="upload-icon">
+                              <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px" alt="Img">
+                            </span>Upload Image
+                          </div>
+                        </span>
+                      </div>
+            
+                    </div> -->
+            
+            
+                  </div>
+                </mat-card>
+            <mat-tab-group animationDuration="0ms" class="tabs-align" [selectedIndex]="selectedIndex1" (selectedTabChange)="tabChanged1($event)">
+                        <mat-tab label="Delivery">
+                          <div class="isEnabled">
+                              <mat-checkbox  [checked]="createComboFormGroup.get('isDeliveryEnabled').value == true" (change)="isEnabledCheck($event,'comboCarts','isDeliveryEnabled','deliveryStoreGroupArray')" formcontroller="isDeliveryEnabled">
+                                </mat-checkbox> <label>&nbsp;&nbsp; Delivery Enabled </label>
+                          </div>
+                            
+                              <div *ngIf="createComboFormGroup.get('isDeliveryEnabled').value == true">
+
+                              <mat-card class="mb-20px">
+                                    <div class="row skuDetail">
+                                      <div>
+                                        <h5>Combo SKU Details</h5>
+                                      </div>
+                              
+                                    </div>
+                                    <div class="row">
+                                      <div class="col-md-12">
+                                        <div class="sku-table">
+                                          <div class="">
+                                            <table class="GeneratedTable">
+                                              <thead>
+                                                <tr>
+                                                  <th>SKU CODE* </th>
+                                                  <th>Packaging Charges</th>
+                                                  <th>Delivery Charges</th>
+                                                  <th>TAX RATES</th>
+                                                </tr>
+                              
+                                              </thead>
+                                              <tbody>
+                                                <tr>
+                                                  <td>
+                                                    <div class="table-input">
+                                                      <mat-form-field>
+                                                        <input matInput [readonly]="isDeliveryReadonly" formControlName="skuCode" maxlength="16">
+                                                        <mat-error class="skuFont" *ngIf="createComboFormGroup.get('skuCode').hasError('required')">
+                                                          Please enter value
+                                                        </mat-error>
+                                                        <mat-error class="skuFont" *ngIf="createComboFormGroup.get('skuCode').hasError('pattern')">
+                                                          Please enter valid characters in SKU code
+                                                        </mat-error>
+                              
+                                                      </mat-form-field>
+                                                    </div>
+                                                  </td>
+                                                  <td>
+                                                    <div class="table-input">
+                                                      <mat-form-field>
+                                                        <input matInput maxlength="5" formControlName="packingCharge" OnlyNumber="true">
+                                                      </mat-form-field>
+                                                    </div>
+                                                  </td>
+                                                  <td>
+                                                    <div class="table-input">
+                                                      <mat-form-field>
+                                                        <input matInput maxlength="5" formControlName="deliveryCharge" OnlyNumber="true">
+                                                      </mat-form-field>
+                                                    </div>
+                                                  </td>
+                                                  <td>
+                                                    <div class="table-input">
+                                                      <mat-form-field>
+                                                        <input matInput maxlength="5" formControlName="taxRates" OnlyNumber="true">
+                                                      </mat-form-field>
+                                                    </div>
+                                                  </td>
+                              
+                              
+                                                </tr>
+                              
+                                              </tbody>
+                                            </table>
+                                          </div>
+                                        </div>
+                                 
+                              
+                              
+                                      </div>
+                                    
+                                    </div>
+                                  </mat-card>
+                                  <div  class="row" style="justify-content: flex-end;margin: 5px;">
+                                  <div  class="col-3" style="display: flex; width: 100%;justify-content: flex-end;">
+                                      <mat-form-field>
+                                          <mat-select placeholder="Select" #orderInput2 >
+                                              <mat-option *ngFor="let clone of cloneOrderList;let i = index" value="{{clone.id}}" 
+                                              [disabled]="selectedIndex1 == i || (i === 0 && createComboFormGroup.get('isDeliveryEnabled').value == false) || (i === 1 && createComboFormGroup.get('isPickupEnabled').value == false) || (i === 2 && createComboFormGroup.get('isDineinEnabled').value == false)">
+                                                  {{ clone.value }}
+                                              </mat-option>
+                                             
+        
+                                          </mat-select>
+                                         
+                                      </mat-form-field>
+
+                                    </div>
+                                    <div style="margin-top: 5px;">
+                                        <button  type="button" [disabled]="!orderInput2.value" (click)="cloneOrder(selectedIndex1,orderInput2.value)" class="button primary-btn">CLONE</button>
+
+                                    </div>
+                                  </div>
+                                  
+
+                                  <div class="card-title">
+                
+                                      <div style="width: 100%;">
+                                        <mat-card class="add-card">
+                                          <div class="card-title text-right">
+                                            <h6>Stores</h6>
+                                            <div class="">
+                                              <button class='button tertiary-btn' type="button" [disabled]="brandId === 0" (click)="openDialog('deliveryStoreGroupArray','new')">SELECT
+                                                STORES
+                                              </button>
+                                            </div>
+                                          </div>
+                                          <mat-divider></mat-divider>
+                                
+                                          <div *ngIf="storeGroup.length > 0">
+                                            <table class="table">
+                                              <tbody>
+                                                  <div formArrayName="deliveryStoreGroupArray">
+                                                      <tr *ngFor="let ln of createComboFormGroup['controls']['deliveryStoreGroupArray']['controls'];let i = index;"
+                                                        [formGroupName]="i" class="skurow">
+                                                    <td class="skucol" (click)="openDialog('deliveryStoreGroupArray',i)">
+                                                        <u><a
+                                                          class="text-blue">  {{storeGroup[i].storeOids.length}} Stores Selected </a></u>
+                                                    </td >
+                                                  <td class="skucol">Display Price  &nbsp;&nbsp;{{storeGroup[i].currencyCode}}</td>
+                                                  <td *ngIf="createComboFormGroup.get('displayPriceType').value == 'AUTO_CALCULATE'" class="skucol">{{createComboFormGroup.get('displayPriceType').value != 'AUTO_CALCULATE' ? storeGroup[i].displayPrice : 'AUTO CALCULATE'}}</td>
+                                                  <td *ngIf="createComboFormGroup.get('displayPriceType').value != 'AUTO_CALCULATE'" class="skucol">{{storeGroup[i].displayPrice == 'AUTO CALCULATE' ? 0 : storeGroup[i].displayPrice}}</td> 
+                                                  <td class="skucol" >                                
+                                                    <mat-checkbox  [checked]="ln.get('isDiscount').value == true" (change)="CheckDiscountType($event,'deliveryStoreGroupArray',i)" formcontroller="isDiscount">
+                                                    </mat-checkbox> <label>&nbsp;&nbsp; Discount </label>
+                                                  </td>
+                                                  <td class="skucol">
+                                                    <div *ngIf="ln.get('isDiscount').value == true" class="">
+                                                        <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group" formControlName="discountType">
+                                                            <mat-radio-button class="example-radio-button" *ngFor="let section of radioOptions" [value]="section" [checked]="ln.get('discountType').value == section"
+                                                              (change)="updateDiscount(section , $event,'deliveryStoreGroupArray',i)">
+                                                              {{section == 'PERCENTAGE' ? 'Percentage' : 'Fixed Value'}} &nbsp;&nbsp;</mat-radio-button>
+                                                          </mat-radio-group>
+                                          
+                                                    </div>
+                                                  </td>
+                                                  <td class="skucol" *ngIf="ln.get('isDiscount').value == true && ln.get('discountType').value != 'PERCENTAGE'">{{storeGroup[i].currencyCode}}</td>
+                                                  <td class="skucol1" *ngIf="ln.get('isDiscount').value == true">
+                                                      <div *ngIf="ln.get('discountType').value == 'PERCENTAGE'" class="">
+                                                        <mat-form-field>
+                                                          <input matInput  placeholder=" Enter Percentage"  OnlyNumber="true" (keyup)="functionname($event.target.value, ln['controls'],'discountPrice1')"
+                
+                                                            formControlName="discountPrice1">
+                                                          <mat-error *ngIf="ln.get('discountPrice1').hasError('required')">please enter
+                                                            Percentage
+                                                          </mat-error>
+                                                          <mat-error *ngIf="ln.get('discountPrice1').hasError('pattern')">please enter
+                                                            percentage between 1 to 99
+                                                         </mat-error>
+                                                        </mat-form-field>
+                                                      </div>
+                                                      <div *ngIf="ln.get('discountType').value == 'FIXED_VALUE'" class="">
+                                                        <mat-form-field>
+                                                          <input matInput  placeholder="Enter Value"  OnlyNumber="true" (keyup)="functionname($event.target.value, ln['controls'],'discountPrice')"
+                                                            formControlName="discountPrice">
+                                                          <mat-error *ngIf="ln.get('discountPrice').hasError('required')">please enter
+                                                            value
+                                                          </mat-error>
+                                                          <mat-error *ngIf="ln.get('discountPrice').hasError('max')">please enter 
+                                                            value lesser than Display Price
+                                                          </mat-error>
+                                                          <mat-error *ngIf="ln.get('discountPrice').hasError('min')"> Minimun value should be 1
+                                                          </mat-error>
+                                                        </mat-form-field>
+                                                      </div>
+                                                    </td>
+                                                    <td  class="skucol">
+                                                        Final Price 
+                                                    </td>
+                                                    <td *ngIf="createComboFormGroup.get('displayPriceType').value == 'AUTO_CALCULATE'" class="skucol">
+                                                        Calculate at Runtime
+                                                    </td>
+                                                    <td *ngIf="createComboFormGroup.get('displayPriceType').value != 'AUTO_CALCULATE'" class="skucol">
+                                                        {{storeGroup[i].currencyCode}} &nbsp;&nbsp; {{ln.get('showFinalPrice').value == 'AUTO CALCULATE' ? 0 :  ln.get('showFinalPrice').value}} 
+                                                    </td>
+                                                </tr>
+                                                  </div>
+                                              </tbody>
+                                            </table>
+                                          </div>
+                                        </mat-card>
+                                      </div>
+                                    </div>
+                                    <div class="row error_message" *ngIf="createComboFormGroup['controls']['comboCarts'].length > 0 && storeGroup.length == 0 && addComboForm.submitted">
+                                        <p>Please select Store </p>
+                                    </div>
+                                    <div  class="row" style="justify-content: flex-end;margin: 5px;">
+                                 
+                                        <div >
+                                            <button  [disabled]="createComboFormGroup.get('comboType').value == 'FIXED'" type="button" (click)="titleTab('comboCarts')" class="button primary-btn">ADD</button>
+      
+                                        </div>
+                                      </div>
+                                    <div formArrayName="comboCarts" style="margin-top: 10px;">
+                                      <div *ngFor="let ln of createComboFormGroup['controls']['comboCarts']['controls'];let i = index;"
+                                        [formGroupName]="i">
+                                        <mat-card class="mb-20px">
+                                          <div [class.closeDisable]="createComboFormGroup['controls']['comboCarts'].length == 1" class="close-icon-row row">
+                                            <img src="assets/images/icons/filter_close_ico.png" alt="close_icon" (click)="onCloseClick(i,'comboCarts')">
+                                          </div>
+                                          <br>
+                                          <div class="row">
+                                            <div class="col-md-3">
+                                              <div class="master-fieldSet" formArrayName="comboCartLocales">
+                                                <fieldset class="language-fieldset">
+                                                  <legend class="fieldset-heading">Title</legend>
+                                                  <div *ngFor="let locale of ln['controls']['comboCartLocales']['controls'];let j = index;"
+                                                    [formGroupName]="j">
+                                                    <div class="example-container ">
+                                                      <mat-form-field [class.direction-right]="languageList[j].languageName == 'Arabic'">
+                                                        <input matInput placeholder="{{languageList[j].languageName}}" maxlength="100"
+                                                          formControlName="comboCartName" required>
+                                                        <mat-error *ngIf="locale.get('comboCartName').hasError('required')">please enter value
+                                                        </mat-error>
+                                                      </mat-form-field>
+                                  
+                                                    </div>
+                                                  </div>
+                                                </fieldset>
+                                              </div>
+                                            </div>
+                                  
+                                            <div class="col-md-9">
+                                              <div class="flex-bet">
+                                                <div class="row selected_row" [class.justifyData]="ln.get('addCartType').value !=''">
+                                                  <div class=" selectedsm_col"
+                                                    *ngIf="ln.get('addCartType').value !='product' && createComboFormGroup.get('comboType').value != 'FIXED'">
+                                                    <button class='button tertiary-btn ' [disabled]="ln['controls']['comboCartLocales']['controls'][0].get('comboCartName').hasError('required') || brandId === 0"
+                                                    (click)="openCategoryPopUP('comboCarts',ln['controls'],i,'DELIVERY')"
+                                                      type="button">ADD CATEGORY</button>
+                                  
+                                                  </div>
+                                                  <div class=" selectedsm_col" *ngIf="ln.get('addCartType').value != 'category'">
+                                                    <button class='button tertiary-btn ' [disabled]="ln['controls']['comboCartLocales']['controls'][0].get('comboCartName').hasError('required') || brandId === 0"
+                                                    (click)="openProductPopUP('comboCarts',ln['controls'],i,'DELIVERY')"
+                                                      type="button"> ADD PRODUCT</button>
+                                                  </div>
+                                               
+                                  
+                                                  <div class=" selectedsm_col text-right" *ngIf=" createComboFormGroup.get('comboType').value != 'FIXED' && ln.get('addCartType').value != ''">
+                                                    <div>
+                                                      <button class='button tertiary-btn text-right' type="button"
+                                                        (click)="openVarientDialog($event, 'comboCarts',ln['controls'],i)">
+                                                        Quantity</button>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                <div class="row selected_row">
+                                                  <div class="col-10 selectedsm_lg" *ngIf="ln.get('addCartType').value =='category'">
+                                                                                    <div class="row category_row" formArrayName="comboCategoryList">
+                                                                                      <div class="col-4 category_col"
+                                                                                        *ngFor="let item of ln['controls']['comboCategoryList']['controls']; let m = index;"
+                                                                                        [formGroupName]="m">
+                                                                                        <div class="category-col-list">
+                                                                                          <p>
+                                                                                            {{ item.controls.categoryName.value}}
+                                                                
+                                                                                          </p>
+                                                                                          <img class="close-img" src="assets/images/icons/filter_close_ico.png" alt="close_icon"
+                                                                                            (click)="deleteCategoryProducts(ln['controls'],i,m,'comboCarts',ln['controls'])">
+                                                                                        </div>
+                                                                
+                                                                                      </div>
+                                                                                    </div>
+                                                                                  </div>
+                                                </div>
+                                                <div class="add_on_block">
+                                                  <div class="add-on-images mostly-customized-scrollbar" >
+                                                    <div class="row" formArrayName="comboCartProduct">
+                                                      <div class=""
+                                                        *ngFor="let product of ln['controls']['comboCartProduct']['controls'];let k = index;"
+                                                        [formGroupName]="k">
+                                  
+                                  
+                                                        <div class="image-block ">
+                                                          <div class="image-container ">
+                                                            <span class="close_combo" (click)="removeCustomization(i,k,'comboCarts')">
+                                                              <img class="close-img" src="assets/images/icons/filter_close_ico.png"
+                                                                alt="close_icon"></span>
+                                                            <img *ngIf="product.controls.imagePath.value == '' " src="assets/images/no_image.png"
+                                                              alt="Addon Image" class="Addon_Image">
+                                                            <img *ngIf="product.controls.imagePath.value != '' "
+                                                              [src]="product.controls.imagePath.value" alt="Addon Image" class="Addon_Image">
+                                                          </div>
+                                                        </div>
+                                                        <div style="margin-left: 20px;">
+                                  
+                                                          <div class="info crossSell">
+                                                            <p class="price-info skuCode ">{{product.controls.productName.value}}</p>
+                                                            <p class="price-info skuCode ">{{product.controls.varientName.value}}</p>
+                                  
+                                                            <p class="price-info">Price: {{product.controls.displayPrice.value}} </p>
+                                                            <p class="price-info skuCode">SKU code: {{product.controls.skuCode.value}} </p>
+                                                            <p class="price-info skuCode">Available From: {{product?.controls.availableFrom?.value}} </p>
+                                                            <p class="price-info skuCode">Available To: {{product?.controls.availableTo?.value}} </p>
+  
+                                                          </div>
+                                                          <div class="pQuantity" >
+                                                            <mat-form-field *ngIf="ln.get('addCartType').value =='product' && createComboFormGroup.get('comboType').value == 'FIXED'">
+                                                              <input matInput placeholder="Enter Quantity" maxlength="5" OnlyNumber="true"
+                                                                formControlName="productQuantity" required>
+                                                                <mat-error *ngIf="product.get('productQuantity').hasError('required')">please enter
+                                                                  Quantity
+                                                                </mat-error>
+                                                                <mat-error *ngIf="product.get('productQuantity').hasError('min')"> Minimun Quantity should be 1
+                                                                </mat-error>
+                                                            </mat-form-field>
+                                                          </div>
+                                  
+                                  
+                                  
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                  
+                                              </div>
+                                  
+                                            </div>
+                                  
+                                          </div>
+                                        </mat-card>
+                                      </div>
+                                    </div>
+                                  </div>
+                               
+                        </mat-tab>
+                        <mat-tab label="Pick Up">
+                            <div class="isEnabled">
+                                <mat-checkbox  [checked]="createComboFormGroup.get('isPickupEnabled').value == true" (change)="isEnabledCheck($event,'comboCartsPickup','isPickupEnabled','pickupStoreGroupArray')" formcontroller="isPickupEnabled">
+                                  </mat-checkbox> <label>&nbsp;&nbsp;Pickup Enabled </label>
+                            </div>
+                            <div *ngIf="createComboFormGroup.get('isPickupEnabled').value == true">
+                            <mat-card class="mb-20px">
+                                <div class="row skuDetail">
+                                  <div>
+                                    <h5>Combo SKU Details</h5>
+                                  </div>
+                          
+                                </div>
+                                <div class="row">
+                                  <div class="col-md-12">
+                                    <div class="sku-table">
+                                      <div class="">
+                                        <table class="GeneratedTable">
+                                          <thead>
+                                            <tr>
+                                              <th>SKU CODE* </th>
+                                              <th>Packaging Charges</th>
+                                              <th>TAX RATES</th>
+                                            </tr>
+                          
+                                          </thead>
+                                          <tbody>
+                                            <tr>
+                                              <td>
+                                                <div class="table-input">
+                                                  <mat-form-field>
+                                                    <input matInput [readonly]="isPickupReadonly" formControlName="skuCodePickup" maxlength="16">
+                                                    <mat-error class="skuFont" *ngIf="createComboFormGroup.get('skuCodePickup').hasError('required')">
+                                                      Please enter value
+                                                    </mat-error>
+                                                    <mat-error class="skuFont" *ngIf="createComboFormGroup.get('skuCodePickup').hasError('pattern')">
+                                                      Please enter valid characters in SKU code
+                                                    </mat-error>
+                          
+                                                  </mat-form-field>
+                                                </div>
+                                              </td>
+                                              <td>
+                                                <div class="table-input">
+                                                  <mat-form-field>
+                                                    <input matInput maxlength="5" formControlName="packingChargePickup" OnlyNumber="true">
+                                                  </mat-form-field>
+                                                </div>
+                                              </td>
+                                              
+                                              <td>
+                                                <div class="table-input">
+                                                  <mat-form-field>
+                                                    <input matInput maxlength="5" formControlName="taxRatesPickup" OnlyNumber="true">
+                                                  </mat-form-field>
+                                                </div>
+                                              </td>
+                          
+                          
+                                            </tr>
+                          
+                                          </tbody>
+                                        </table>
+                                      </div>
+                                    </div>
+                             
+                          
+                          
+                                  </div>
+                                
+                                </div>
+                              </mat-card>
+                              <div  class="row" style="justify-content: flex-end;margin: 5px;">
+                                  <div  class="col-3" style="display: flex; width: 100%;justify-content: flex-end;">
+                                      <mat-form-field>
+                                          <mat-select placeholder="Select" #orderInput1 >
+                                              <mat-option *ngFor="let clone of cloneOrderList;let i = index" value="{{clone.id}}" 
+                                              [disabled]="selectedIndex1 == i || (i === 0 && createComboFormGroup.get('isDeliveryEnabled').value == false) || (i === 1 && createComboFormGroup.get('isPickupEnabled').value == false) || (i === 2 && createComboFormGroup.get('isDineinEnabled').value == false)">
+                                                  {{ clone.value }}
+                                              </mat-option>
+                                              
+        
+                                          </mat-select>
+                                         
+                                      </mat-form-field>
+
+                                    </div>
+                                    <div style="margin-top: 5px;">
+                                        <button [disabled]="!orderInput1.value" type="button" (click)="cloneOrder(selectedIndex1,orderInput1.value)" class="button primary-btn">CLONE</button>
+
+                                    </div>
+                                  </div>
+                              <div class="card-title">
+                
+                                <div style="width: 100%;">
+                                  <mat-card class="add-card">
+                                    <div class="card-title text-right">
+                                      <h6>Stores</h6>
+                                      <div class="">
+                                        <button class='button tertiary-btn' type="button" [disabled]="brandId === 0" (click)="openDialog('pickupStoreGroupArray','new')">SELECT
+                                          STORES
+                                        </button>
+                                      </div>
+                                    </div>
+                                    <mat-divider></mat-divider>
+                          
+                                    <div *ngIf="storeGroupPickup.length > 0">
+                                      <table class="table">
+                                        <tbody>
+                                            <div formArrayName="pickupStoreGroupArray">
+                                                <tr *ngFor="let ln of createComboFormGroup['controls']['pickupStoreGroupArray']['controls'];let i = index;"
+                                                  [formGroupName]="i" class="skurow">
+                                              <td class="skucol" (click)="openDialog('pickupStoreGroupArray',i)">
+                                                  <u><a
+                                                    class="text-blue">  {{storeGroupPickup[i].storeOids.length}} Stores Selected </a></u>
+                                              </td>
+                                            <td class="skucol"> Display Price  &nbsp;&nbsp;{{storeGroupPickup[i].currencyCode}}</td>
+                                            <td *ngIf="createComboFormGroup.get('displayPriceType').value == 'AUTO_CALCULATE'" class="skucol">{{createComboFormGroup.get('displayPriceType').value != 'AUTO_CALCULATE' ? storeGroupPickup[i].displayPrice : 'AUTO CALCULATE'}}</td>
+                                            <td *ngIf="createComboFormGroup.get('displayPriceType').value != 'AUTO_CALCULATE'" class="skucol">{{storeGroupPickup[i].displayPrice == 'AUTO CALCULATE' ? 0 : storeGroupPickup[i].displayPrice}}</td>
+                
+                                            <td class="skucol">
+                                              <mat-checkbox [checked]="ln.get('isDiscount').value == true" (change)="CheckDiscountType($event,'pickupStoreGroupArray',i)" formcontroller="isDiscount">
+                                              </mat-checkbox> <label>&nbsp;&nbsp; Discount </label>
+                                            </td>
+                                            <td class="skucol">
+                                              <div *ngIf="ln.get('isDiscount').value == true" class="">
+                                                  <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group" formControlName="discountType">
+                                                      <mat-radio-button class="example-radio-button" *ngFor="let section of radioOptions" [value]="section" [checked]="ln.get('discountType').value == section"
+                                                        (change)="updateDiscount(section , $event,'pickupStoreGroupArray',i)">
+                                                        {{section == 'PERCENTAGE' ? 'Percentage' : 'Fixed Value'}} &nbsp;&nbsp;</mat-radio-button>
+                                                    </mat-radio-group>
+                                    
+                                              </div>
+                                            </td>
+                
+                                          <td class="skucol" *ngIf="ln.get('isDiscount').value == true && ln.get('discountType').value != 'PERCENTAGE'">{{storeGroupPickup[i].currencyCode}}</td>
+                                          <td class="skucol1" *ngIf="ln.get('isDiscount').value == true">
+                                              <div *ngIf="ln.get('discountType').value == 'PERCENTAGE'" class="">
+                                                <mat-form-field>
+                                                  <input matInput placeholder=" Enter Percentage" OnlyNumber="true"  (keyup)="functionname($event.target.value, ln['controls'],'discountPrice1')"
+                
+                                                    formControlName="discountPrice1">
+                                                  <mat-error *ngIf="ln.get('discountPrice1').hasError('required')">please enter
+                                                    Percentage
+                                                  </mat-error>
+                                                  <mat-error *ngIf="ln.get('discountPrice1').hasError('pattern')">please enter
+                                                    Percentage between 1 to 99
+                                                 </mat-error>
+                                                </mat-form-field>
+                                              </div>
+                                              <div *ngIf="ln.get('discountType').value == 'FIXED_VALUE'" class="">
+                                                <mat-form-field>
+                                                  <input matInput placeholder="Enter Value" OnlyNumber="true"  (keyup)="functionname($event.target.value, ln['controls'],'discountPrice')"
+                                                    formControlName="discountPrice">
+                                                  <mat-error *ngIf="ln.get('discountPrice').hasError('required')">please enter
+                                                    value
+                                                  </mat-error>
+                                                  <mat-error *ngIf="ln.get('discountPrice').hasError('max')">please enter 
+                                                    value lesser than Display Price
+                                                  </mat-error>
+                                                  <mat-error *ngIf="ln.get('discountPrice').hasError('min')"> Minimun value should be 1
+                                                  </mat-error>
+                                                </mat-form-field>
+                                              </div>
+                                            </td>
+                                            <td  class="skucol">
+                                                Final Price 
+                                            </td>
+                                            <td *ngIf="createComboFormGroup.get('displayPriceType').value == 'AUTO_CALCULATE'" class="skucol">
+                                                Calculate at Runtime
+                                            </td>
+                                            <td *ngIf="createComboFormGroup.get('displayPriceType').value != 'AUTO_CALCULATE'" class="skucol">
+                                                {{storeGroupPickup[i].currencyCode}} &nbsp;&nbsp; {{ln.get('showFinalPrice').value == 'AUTO CALCULATE' ? 0 :  ln.get('showFinalPrice').value}} 
+                                            </td>
+                                        </tr>
+                                            </div>
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </mat-card>
+                                </div>
+                              </div>
+                              <div class="row error_message" *ngIf="createComboFormGroup['controls']['comboCartsPickup'].length > 0 && storeGroupPickup.length == 0 && addComboForm.submitted">
+                                  <p>Please select Store </p>
+                              </div>
+                              <div  class="row" style="justify-content: flex-end;margin: 5px;">
+                                 
+                                  <div >
+                                      <button [disabled]="createComboFormGroup.get('comboType').value == 'FIXED'"  type="button" (click)="titleTab('comboCartsPickup')" class="button primary-btn">ADD</button>
+
+                                  </div>
+                                </div>
+                              <div formArrayName="comboCartsPickup" *ngIf="createComboFormGroup['controls']['comboCartsPickup'].length > 0">
+                                  <div *ngFor="let ln of createComboFormGroup['controls']['comboCartsPickup']['controls'];let i = index;"
+                                    [formGroupName]="i">
+                                    <mat-card class="mb-20px">
+                                      <div [class.closeDisable]="createComboFormGroup['controls']['comboCartsPickup'].length == 1" class="close-icon-row row">
+                                        <img src="assets/images/icons/filter_close_ico.png" alt="close_icon" (click)="onCloseClick(i,'comboCartsPickup')">
+                                      </div>
+                                      <br>
+                                      <div class="row">
+                                        <div class="col-md-3">
+                                          <div class="master-fieldSet" formArrayName="comboCartLocales">
+                                            <fieldset class="language-fieldset">
+                                              <legend class="fieldset-heading">Title</legend>
+                                              <div *ngFor="let locale of ln['controls']['comboCartLocales']['controls'];let j = index;"
+                                                [formGroupName]="j">
+                                                <div class="example-container ">
+                                                  <mat-form-field [class.direction-right]="languageList[j].languageName == 'Arabic'">
+                                                    <input matInput placeholder="{{languageList[j].languageName}}" maxlength="100"
+                                                      formControlName="comboCartName" required>
+                                                    <mat-error *ngIf="locale.get('comboCartName').hasError('required')">please enter value
+                                                    </mat-error>
+                                                  </mat-form-field>
+                            
+                                                </div>
+                                              </div>
+                                            </fieldset>
+                                          </div>
+                                        </div>
+                            
+                                         <div class="col-md-9">
+                                          <div class="flex-bet">
+                                            <div class="row selected_row" [class.justifyData]="ln.get('addCartType').value !=''">
+                            
+                                              <div class="selectedsm_col"
+                                                *ngIf="ln.get('addCartType').value !='product' && createComboFormGroup.get('comboType').value != 'FIXED'">
+                                                <button class='button tertiary-btn ' [disabled]="ln['controls']['comboCartLocales']['controls'][0].get('comboCartName').hasError('required') || brandId === 0" (click)="openCategoryPopUP('comboCartsPickup',ln['controls'],i,'PICKUP')"
+                                                  type="button">ADD CATEGORY</button>
+                            
+                                              </div>
+                                              <div class="selectedsm_col" *ngIf="ln.get('addCartType').value != 'category'">
+                                                <button class='button tertiary-btn ' [disabled]="ln['controls']['comboCartLocales']['controls'][0].get('comboCartName').hasError('required') || brandId === 0" (click)="openProductPopUP('comboCartsPickup',ln['controls'],i,'PICKUP')"
+                                                  type="button"> ADD PRODUCT</button>
+                                              </div>
+                                           
+                                              <div class="selectedsm_col text-right" *ngIf="createComboFormGroup.get('comboType').value != 'FIXED' && ln.get('addCartType').value !=''">
+                                                <div>
+                                                  <button class='button tertiary-btn text-right' type="button"
+                                                    (click)="openVarientDialog($event, 'comboCartsPickup',ln['controls'],i)">
+                                                    Quantity</button>
+                                                </div>
+                                              </div>
+                                            
+                                            </div>
+                                            <div class="row selected_row">
+                                              <div class="col-10 selectedsm_lg" *ngIf="ln.get('addCartType').value =='category'">
+                                                                                <div class="row category_row" formArrayName="comboCategoryList">
+                                                                                  <div class="col-4 category_col"
+                                                                                    *ngFor="let item of ln['controls']['comboCategoryList']['controls']; let m = index;"
+                                                                                    [formGroupName]="m">
+                                                                                    <div class="category-col-list">
+                                                                                      <p>
+                                                                                        {{ item.controls.categoryName.value}}
+                                                            
+                                                                                      </p>
+                                                                                      <img class="close-img" src="assets/images/icons/filter_close_ico.png" alt="close_icon"
+                                                                                        (click)="deleteCategoryProducts(ln['controls'],i,m,'comboCartsPickup')">
+                                                                                    </div>
+                                                            
+                                                                                  </div>
+                                                                                </div>
+                                                                              </div>
+                                            </div>
+                                            <div class="add_on_block">
+                                              <div class="add-on-images mostly-customized-scrollbar" >
+                                                <div class="row" formArrayName="comboCartProduct">
+                                                  <div class=""
+                                                    *ngFor="let product of ln['controls']['comboCartProduct']['controls'];let k = index;"
+                                                    [formGroupName]="k">
+                            
+                            
+                                                    <div class="image-block ">
+                                                      <div class="image-container ">
+                                                        <span class="close_combo" (click)="removeCustomization(i,k,'comboCartsPickup')">
+                                                          <img class="close-img" src="assets/images/icons/filter_close_ico.png"
+                                                            alt="close_icon"></span>
+                                                        <img *ngIf="product.controls.imagePath.value == '' " src="assets/images/no_image.png"
+                                                          alt="Addon Image" class="Addon_Image">
+                                                        <img *ngIf="product.controls.imagePath.value != '' "
+                                                          [src]="product.controls.imagePath.value" alt="Addon Image" class="Addon_Image">
+                                                      </div>
+                                                    </div>
+                                                    <div style="margin-left: 20px;">
+                            
+                                                      <div class="info crossSell">
+                                                        <p class="price-info skuCode ">{{product.controls.productName.value}}</p>
+                                                        <p class="price-info skuCode ">{{product.controls.varientName.value}}</p>
+                            
+                                                        <p class="price-info">Price: {{product.controls.displayPrice.value}} </p>
+                                                        <p class="price-info skuCode">SKU code: {{product.controls.skuCode.value}} </p>
+                                                        <p class="price-info skuCode">Available From: {{product?.controls.availableFrom?.value}} </p>
+                                                        <p class="price-info skuCode">Available To: {{product?.controls.availableTo?.value}} </p>
+
+                                                      </div>
+                                                      <div class="pQuantity">
+                                                        <mat-form-field *ngIf="createComboFormGroup.get('comboType').value == 'FIXED' && ln.get('addCartType').value =='product'">
+                                                          <input matInput placeholder="Enter Quantity" maxlength="5" OnlyNumber="true"
+                                                            formControlName="productQuantity" required>
+                                                            <mat-error *ngIf="product.get('productQuantity').hasError('required')">please enter
+                                                              Quantity
+                                                            </mat-error>
+                                                            <mat-error *ngIf="product.get('productQuantity').hasError('min')"> Minimun Quantity should be 1
+                                                            </mat-error>
+                                                        </mat-form-field>
+                                                      </div>
+                            
+                            
+                            
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                            
+                                          </div>
+                            
+                                        </div> 
+                            
+                                      </div>
+                                    </mat-card>
+                                  </div>
+                                </div> 
+                            
+                        
+                        </div>
+                            </mat-tab>
+                           <mat-tab label="Dine IN">
+                                 <div class="isEnabled">
+                                    <mat-checkbox  [checked]="createComboFormGroup.get('isDineinEnabled').value == true" (change)="isEnabledCheck($event,'comboCartsDineIn','isDineinEnabled','dineInStoreGroupArray')"  formcontroller="isDineinEnabled">
+                                      </mat-checkbox> <label>&nbsp;&nbsp; Dine In Enabled </label>
+                                </div>
+                                <div *ngIf="createComboFormGroup.get('isDineinEnabled').value == true">
+                                <mat-card class="mb-20px">
+                                    <div class="row skuDetail">
+                                      <div>
+                                        <h5>Combo SKU Details</h5>
+                                      </div>
+                              
+                                    </div>
+                                    <div class="row">
+                                      <div class="col-md-12">
+                                        <div class="sku-table">
+                                          <div class="">
+                                            <table class="GeneratedTable">
+                                              <thead>
+                                                <tr>
+                                                  <th>SKU CODE* </th>
+                                                  <th>Packaging Charges</th>
+                                                  <th>TAX RATES</th>
+                                                </tr>
+                              
+                                              </thead>
+                                              <tbody>
+                                                <tr>
+                                                  <td>
+                                                    <div class="table-input">
+                                                      <mat-form-field>
+                                                        <input matInput [readonly]="isDineINReadonly" formControlName="skuCodeDineIn" maxlength="16">
+                                                        <mat-error class="skuFont" *ngIf="createComboFormGroup.get('skuCodeDineIn').hasError('required')">
+                                                          Please enter value
+                                                        </mat-error>
+                                                        <mat-error class="skuFont" *ngIf="createComboFormGroup.get('skuCodeDineIn').hasError('pattern')">
+                                                          Please enter valid characters in SKU code
+                                                        </mat-error>
+                              
+                                                      </mat-form-field>
+                                                    </div>
+                                                  </td>
+                                                  <td>
+                                                    <div class="table-input">
+                                                      <mat-form-field>
+                                                        <input matInput maxlength="5" formControlName="packingChargeDineIn" OnlyNumber="true">
+                                                      </mat-form-field>
+                                                    </div>
+                                                  </td>
+                                            
+                                                  <td>
+                                                    <div class="table-input">
+                                                      <mat-form-field>
+                                                        <input matInput maxlength="5" formControlName="taxRatesDineIn" OnlyNumber="true">
+                                                      </mat-form-field>
+                                                    </div>
+                                                  </td>
+                              
+                              
+                                                </tr>
+                              
+                                              </tbody>
+                                            </table>
+                                          </div>
+                                        </div>
+                                 
+                              
+                              
+                                      </div>
+                                    
+                                    </div>
+                                  </mat-card>
+                                  <div  class="row" style="justify-content: flex-end;margin: 5px;">
+                                      <div  class="col-3" style="display: flex; width: 100%;justify-content: flex-end;">
+                                          <mat-form-field>
+                                              <mat-select placeholder="Select" #orderInput >
+                                                  <mat-option *ngFor="let clone of cloneOrderList;let i = index" value="{{clone.id}}" 
+                                                  [disabled]="selectedIndex1 == i || (i === 0 && createComboFormGroup.get('isDeliveryEnabled').value == false) || (i === 1 && createComboFormGroup.get('isPickupEnabled').value == false) || (i === 2 && createComboFormGroup.get('isDineinEnabled').value == false)">
+                                                      {{ clone.value }}
+                                                  </mat-option>
+                                                 
+            
+                                              </mat-select>
+                                             
+                                          </mat-form-field>
+    
+                                        </div>
+                                        <div style="margin-top: 5px;">
+                                            <button [disabled]="!orderInput.value"  type="button" (click)="cloneOrder(selectedIndex1,orderInput.value)" class="button primary-btn">CLONE</button>
+    
+                                        </div>
+                                      </div>
+                                  <div class="card-title">
+                
+                                    <div style="width: 100%;">
+                                      <mat-card class="add-card">
+                                        <div class="card-title text-right">
+                                          <h6>Stores</h6>
+                                          <div class="">
+                                            <button class='button tertiary-btn' type="button" [disabled]="brandId === 0" (click)="openDialog('dineInStoreGroupArray','new')">SELECT
+                                              STORES
+                                            </button>
+                                          </div>
+                                        </div>
+                                        <mat-divider></mat-divider>
+                              
+                                        <div *ngIf="storeGroupDine.length > 0">
+                                          <table class="table">
+                                            <tbody>
+                                                <div formArrayName="dineInStoreGroupArray">
+                                                    <tr *ngFor="let ln of createComboFormGroup['controls']['dineInStoreGroupArray']['controls'];let i = index;"
+                                                      [formGroupName]="i" class="skurow">
+                                                  <td class="skucol" (click)="openDialog('dineInStoreGroupArray',i)">
+                                                      <u><a
+                                                        class="text-blue">  {{storeGroupDine[i].storeOids.length}} Stores Selected </a></u>
+                                                  </td>
+                                                <td class="skucol">Display Price  &nbsp;&nbsp;{{storeGroupDine[i].currencyCode}}</td>
+                                                <td *ngIf="createComboFormGroup.get('displayPriceType').value == 'AUTO_CALCULATE'" class="skucol">{{createComboFormGroup.get('displayPriceType').value != 'AUTO_CALCULATE' ? storeGroupDine[i].displayPrice : 'AUTO CALCULATE'}}</td>
+                                                <td *ngIf="createComboFormGroup.get('displayPriceType').value != 'AUTO_CALCULATE'" class="skucol">{{storeGroupDine[i].displayPrice == 'AUTO CALCULATE' ? 0 : storeGroupDine[i].displayPrice}}</td> 
+                                                                <td class="skucol">
+                                                  <mat-checkbox [checked]="ln.get('isDiscount').value == true" (change)="CheckDiscountType($event,'dineInStoreGroupArray',i)" formcontroller="isDiscount">
+                                                  </mat-checkbox> <label>&nbsp;&nbsp; Discount </label>
+                                                </td>
+                                                <td class="skucol">
+                                                  <div *ngIf="ln.get('isDiscount').value == true" class="">
+                                                      <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group" formControlName="discountType">
+                                                          <mat-radio-button class="example-radio-button" *ngFor="let section of radioOptions" [value]="section" [checked]="ln.get('discountType').value == section"
+                                                            (change)="updateDiscount(section , $event,'dineInStoreGroupArray',i)">
+                                                            {{section == 'PERCENTAGE' ? 'Percentage' : 'Fixed Value'}} &nbsp;&nbsp;</mat-radio-button>
+                                                        </mat-radio-group>
+                                        
+                                                  </div>
+                                                </td>
+                                              <td class="skucol" *ngIf="ln.get('isDiscount').value == true && ln.get('discountType').value != 'PERCENTAGE'">{{storeGroupDine[i].currencyCode}}</td>
+                                              <td class="skucol1" *ngIf="ln.get('isDiscount').value == true">
+                                                  <div *ngIf="ln.get('discountType').value == 'PERCENTAGE'" class="">
+                                                    <mat-form-field>
+                                                      <input matInput placeholder=" Enter Percentage" OnlyNumber="true" (keyup)="functionname($event.target.value, ln['controls'],'discountPrice1')"
+                    
+                                                        formControlName="discountPrice1">
+                                                      <mat-error *ngIf="ln.get('discountPrice1').hasError('required')">please enter
+                                                        Percentage
+                                                      </mat-error>
+                                                      <mat-error *ngIf="ln.get('discountPrice1').hasError('pattern')">please enter
+                                                         percentage between 1 to 99
+                                                      </mat-error>
+                                                    </mat-form-field>
+                                                  </div>
+                                                  <div *ngIf="ln.get('discountType').value == 'FIXED_VALUE'" class="">
+                                                    <mat-form-field>
+                                                      <input matInput placeholder="Enter Value"   OnlyNumber="true" (keyup)="functionname($event.target.value, ln['controls'],'discountPrice')"
+                                                        formControlName="discountPrice">
+                                                      <mat-error *ngIf="ln.get('discountPrice').hasError('required')">please enter
+                                                        value
+                                                      </mat-error>
+                                                      <mat-error *ngIf="ln.get('discountPrice').hasError('max')">please enter 
+                                                        value lesser than Display Price
+                                                      </mat-error>
+                                                      <mat-error *ngIf="ln.get('discountPrice').hasError('min')"> Minimun value should be 1
+                                                      </mat-error>
+                                                    </mat-form-field>
+                                                  </div>
+                                                </td>
+                                                <td  class="skucol">
+                                                    Final Price 
+                                                </td>
+                                                <td *ngIf="createComboFormGroup.get('displayPriceType').value == 'AUTO_CALCULATE'" class="skucol">
+                                                    Calculate at Runtime
+                                                </td>
+                                                <td *ngIf="createComboFormGroup.get('displayPriceType').value != 'AUTO_CALCULATE'" class="skucol">
+                                                    {{storeGroupDine[i].currencyCode}} &nbsp;&nbsp;{{ln.get('showFinalPrice').value == 'AUTO CALCULATE' ? 0 :  ln.get('showFinalPrice').value}} 
+                                                </td>
+                                            </tr>
+                                                </div>
+                                            </tbody>
+                                          </table>
+                                        </div>
+                                      </mat-card>
+                                    </div>
+                                  </div>
+                                  <div class="row error_message" *ngIf="createComboFormGroup['controls']['comboCartsDineIn'].length > 0 && storeGroupDine.length == 0 && addComboForm.submitted">
+                                      <p>Please select Store </p>
+                                  </div>
+                                  <div  class="row" style="justify-content: flex-end;margin: 5px;">
+                                 
+                                        <div >
+                                            <button [disabled]="createComboFormGroup.get('comboType').value == 'FIXED'"  type="button" (click)="titleTab('comboCartsDineIn')" class="button primary-btn">ADD</button>
+    
+                                        </div>
+                                      </div>
+                                   <div formArrayName="comboCartsDineIn" *ngIf="createComboFormGroup['controls']['comboCartsDineIn'].length > 0">
+                                      <div *ngFor="let ln of createComboFormGroup['controls']['comboCartsDineIn']['controls'];let i = index;"
+                                        [formGroupName]="i">
+                                        <mat-card class="mb-20px">
+                                          <div [class.closeDisable]="createComboFormGroup['controls']['comboCartsDineIn'].length == 1" class="close-icon-row row">
+                                            <img src="assets/images/icons/filter_close_ico.png" alt="close_icon" (click)="onCloseClick(i,'comboCartsDineIn')">
+                                          </div>
+                                          <br>
+                                          <div class="row">
+                                            <div class="col-md-3">
+                                              <div class="master-fieldSet" formArrayName="comboCartLocales">
+                                                <fieldset class="language-fieldset">
+                                                  <legend class="fieldset-heading">Title</legend>
+                                                  <div *ngFor="let locale of ln['controls']['comboCartLocales']['controls'];let j = index;"
+                                                    [formGroupName]="j">
+                                                    <div class="example-container ">
+                                                      <mat-form-field [class.direction-right]="languageList[j].languageName == 'Arabic'">
+                                                        <input matInput placeholder="{{languageList[j].languageName}}" maxlength="100"
+                                                          formControlName="comboCartName" required>
+                                                        <mat-error *ngIf="locale.get('comboCartName').hasError('required')">please enter value
+                                                        </mat-error>
+                                                      </mat-form-field>
+                                
+                                                    </div>
+                                                  </div>
+                                                </fieldset>
+                                              </div>
+                                            </div>
+                                
+                                             <div class="col-md-9">
+                                              <div class="flex-bet">
+                                                <div class="row selected_row" [class.justifyData]="ln.get('addCartType').value !=''">
+                                
+                                                  <div class="selectedsm_col"
+                                                    *ngIf="ln.get('addCartType').value !='product' && createComboFormGroup.get('comboType').value != 'FIXED'">
+                                                    <button class='button tertiary-btn ' [disabled]="ln['controls']['comboCartLocales']['controls'][0].get('comboCartName').hasError('required') || brandId === 0"
+                                                     (click)="openCategoryPopUP('comboCartsDineIn',ln['controls'],i,'DINEIN')"
+                                                      type="button">ADD CATEGORY</button>
+                                
+                                                  </div>
+                                                  <div class="selectedsm_col" *ngIf="ln.get('addCartType').value != 'category'">
+                                                    <button class='button tertiary-btn ' [disabled]="ln['controls']['comboCartLocales']['controls'][0].get('comboCartName').hasError('required') || brandId === 0"
+                                                     (click)="openProductPopUP('comboCartsDineIn',ln['controls'],i,'DINEIN')"
+                                                      type="button"> ADD PRODUCT</button>
+                                                  </div>
+                                                
+                                                  <div class="selectedsm_col text-right" *ngIf="createComboFormGroup.get('comboType').value != 'FIXED' && ln.get('addCartType').value !=''">
+                                                    <div>
+                                                      <button class='button tertiary-btn text-right' type="button"
+                                                        (click)="openVarientDialog($event, 'comboCartsDineIn',ln['controls'],i)">
+                                                        Quantity</button>
+                                                    </div>
+                                                  </div>
+                                              
+                                                </div>
+                                                <div class="row selected_row">
+                                                  <div class="col-10 selectedsm_lg" *ngIf="ln.get('addCartType').value =='category'">
+                                                                                    <div class="row category_row" formArrayName="comboCategoryList">
+                                                                                      <div class="col-4 category_col"
+                                                                                        *ngFor="let item of ln['controls']['comboCategoryList']['controls']; let m = index;"
+                                                                                        [formGroupName]="m">
+                                                                                        <div class="category-col-list">
+                                                                                          <p>
+                                                                                            {{ item.controls.categoryName.value}}
+                                                                
+                                                                                          </p>
+                                                                                          <img class="close-img" src="assets/images/icons/filter_close_ico.png" alt="close_icon"
+                                                                                            (click)="deleteCategoryProducts(ln['controls'],i,m,'comboCartsDineIn')">
+                                                                                        </div>
+                                                                
+                                                                                      </div>
+                                                                                    </div>
+                                                                                  </div>
+                                                </div>
+                                
+                                                <div class="add_on_block">
+                                                  <div class="add-on-images mostly-customized-scrollbar" >
+                                                    <div class="row" formArrayName="comboCartProduct">
+                                                      <div class=""
+                                                        *ngFor="let product of ln['controls']['comboCartProduct']['controls'];let k = index;"
+                                                        [formGroupName]="k">
+                                
+                                
+                                                        <div class="image-block ">
+                                                          <div class="image-container ">
+                                                            <span class="close_combo" (click)="removeCustomization(i,k,'comboCartsDineIn')">
+                                                              <img class="close-img" src="assets/images/icons/filter_close_ico.png"
+                                                                alt="close_icon"></span>
+                                                            <img *ngIf="product.controls.imagePath.value == '' " src="assets/images/no_image.png"
+                                                              alt="Addon Image" class="Addon_Image">
+                                                            <img *ngIf="product.controls.imagePath.value != '' "
+                                                              [src]="product.controls.imagePath.value" alt="Addon Image" class="Addon_Image">
+                                                          </div>
+                                                        </div>
+                                                        <div style="margin-left: 20px;">
+                                
+                                                          <div class="info crossSell">
+                                                            <p class="price-info skuCode ">{{product.controls.productName.value}}</p>
+                                                            <p class="price-info skuCode ">{{product.controls.varientName.value}}</p>
+                                
+                                                            <p class="price-info">Price: {{product.controls.displayPrice.value}} </p>
+                                                            <p class="price-info skuCode">SKU code: {{product.controls.skuCode.value}} </p>
+                                                            <p class="price-info skuCode">Available From: {{product?.controls.availableFrom?.value}} </p>
+                                                            <p class="price-info skuCode">Available To: {{product?.controls.availableTo?.value}} </p>
+  
+                                                          </div>
+                                                          <div class="pQuantity">
+                                                            <mat-form-field *ngIf="createComboFormGroup.get('comboType').value == 'FIXED'&& ln.get('addCartType').value =='product'">
+                                                              <input matInput placeholder="Enter Quantity" maxlength="5" OnlyNumber="true"
+                                                                formControlName="productQuantity" >
+                                                                <mat-error *ngIf="product.get('productQuantity').hasError('required')">please enter
+                                                                  Quantity
+                                                                </mat-error>
+                                                                <mat-error *ngIf="product.get('productQuantity').hasError('min')"> Minimun Quantity should be 1
+                                                                </mat-error>
+                                                            </mat-form-field>
+                                                          </div>
+                                
+                                
+                                
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                
+                                              </div>
+                                
+                                            </div> 
+                                
+                                          </div>
+                                        </mat-card>
+                                      </div>
+                                    </div> 
+                                </div>
+                                
+                        </mat-tab>
+                
+                </mat-tab-group> 
+                <div *ngIf="addComboForm.submitted && ( createComboFormGroup.invalid || basicTabError || invalidError )" class="error_message">Please fill Mandatory Fields in All Tabs</div>
+
+             
+            
+                
+            
+                <div class="button-wrap text-right pt-20px">
+                  <button class="button secondary-btn" type="button" [routerLink]="['/search-combo']">CANCEL</button>
+                  <button class="button primary-btn" type="submit" [disabled]="loading">NEXT</button>
+                </div>
+              </form>
+        </ng-template>
+        </mat-tab>
+
+
+
+        <mat-tab label="Additional Details">
+            <ng-template matTabContent>
+      
+                <form (ngSubmit)="createCombo(createComboFormGroup1.value)" [formGroup]="createComboFormGroup1" #addComboForm1="ngForm">
+                    <div class="row additionalData">
+                        <div class="col-md-4">
+                           
+                            <mat-card class="add-card product-details">
+                              
+                                <div class="mb-10px">
+                                    <div>
+                                        <mat-checkbox formControlName="isExclusive"> Exclusive</mat-checkbox>
+                                    </div>
+                                    <div>
+                                        <mat-checkbox formControlName="isLimitedTimeCategory"> Limited Time Category
+                                        </mat-checkbox>
+                                    </div>
+                                    <div>
+                                        <mat-checkbox formControlName="isHealthy"> Healthy</mat-checkbox>
+                                    </div>
+                                    <div>
+                                        <mat-checkbox formControlName="isHotSeller"> Hotseller</mat-checkbox>
+                                    </div>
+                                </div>
+                           
+            
+                                <div class="food-type">
+                                    <mat-radio-group class="flex" formControlName="productType">
+                                        <mat-radio-button class="mr-5px" value="VEG" [checked]="true"> <img src="assets/images/svg-icons/veg_ico.svg" width="12px" alt=""> Vegetarian
+                                        </mat-radio-button>
+                                        <mat-radio-button class="mr-5px" value="EGG"><img src="assets/images/icons/Egg_1x.png" width="12px" alt=""> Egg</mat-radio-button>
+                                        <mat-radio-button value="NONVEG"><img src="assets/images/svg-icons/nonveg_ico.svg" width="12px" alt=""> Non Vegetarian</mat-radio-button>
+                                    </mat-radio-group>
+                                </div>
+                           
+                            </mat-card>
+                            <mat-card class="add-card">
+                                <div class="diatry">
+                                    <div class="card-title">
+                                        <h6>Dietary</h6>
+                                        <button type="button" class="btn primary-button m-0px" (click)="openDieatryDialog()" >
+                              <span class="add-plus">
+                                <img src="assets/images/svg-icons/add_ico.svg" alt="add" class="plus-icon">
+                              </span>ADD
+                            </button>
+            
+                                    </div>
+                                    <mat-divider></mat-divider>
+                                    <div class="centered-text" *ngIf="imagePathDieatry.length == 0">
+                                        <p>Upload Dietary Images</p>
+                                    </div>
+                                    <div class="img-layout1 mostly-customized-scrollbar" *ngIf="imagePathDieatry.length > 0" >
+                                      <div class="grid img-block1" *ngFor="let item of imagePathDieatry;let i = index;" >
+                                          <div class="images-placeholder" *ngIf="imagePathDieatry[i]!=''">
+                                             
+                                              <div class="img-container">
+                                                  <span class="close_combo" (click)="removeImageDieatry(i)">
+                                                      <img class="close-img" src="assets/images/icons/filter_close_ico.png"
+                                                        alt="close_icon"></span>
+                                                        <img class="uploaded-image" [src]="filePathUrl+item?.imgPath" [class.uploaded-img]="imgUploadAlergion">
+                                                      </div>
+                                                      <label class="text-center">{{item?.name}}</label>
+                                          </div>
+              
+                                      </div>
+              
+                                  </div>
+                                    <div class="">
+                                        <div class="imgInfo info1">
+                                            <p>Image size: 150 x 150 (Circle)</p>
+                                        </div>
+                                    </div>
+            
+                                    <div *ngIf="imageErr" style="color:red; font-size: 10px;">{{imageErrMsg}}</div>
+            
+                                </div>
+            
+                                <div class="alergion pt-10px">
+                                    <div class="card-title">
+                                        <h6>Allergen</h6>
+            
+                                        <button type="button" class="btn primary-button m-0px" (click)="openAlergionDialog()">
+                              <span class="add-plus">
+                                <img src="assets/images/svg-icons/add_ico.svg" alt="add" class="plus-icon">
+                              </span>ADD
+                            </button>
+            
+                                    </div>
+                                    <mat-divider></mat-divider>
+            
+                                    <div class="centered-text" *ngIf="imagePathAlergion.length == 0">
+                                        <p>Upload Alergin Images</p>
+                                    </div>
+
+                                  <div class="img-layout1 mostly-customized-scrollbar" *ngIf="imagePathAlergion.length > 0" >
+                                    <div class="grid img-block1" *ngFor="let item of imagePathAlergion;let i = index;" >
+                                        <div class="images-placeholder" *ngIf="imagePathAlergion[i]!=''">
+                                           
+                                            <div class="img-container">
+                                                <span class="close_combo" (click)="removeImageAlergion(i)">
+                                                    <img class="close-img" src="assets/images/icons/filter_close_ico.png"
+                                                      alt="close_icon"></span>
+                                                      <img class="uploaded-image" [src]="filePathUrl+item?.imgPath" [class.uploaded-img]="imgUploadAlergion">
+                                                    </div>
+                                                    <label class="text-center">{{item?.name}}</label>
+                                        </div>
+            
+                                    </div>
+            
+                                </div>
+                                    <div class="">
+                                        <div class="imgInfo info1">
+                                            <p>Image size: 150 x 150 (Circle)</p>
+                                        </div>
+                                    </div>
+            
+                                    <div *ngIf="imageErr" style="color:red; font-size: 10px;">{{imageErrMsg}}</div>
+            
+                                </div>
+                            </mat-card>
+                        </div>
+                        <div class="col-md-8 mb-20px">
+                            <mat-card class="terms-conditions-card">
+                                <div class="" formArrayName="productFormArray">
+                                    <div class="expansion-panel" *ngFor="let ln of createComboFormGroup1['controls']['productFormArray']['controls'];let i = index;" [formGroupName]="i">
+                                        <mat-accordion>
+                                            <mat-expansion-panel class="mat-expansion-panel {{rightPanel[i]}}" (opened)="panelOpenState = true;expandDataEmail();expandDataEmailDescrtipion();" (closed)="panelOpenState = false">
+                                                <mat-expansion-panel-header>
+                                                    <mat-panel-title>
+                                                        {{languageList[i].languageName}}
+                                                    </mat-panel-title>
+                                                </mat-expansion-panel-header>
+                                                <div class="row card-mb">
+                                                    <div class="col-md-11 text-fields">
+                                                        <div class="row {{languageDirection[i]}}">
+                                                            <div class="col-md-12">
+                                                                <mat-form-field [class.direction-right]="languageList[i].languageName == 'Arabic'">
+                                                                    <input matInput placeholder="Additional Description" maxlength="200" formControlName="additionalDescription" >
+                                                                  
+                                                                </mat-form-field>
+                                                            </div>
+            
+                                                           
+                                                            <div class="col-md-12 mt-15px ">
+                                                                <label>
+                                        Ingredients
+                                      </label>
+                                                                <editor *ngIf="languageList[i].languageName!='Arabic'" apiKey="test" [init]="{plugins: 'link'}" formControlName="ingredients">
+                                                                </editor>
+                                                                <editor id="arabicID" *ngIf="languageList[i].languageName=='Arabic'" apiKey="test" [init]="{plugins: 'link'}" formControlName="ingredients">
+                                                                </editor>
+                                                            </div>
+                                                            <div class="col-md-12 mt-15px">
+                                                                <label>
+                                        Description
+                                      </label>
+                                                                <editor *ngIf="languageList[i].languageName!='Arabic'" apiKey="test" [init]="{plugins: 'link'}" formControlName="description">
+                                                                </editor>
+                                                                <editor id="arabicIDDescrtipion" *ngIf="languageList[i].languageName=='Arabic'" apiKey="test" [init]="{plugins: 'link'}" formControlName="description">
+                                                                </editor>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </mat-expansion-panel>
+            
+                                        </mat-accordion>
+            
+                                    </div>
+                                </div>
+                            </mat-card>
+            
+            
+                        </div>
+                    </div>
+                    <div *ngIf=" addComboForm1.submitted && ( createComboFormGroup.invalid || invalidError )"  class="error_message" >Please fill Mandatory Fields in Basic Tab</div>
+
+                    <div *ngIf="loading" class="page-loader-block full-page-loader">
+                        <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                      </div>
+                    <div class="btm-button-wrap"> 
+                        <button type="button" class="button secondary-btn" [routerLink]="['/search-combo']">CANCEL</button>
+                        <button type="button" class="button secondary-btn" (click)="previousStep()">BACK</button>
+
+                        <button class="button primary-btn" type="submit">UPDATE</button>
+                    </div>
+                </form>
+                   
+                  
+              </ng-template>
+              </mat-tab>
+        </mat-tab-group>
+      </div>

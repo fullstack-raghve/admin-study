@@ -1,0 +1,122 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title">
+        <h1>Masters</h1>
+    </div>
+</div>
+<div class="page-wrap-masters">
+    <div class="row master-cards">
+        <div class="col-md-3 master-list master-left">
+            <mat-card>
+                <ul class="master_listing">
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-customer-type']">Customer Type</a></li>
+          <li  class="master-list-selected"><a href="javascript:void(0)" [routerLink]="['/search-merchant']">Merchant</a></li> -->
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-brand']">Brand</a></li> -->
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-country']">Countries</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-cities']">Cities</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-malls']">Malls</a></li>
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-course']">Course</a></li>
+          <li><a href="javascript:void(0)" [routerLink]="['/search-cuisine']">Cuisine</a></li> -->
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-currency']">Currency</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-currency-conversion']">Currency Conversion</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-brand-category']">Brand Category</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-language']">Language</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-faq-category']">FAQ Category</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-about-us-category']">About Us Category</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-feedback']">Feedback</a></li>
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-partner']">Partner</a></li> -->
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-enquiry-type']">Enquiry Type</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/add-taxation']">Taxation</a></li>
+
+                </ul>
+            </mat-card>
+        </div>
+        <div class="col-md-9 master-right">
+            <mat-card class="master-content">
+                <div class="country-card">
+                    <div class="subtitle flex-center">
+                        <h3><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/left_arrow.png"
+                  alt="leftArrow" [routerLink]="['/search-merchant']"></span>Edit Merchant</h3>
+                        <div class="slider">
+                            <mat-slide-toggle [(ngModel)]="toggleVal" (change)="toggleStatus($event)" class="mat-slide-toggle">
+                                {{statusValue}}</mat-slide-toggle>
+                        </div>
+                    </div>
+
+                    <form id="addMerchantForm" (submit)="createMerchant(merchantFormGroup.value)" [formGroup]="merchantFormGroup" #createMerchantForm="ngForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="master-fieldSet" formArrayName="merchantLocale">
+                                    <fieldset class="language-fieldset">
+                                        <legend class="fieldset-heading">Merchant Name</legend>
+                                        <div *ngFor="let locale of merchantFormGroup['controls']['merchantLocale']['controls'];let i = index;" [formGroupName]="i">
+                                            <div class="example-container">
+                                                <mat-form-field class="{{alignCss[i]}}">
+                                                    <input matInput placeholder="{{languageList[i].languageName}}" maxlength="50" formControlName="merchantName" required>
+                                                    <mat-error *ngIf="locale.get('merchantName').hasError('required')">Please enter value
+                                                    </mat-error>
+                                                    <mat-error *ngIf="locale.get('merchantName').hasError('minlength')">Minimum 2 characters required
+                                                    </mat-error>
+                                                    <mat-error *ngIf="locale.get('merchantName').hasError('pattern')">Invalid characters entered
+                                                    </mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="example-container">
+                                            <mat-form-field class="field-style">
+                                                <input matInput placeholder="Merchant Code" maxlength="10" formControlName="merchantCode" required>
+                                                <mat-error *ngIf="merchantFormGroup.get('merchantCode').hasError('required')">Please enter value
+                                                </mat-error>
+                                                <mat-error *ngIf="merchantFormGroup.get('merchantCode').hasError('pattern')">This special character(s) is not allowed</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p class="image-text">Merchant Image*</p>
+                                        <div class="grid img-block">
+                                            <div class="avatar-zone" *ngIf="showImage">
+                                                <label *ngIf="imagePath==''" class="image-uploadText" [class.placeholder-img]="imgUpload">Image</label>
+                                                <img *ngIf="imagePath!=''" [src]="filePathUrl+imagePath" width="120px" height="80px">
+                                            </div>
+                                            <div class="remove-image" *ngIf="imagePath!=''" [class.imgbg]="imagePath!=''">
+                                                <div class="remove-image-icon">
+                                                    <img src="assets/images/icons/close_img_ico.png" alt="" (click)="removeImage()">
+                                                </div>
+                                                <div class="remove-image-text">
+                                                    <label>Remove</label>
+                                                </div>
+                                            </div>
+                                            <input style="display:none;" type="file" #uploadEl class="upload_btn" (change)="uploadImage($event.target.files)" />
+                                            <div class="text-center" style="width: 60%; " *ngIf="imagePath==''">
+                                                <span class="upload-text" (click)='uploadEl.click()'>
+                            <span class="upload-icon">
+                              <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px" alt="Img">
+                            </span>Upload Image
+                                                </span>
+                                            </div>
+                                            <div *ngIf="imageErrStatus" style="color:#f44336;font-size:75%">Please upload image</div>
+                                        </div>
+                                        <div class="image-error" *ngIf="showImageError">Please upload image</div>
+                                        <div *ngIf="imageErrMsg != undefined" class="image-error">{{imageErrMsg[i]}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="btm-button-wrap">
+                            <button type="button" class="site_btn gray_btn" [routerLink]="['/search-merchant']">CANCEL</button>
+                            <button type="submit" class="button primary-btn" [disabled]="loading == true" (click)="formImageStatus()">UPDATE</button>
+                        </div>
+                    </form>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+</div>

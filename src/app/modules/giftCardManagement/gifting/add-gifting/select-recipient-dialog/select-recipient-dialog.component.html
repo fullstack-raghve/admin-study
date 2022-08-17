@@ -1,0 +1,88 @@
+<div class="page-wrap">
+    <div class="bredcrumb-title-wrap">
+        <div class="search-wrap filter-wrap">
+          <div class="row common-search">
+              <div class="col-md-5 store-title" style="text-align: left;">
+                <h6>Select Recipients</h6>
+              </div>
+              <div class="col-md-7">
+                
+              </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-wrap">
+          <div class="table-wrap">
+          <div class="table-wrap-inner" >
+              <table class="table-scroll" mat-table [dataSource]="dataSource" matSort>
+                  <ng-container matColumnDef="select">
+                      <th mat-header-cell *matHeaderCellDef>
+                          <mat-checkbox (change)="$event ? masterToggle() : null"
+                              [checked]="selection.hasValue() && isAllSelected()"
+                              [indeterminate]="selection.hasValue() && !isAllSelected()"
+                              disabled="{{isDisabled}}">
+                          </mat-checkbox> ALL
+                      </th>
+                      <td mat-cell *matCellDef="let row">
+                          <mat-checkbox (click)="$event.stopPropagation()"
+                              (change)="$event ? selection.toggle(row) : null"
+                              [checked]="selection.isSelected(row)" disabled="{{isDisabled}}">
+                          </mat-checkbox>
+                      </td>
+                  </ng-container>          
+                  <ng-container matColumnDef="empId">
+                    <th class="mat-tab" mat-header-cell *matHeaderCellDef> EMPLOYEE ID </th>
+                    <td mat-row *matCellDef="let row">
+                      {{row.empId}}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="USER_NAME">
+                    <th mat-header-cell *matHeaderCellDef> NAME</th>
+                    <td mat-row *matCellDef="let row"> {{row.USER_NAME}} </td>
+                  </ng-container>
+
+      
+                  <ng-container matColumnDef="EMAIL">
+                    <th mat-header-cell *matHeaderCellDef> EMAIL ID</th>
+                    <td mat-row *matCellDef="let row"> {{row.EMAIL}} </td>
+                  </ng-container>
+      
+                  <ng-container matColumnDef="MOBILE_NUMBER">
+                    <th mat-header-cell *matHeaderCellDef> MOBILE NUMBER</th>
+                    <td mat-row *matCellDef="let row"> {{row.MOBILE_NUMBER}} </td>
+                  </ng-container>
+
+                
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+              </table>
+              <div class="no-records" *ngIf="noRecords">
+                No Records Found!
+              </div>
+              </div>
+             
+            </div>
+            <div class=" row  total-val-block">
+                <div class="col-md-5 total-value-block" *ngIf="totalFilterRecordVal">
+                  <div class="total-value">
+                    <p>Total Recipients : </p>
+                    <span>{{total}}</span>
+                  </div>
+                </div>
+        
+        
+              </div>
+            <div class="button-wrap">
+              <div class="">
+                <button class="button secondary-btn" [mat-dialog-close]="{
+                  'buttonName': 'CANCEL'
+                }">CANCEL</button>
+                <button class="button primary-btn" [mat-dialog-close]="{
+                  'buttonName': 'SELECT',
+                  'tableData': selection.selected,
+                  'totalCount':resultsLength
+                }">SELECT</button>
+              </div>
+            </div>
+        </div>
+      </div>

@@ -1,0 +1,207 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container">
+        <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg"
+                    alt="leftArrow" [routerLink]="['/search-customer-segments']"></span>View Customer Segments</h1>
+        <mat-slide-toggle class="example-margin text-right" [(ngModel)]="toggleVal" (change)="toggleStatus($event)">
+            {{statusValue}}
+        </mat-slide-toggle>
+    </div>
+</div>
+<div *ngIf="viewcusSegmentData" class="select-store-block">
+    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+</div>
+
+
+<div class="page-wrap" *ngIf="!viewcusSegmentData">
+    <form *ngIf="viewTemplateData" #viewCustomerSegmentsForm="ngForm">
+        <div class="row">
+            <div class="col-md-5">
+                <h3 class="card-title">Basic Details</h3>
+                <mat-card class="segment-card">
+                    <div class="row segment-details">
+                        <div class="col-md-12">
+                            <label>Segment Name</label>
+                            <p>{{viewTemplateData.segmentName}}</p>
+                        </div>
+                        <div class="col-md-12 brk-all">
+                            <label>Description</label>
+                            <p>{{viewTemplateData.segmentDescription}}</p>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+            <div class="col-md-7">
+                <span class="flex-container">
+                    <h3 class="card-title">Segmentation Rules</h3>
+                    <button type="button" class="button tertiary-btn" name="button"
+                        (click)="MoveToEdit(viewTemplateData.segmentId,'clone')"
+                        *ngIf="viewTemplateData?.segmentType == 'SEGMENT_RULE'">CLONE TEMPLATE</button>
+                </span>
+                <mat-card class="segment-card">
+                    <div class="segment-rules" *ngIf="viewTemplateData?.segmentType == 'SEGMENT_RULE'">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h1>{{viewTemplateData.customerSelctedCount}}</h1>
+                                        <div class="">
+                                            <label>Customers Selected</label>
+                                        </div>
+                                        <div class="getdetails-cus">
+                                            <div class="getcustomer-download">
+                                                <div>
+                                                    <a (click)="getCustomerList()" class="getdetails" *ngIf="getCustomerBtnEnbale" [class.disable-cusbtn]="disableData"><span
+                                                            class="download-info">
+                                                            <img class="downoad-icon"
+                                                                src="assets/images/svg-icons/uploadgray_ico.svg"
+                                                                alt=""><span class="download-info">Download
+                                                                Customer Data</span>
+                                                        </span></a>
+                                                </div>
+                                                <div *ngIf="downloadQuery" class="segment-loader download-loader">
+                                                    <div>
+                                                        <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                                                    </div>
+                                                    <span>Downloading</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 select-segment">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <hr>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="segment-info">
+                                    <p class="segment-title">Segmentation</p>
+                                    <div *ngIf="selectfinalQuery" class="segment-loader">
+                                        <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                                    </div>
+                                    <p *ngIf="!selectfinalQuery">{{finalQuery}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row row_non_memData" *ngIf="viewTemplateData?.segmentType != 'SEGMENT_RULE'">
+                        <div class="col-4 non_memData">
+                            <label>File Validate Status</label>
+                            <p>
+                                {{viewTemplateData?.uploadStatus}}
+                            </p>
+                        </div>
+                        <div class="col-4 non_memData">
+                            <label>Success File Path</label>
+                            <div class="getcustomer-download">
+                                <div class="segmentFile_upload">
+                                    <p *ngIf="viewTemplateData?.successFilePath == null">-</p>
+                                    <a *ngIf="viewTemplateData?.successFilePath != null" href="{{fileSegmentUrl}}{{viewTemplateData?.successFilePath}}"><img class="downoad-icon" src="assets/images/download_icon.png" alt=""><span class="download-info">Download
+                                            Success File Path</span></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4 non_memData">
+                            <label>Error File Path
+                            </label>
+                            <div class="getcustomer-download">
+                                <div class="segmentFile_upload">
+                                    <p *ngIf="viewErrorFilePath == null">-</p>
+                                    <a *ngIf="viewErrorFilePath != null" href="{{fileSegmentUrl}}{{viewErrorFilePath}}">
+                                        <img class="downoad-icon" src="assets/images/download_icon.png" alt=""><span class="download-info">Download
+                                            Error File Path
+                                        </span></a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-4 non_memData" *ngIf="viewTemplateData?.segmentType != 'SEGMENT_MEMBER_AND_NON_MEMBER'">
+                            <!-- <div class="col-4 non_memData"> -->
+                            <label>Valid Member Count</label>
+                            <div class="vaild_nonvalid" *ngIf="viewTemplateData?.segmentType != 'SEGMENT_NON_MEMBER'">
+                                <p *ngIf="viewTemplateData?.validMemberCount == null">-</p>
+                                <p *ngIf="viewTemplateData?.validMemberCount != null">
+                                    {{viewTemplateData?.validMemberCount}}
+                                </p>
+                            </div>
+                            <div class="vaild_nonvalid" *ngIf="viewTemplateData?.segmentType == 'SEGMENT_NON_MEMBER'">
+                                <p *ngIf="viewTemplateData?.validNonMemberCount == null">-</p>
+                                <p *ngIf="viewTemplateData?.validNonMemberCount != null">
+                                    {{viewTemplateData?.validNonMemberCount}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-4 non_memData" *ngIf="viewTemplateData?.segmentType != 'SEGMENT_MEMBER_AND_NON_MEMBER'">
+                            <!-- <div class="col-4 non_memData"> -->
+                            <label>Invalid Member Count</label>
+                            <div class="vaild_nonvalid" *ngIf="viewTemplateData?.segmentType != 'SEGMENT_NON_MEMBER'">
+                                <p *ngIf="viewTemplateData?.inValidMemeberCount == null">
+                                    -</p>
+                                <p *ngIf="viewTemplateData?.inValidMemeberCount != null">
+                                    {{viewTemplateData?.inValidMemeberCount}}</p>
+                            </div>
+                            <div class="vaild_nonvalid" *ngIf="viewTemplateData?.segmentType == 'SEGMENT_NON_MEMBER'">
+                                <p *ngIf="viewTemplateData?.inValidMemeberCount == null">-</p>
+                                <p *ngIf="viewTemplateData?.inValidMemeberCount != null">
+                                    {{viewTemplateData?.inValidMemeberCount}}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-12 " *ngIf="viewTemplateData?.segmentType == 'SEGMENT_MEMBER_AND_NON_MEMBER'">
+                            <div class="row nonValidNon_row">
+                                <div class="col-6 nonValidNon_col">
+                                    <div class="row">
+                                        <div class="col-12 seg_mem_col">
+                                            <div class="segmem_nonmem" *ngIf="viewTemplateData?.segmentType == 'SEGMENT_MEMBER_AND_NON_MEMBER'">
+                                                <p>Member Count</p>
+                                                <div class="row segmem_nonmem_row">
+                                                    <div class="col-6 non_memData_col">
+                                                        <label>Valid Member Count</label>
+                                                        <p *ngIf="viewTemplateData?.validMemberCount == null">-</p>
+                                                        <p *ngIf="viewTemplateData?.validMemberCount != null">
+                                                            {{viewTemplateData?.validMemberCount}}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 seg_mem_col">
+                                            <div class="segmem_nonmem" *ngIf="viewTemplateData?.segmentType == 'SEGMENT_MEMBER_AND_NON_MEMBER'">
+                                                <p>Non Member Count</p>
+                                                <div class="row segmem_nonmem_row">
+                                                    <div class="col-6 non_memData_col">
+                                                        <label>Valid Non Member Count</label>
+                                                        <p *ngIf="viewTemplateData?.validNonMemberCount == null">-</p>
+                                                        <p *ngIf="viewTemplateData?.validNonMemberCount != null">
+                                                            {{viewTemplateData?.validNonMemberCount}}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6 nonValidNon_col">
+                                    <div class="segmem_nonmem" *ngIf="viewTemplateData?.segmentType == 'SEGMENT_MEMBER_AND_NON_MEMBER'">
+                                        <div class="non_memData_col">
+                                            <label>Invalid Count</label>
+                                            <p *ngIf="viewTemplateData?.inValidMemeberCount == null">
+                                                {{viewTemplateData?.inValidMemeberCount}}</p>
+                                            <p *ngIf="viewTemplateData?.inValidMemeberCount != null">
+                                                {{viewTemplateData?.inValidMemeberCount}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+        </div><br>
+        <div class="btm-button-wrap">
+            <button class="button secondary-btn" [routerLink]="['/search-customer-segments']">CANCEL</button>
+            <button class="button primary-btn" (click)="MoveToEdit(viewTemplateData.segmentId,'edit')" *ngIf="viewTemplateData?.segmentType=='SEGMENT_RULE'">EDIT</button>
+        </div>
+    </form>
+</div>

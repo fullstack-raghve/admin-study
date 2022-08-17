@@ -1,0 +1,237 @@
+<div class="page-wrap">
+  <div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container">
+      <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg"
+            alt="leftArrow" [routerLink]="['/search-cart-configuration']"></span>view Cart Configuration</h1>
+            <div class="slider">
+              <mat-slide-toggle class="mat-slide-toggle" [checked]="checked" [disabled]='true'>{{ViewData.status}}
+              </mat-slide-toggle>
+          </div>
+    </div>
+  </div>
+  <mat-card class="card">
+      <div class="row">
+        <div class="col-md-3">
+          <label>Configuration Title</label>
+          <p>{{ViewData.configurationTitle}}</p>
+        </div>
+        <div class="col-md-3">
+            <label>Brand</label>
+          <p>{{ViewData['brand'].brandName}}</p>
+          </div>
+          <div class="col-md-3">
+              <label>Country</label>
+              <div *ngFor="let country of CountryList">
+                <p>{{country.countryName}}</p>
+              </div>
+              
+            </div>
+            <div class="col-md-3">
+                <label>Add Stores</label>
+                <p>{{ViewData['storeList'].length}} Stores Selected</p>
+              </div>
+              
+      </div>
+      
+</mat-card>
+
+    <mat-card *ngIf="checkInstruction" class="card">
+        <div class=" row">
+        <!-- <div class="subtitle flex-center"> -->
+          <div class="col-md-8"> 
+              <h3 class="card-title ">Instructions</h3>
+
+          </div>
+         
+
+      </div>
+      <div *ngFor="let insDetails of ViewData['insDetailsViewBeans'];let j = index;" class="row">
+        <div class="col-md-3">
+            <div class="grid img-block">
+                <div class="avatar-zone">
+                  <img class="upload-img" [src]="filePathUrl+insDetails.insImagePath"
+                     />
+                </div>
+              </div>
+          <div class="row">
+              <label class="col-md-12">Instructions For</label>
+            <div class="col-md-6">
+                    <mat-checkbox [checked]="insDetails.insForDeliveryPartner"> Delivery Partner</mat-checkbox>
+            </div>
+            <div class="col-md-6"> 
+                <mat-checkbox [checked]="insDetails.insForStorePartner"> Store</mat-checkbox>
+            </div>
+          </div>
+          <div class="row">
+              <div class="col-md-6">
+                <label>Start Date</label>
+                <p>{{insDetails['startDate']}}</p>
+              </div>
+              <div class="col-md-6">
+                <label>End Date</label>
+                <p>{{insDetails['endDate']}}</p>
+              </div>
+            </div>
+        </div>
+  
+                      <div class="col-md-3">
+                        <div class="master-fieldSet">
+                            <fieldset class="language-fieldset" required>
+                                <legend class="fieldset-heading">Name*</legend>
+                                <div class="multi-fieldset">
+                                    <div *ngFor="let c of insDetails.instructionLocales;let k = index">
+                                        <div [class.text-right]="c.language == 'Arabic'" class="view-label">
+                                            <label>{{c.language}}</label>
+                                            <p>{{c.instuctionName}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+        
+        <div class="col-md-6">
+                <div class="master-fieldSet">
+                        <fieldset class="language-fieldset" required>
+                            <legend class="fieldset-heading">Description*</legend>
+                            <div class="multi-fieldset">
+                                <div *ngFor="let c of insDetails.instructionLocales;let k = index">
+                                    <div  [class.text-right]="c.language == 'Arabic'" class="view-label">
+                                        <label>{{c.language}}</label>
+                                        <p>{{c.instuctionDesc}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+         
+        </div>
+      </div>
+      </mat-card>
+<div *ngIf="checkTips">
+    <mat-card class="card">
+        <div class=" row">
+          <div class="col-md-8">
+              <h3 class="card-title ">Tips/Donations</h3>
+
+          </div>
+          <!-- <div class="col-md-4 btm-button-wrap">
+              <button class="button primary-btn" type="button" >ADD INSTRUCTION</button>
+
+          </div> -->
+
+      </div>
+      <div class="row" *ngFor="let tip of ViewData['tipDonationViewBean'];let j = index;">
+        <div class="col-md-3">
+            <div class="grid img-block">
+                <div class="avatar-zone">
+                  <img class="upload-img" [src]="filePathUrl+tip.tipDonationImagePath"
+                     />
+                </div>
+              </div>
+          <div class="row">     
+            <div class="col-md-12">
+                <mat-checkbox [checked]="tip.passToDeliveryPartner" > Pass to Delivery Partner</mat-checkbox>
+
+            </div>            
+          </div>
+          <div class="row">
+              <div class="col-md-6">
+                <label>Start Date</label>
+                <p>{{tip.startDate}}</p>
+              </div>
+              <div class="col-md-6">
+                <label>End Date</label>
+                <p>{{tip.endDate}}</p>
+              </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+              <div class="master-fieldSet">
+                  <fieldset class="language-fieldset" required>
+                      <legend class="fieldset-heading">Name*</legend>
+                      <div class="multi-fieldset">
+                          <div *ngFor="let c of tip.tipDonationLocales;let k = index">
+                              <div [class.text-right]="c.language == 'Arabic'" class="view-label">
+                                  <label>{{c.language}}</label>
+                                  <p>{{c.tipDonationName}}</p>
+                              </div>
+                          </div>
+                      </div>
+                  </fieldset>
+              </div>
+          </div>
+          <div class="col-md-6">
+                  <div class="master-fieldSet">
+                          <fieldset class="language-fieldset" required>
+                              <legend class="fieldset-heading">Description*</legend>
+                              <div class="multi-fieldset">
+                                  <div *ngFor="let c of tip.tipDonationLocales;let k = index">
+                                      <div [class.text-right]="c.language == 'Arabic'" class="view-label">
+                                          <label>{{c.language}}</label>
+                                          <p>{{c.tipDonationDesc}}</p>
+                                      </div>
+                                  </div>
+                              </div>
+                          </fieldset>
+                      </div>
+           
+          </div>
+          <div class="col-md-12">
+                    <label>Denominations</label>
+                </div>
+                <div class="row row-denomination"  >
+                  <div class="col-md-4 col-denomination"
+                  *ngFor="let Denomination of tip['tipDonationDenominations'];let k = index;" >
+
+                    <div class="denomination-data" >
+                    
+                      <div class="chip-list">
+                        {{Denomination.currencyCode}}
+                        <div >
+                          <mat-chip *ngFor="let denominations of Denomination.denominations" >
+                            {{denominations}}
+                          </mat-chip>
+                        </div>
+
+
+
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+                <!-- <div class="col-md-12">
+                      <div *ngFor="let Denomination of tip['tipDonationDenominations'];let k = index;" class="row">
+        
+                              <div  class="col-md-4">
+                                  <div class="chip-list">
+                    
+                                      {{Denomination.currencyCode}}
+                                
+                                        <mat-chip *ngFor="let denominations of Denomination.denominations" >
+                                            {{denominations}}
+                                            
+                                        </mat-chip>
+                                       
+                                    </div>
+                              </div>
+                            
+                                
+                            </div>
+                </div> -->
+                
+        
+      </div>
+      
+      </mat-card>
+</div>
+      
+  <div class="btm-button-wrap">
+    <button [routerLink]="['/search-cart-configuration']" class="button secondary-btn" >CANCEL</button>
+    <!-- <button class="button primary-btn" [routerLink]="['/edit-press-release/'+prId]">EDIT</button> -->
+    <button (click)="EditCart()" class="button primary-btn" type="button" >EDIT</button>
+</div>
+  </div>
+ 

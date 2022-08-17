@@ -1,0 +1,157 @@
+<div class="page-wrap">
+    <div class="bredcrumb-title-wrap">
+        <div class="space-between close-dialog">
+            <div class="title">
+                <h4>Extend Points Expiry</h4>
+            </div>
+            <div class="close-icon text-right">
+                <img src="assets/images/icons/filter_close_ico.png" (click)="onCloseClick()" alt="">
+            </div>
+        </div>
+        <div *ngIf="searchStoreVal" class="select-store-block">
+            <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+        </div>
+        <form class="filter-wrap" *ngIf="!searchStoreVal" [formGroup]="expiryRewardSearchGroup" (submit)="viewRewardExpiry()">
+            <div class="common-search">
+                <input type="text" placeholder="Search Points" formControlName="searchVal" />
+                <span class="search-btn" (click)="viewRewardExpiry()"></span>
+                <div class="filter-btn-wrap">
+                    <span class="filter-btn" (click)="openFilter();" [ngClass]="status ? 'open' : 'close'"></span>
+                </div>
+            </div>
+            <div class="feild-search" *ngIf="!status">
+                <div class="row feild-search-inner">
+                    <div class="col-md-3">
+                        <mat-form-field>
+                            <mat-select placeholder="Select Year" formControlName="year">
+                                <mat-option value="2019">2019</mat-option>
+                                <mat-option value="2020">2020</mat-option>
+                                <mat-option value="2021">2021</mat-option>
+                                <mat-option value="2022">2022</mat-option>
+                                <mat-option value="2023">2023</mat-option>
+                                <mat-option value="2024">2024</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-3">
+                        <mat-form-field>
+                            <mat-select placeholder="Select Month" formControlName="month">
+                                <mat-option value="01">Jan</mat-option>
+                                <mat-option value="02">Feb</mat-option>
+                                <mat-option value="03">Mar</mat-option>
+                                <mat-option value="04">Apr</mat-option>
+                                <mat-option value="05">May</mat-option>
+                                <mat-option value="06">Jun</mat-option>
+                                <mat-option value="07">Jul</mat-option>
+                                <mat-option value="08">Aug</mat-option>
+                                <mat-option value="09">Sep</mat-option>
+                                <mat-option value="10">Oct</mat-option>
+                                <mat-option value="11">Nov</mat-option>
+                                <mat-option value="12">Dec</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <!-- <div class="col-md-3">
+            <mat-form-field>
+              <mat-select placeholder="Type Of Points">
+                <mat-option value="">Type 1</mat-option>
+                <mat-option value="">Type 2</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div> -->
+                    <div class="button-wrap">
+                        <div class="">
+                            <button class='button quaternary-btn' type="reset" (click)="viewRewardExpiry()">Reset</button>
+                            <button class='button tertiary-btn' type="submit">Apply</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="form-wrap" *ngIf="!searchStoreVal">
+
+
+
+        <div class="table-wrap">
+            <form [formGroup]="extendExpiryFormGroup" #extendExpiryForm="ngForm">
+                <div class="table-wrap-inner " malihu-scrollbar [scrollbarOptions]="scrollbarOptions" formArrayName="expiryItems">
+                    <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortExpiryData($event)" class="table-scroll">
+                        <ng-container matColumnDef="slNo">
+                            <th mat-header-cell *matHeaderCellDef class="top-border"> SLNO. </th>
+                            <td mat-cell *matCellDef="let row; let i = index;">
+                                {{(paginationData.pageIndex*paginationData.pageSize)+i+1}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="txnId">
+                            <th mat-header-cell *matHeaderCellDef class="top-border"> TRANSACTION ID </th>
+                            <td mat-cell *matCellDef="let row"> {{ row.txnId }} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="rewardType">
+                            <th mat-header-cell *matHeaderCellDef class="top-border"> REWARD TYPE </th>
+                            <td mat-cell *matCellDef="let row"> {{row.rewardType}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="noOfRewards">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="remainingBalance" class="top-border"> NO OF REWARDS </th>
+                            <td mat-cell *matCellDef="let row"> {{row.noOfRewards}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="expiryDate">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="expiryDate" class="top-border"> EXPIRY DATE </th>
+                            <td mat-cell *matCellDef="let row"> {{row.expiryDate}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="days">
+                            <th mat-header-cell *matHeaderCellDef class="top-border"> DAYS </th>
+                            <td mat-cell *matCellDef="let row;let i=index" [formGroupName]="i">
+                                <div class="table-input" [hidden]="(minDate > minDates[i] || !row.isAllowExpiryExtension)">
+                                    <mat-form-field>
+                                        <input matInput placeholder="Days" formControlName="expiryDays" OnlyNumber="true" [readonly]="!editable[i]">
+                                    </mat-form-field>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="date">
+                            <th mat-header-cell *matHeaderCellDef class="top-border"> DATE </th>
+                            <td mat-cell *matCellDef="let row;let i=index" [formGroupName]="i">
+                                <div class="table-input flex-container" [hidden]="minDate > minDates[i] || !row.isAllowExpiryExtension">
+                                    <mat-form-field>
+                                        <input matInput [matDatepicker]="picker" formControlName="expiryDate" placeholder="Date" [min]="minDates[i]" [readonly]="true">
+                                        <mat-datepicker-toggle matSuffix [for]="picker" [disabled]="!editable[i]"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker></mat-datepicker>
+                                    </mat-form-field>
+
+                                    <div class="flex-container edit-ico">
+                                        <div class="edit-ico" (click)="enableEditable(i)" *ngIf="!editable[i]">
+                                            <span>
+                        <img src="assets/images/icons/flaticon1562564280-svg.svg" alt="edit-ico" ng-model="editButton">
+                      </span>
+                                        </div>
+                                        <div class="mt-15px" *ngIf="editable[i]">
+                                            <button class="button tertiary-btn cancel-tertiary-btn" (click)="disableEditable(i)" type="reset">CANCEL</button>
+                                            <button class="button tertiary-btn" (click)="updateExpiry(i,row.txnOids)">UPDATE</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                        </tr>
+                    </table>
+                    <div *ngIf="searchStoreVal" class="select-store-block">
+                        <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                    </div>
+                    <div class="no-records" *ngIf="noRecords">
+                        No Records Found!
+                    </div>
+                </div>
+                <mat-paginator [length]="resultsLength" #paginator (page)="getUpdate($event)" [pageSize]="this.paginationData.pageSize" [pageSizeOptions]="[10,20,50,100]">
+                </mat-paginator>
+            </form>
+        </div>
+    </div>
+</div>

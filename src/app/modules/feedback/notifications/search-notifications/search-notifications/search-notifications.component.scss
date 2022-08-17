@@ -1,0 +1,19 @@
+
+.isread{
+    opacity: 0.7;
+}
+.emoji-section{
+    img {
+        width: 20px;
+        height: 20px;
+    }
+}
+.select-tags{
+    position: absolute;
+    bottom: 0px;
+    .mat-form-field {
+        /deep/.mat-form-field-wrapper {
+            width: 188px !important;
+        }
+    }
+}

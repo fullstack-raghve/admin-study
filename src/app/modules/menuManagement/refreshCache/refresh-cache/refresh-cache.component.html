@@ -1,0 +1,38 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container">
+        <h1>Refresh Menu</h1>
+    </div>
+</div>
+<div class="landing-page">
+    <mat-card>
+        <div class="welcome-page">
+            <div class="logo">
+                <img class="logo-img" src="assets/images/update.png">
+            </div>
+            <div>
+                Clicking the Refresh menu button will refresh the Customer app menu for all stores with the updated data. Please note this may take 30 mins or more to refresh the entire menu.
+            </div>
+            <div class="refresh">
+                Do not update any Products / Categories / Addon during the refresh.
+            </div>
+            <div class="spinner" *ngIf="loading == true">
+                <div class="rect1"></div>
+                <div class="rect2"></div>
+                <div class="rect3"></div>
+                <div class="rect4"></div>
+                <div class="rect5"></div>
+            </div>
+            <div>
+                <div class="btm-button-wrap">
+                    <div *ngIf="loading == true">
+                        <button type="button" class="button secondary-btn" style="cursor: none;">REFRESH IN PROGRESS</button>
+                    </div>
+                    <div *ngIf="loading == false">
+                        <button type="submit" class="button primary-btn" (click)="clearCache()">REFRESH</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </mat-card>
+</div>

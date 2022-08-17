@@ -1,0 +1,77 @@
+.page-wrap {
+    padding: 1em;
+    .heading {
+        h1 {
+            font-size: 25px;
+            color: #000;
+            margin-bottom: 1em;
+        }
+        p {
+            color: #000;
+            font-size: 18px;
+            span {
+                color: #525252;
+                font-size: 17px;
+            }
+        }
+    }
+    .grey-font-label {
+        font-size: 13px;
+        color: #5d5d5d;
+        margin-bottom: 0;
+    }
+}
+.order-details {
+    background-color: #fffaea;
+    padding: 1em 1em 1em 2em;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+}
+.delivery-icon {
+    background: url("src/assets/images/order_management/delivery_active_ico.svg");
+    height: 23px;
+    width: 42px;
+    display: block;
+    background-repeat: no-repeat;
+}
+.pickup-icon {
+    background: url("src/assets/images/order_management/pickup_inactive_ico.svg");
+    height: 23px;
+    width: 42px;
+    display: block;
+    background-repeat: no-repeat;
+}
+.curbside-icon {
+    background: url("src/assets/images/order_management/Curbside_ico.png");
+    height: 23px;
+    width: 42px;
+    display: block;
+    background-repeat: no-repeat;
+}
+.customer-details-section {
+    .address {
+        font-size: 15px;
+        color: #000000;
+        margin-bottom: 5px;
+    }
+}
+.grey-font-label {
+    font-size: 10px;
+    color: #5d5d5d;
+    margin-bottom: 0;
+}
+.status-description{
+    padding: 1em;
+    background-color: #FFF4F4;
+    text-align: right;
+    p{
+        color: #000;
+        font-size: 15px;
+        margin-bottom: 0;
+    }
+    .currency-lable{
+        font-size: 10px;
+        color: #939393;
+        margin-bottom: 0;
+    }
+}

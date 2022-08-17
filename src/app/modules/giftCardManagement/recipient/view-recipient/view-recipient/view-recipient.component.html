@@ -1,0 +1,32 @@
+<div class="page-wrap">
+    <form>
+      <mat-card>
+        <h5>View Recipient<span>
+        <div class="close-icon text-right">
+            <img src="assets/images/icons/filter_close_ico.png" (click)="onCloseClick()" alt="">
+          </div></span></h5>
+        <div class="row">
+          <div class="col view-label">
+
+            <label>ID</label>
+            <p>{{recipientId}} </p>
+           
+           <label>Name</label>
+            <p>{{name}} </p>
+  
+            <label>Mobile Number</label>
+            <p>{{mobileNumber}}</p>
+            
+            <label>Email Id</label>
+            <p>{{EMAIL}}</p>
+
+          </div>
+        </div>
+  
+        <div>
+          <button type="button"class="button primary-btn" (click)="editRecipient()">EDIT</button>
+          <button type="button" class="button secondary-btn" (click)="deleteRecipient()">DELETE</button>
+        </div>
+      </mat-card>
+    </form>
+  </div>

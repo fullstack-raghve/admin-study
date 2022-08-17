@@ -1,0 +1,97 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container">
+        <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          [routerLink]="['/search-eWallet']"></span>View E-Wallet</h1>
+        <mat-slide-toggle class="example-margin" [checked]="checked" [disabled]="true">
+            {{toggleVal}}
+        </mat-slide-toggle>
+    </div>
+</div>
+<div class="page-wrap">
+    <div class="row">
+        <div class="col-md-5">
+            <h3 class="card-title">Basic Details</h3>
+            <mat-card>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Wallet Name</label>
+                        <p>{{viewData?.walletName}}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Currency Name</label>
+                        <p>{{viewData?.currencyCode}}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Minimum Reload Balance</label>
+                        <p>{{viewData?.minBalance}}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Maximum Reload Balance</label>
+                        <p>{{viewData?.maxBalance}}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Recharge Denominations</label>
+                        <ul class="added_denominations" *ngIf="denominationsArray.length != 0">
+                            <li *ngFor="let item of denominationsArray; let i=index;">
+                                {{ item }}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+        <div class="col-md-7">
+            <h3 class="card-title">Stores</h3>
+            <mat-card>
+                <div class="row">
+                    <!-- <div class="col-md-6">
+            <label>Maximum Single Amount Loading</label>
+            <p>{{viewData?.maxAmountLoad}}</p>
+          </div>
+          <div class="col-md-6">
+            <label>Maximum Transaction Volume (Day)</label>
+            <p>{{viewData?.perDayCap}}</p>
+          </div>
+          <div class="col-md-6">
+            <label>Maximum Transaction Volume (Month)</label>
+            <p>{{viewData?.perMonthCap}}</p>
+          </div> -->
+                    <div class="col-md-6">
+                        <!-- <label>POS Stores</label> -->
+                        <p class="stores-selected"><u>{{viewData?.storeIDs.length}} stores selected</u></p>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+    <div class="terms-conditions pt-20px">
+        <h3 class="card-title">Terms & Conditions *</h3>
+        <mat-card class="description-card">
+            <div class="expansion-panel">
+                <mat-accordion>
+                    <mat-expansion-panel *ngFor="let lang of languageList;let i = index;" class="mat-expansion-panel">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                {{lang.languageName}}
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <div class="pt-20px">
+                            <label>Content</label>
+                            <div class="content-block" *ngIf="viewData?.termsNConditions.length != 0">
+                                <p [innerHTML]="viewData?.termsNConditions[i].content != '' ? viewData?.termsNConditions[i].content : '-'"></p>
+                            </div>
+                        </div>
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </div>
+        </mat-card>
+    </div>
+    <div class="btm-button-wrap">
+        <button class="button secondary-btn" [routerLink]="['/search-eWallet']">CANCEL</button>
+        <button class="button primary-btn" type="button" (click)="goToEditEWallet()">EDIT</button>
+    </div>
+</div>
+<div *ngIf="pageLoader" class="page-loader-block full-page-loader">
+    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+</div>

@@ -1,0 +1,88 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title">
+        <h1>Masters</h1>
+    </div>
+</div>
+<div class="page-wrap-masters">
+    <div class="row master-cards">
+        <div class="col-md-3 master-list master-left">
+            <mat-card>
+                <ul class="master_listing">
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-customer-type']">Customer Type</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-merchant']">Merchant</a></li> -->
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-brand']">Brand</a></li> -->
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-country']">Countries</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-cities']">Cities</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-malls']">Malls</a></li>
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-course']">Course</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-cuisine']">Cuisine</a></li> -->
+                    <li class="master-list-selected"><a href="javascript:void(0)" [routerLink]="['/search-currency']">Currency</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-currency-conversion']">Currency Conversion</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-brand-category']">Brand Category</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-language']">Language</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-faq-category']">FAQ Category</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-about-us-category']">About Us Category</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-feedback']">Feedback</a></li>
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-partner']">Partner</a></li> -->
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-enquiry-type']">Enquiry Type</a></li>
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/add-taxation']">Taxation</a></li> -->
+                    <li><a href="javascript:void(0)" [routerLink]="['/add-product-tag']">Product Tag</a></li>
+
+
+                </ul>
+            </mat-card>
+        </div>
+        <div class="col-md-9 master-right">
+            <mat-card class="master-content">
+                <div class="country-card">
+                    <div class="subtitle flex-center">
+                        <h3><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/left_arrow.png" alt="leftArrow" [routerLink]="['/search-currency']"></span>Add Currency</h3>
+                        <div class="slider">
+                            <mat-slide-toggle [(ngModel)]="toggleVal" (change)="toggleStatus($event)" class="mat-slide-toggle">{{statusValue}}</mat-slide-toggle>
+                        </div>
+                    </div>
+                    <form [formGroup]="currencyFormGroup" id="addCurrencyForm" (submit)="addCurrency(currencyFormGroup.value)" #createCurrencyForm="ngForm">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="master-fieldSet" formArrayName="currencyLocale">
+                                    <fieldset class="language-fieldset">
+                                        <legend class="fieldset-heading">Currency Name</legend>
+                                        <div *ngFor="let locale of currencyFormGroup['controls']['currencyLocale']['controls'];let i = index;" [formGroupName]="i">
+                                            <div class="example-container">
+                                                <mat-form-field class="{{alignCss[i]}}">
+                                                    <input matInput placeholder="{{languageList[i].languageName}}" maxlength="100" formControlName="currencyName" required>
+                                                    <mat-error *ngIf="locale.get('currencyName').hasError('required')">Please enter value</mat-error>
+                                                    <mat-error *ngIf="locale.get('currencyName').hasError('minlength')">Minimum 2 characters required</mat-error>
+                                                    <mat-error *ngIf="locale.get('currencyName').hasError('pattern')">Only alphabates are allowed</mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="row mt-30px">
+                                    <div class="col-md-6">
+                                        <div class="example-container">
+                                            <mat-form-field class="field-style">
+                                                <input matInput placeholder="Currency Codes" maxlength="3" formControlName="currencyCode" required>
+                                                <mat-error *ngIf="currencyFormGroup.get('currencyCode').hasError('required')">Please enter value</mat-error>
+                                                <mat-error *ngIf="currencyFormGroup.get('currencyCode').hasError('minlength')">Currency Code must be 3 characters</mat-error>
+                                                <mat-error *ngIf="currencyFormGroup.get('currencyCode').hasError('pattern')">Only alphabets are allowed</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="btm-button-wrap">
+                            <button type="button" class="site_btn gray_btn mr-12px" [routerLink]="['/search-currency/']">CANCEL</button>
+                            <button type="submit" class="site_btn orange_btn" [disabled]="loading == true">ADD</button>
+                        </div>
+                    </form>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+</div>

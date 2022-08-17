@@ -1,0 +1,19 @@
+/deep/ .mat-autocomplete-panel{
+    /deep/ .mat-option{
+        /deep/ .mat-option-text{
+            span{
+                font-size: 12px;
+            }
+        }
+    }
+}
+.select-tags{
+    position: absolute;
+    bottom: 0px;
+    .mat-form-field {
+        /deep/.mat-form-field-wrapper {
+            width: 267px !important;
+        }
+    }
+    
+}

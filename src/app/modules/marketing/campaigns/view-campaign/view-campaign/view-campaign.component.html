@@ -1,0 +1,614 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container">
+        <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg"
+                    alt="leftArrow" (click)="moveToPreviousUrl()"></span>View Campaigns</h1>
+        <!-- <mat-slide-toggle class="example-margin text-right" [checked]="checked" (change)="toggleStatus()">
+            {{statusValue}}
+        </mat-slide-toggle> -->
+        <mat-slide-toggle class="example-margin text-right" [(ngModel)]="toggleVal" (change)="toggleStatus($event)">
+            {{statusValue}}
+        </mat-slide-toggle>
+    </div>
+</div>
+<div class="page-wrap" *ngIf="campaignData.length != 0">
+    <div class="campaign-block">
+        <mat-horizontal-stepper #stepper class="campaign-stepper">
+            <mat-step [stepControl]="firstFormGroup">
+                <form [formGroup]="firstFormGroup">
+                    <ng-template matStepLabel>Basic Details</ng-template>
+                    <div class="basic-details">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Activity</label>
+                                <p>{{ campaignData.basicDetails.activityName }}</p>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label>Campaign Name</label>
+                                <p>{{ campaignData.basicDetails.campaignName }}</p>
+                            </div>
+                        </div>
+                        <div class="row mb-20px">
+                            <div class="col-md-12">
+                                <label>Description</label>
+                                <p>{{ campaignData.basicDetails.campaignDescription }}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="card-title">Select Communication Type</p>
+                                <mat-card class="select-communication">
+                                    <div>
+                                        <div class="communication-types">
+                                            <mat-checkbox [checked]="pushChecked" [disabled]="disabled" *ngIf="nonmemberCampaign"> App-Push Notification </mat-checkbox>
+                                            <mat-checkbox [checked]="emailChecked" [disabled]="disabled"> Email
+                                            </mat-checkbox>
+                                            <mat-checkbox [checked]="smsChecked" [disabled]="disabled"> SMS
+                                            </mat-checkbox>
+                                        </div>
+                                    </div>
+                                    <div class="content">
+                                        <p class="sub-title">Delivery Schedule</p>
+                                        <div class="select-frequency">
+                                            <label>Frequency</label>
+                                            <p>{{ campaignData.basicDetails.deliveryFrequency }}</p>
+                                        </div>
+
+                                        <div class="row mat-row-col">
+                                            <div class="col-md-6 pad-0" *ngIf="campaignData.basicDetails.deliveryFrequency == 'ONE_TIME'">
+                                                <label>Date</label>
+                                                <p>{{ campaignData.basicDetails.deliveryDate | date:'dd/MM/yyyy' }}</p>
+                                            </div>
+                                            <div class="col-md-6 pad-0" *ngIf="campaignData.basicDetails.deliveryFrequency == 'WEEKLY'">
+                                                <label>Days</label>
+                                                <p>{{ campaignData.basicDetails.deliveryWeekDay }}</p>
+                                            </div>
+                                            <div class="col-md-6 pad-0" *ngIf="campaignData.basicDetails.deliveryFrequency == 'MONTHLY'">
+                                                <label>Dates</label>
+                                                <p>{{ campaignData.basicDetails.deliveryMonthDay }}</p>
+                                            </div>
+                                            <div class="col-md-6 pad-0" *ngIf="campaignData.basicDetails.deliveryFrequency != 'IMMEDIATE'">
+                                                <label>Time</label>
+                                                <p>{{ campaignData.basicDetails.deliveryTime }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 pad-0" *ngIf="campaignData.basicDetails.deliveryFrequency != 'ONE_TIME' && campaignData.basicDetails.deliveryFrequency != 'IMMEDIATE'">
+                                            <div class="row mat-row-col">
+                                                <div class="col-md-6 pad-0">
+                                                    <label>Start Date</label>
+                                                    <p>{{ campaignData.basicDetails.campaignStartDate | date:'dd/MM/yyyy' }}
+                                                    </p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label>End Date</label>
+                                                    <p>{{ campaignData.basicDetails.campaignEndDate | date:'dd/MM/yyyy' }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-card>
+                            </div>
+                            <div class="col-md-6" *ngIf="nonmemberCampaign">
+                                <p class="card-title">Want to add promotion to this campaign?</p>
+                                <mat-card class="select-promotion">
+                                    <div class="rule-coupon" *ngIf="campaignData.basicDetails.promotionType == 'RULE'">
+                                        <div *ngIf="promotionData.earnRuleId">
+                                            <div *ngIf="promotionData.earnRuleId">
+                                                <label>Rule Name</label>
+                                                <p (click)="viewEarnRule(promotionData.earnRuleId)"><u class="sky-blue"><a>{{promotionData.ruleName}}</a></u>
+                                                </p>
+                                            </div>
+                                            <div class="hl">
+                                            </div>
+                                            <div>
+                                                <label>Program Name</label>
+                                                <p>{{promotionData.programName}}</p>
+                                            </div>
+                                            <div>
+                                                <label>Program Type</label>
+                                                <p>{{promotionData.programType}}</p>
+                                            </div>
+                                            <div>
+                                                <label>Reward Type</label>
+                                                <p>{{promotionData.rewardType}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="rule-coupon" *ngIf="campaignData.basicDetails.promotionType == 'RULE'">
+                                        <div *ngIf="promotionData.burnRuleId">
+                                            <div>
+                                                <label>Rule Name</label>
+                                                <p><u class="sky-blue"><a
+                                                            (click)="ViewBurnRule(promotionData.burnRuleId)">{{promotionData.ruleName}}</a></u>
+                                                </p>
+                                            </div>
+                                            <div class="hl">
+                                            </div>
+                                            <div>
+                                                <label>Reward Type</label>
+                                                <p>{{promotionData.rewardType}}</p>
+                                            </div>
+                                            <div>
+                                                <label>Reward Qty</label>
+                                                <p>{{promotionData.rewardQty}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="rule-coupon" *ngIf="campaignData.basicDetails.promotionType == 'COUPON'">
+                                        <div>
+                                            <label>Coupon Name</label>
+                                            <p (click)="MoveToViewCoupons(promotionData.couponId)"><u class="sky-blue"><a>{{promotionData.couponTitle}}</a></u>
+                                            </p>
+                                        </div>
+                                        <div class="hl">
+                                        </div>
+                                        <div>
+                                            <label>Discount Type</label>
+                                            <p>{{promotionData.discountType}}</p>
+                                        </div>
+                                        <div>
+                                            <label>Notification Type</label>
+                                            <p>{{promotionData.notificationType}}</p>
+                                        </div>
+                                        <div>
+                                            <label>Usage Limit per customer</label>
+                                            <p>{{promotionData.usageLimitPerCustomer}}</p>
+                                        </div>
+                                    </div>
+                                </mat-card>
+                            </div>
+                            <div class="col-md-6" *ngIf="campaignData['basicDetails'].activityName == 'File Upload Segment Campaign'">
+                                <p class="card-title">Want to add promotion to this campaign?</p>
+                                <mat-card class="select-promotion">
+                                    <div class="rule-coupon" *ngIf="campaignData.basicDetails.promotionType == 'COUPON'">
+                                        <div>
+                                            <label>Coupon Name</label>
+                                            <p (click)="MoveToViewCoupons(promotionData.couponId)"><u class="sky-blue"><a>{{promotionData.couponTitle}}</a></u>
+                                            </p>
+                                        </div>
+                                        <div class="hl">
+                                        </div>
+                                        <div>
+                                            <label>Discount Type</label>
+                                            <p>{{promotionData.discountType}}</p>
+                                        </div>
+                                        <div>
+                                            <label>Notification Type</label>
+                                            <p>{{promotionData.notificationType}}</p>
+                                        </div>
+                                        <div>
+                                            <label>Usage Limit per customer</label>
+                                            <p>{{promotionData.usageLimitPerCustomer}}</p>
+                                        </div>
+                                    </div>
+                                </mat-card>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-right mr-20px">
+                        <button class="button secondary-btn text-right" [routerLink]="['/search-campaign']">CANCEL</button>
+                        <!-- <button class="button primary-btn text-right" type="button" (click)="EditCampaign(campaignData.campaignId, 'edit')" *ngIf="nonmemberCampaign">EDIT</button> -->
+                        <!-- <button class="button primary-btn text-right"
+                [routerLink]="['/edit-campaign/'+ campaignData.campaignId, 'edit']">EDIT</button> -->
+                        <button matStepperNext class="button tertiary-btn text-right">NEXT</button>
+                    </div>
+                </form>
+            </mat-step>
+            <mat-step [stepControl]="secondFormGroup">
+                <form [formGroup]="secondFormGroup">
+                    <ng-template matStepLabel>Audience</ng-template>
+                    <div class="second-template">
+                        <div class="audience-content">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label>Segment Type</label>
+                                    <p *ngIf="campaignData.audience.segmentType == 'SEGMENT_NON_MEMBER'">
+                                        {{ campaignData.audience.segmentType == 'SEGMENT_NON_MEMBER' ? 'Segment Non Member' : '' }}
+                                    </p>
+                                    <p *ngIf="campaignData.audience.segmentType == 'SEGMENT_MEMBER'">
+                                        {{ campaignData.audience.segmentType == 'SEGMENT_MEMBER' ? 'Segment Member' : '' }}
+                                    </p>
+                                    <p *ngIf="campaignData.audience.segmentType == 'SEGMENT_MEMBER_AND_NON_MEMBER'">
+                                        {{ campaignData.audience.segmentType == 'SEGMENT_MEMBER_AND_NON_MEMBER' ? 'Segment Member And Non Member' : '' }}
+                                    </p>
+                                    <p *ngIf="campaignData.audience.segmentType == 'SEGMENT_RULE' || campaignData.audience.segmentType == null">
+                                        {{ (campaignData.audience.segmentType == 'SEGMENT_RULE' || campaignData.audience.segmentType == null) ? 'Segment Rule' : '' }}
+                                    </p>
+                                </div>
+                                <div class="col-md-3">
+                                    <label>Segment Name</label>
+                                    <p>{{ campaignData.audience.segmentName }}</p>
+                                </div>
+                                <div class="col-md-3">
+                                    <label>Notificaton Limit</label>
+                                    <p>{{ campaignData.audience.notificationLimit }}</p>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="communication-types">
+                                        <mat-checkbox [checked]="includeArabicCustomers" [disabled]="disabled">IsInclude
+                                            Arabic</mat-checkbox>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Description</label>
+                                    <p>{{ campaignData.audience.segmentDescription }}</p>
+                                </div>
+                            </div>
+                            <div class="row" *ngIf="campaignData.audience.segmentType != 'SEGMENT_RULE'  && campaignData.audience.segmentType != null">
+                                <div class="col-md-3">
+                                    <label>File Validate Status</label>
+                                    <p>
+                                        {{campaignData.audience.fileValidateStatus != 0 ? 'Yes' : 'No'}}
+                                    </p>
+                                </div>
+                                <div class="col-md-3">
+                                    <label>Success File Path</label>
+                                    <div>
+                                        <p *ngIf="campaignData.audience.successFilePath == ''  || campaignData.audience.successFilePath == null" class="text-left">-</p>
+                                        <a *ngIf="campaignData.audience.successFilePath != '' &&  campaignData.audience.successFilePath != null" href="{{fileUrl}}{{campaignData.audience.successFilePath}}"><img class="downoad-icon" src="assets/images/download_icon.png" alt=""><span class="download-info">Download
+                                                Success File Path</span></a>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <label>Error File Path</label>
+                                    <div>
+                                        <p *ngIf="campaignData.audience.errorFilePath == '' || campaignData.audience.errorFilePath == null" class="text-left">-</p>
+                                        <a *ngIf="campaignData.audience.errorFilePath != ''  && campaignData.audience.errorFilePath != null" href="{{fileUrl}}{{campaignData.audience.errorFilePath}}"><img class="downoad-icon" src="assets/images/download_icon.png" alt=""><span class="download-info">Download
+                                                Error File Path</span></a>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <label *ngIf="campaignData.audience.segmentType != 'SEGMENT_MEMBER_AND_NON_MEMBER'">Valid Member Count</label>
+                                    <label *ngIf="campaignData.audience.segmentType == 'SEGMENT_MEMBER_AND_NON_MEMBER'">Valid Member and Non Member Count</label>
+                                    <div>
+                                        <!-- <p *ngIf="campaignData.audience.validMemberCount==''"  class="text-left">-</p> -->
+                                        <p>{{campaignData.audience.validMemberCount}}</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <label>Invalid Member Count</label>
+                                    <div>
+                                        <!-- <p *ngIf="campaignData.audience.inValidMemeberCount==''"  class="text-left">-</p> -->
+                                        <p>{{campaignData.audience.inValidMemeberCount}}</p>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row" *ngIf="campaignData.audience.segmentType == 'SEGMENT_RULE' || campaignData.audience.segmentType == null">
+                                <div class="col-md-5">
+                                    <div class="details">
+                                        <h2>{{ campaignData.audience.customerSelctedCount }}</h2>
+                                        <p>Customers Selected</p>
+                                    </div>
+                                    <div class="notification-types">
+                                        <div *ngIf="emailChecked == true">
+                                            <label>Email</label>
+                                            <p>{{ campaignData.audience.selectedEmailCount }}</p>
+                                        </div>
+                                        <div class="vl" *ngIf="emailChecked == true">
+                                        </div>
+                                        <div *ngIf="smsChecked == true">
+                                            <label>SMS</label>
+                                            <p>{{ campaignData.audience.customerSelctedCount }}</p>
+                                        </div>
+                                        <div class="vl" *ngIf="smsChecked == true && pushChecked == true">
+                                        </div>
+                                        <div *ngIf="pushChecked == true">
+                                            <label>Push</label>
+                                            <p>{{ campaignData.audience.customerSelctedCount }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-7">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <div class="notification-filter">
+                                                {{ campaignData.audience.fixedOrScheduled }} the customer list
+                                                <span *ngIf="campaignData.audience.fixedOrScheduled == 'FIXED'">
+                                                    (Qualified as of now)
+                                                </span>
+                                                <div *ngIf="smsRestriction">
+                                                    <mat-checkbox [checked]=smsRestriction>Apply SMS Restriction (Last 7 days 2 promotional SMS)</mat-checkbox>
+                                                </div>
+                                            </div>
+                                            <div class="hl">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="getcustomer-download pt-25px">
+                                                <div>
+                                                    <a (click)="getCustomerList()" class="getdetails" *ngIf="getCustomerBtnEnbale" [class.disable-cusbtn]="disableData"><span
+                                                            class="download-info">
+                                                            <img class="downoad-icon"
+                                                                src="assets/images/svg-icons/uploadgray_ico.svg"
+                                                                alt=""><span class="download-info">Download
+                                                                Customer Data</span>
+                                                        </span></a>
+                                                </div>
+                                                <div class="download-loader" *ngIf="downloadQuery">
+                                                    <div class="segment-loader  download-loader">
+                                                        <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                                                    </div>
+                                                    <span>Downloading</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="ml-20px">
+                                            <label>Segmentation Rules</label>
+                                            <p>{{campaignData.audience.segmentQuery}}</p>
+                                        </div>
+                                        <div>
+
+                                        </div>
+
+                                    </div>
+                                    <!-- <div class="col-md-4" *ngIf="!nonmemberCampaign">
+                                        <div class="view-mode">
+                                            <label>Excel File</label>
+                                            <p><a class="text-blue word-wrap" *ngIf="skuFileName!=''" href="{{skuFilePathUrl}}{{campaignData.audience.segmentFilePath}}" download="{{skuFileName}}">{{skuFileName}}</a>
+                                            </p>
+                                        </div>
+                                    </div> -->
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-right mr-25px">
+                        <button matStepperPrevious class="button tertiary-btn text-right">PREVIOUS</button>
+                        <button class="button secondary-btn text-right" [routerLink]="['/search-campaign']">CANCEL</button>
+                        <!-- <button class="button primary-btn text-right"
+                [routerLink]="['/edit-campaign/'+ campaignData.campaignId, 'edit']">EDIT</button> -->
+                        <!-- <button class="button primary-btn text-right" type="button" (click)="EditCampaign(campaignData.campaignId, 'edit')" *ngIf="nonmemberCampaign">EDIT</button> -->
+                        <button matStepperNext class="button tertiary-btn text-right">NEXT</button>
+                    </div>
+                </form>
+            </mat-step>
+            <mat-step>
+                <ng-template matStepLabel>Content
+                    <!-- <button class="clone-button tertiary-btn text-right"
+              [routerLink]="['/edit-campaign/'+ campaignData.campaignId ,'clone']" (click)="cloneCamp($event.value)">CLONE
+              CAMPAIGN</button> -->
+                    <button class="clone-button tertiary-btn text-right" (click)="EditCampaign(campaignData.campaignId, 'clone')">CLONE
+                        CAMPAIGN</button>
+                </ng-template>
+                <div class="third-template">
+                    <div class="expansion-panel" *ngFor="let c of campaignData.content">
+                        <mat-accordion>
+                            <mat-expansion-panel *ngIf="pushChecked">
+                                <mat-expansion-panel-header [collapsedHeight]="'38px'" [expandedHeight]="'38px'">
+                                    <mat-panel-title>
+                                        App-Push Notification
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <div class="panel-wrap">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label>Template</label>
+                                            <p>{{ c.pushContent.templateName }}</p>
+                                        </div>
+                                        <!-- <div class="col-md-3">
+                                            <div class="field-container">
+                                                <label>Sender ID</label>
+                                                <p>{{ c.pushContent.senderId }}</p>
+                                            </div>
+                                        </div> -->
+                                        <div class="col-md-3">
+                                            <div class="field-container">
+                                                <label>Link To</label>
+                                                <p>{{ c.pushContent.linkTo }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3" *ngIf="c.pushContent.linkTo === 'Our Brands'">
+                                            <div class="field-container">
+                                                <label>Brand</label>
+                                                <p>{{ c.pushContent.brandName }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3" *ngIf="c.pushContent?.linkTo === 'Category' || c.pushContent?.linkTo === 'Product'">
+                                            <div class="field-container">
+                                                <label>{{ c.pushContent?.linkTo }} selected</label>
+                                                <p>{{ c.pushContent?.linkToItemName }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label>Hyper Link</label>
+                                            <p>{{ c.pushContent.hyperLink }}</p>
+                                        </div>
+                                    </div>
+                                    <div *ngFor="let push of c.pushContent.pushContentLocale; let i=index;">
+                                        <mat-card class="pushNotification-card mb-20px mat-card {{arbicInvalid[i]}}">
+                                            <div class="lang-field {{languageDirection[i]}}">
+                                                <p>{{ push.languageName }}</p>
+                                            </div>
+                                            <div class="row card-mb">
+                                                <div class="col-md-7 text-fields">
+                                                    <div class="row tempview-block">
+                                                        <div class="col-md-4 temp-view-img">
+                                                            <div>
+                                                                <p class="note-text"><span>image size 1024x512</span></p>
+                                                                <div class="no-img" *ngIf="push.imagePath == ''">
+                                                                    No Image
+                                                                </div>
+                                                                <img [src]="fileImgPathUrl + push.imagePath" [class.uploaded-img]="imgUpload" width="150px" *ngIf="push.imagePath != ''" />
+                                                            </div>
+                                                            <div>
+                                                                <p class="note-text"><span>image size 1024x512</span></p>
+                                                                <div class="no-img" *ngIf="push.imagePathTwo == ''">
+                                                                    No Image
+                                                                </div>
+                                                                <img [src]="fileImgPathUrl + push.imagePathTwo" [class.uploaded-img]="imgUpload" width="150px" *ngIf="push.imagePathTwo != ''" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-8 temp-view-contnet">
+                                                            <div class="field-container {{languageDirection[i]}}">
+                                                                <label>Subject</label>
+                                                                <p>{{ push.subject }}</p>
+                                                            </div>
+                                                            <div class="field-container {{languageDirection[i]}}">
+                                                                <label>Content</label>
+                                                                <p>{{ push.content }}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-5 img-container">
+                                                    <div class="preview-container">
+                                                        <div class="img-preview">
+                                                            <p class="text-preview">Notification Preview</p>
+                                                            <img src="assets/images/svg-icons/mobile_frame.svg" alt="">
+                                                            <div class="notification-content {{languageDirection[i]}}">
+                                                                <div class="notification-description">
+                                                                    <h6>
+                                                                        {{push.subject}}
+                                                                    </h6>
+                                                                    <p>
+                                                                        {{push.content}}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </mat-card>
+                                    </div>
+                                </div>
+                            </mat-expansion-panel>
+                            <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" *ngIf="smsChecked">
+                                <mat-expansion-panel-header [collapsedHeight]="'38px'" [expandedHeight]="'38px'">
+                                    <mat-panel-title>
+                                        SMS
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <div class="panel-wrap">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label>Template</label>
+                                            <p>{{ c.smsContent.templateName }}</p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="field-container">
+                                                <label>Sender ID</label>
+                                                <p>{{ c.smsContent.senderId }}</p>
+                                            </div>
+                                        </div>
+                                        <!-- <div class="col-md-6">
+                        <div class="field-container">
+                          <label>Hyper Link</label>
+                          <p>{{ c.smsContent.hyperLink }}</p>
+                        </div>
+                      </div> -->
+                                    </div>
+                                    <div *ngFor="let sms of c.smsContent.smsContentLocale; let i=index;">
+                                        <mat-card class="pushNotification-card mb-20px mat-card {{arbicInvalid[i]}}">
+                                            <div class="lang-field {{languageDirection[i]}} {{langfieldname[i]}}">
+                                                <p>{{ sms.languageName }}</p>
+                                            </div>
+                                            <div class="row card-mb">
+                                                <div class="col-md-7 text-fields">
+                                                    <!-- <div class="field-container {{languageDirection[i]}}">
+                              <label>Subject</label>
+                              <p>{{ sms.subject }}</p>
+                            </div> -->
+                                                    <div class="field-container {{languageDirection[i]}}">
+                                                        <label>Content</label>
+                                                        <p>{{ sms.content }}</p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-5 img-container">
+                                                    <div class="preview-container">
+                                                        <div class="img-preview">
+                                                            <p class="text-preview">Notification Preview</p>
+                                                            <img src="assets/images/svg-icons/mobile_frame.svg" alt="">
+                                                            <div class="notification-content">
+                                                                <div class="notification-description {{languageDirection[i]}}">
+                                                                    <!-- <h6>
+                                      {{sms.subject}}
+                                    </h6> -->
+                                                                    <p>
+                                                                        {{sms.content}}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </mat-card>
+                                    </div>
+                                </div>
+                            </mat-expansion-panel>
+                            <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" *ngIf="emailChecked">
+                                <mat-expansion-panel-header [collapsedHeight]="'38px'" [expandedHeight]="'38px'">
+                                    <mat-panel-title>
+                                        Email
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <div class="email-panel">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="view-camp-block">
+                                                <div class="view-camp">
+                                                    <label>Template Name</label>
+                                                    <p>{{ c.emailContent.templateName }}</p>
+                                                </div>
+                                                <div class="view-camp">
+                                                    <label>Sender Email ID</label>
+                                                    <p>{{ c.emailContent.senderId }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 view-camp-preview">
+                                            <div *ngFor="let email of c.emailContent.emailContentLocale; let i=index;" class="pb-10">
+                                                <mat-accordion (selectedTabChange)="call($event)">
+                                                    <mat-expansion-panel (opened)="panelOpenState = true" [class.right-panelarabic]="email.languageName == 'Arabic'" (closed)="panelOpenState = false">
+                                                        <mat-expansion-panel-header [collapsedHeight]="'38px'" [expandedHeight]="'38px'">
+                                                            <mat-panel-title>
+                                                                {{ email.languageName}}
+                                                            </mat-panel-title>
+                                                        </mat-expansion-panel-header>
+                                                        <div class="view-campaign-block">
+                                                            <div class="{{languageDirection[i]}}">
+                                                                <label>Subject</label>
+                                                                <p>{{ email.subject }}</p>
+                                                            </div>
+                                                            <div class="{{languageDirection[i]}}">
+                                                                <label>Content</label>
+                                                                <!-- <p [innerHTML]="email.content"></p> -->
+                                                                <p [innerHTML]="genratedTemplate" style="pointer-events: none;"></p> 
+                                                            </div>
+                                                        </div>
+                                                    </mat-expansion-panel>
+                                                </mat-accordion>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </div>
+                </div>
+                <div class="text-right mr-15px">
+                    <button matStepperPrevious class="button tertiary-btn text-right">PREVIOUS</button>
+                    <button class="button secondary-btn text-right" [routerLink]="['/search-campaign']">CANCEL</button>
+                    <!-- <button class="button primary-btn text-right"
+              [routerLink]="['/edit-campaign/'+ campaignData.campaignId, 'edit']">EDIT</button> -->
+                    <!-- <button class="button primary-btn text-right" type="button" *ngIf="nonmemberCampaign" (click)="EditCampaign(campaignData.campaignId, 'edit')">EDIT</button> -->
+                </div>
+            </mat-step>
+
+        </mat-horizontal-stepper>
+    </div>
+</div>

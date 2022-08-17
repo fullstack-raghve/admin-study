@@ -1,0 +1,165 @@
+  <div *ngIf="contentLoader" class="page-loader-block full-page-loader">
+      <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+    </div>
+<div class="flex">
+  <div class="left-column-cotent">
+    <div   class="page-title">
+      <div class="header flex-container">
+        <h3>Select Category</h3>
+        <div class="close-icon">
+          <img src="assets/images/icons/filter_close_ico.png" alt="" (click)="onCloseClick()">
+        </div>
+      </div>
+    </div>
+ 
+
+    <div  class="page-content">
+   
+          <!-- <div class="row category row-col">
+            <div class="col-md-12">
+                <mat-form-field>
+                    <mat-select placeholder="Select Category" [(ngModel)]="categoryId"
+                        (selectionChange)="getAllProducts(categoryId)" required>
+                        <mat-option *ngFor="let category of categoryList" value="{{category.categoryId}}">
+                            {{ category.categoryName }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div> -->
+        <div class="products-list">
+          <dx-list 
+              #list
+              [dataSource]="categoryList"
+              [height]="400"
+              [searchEnabled]="true"
+              searchExpr="categoryName"
+              searchMode="contains">
+              <ul>
+                <li *dxTemplate="let data of 'item'" >
+                  <div class="flex-container pb-1em">
+                    <div class="flex row pimg" > 
+                        <div *ngIf="data.categoryImage != ''" class="col-3 imageClass">
+                            <img [src]="filePathUrl+data.categoryImage" alt="item_ico"  style="width: 65px;
+                            height: 65px;
+                            object-fit: cover;">
+                          </div>
+                          <div *ngIf="data.categoryImage == ''" class="col-3 imageClass">
+                            <img src="assets/images/no_image.png" alt="item_ico" >
+                          </div>
+                      <!-- <div *ngIf="data.imagePath != ''" class="col-3 imageClass">
+                        <img [src]="data.imagePath" alt="item_ico"  style="width: 65px;
+                        height: 65px;
+                        object-fit: cover;">
+                      </div> -->
+                      <!-- <div  class="col-3 imageClass">
+                        <img src="assets/images/no_image.png" alt="item_ico" >
+                      </div> -->
+                      <div class="col-9 imageClass1">
+                        <div class="flex-center mr-5px ckclass">
+                            <div  class="productData">
+                                <!-- <img  src="assets/images/svg-icons/veg_ico.svg" width="12px" alt="">  -->
+                               <span class="productName">{{data.categoryName}} </span>  
+                            </div>
+                            <!-- <div *ngIf="data.productType == 'NONVEG'" class="productData">
+                                <img  src="assets/images/svg-icons/nonveg_ico.svg" width="12px" alt=""> 
+                               <span class="productName">{{data.productName1 }} </span>  
+                            </div>
+                            <div *ngIf="data.productType == 'EGG'" class="productData">
+                                <img  src="assets/images/icons/Egg_1x.png" width="12px" alt=""> 
+                               <span class="productName">{{data.productName1 }} </span>  
+                            </div>  -->
+                              <div class="checkboxClass">
+                                  <mat-checkbox (change)="toggleVisibility($event,data)" [(ngModel)]="data.checked">
+                                 
+                                    </mat-checkbox>
+                              </div>
+                             
+                          </div>
+                    
+                    
+                        <!-- <p class="varientName" >{{data.varientName}}</p> -->
+                      </div>
+                    </div>
+               
+                  </div>
+                </li>
+              </ul>
+             
+          </dx-list>
+      </div>
+          <!-- <div class="products-list">
+     
+            <ul>
+              <li *ngFor="let item of products">
+                <div class="flex-container pb-1em">
+                  <div class="flex row pimg"> 
+                    <div *ngIf="item.imagePath != ''" class="col-3 imageClass">
+                      <img [src]="item.imagePath" alt="item_ico">
+                    </div>
+                    <div *ngIf="item.imagePath == ''" class="col-3 imageClass">
+                      <img src="assets/images/no_image.png" alt="item_ico">
+                    </div>
+                 
+                    <div class="col-9 imageClass1">
+                        <div class="flex-center mr-5px ckclass">
+                            <div *ngIf="item.productType == 'VEG'" class="productData">
+                                <img  src="assets/images/svg-icons/veg_ico.svg" width="12px" alt=""> 
+                               <span class="productName">{{item.productName1 }} </span>  
+                            </div>
+                            <div *ngIf="item.productType == 'NONVEG'" class="productData">
+                                <img  src="assets/images/svg-icons/nonveg_ico.svg" width="12px" alt=""> 
+                               <span class="productName">{{item.productName1 }} </span>  
+                            </div>
+                            <div *ngIf="item.productType == 'EGG'" class="productData">
+                                <img  src="assets/images/icons/Egg_1x.png" width="12px" alt=""> 
+                               <span class="productName">{{item.productName1 }} </span>  
+                            </div>
+                              <div class="checkboxClass">
+                                  <mat-checkbox (change)="toggleVisibility($event,item)" [(ngModel)]="item.checked">
+                                 
+                                    </mat-checkbox>
+                              </div>
+                             
+                          </div>
+                   
+                  
+                      <p class="varientName" >{{item.varientName}}</p>
+                    </div>
+                  </div>
+             
+                </div>
+
+              </li>
+            </ul>
+           
+          </div> -->
+          <div>
+            <p *ngIf="ShowError" style="color:red; font-size: 13px;
+            margin: 10px;">please select Category</p>
+          </div>
+          <div>
+            <p *ngIf="ShowErrorProduct" style="color:red; font-size: 13px;
+            margin: 10px;">Products Not Available for Selected Category</p>
+          </div>
+
+          <div *ngIf="categoryList.length >0"  style="margin: 10px;"  class=" footer text-center footer-addon">
+              <button type="button" class="button primary-btn" (click)="createList()">ADD</button>
+          </div>
+          <!-- <div>
+            <p *ngIf="ShowError" style="color:red; font-size: 13px;
+            margin: 10px;">please select product</p>
+          </div>
+       
+          <div *ngIf="categoryList.length >0"  class=" footer text-center footer-addon">
+              <button type="button" class="button primary-btn" (click)="createList()">ADD</button>
+          </div> -->
+       
+    </div>
+
+  </div>
+  
+
+</div>
+
+

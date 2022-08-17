@@ -1,0 +1,40 @@
+<div class="page-wrap"> 
+    <div class="header flex-container">
+        <h5>Add Allergen Image</h5>
+        <div class="close-icon">
+          <img src="assets/images/icons/filter_close_ico.png" alt="" (click)="onCloseClick()">
+        </div>
+    </div>
+    <div class="form-wrap">
+            <form [formGroup]="alergionImageGroup" (submit)="createAlergion(alergionImageGroup.value)">
+        <div class="image-block">
+            <div class="grid img-block">
+                <div class="avatar-zone">
+                    <label *ngIf="alergionImagePath==''" class="upload-text" [class.placeholder-img]="imgUploadAlergion">Allergen Image</label>
+                    <img *ngIf="alergionImagePath!=''" class="upload-img" [src]="imgBaseUrl+alergionImagePath" [class.uploaded-img]="imgUploadAlergion">
+                </div>
+                <div class="remove-img" *ngIf="alergionImagePath!=''">
+                    <span (click)="removeImage()" class="pointer"> <img src="assets/images/icons/filter_close_ico.png" alt="Image Not Found"><label class="pointer">Remove</label></span>
+                </div>
+                <input style="display:none;" #uploadImgEl type="file" class="upload_btn" (change)="uploadAlergionImage($event.target.files)" />
+                <div class="text-center" style="width: 100%;" *ngIf="alergionImagePath==''">
+                    <span class="upload-btn-text" (click)='uploadImgEl.click()'>
+                            <span class="upload-icon">
+                                <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px" alt="Img">
+                            </span>Upload Image
+                    </span>
+                </div>
+              </div>
+              <div *ngIf="imageErr" style="color:red; font-size: 10px;">{{imageErrMsg}}</div>
+        </div>
+        <div>
+            <mat-form-field>
+                <input matInput placeholder="Allergen Name" formControlName="name" required>
+            </mat-form-field>
+        </div>
+        <div class="text-center">
+            <button class="button primary-btn" type="submit">ADD</button>
+        </div>  
+        </form>      
+    </div>
+</div>

@@ -1,0 +1,154 @@
+.page-wrap {
+    .form-wrap {
+      padding: 2em 2em 5em;
+  
+      .card-title {
+        color: #5f5c5c;
+        font-size: 16px;
+      }
+  
+      .store-card {
+        border-radius: 6px;
+        padding: 20px;
+        margin-bottom: 20px;
+  
+        .overflow_scroll {
+          overflow-y: auto;
+          padding-bottom: 7px;
+          margin-top: 5px;
+        }
+  
+        table {
+          width: 100%;
+        }
+  
+        .card-subtitle {
+          color: #5f5c5c;
+          font-size: 15px;
+          padding-bottom: 10px;
+        }
+  
+        .chip-list {
+          width: 100%;
+        }
+      }
+    }
+  }
+  
+  
+  .emoji-block {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 1rem;
+  
+    .number-img {
+      display: flex;
+      align-items: center;
+      background-color: #F8F8F8;
+      border-right: 1rem solid #fff;
+      padding: 0.5rem 0.75rem;
+  
+      p {
+        margin: 0;
+      }
+    }
+  
+    .emoji-img {
+      img {
+        width: 100%;
+        height: 30px;
+        object-fit: contain;
+      }
+    }
+  
+    .change-format {
+      .text-blue {
+        text-decoration: underline;
+      }
+    }
+  }
+  
+  .nps-row {
+    h3 {
+      font-size: 16px;
+      font-weight: bold;
+    }
+  
+    h5 {
+      font-size: 14px;
+    }
+  }
+  
+  .sentimentCreateBean-row {
+    margin: 0;
+  }
+  
+  .nps-card-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    .colourCodingCreateBean-block {
+      .colourCodingCreateBean-col {
+        display: flex;
+        align-items: center;
+  
+        .color-code-input {
+          position: relative;
+          top: 10px;
+          margin-left: 20px;
+        }
+  
+        .color-coding-box {
+          width: 40px;
+          height: 40px;
+          color: #fff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+  
+          p {
+            margin: 0;
+          }
+        }
+      }
+    }
+  }
+  
+
+  .num-mar-0{
+    margin: 0;
+    width: 100%;
+  }
+  .num-pad-0{
+    padding: 0;
+  }
+  .Reset-button{
+     display: flex;
+     margin-right: 0 !important;
+     float: right;
+  }
+
+  .full-page-loader{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: #00000085;
+    left: 0;
+    top: 0;
+    z-index: 999;
+    display: flex;
+    img{
+      width: 5rem;
+      position: absolute;
+      display: flex;
+      align-items: center;
+      top: 45%;
+      left: 45%;
+    }
+    span{
+        padding-left: 5px;
+    }
+  }

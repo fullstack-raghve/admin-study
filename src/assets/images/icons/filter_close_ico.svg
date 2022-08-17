@@ -1,0 +1,19 @@
+<svg id="filter_close_ico" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24.001">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+  <g id="Group_43963" data-name="Group 43963" transform="translate(0 0)">
+    <g id="Group_43962" data-name="Group 43962" transform="translate(0 0)">
+      <path id="Path_18009" data-name="Path 18009" class="cls-1" d="M23.717.284a.969.969,0,0,0-1.371,0L.284,22.345a.969.969,0,1,0,1.371,1.371L23.717,1.655A.97.97,0,0,0,23.717.284Z" transform="translate(0 0)"/>
+    </g>
+  </g>
+  <g id="Group_43965" data-name="Group 43965" transform="translate(0 0)">
+    <g id="Group_43964" data-name="Group 43964" transform="translate(0 0)">
+      <path id="Path_18010" data-name="Path 18010" class="cls-1" d="M23.717,22.346,1.655.285A.969.969,0,0,0,.284,1.656L22.346,23.718a.969.969,0,1,0,1.371-1.371Z" transform="translate(0 -0.001)"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,113 @@
+<div class="page-wrap">
+    <div class="search-panel-block">
+        <div class="bredcrumb-title-wrap">
+            <div class="search-container-block">
+                <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+                <div class="search-list">
+                    <form class="filter-wrap" [formGroup]="searchBannerFormGroup" (submit)="searchVal()" #searchBannerForm="ngForm">
+                        <div class="row title-search-row">
+                            <div class="col-md-4 title-search-col">
+                                <div class="title">
+                                    <h1>Banner Management</h1>
+                                </div>
+                            </div>
+                            <div class="col-md-8 title-search-col text-right bannerType">
+                                <div>
+                                    <mat-radio-group disabled formControlName="bannerType" aria-label="Select an option" style="padding-top:17px;">
+                                        <mat-radio-button value="type1">Type 1 Banner</mat-radio-button>&nbsp;
+                                        <mat-radio-button value="type2">Type 2 Banner</mat-radio-button>
+                                    </mat-radio-group>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="feild-search flex-container mt-20px mb-10px">
+                            <div class="row feild-search-inner">
+                                <div class="col-md-4">
+                                    <mat-form-field>
+                                        <mat-select placeholder="Country Name" formControlName="countryId" #countryInput (selectionChange)="getAllCities(countryInput.value);searchVal();onChangeClearCity()" [(value)]="selectedCountry">
+                                            <mat-option *ngFor="let country of countries" value="{{country.countryId}}">
+                                                {{ country.countryName }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-4">
+                                    <mat-form-field>
+                                        <mat-select id="city" matInput placeholder="City Name" #cityInput formControlName="cityId" (selectionChange)="cityDetails(cityInput.value);searchVal()" [(value)]="selectedCity">
+                                            <mat-option value="0">Select City</mat-option>
+                                            <mat-option *ngFor="let city of cities" value="{{city.cityId}}">
+                                                {{ city.cityName }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+                            <div class="title-search-col">
+                                <div class="add-btn text-right">
+                                    <button type="button" (click)="getBannerId()" class="button primary-btn m-0px" [routerLink]="['/add-banner']">
+                    <span class="add-plus">
+                      <img src="assets/images/svg-icons/add_ico.svg" alt="add" class="plus-icon">
+                    </span>ADD BANNER
+                  </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="form-wrap">
+            <div class="table-wrap">
+                <div class="table-wrap-inner">
+                    <table mat-table #table [dataSource]="dataSource" cdkDropList [cdkDropListData]="dataSource" (cdkDropListDropped)="dropTable($event)" [cdkDropListDisabled]="dragDisabled">
+                        <ng-container matColumnDef="position">
+                            <th mat-header-cell *matHeaderCellDef>Re-Order </th>
+                            <td mat-cell *matCellDef="let element">
+                                <mat-icon class="sortOrder" style="pointer-events: all; cursor: grabbing !important;" cdkDragHandle>reorder</mat-icon>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="sequenceNum">
+                            <th mat-header-cell *matHeaderCellDef class="top-border"> SL.NO </th>
+                            <td style="pointer-events: all; cursor: pointer !important;" mat-cell *matCellDef="let row" (click)="viewBannerManagement(row.sequenceNum, selectedCity, selectedCountry)">
+                                <span>
+                                    <u>
+                                        <a class="text-blue">
+                                            {{ row.sequenceNum }}
+                                        </a>
+                                    </u>
+                                </span>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="bannerId">
+                            <th mat-header-cell *matHeaderCellDef class="top-border"> BANNER ID </th>
+                            <td mat-cell *matCellDef="let row">
+                                {{ row.bannerId }}
+                            </td>
+                        </ng-container>
+                        <ng-container *ngFor="let lang of languageList;let i = index;" matColumnDef="{{lang.languageName}}">
+                            <th mat-header-cell *matHeaderCellDef> {{lang.languageName}} </th>
+                            <td mat-cell *matCellDef="let row">
+                                <span *ngIf="row.bannerManagementLocaleBean != null">
+                                    <img class="upload-img" [src]="filePathUrl+row.bannerManagementLocaleBean[i].imgPath=='' || filePathUrl+row.bannerManagementLocaleBean[i].imgPath == null ? '' : filePathUrl+row.bannerManagementLocaleBean[i].imgPath" alt="" width="50px" [class.uploaded-img]="imgUpload">
+                                </span>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="bannerName">
+                            <th mat-header-cell *matHeaderCellDef class="top-border"> BANNER NAME </th>
+                            <td mat-cell *matCellDef="let row"> {{row.bannerName}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="linkTo">
+                            <th mat-header-cell *matHeaderCellDef class="top-border"> LINK TO </th>
+                            <td mat-cell *matCellDef="let row"> {{row.linkTo}} </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="pointer-events: none;" cdkDrag [cdkDragData]="row"></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="searchStoreVal" class="select-store-block">
+            <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+        </div>
+    </div>

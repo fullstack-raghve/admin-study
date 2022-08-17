@@ -1,0 +1,1729 @@
+<div class="bredcrumb-title-wrap">
+  <app-breadcrumb [breadCrumbData]= "breadCrumbData"></app-breadcrumb>
+  <div class="title flex-container">
+
+    <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          [routerLink]="['/search-events']"></span>Add Events</h1>
+
+  </div>
+</div>
+
+<div class="page-wrap-add-event">
+  
+  <div *ngIf="loading" class="page-loader-block full-page-loader">
+    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+  </div>
+
+
+  <form [formGroup]= "addeventForm" #myForm="ngForm" (ngSubmit)="createEvents()">
+
+    <div class="row">
+      <!--section 1 start -->
+      <div class="col-md-12">
+        <mat-card class="mb-20px">
+          <div class="row">
+            
+            <div class="col-md-4">
+              <h3 class="card-title-new">Event Details</h3>
+              <div class="create-fieldSet">
+                <fieldset class="language-fieldset">
+                  <legend class="fieldset-heading">Event Name*</legend>
+                  <div formArrayName= "giftLanguageList">
+                    <div
+                      *ngFor= "let eventLanguage of addeventForm['controls']['giftLanguageList']['controls'];let i = index;"
+                      [formGroupName]="i">
+                      <mat-form-field class="{{alignCss[i]}}">
+                        <input matInput placeholder="{{languageList[i].languageName}}" required
+                          formControlName="eventName" maxlength="50">
+                        <mat-error *ngIf= "eventLanguage.get('eventName').hasError('required')">
+                          Please enter event name</mat-error>
+                        <mat-error *ngIf= "eventLanguage.get('eventName').hasError('pattern')">
+                          Invalid characters entered</mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+              </div>
+              <div class="col-md-8 mt-20">
+                <div class="row">
+                  <div class="col-md-4">
+                    <mat-form-field>
+                      <input matInput #ref [min]="currentDate" readonly (dateChange)="setEndDate(addeventForm.value)" [matDatepicker]="startDate" placeholder="Start Date" formControlName="startDate" required>
+                      <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
+                      <mat-datepicker #startDate></mat-datepicker>
+                      <mat-error *ngIf="addeventForm.get('startDate').hasError('required')">Please select start date
+                      </mat-error>
+                      <mat-error *ngIf="addeventForm.get('startDate').hasError('min')">Start Date is Expired
+                      </mat-error>
+                  </mat-form-field>
+                    </div>
+
+                    <div class="col-md-4">
+                    
+                    <mat-form-field class="starttime">
+                      <input matInput placeholder="Start Time*" [owlDateTimeTrigger]="dt" [owlDateTime]="dt" class="timer"
+                        formControlName="startTime">
+                      <mat-error *ngIf="addeventForm.get('startTime').hasError('required')">
+                        Please select start time</mat-error>
+                      <owl-date-time [pickerType]="'timer'" #dt>
+                      </owl-date-time>
+                        <span class="time">
+                          <img
+                      src="assets/images/icons/time_ico.svg" alt="">
+                        </span>
+                    </mat-form-field>
+                    <span *ngIf="timeerror" class="ct-e">Please enter start time more than the current time</span>
+
+                      </div>
+
+                      <div class="col-md-4 mt-20">
+                        <mat-checkbox formControlName="isPreptual"
+                        (change)="onChangePreptual($event)"
+                        >Perpetual
+                        </mat-checkbox>
+                        </div>
+
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <mat-form-field>
+                      <input matInput [min]="minEndDate" readonly [matDatepicker]="endDate" placeholder="End Date" formControlName="endDate" required>
+                      <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
+                      <mat-datepicker #endDate></mat-datepicker>
+                      <mat-error *ngIf="addeventForm.get('endDate').hasError('required')">Please select end date
+                      </mat-error>
+                      <mat-error *ngIf="endDateError">End date should be greater than start date</mat-error>
+                      <mat-error *ngIf="addeventForm.get('endDate').hasError('min')">End Date is Expired
+                      </mat-error>
+                  </mat-form-field>
+                    </div>
+
+                    <div class="col-md-4">
+                     
+                    <mat-form-field>
+                      <input matInput placeholder="End Time*" [owlDateTimeTrigger]="dt1" [owlDateTime]="dt1" class="timer"
+                        formControlName="endTime">
+                      <mat-error *ngIf="addeventForm.get('endTime').hasError('required')">
+                        Please select end time</mat-error>
+                      <owl-date-time [pickerType]="'timer'" #dt1>
+                      </owl-date-time>
+                      <span class="time">
+                        <img
+                    src="assets/images/icons/time_ico.svg"  alt="">
+                      </span>
+                    </mat-form-field>
+                    <span *ngIf="timeerror2" class="ct-e">Please enter end time more than the start time</span>
+
+                      </div>
+
+                      <!-- <div class="col-md-4">
+                        <p>checkbox</p>
+                        </div> -->
+
+                </div>
+                <div class="row">
+                  <div class="col-md-8">
+                    <!-- {{addeventForm.get('eventdesc').status}} -->
+                    <div class="col-md-12">
+                      <mat-form-field class="field-style">
+                          <input matInput placeholder="Event Description" formControlName="eventdesc"  maxlength="50">
+                          <mat-error *ngIf="addeventForm.get('eventdesc').hasError('required')">
+                              Please enter event description</mat-error>
+                          <mat-error *ngIf="addeventForm.get('eventdesc').hasError('maxLength')">
+                              Maximum 50 Characters allowed</mat-error>
+                          <!-- <mat-error *ngIf="addeventForm.get('eventdesc').hasError('pattern')">
+                              Only numeric values allowed greater than zero</mat-error> -->
+                      </mat-form-field>
+                  </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                   <div class="default-event">
+
+                   
+                    <mat-checkbox formControlName="isDefaultEvent">Default Event
+                    </mat-checkbox>
+                  </div>
+                  </div>
+                  <div class="col-md-4">
+                   
+                    <mat-form-field class="field-style field-width">
+                      <mat-select  matInput  placeholder="Select Brand"  formControlName="brandDropdowncontrol" (selectionChange)="changeBrand($event.value)"  required>
+                          <mat-option value="">Brand</mat-option>
+                          <mat-option *ngFor="let brand of brandDropdown" [value]="brand.brandId">
+                              {{ brand.brandName }}
+                          </mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="addeventForm.get('brandDropdowncontrol').hasError('required')">Please select a brand</mat-error>
+                  </mat-form-field>
+
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+          </mat-card>
+
+          </div>
+             <!--section 1 end-->
+
+            <!--section 2 start -->
+          <div class="col-md-8">
+            <mat-card class="mb-20px">
+           <!-- <p>{{myForm.submitted}}</p> -->
+              <h3 class="card-title dark">Store app content</h3>
+              <div>
+              <mat-form-field class="field-style">
+                <input matInput placeholder="Title" formControlName="apptitle"  maxlength="20">
+                <mat-error *ngIf="addeventForm.get('apptitle').hasError('required')">
+                  Please enter title</mat-error>
+
+                   
+                
+              
+            </mat-form-field>
+             </div>
+             <div>
+              <mat-form-field class="field-style">
+                <input matInput placeholder="Description" formControlName="appdesc"  maxlength="250">
+                <mat-error *ngIf="addeventForm.get('appdesc').hasError('required')">
+                  Please enter description</mat-error>
+                <mat-error *ngIf="addeventForm.get('appdesc').hasError('maxLength')">
+                    Maximum 50 Characters allowed</mat-error>
+              
+            </mat-form-field>
+             </div>
+            </mat-card>
+          </div>
+          <div class="col-md-4">
+            <div class="row">
+              <div class="col-md-12">
+                <mat-card class="mb-20px" style="padding: 25px;">
+                 
+                  <h3 class="card-title dark">
+                    <mat-checkbox formControlName="isDisplayEvent">Display Event on Customer App
+                    </mat-checkbox>
+                    </h3>
+                </mat-card>
+              </div>
+              <div class="col-md-12">
+                <mat-card class="mb-20px padding-one">
+                
+                    <div class="flex flex-col">
+                       
+                        <div>
+                            <button matRipple class='button tertiary-btn' type="button" (click)="openSoreDialog()">SELECT
+                                            STORES</button>
+                        </div>
+                        <div *ngIf= "selectedStore!=null" class="select-store-block">
+                            <div *ngIf="selectStoreVal">
+                                <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader" style="width: 25px;">
+                            </div>
+                          
+                          
+
+                                            <p *ngIf="dataStore">
+                                              {{selectedStorearray.length}} Stores Selected of
+                                            <span>{{totalCount}} Stores</span>
+                                            </p>
+                                          
+                        </div>
+                    
+                    <p *ngIf="selectStoreError" class="error-msg">Please select Store</p>
+                </div>
+                </mat-card>
+              </div>
+            </div>
+
+          </div>
+            <!--section 2 end-->
+            <!--section 3 location start-->
+            
+   <!-- LOCATION -->
+   <div class="col-md-12 mb-20px">
+    <div class="loc-header">
+     <div class="row">
+       <div class="col-md-8">
+        <h3  class="card-title dark mt-10">Location</h3>
+       </div>
+       <div class="col-md-4">
+       
+        <button matRipple class='button tertiary-btn  float-right' type="button" (click)= "addLocation()">SELECT LOCATION
+        </button>
+        <span *ngIf="selectLocationError" class="brand-msg2">Please Select Location</span>
+       </div>
+     </div>
+     </div>
+     <div class="loc-header2">
+     
+      <!-- {{addeventForm.controls['LocationFormList'].valid}} -->
+
+        <div class="row"  formArrayName="LocationFormList">
+
+          <div class="col">
+            <div
+              *ngFor="let location of addeventForm['controls']['LocationFormList']['controls'];let i = index;"
+              [formGroupName]="i">
+  
+              <div class="form-wrap"  style='width:100%' >
+
+                <div class="table-mat table-wrap-inner"  style='width:100%' >
+     
+                  <!-- <table mat-table [dataSource]="dataSource" class="table-wrap-inner" *ngIf="!noRecord"> -->
+      
+                <table mat-table [dataSource]="mydataSource"  *ngIf="this.selectedLocationarray.length>0" style="border: 1px solid #dadada;">
+              
+                  <ng-container matColumnDef="location">
+                    <th mat-header-cell *matHeaderCellDef> LOCATION</th>
+                    <td mat-cell *matCellDef="let element"> {{element.locationName}} </td>
+                  </ng-container>
+              
+                  <ng-container matColumnDef="countryName">
+                    <th mat-header-cell *matHeaderCellDef> COUNTRY </th>
+                    <td mat-cell *matCellDef="let element"> {{element.countryName}} </td>
+                  </ng-container>
+              
+                  <ng-container matColumnDef="cityName">
+                    <th mat-header-cell *matHeaderCellDef> CITY	 </th>
+                    <td mat-cell *matCellDef="let element"> {{element.cityName }} </td>
+                  </ng-container>
+              
+                
+                  
+                    
+  
+                  <ng-container matColumnDef="remove">
+                    <th mat-header-cell *matHeaderCellDef style="text-align: end;">
+                      <button type="button" mat-icon-button>
+                        <mat-icon>clear_all</mat-icon>
+                      </button>
+                      <!-- <button mat-icon-button (click)="removeAllLocation()" matTooltip="Remove all">
+                        <mat-icon>clear_all</mat-icon>
+                      </button> -->
+                    </th>
+                    <td mat-cell *matCellDef="let score; let i = index;" style="text-align: end;">
+                      <button mat-icon-button (click)="removeLocationAt(i)" matTooltip="Remove">
+                        <mat-icon>clear</mat-icon>
+                      </button>
+                    </td>
+                  </ng-container>
+  
+                
+              
+                  <tr mat-header-row *matHeaderRowDef="displayedColumn"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumn;"></tr>
+  
+                </table>
+                <div class="loc-text" *ngIf="this.selectedLocationarray.length<1">
+                  No location selected
+                </div>
+                <!-- <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator> -->
+                <mat-paginator [pageSizeOptions]="[5, 10, 20]" ></mat-paginator>
+
+              </div>
+
+             
+              </div>
+            
+            </div>
+          </div>
+        </div>
+
+     
+    </div>
+
+    
+  </div>
+
+
+
+
+             <!--section 3 end-->
+              <!--section 4 gifting start-->
+
+<!--coupon , program , product -->
+
+<div class="col-md-12  mb-20px">
+  <h3 class="card-title">Gifting</h3>
+
+  <div class="tab-demo mb-20px">
+    <!-- <button mat-raised-button (click)="demo1BtnClick()">Tab Demo 1!</button> -->
+    <mat-tab-group [(selectedIndex)]="demo1TabIndex"  (selectedTabChange)="giftingType($event)">
+                <!--Coupons gifting-->
+
+
+                <!-- <mat-tab label="Coupons"> -->
+
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <span>Coupons</span>
+          <!-- <img *ngIf = "couponErrMssg"  class="err-icon" src="assets/images/multiply.png"> -->
+          <img  class="err-icon" 
+          *ngIf="addeventForm.get('isCouponsEnabled').value == true && selectedCouponArray.length == 0 && myForm.submitted" 
+          src="assets/images/multiply.png">
+
+          <img  class="err-icon" 
+          *ngIf="addeventForm.get('isCouponsEnabled').value == true && selectedCouponArray.length>0" 
+          src="assets/images/tickk.svg">
+
+      </ng-template>
+      <!-- <span>
+        <img  class="crossicn" src="assets/images/multiply.png">
+      </span> -->
+        <!-- {{addeventForm.controls['CouponFormList'].valid}} -->
+
+        <div *ngIf="couponGiftingType">
+          <div class="row">
+            <div class="col-md-12">
+              <mat-checkbox  [checked]="addeventForm.get('isCouponsEnabled').value == true"
+              formControlName="isCouponsEnabled"
+              (change)="isEnabledCheckbox($event,'couponstab','isCouponsEnabled','couponstabGroupArray')"
+              >Enable Coupon</mat-checkbox>
+
+              
+             </div>
+          </div>
+          <div class="pannel-outer" *ngIf="addeventForm.get('isCouponsEnabled').value == true">
+
+         <div class="row">
+          <div class="col-2">
+            <div>
+             <h3  class="card-title dark lh">Coupons</h3>
+          </div>
+               </div>
+          
+               <div class="col-4">
+                <p class="mat-error" style="padding-top: 14px;"  *ngIf="couponErrMssg">Please Select Coupon</p>
+
+               </div>
+          <div class="col-6">
+            <div class="d-flex justify-content-end">
+               <h3  class="card-title dark lh">Eligibility &nbsp;&nbsp;&nbsp;</h3>
+
+              <mat-checkbox  formControlName ="moreThenOneCouponAllow" style="padding-top: 10px;">
+               <span style="color: #656565;">
+                More than one gift allowed&nbsp;&nbsp;&nbsp;
+               </span> </mat-checkbox>
+
+                <button matRipple  class="button tertiary-btn" type="button" (click)="addCoupon()">SELECT COUPON</button>
+                <!-- <button  class="button tertiary-btn" type="button" (click)="addCoupon1()">ss</button> -->
+
+              </div>
+            </div>
+          </div>
+
+          <div class="row"  formArrayName="CouponFormList">
+
+            <div class="col">
+              <div
+                *ngFor="let cardLanguage of addeventForm['controls']['CouponFormList']['controls'];let i = index;"
+                [formGroupName]="i">
+                <div class="form-wrap"  style='width:100%' >
+                  <!-- <p>{{finalCouponArray.length}}</p> -->
+
+                  <div class="table-mat table-wrap-inner"  style='width:100%' >
+                  
+                    <table mat-table [dataSource]="coupondataSource">
+                  
+                      <!-- COUPON ID Column -->
+                      <ng-container matColumnDef="couponId">
+                        <th mat-header-cell *matHeaderCellDef> COUPON ID </th>
+                        <td mat-cell *matCellDef="let element"> {{element.couponId}} </td>
+                      </ng-container>
+                  
+                      <!--  COUPON Name  Column -->
+                      <ng-container matColumnDef="couponTitle">
+                        <th mat-header-cell *matHeaderCellDef> COUPON NAME </th>
+                        <td mat-cell *matCellDef="let element" [ngStyle]="{color: color.$primary}"> {{element.couponTitle }} </td>
+                      </ng-container>
+                  
+                      <!-- DISCOUNT TYPE Column -->
+                      <ng-container matColumnDef="discountType">
+                        <th mat-header-cell *matHeaderCellDef> DISCOUNT TYPE	 </th>
+                        <td mat-cell *matCellDef="let element"> {{element. discountType }} </td>
+                      </ng-container>
+                  
+                      <!-- VALUE Column -->
+                      <ng-container matColumnDef="discountValue">
+                        <th mat-header-cell *matHeaderCellDef> VALUE </th>
+                        <td mat-cell *matCellDef="let element"> {{element.discountValue}} </td>
+                      </ng-container>
+                      
+                        <ng-container matColumnDef="startDate">
+                        <th mat-header-cell *matHeaderCellDef> START DATE	 </th>
+                        <td mat-cell *matCellDef="let element"> {{element.startDate}} </td>
+                      </ng-container>
+                  
+                         <ng-container matColumnDef="endDate">
+                        <th mat-header-cell *matHeaderCellDef> END DATE </th>
+                        <td mat-cell *matCellDef="let element"> {{element.endDate}} </td>
+                      </ng-container>
+
+
+                      <ng-container matColumnDef="remove">
+                        <th mat-header-cell *matHeaderCellDef style="text-align: end;">
+                          <button type="button" mat-icon-button>
+                            <mat-icon>clear_all</mat-icon>
+                          </button>
+                          <!-- <button mat-icon-button (click)="removeAllCoupon()" matTooltip="Remove all">
+                            <mat-icon>clear_all</mat-icon>
+                          </button> -->
+                        </th>
+                        <td mat-cell *matCellDef="let score; let i = index;" style="text-align: end;">
+                          <button mat-icon-button (click)="removeCouponAt(i)" matTooltip="Remove">
+                            <mat-icon>clear</mat-icon>
+                          </button>
+                        </td>
+                      </ng-container>
+
+                      <!-- <ng-container matColumnDef="footerMessage">
+                        <td mat-footer-cell *matFooterCellDef colspan="12" class="footer"> 
+                          {{mynewdataSource.data && mynewdataSource.data.length ? mynewdataSource.data.length : 'No'}} Coupns selected
+                        </td>
+                      </ng-container> -->
+                  
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                      <!-- <tr mat-footer-row *matFooterRowDef="['footerMessage']" ></tr> -->
+
+                    </table> 
+                
+                    <!-- <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator> -->
+                  
+                  </div>
+                    
+                  <div class="coupon-txt" style='width:100%'*ngIf="finalCouponArray.length == 0">
+                    No coupon selected
+                </div>
+                  <!-- <mat-paginator [pageSizeOptions]="[10,20,50,100]"></mat-paginator> -->
+                  <mat-paginator #secondPaginator [pageSizeOptions]="[5,10,20]"></mat-paginator>
+
+                  </div>
+              </div>
+            </div>
+          </div>
+</div>
+        </div>
+
+      </mat-tab>
+            <!--Program gifting-->
+
+      <mat-tab>
+
+        <ng-template mat-tab-label>
+          <span>Program</span>
+          <img  class="err-icon" 
+          *ngIf="addeventForm.get('enableProgram').value == true && addProgramResNew.length == 0 && myForm.submitted" 
+          src="assets/images/multiply.png">
+
+          <img  class="err-icon" 
+          *ngIf="addeventForm.get('enableProgram').value == true && addProgramResNew.length>0" 
+          src="assets/images/tickk.svg">
+
+      </ng-template>
+        <!-- <p>is program form valid --- {{addeventForm.controls['ProgramFormList'].valid}}</p>
+           
+<p> VLD - {{PC.get('programMinValue').valid}}</p>
+<p> STS - {{PC.get('programMinValue').status}}</p> -->
+
+        <div *ngIf="programGiftingType">
+
+          <mat-checkbox
+          [checked]="addeventForm.get('enableProgram').value == true"
+          formControlName="enableProgram"
+          (change)="isEnabledProgramCheckbox($event)"
+          >Enable Program</mat-checkbox>
+
+          <!-- <div class="pannel-outer"> -->
+
+          <div class="pannel-outer" *ngIf="addeventForm.get('enableProgram').value == true">
+            <div class="row">
+              <div class="col-md-8">
+                <h3 class="card-title dark">Program Based</h3>
+
+              </div>
+              <div class="col-md-4">
+
+                <mat-checkbox  formControlName = "moreThenOneProgramnAllow" style="padding-top: 10px;">
+                  <span style="color: #656565;">
+                   More than one gift allowed&nbsp;&nbsp;&nbsp;
+                  </span> </mat-checkbox>
+              </div>
+            </div>
+          <div class="pannel-inner">
+
+          <div class="row" style="padding-left:20px;"  formArrayName="ProgramFormList">
+           <div class="col">
+             <div  *ngFor="let programDetails of addeventForm['controls']['ProgramFormList']['controls'];let i = index;"
+             [formGroupName]="i">
+           
+
+               <div class="row">
+              
+                <div class="col-md-3">
+                  <mat-form-field class="field-style field-width">
+                    <mat-select  matInput  placeholder="Select Program"  formControlName="programId" (selectionChange)="changeProgram($event.value)">
+                        <mat-option value="">Select</mat-option>
+                        <mat-option *ngFor="let pgm of allProgram" value="{{pgm.programId}}">
+                            {{ pgm.programName }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="programDetails.get('programId').hasError('required')">Please select program</mat-error>
+                </mat-form-field>
+                  </div>
+
+                <div class="col-md-3">
+                  <!-- <p>{{programKeywordVAlues.length}}</p> -->
+                  <mat-form-field>
+                    <input   matInput
+                      placeholder="Enter Max 5 Values"
+                      
+                       #gift_keyword 
+                       formControlName="programKeywordVAlues"
+                       (keypress)="numberOnly($event)"
+                      maxlength="3"
+                      minlength="1"
+                       >
+                    <mat-error *ngIf="programDetails.get('programKeywordVAlues').hasError('required')">
+                      Please provide fixed value or range or both</mat-error>
+                      <mat-error *ngIf="programDetails.get('programKeywordVAlues').hasError('incorrect')">
+                        Please provide fixed value or range or both</mat-error>
+                      <button matRipple (click)=showKeyword(gift_keyword)  class="button add-btn" type="button">
+                        <img src="assets/images/svg-icons/add_ico.svg" alt="">
+                      </button>
+                      
+                  </mat-form-field>
+                 
+                  <!-- <button (click)=showKeyword(gift_keyword) 
+                  class="button primary-btn add-button" type="button">
+                    <img src="assets/images/svg-icons/add_ico.svg" alt="">
+                  </button> -->
+                  <!-- <p *ngIf="!keywordStatus" style="color:red">Minimum value 1 & Maximum 5 values allowed</p>
+                  <p *ngIf="keywordError" style="color:red">Please enter value more than zero.</p>
+                  <p *ngIf="secondCon" style="color:red"> Please click on add button</p> -->
+                  <div class="row addCardKeywords">
+                    <div class="small-sqare" *ngFor='let key of programKeywordVAlues ; let i = index;'>
+                      {{key}}
+                      <!-- <img (click)= deleteProgramFixedValue(i) src="assets/images/icons/close_img_ico.png"> -->
+                      <span  (click)="deleteProgramFixedValue(i)" matTooltip="Remove">
+                        <mat-icon class="clear-icon">clear</mat-icon>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                 <div class="col-md-2">
+                   
+                    <div class="aligncb">
+
+                   
+<mat-checkbox formControlName="rangeOfProgram"  [checked]="isMarkDefault" (change)="CheckProgramRange($event)">
+  <span>Range Value Selection</span>
+                    </mat-checkbox>
+                  </div>
+                 
+          </div>
+          <div class="col-2"  [class.nonEditable]="Editable">
+            <mat-form-field>
+              <input matInput placeholder="Minimum Value" OnlyNumber="true" formControlName="programMinValue"
+              (blur)="programMinValidate($event,'minValue')"
+              (keypress)="numberOnly($event)"
+              maxlength="9"
+              >
+              <mat-error *ngIf="programDetails.get('programMinValue').hasError('required')">
+                Please enter min value range</mat-error>
+                <mat-error *ngIf="minValueError && !programDetails.get('programMinValue').hasError('required')">
+                  Value should be greater than zero</mat-error>
+            </mat-form-field>
+          </div>
+         <div class="col-2"  [class.nonEditable]="Editable">
+            <!-- <p>{{ProgramMinError2}}</p>  -->
+          <mat-form-field>
+            <input matInput placeholder="Maximum Value" OnlyNumber="true"
+            (blur)="programMaxValidate($event,'maxValue')"
+            (keypress)="numberOnly($event)"
+              formControlName="programMaxValue"  maxlength="9">
+            <mat-error *ngIf="programDetails.get('programMaxValue').hasError('required')">
+              Please enter max value range </mat-error>
+             
+            <mat-error *ngIf="programDetails.get('programMaxValue').hasError('incorrect')">
+              Max value should be greater than min Value</mat-error>
+
+          </mat-form-field>
+         </div>
+            </div>
+               
+              
+           
+             <div class="row">
+                <div class="col-3">
+                  <mat-form-field>
+                    <input maxlength="6" formControlName="programMaxiEvent" matInput placeholder="Maximum for event*" (blur)="programMaxiEvent($event)" (keypress)="numberOnly($event)">
+                    <mat-error *ngIf="programDetails.get('programMaxiEvent').hasError('required')">
+                      Please enter maximum rewards for the event</mat-error>
+                      <mat-error *ngIf="programDetails.get('programMaxiEvent').hasError('incorrect')">
+                        Value should be greater than zero</mat-error>
+                  </mat-form-field>
+                
+                </div>
+                <div class="col-3">
+                  <mat-form-field>
+                    <input maxlength="6" formControlName="programMaxiPerStore" matInput placeholder="Maximum per store/day*" (blur)="programMaxiPerStore($event)" (keypress)="numberOnly($event)">
+                    <mat-error *ngIf="programDetails.get('programMaxiPerStore').hasError('required')">
+                      Please enter maximum rewards for the store per day</mat-error>
+                      <mat-error *ngIf="programDetails.get('programMaxiPerStore').hasError('incorrect')">
+                        Value should be less than maximum rewards for the event</mat-error>
+                  </mat-form-field>
+                </div>
+              
+                <div class="col-3">
+                  <mat-form-field>
+                    <input maxlength="6" formControlName="programmaxiPerLocation" matInput placeholder="Maximum per location/day*" (blur)="programmaxiPerLocation($event)" (keypress)="numberOnly($event)">
+                    <mat-error *ngIf="programDetails.get('programmaxiPerLocation').hasError('required')">
+                      Please enter maximum rewards per location per day</mat-error>
+                      <mat-error *ngIf="programDetails.get('programmaxiPerLocation').hasError('incorrect')">
+                        Value should be less than maximum rewards for the event</mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-2">
+                  <button type="button" 
+                  [disabled]="disableBtn || addeventForm.controls['ProgramFormList'].invalid"
+                   matRipple class="button insert-btn float-right"
+                   (click)="insertProgram()">INSERT</button>
+                </div>
+             </div>
+           
+     
+
+            </div>
+             </div>
+           </div>
+            </div>
+
+            
+            <div class="pannel-inner">
+              <div class="pannel-outer2">
+
+                <table class="table custom-table-program">
+                 <thead class="thead">
+                  <tr>
+                    <th>PROGRAM</th>
+                    <th>REWARD TYPE</th>
+                    <th>POINTS/STAMPS</th>
+                    <th>DENOMINATIOS</th>
+                    <th>START RANGE</th>
+                    <th>END RANGE</th>
+                    <th>MAX ALLOWED FOR EVENT</th>
+                    <th>BALANCE FOR EVENT</th>
+                    <th>MAX PER STORE/DAY</th>
+                    <th>MAX PER LOCATION/DAY</th>
+
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    
+                  </tr>
+                  <tr *ngFor="let pgm of addProgramResNew">
+                    <td>{{pgm.programName}}</td>
+                    <td>{{pgm.rewardType}}</td>
+                    <td>{{pgm.pointorstamp}}</td>
+                    <td>{{pgm.denominations}}</td>
+                    <td>{{pgm.startRange}}</td>
+                    <td>{{pgm.endRange}}</td>
+                    <td>{{pgm.maxForEvent}}</td>
+                    <td>{{pgm.balanceForEvent}}</td>
+                    <td>{{pgm.maxPerStorePerDay}}</td>
+                    <td>{{pgm.maxPerLocationPerDay}}</td>
+                  </tr>
+                
+                  
+                </tbody>
+              </table>
+             </div>
+             </div>
+
+            <!-- <div class="row" formArrayName="ProgramInserFormList">
+              <div class="col">
+                <div *ngFor="let cardLanguage of addeventForm['controls']['ProgramInserFormList']['controls'];let i = index;"
+                [formGroupName]="i">
+                  <div class="row">
+                    <div class="col-md-1">
+                     <mat-form-field>
+                       <input formControlName="programName" matInput placeholder="PROGRAM">
+                     </mat-form-field>
+                    </div>
+                    <div class="col-md-1">
+                     <mat-form-field>
+                       <input formControlName="rewardType" matInput placeholder="REWARD TYPE">
+                     </mat-form-field>
+                    </div>
+                    <div class="col-md-1">
+                     <mat-form-field>
+                       <input formControlName="pointsOrStamps" matInput placeholder="POINTS/STAMPS">
+                     </mat-form-field>
+                    </div>
+                    <div class="col-md-1">
+                     <mat-form-field>
+                       <input  formControlName="denominations" matInput placeholder="DENOMINATIONS">
+                     </mat-form-field>
+                    </div>
+                    <div class="col-md-1">
+                     <mat-form-field>
+                       <input  formControlName="startRange" matInput placeholder="START RANGE">
+                     </mat-form-field>
+                    </div>
+                    <div class="col-md-1">
+                     <mat-form-field>
+                       <input  formControlName="endRange" matInput placeholder="END RANGE">
+                     </mat-form-field>
+                    </div>
+                    <div class="col-md-2">
+                     <mat-form-field>
+                       <input  formControlName="maxEvent" matInput placeholder="MAX ALLOWED FOR EVENT">
+                     </mat-form-field>
+                    </div>
+                    <div class="col-md-2">
+                     <mat-form-field>
+                       <input  formControlName="balEvent" matInput placeholder="BALANCE FOR EVENT">
+                     </mat-form-field>
+                    </div>
+                    <div class="col-md-2">
+                     <mat-form-field>
+                       <input  formControlName="maxStore" matInput placeholder="MAX PER STORE PER DAY">
+                     </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div> -->
+</div>
+</div>
+     
+      </mat-tab>
+      <!--product gifting-->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <span>Product</span>
+          <img *ngIf="addeventForm.get('enableProduct').value == true && insertProductArray.length == 0 && myForm.submitted"  class="err-icon" src="assets/images/multiply.png">
+          <img  class="err-icon" 
+          *ngIf="addeventForm.get('enableProduct').value == true && insertProductArray.length>0" 
+          src="assets/images/tickk.svg">
+      </ng-template>
+    
+        <div *ngIf="productGiftingType">
+          <!-- <mat-checkbox formcontroller="enableProduct" >Enable Product</mat-checkbox> -->
+
+          <mat-checkbox  [checked]="addeventForm.get('enableProduct').value == true"
+          formControlName = "enableProduct"
+          (change)="isEnabledProductCheckbox($event)"
+          >Enable Product</mat-checkbox>
+
+               
+                <div class="pannel-outer" *ngIf="addeventForm.get('enableProduct').value == true">
+
+               <!-- <div class="pannel-outer"> -->
+
+          <h3 class="card-title dark">Product Based</h3>
+          <div class="pannel-inner" >
+            <!--new row outside-->
+            <div class="row" style="padding-left: 20px;">
+              <div class="col-md-3">
+               
+                <input style="display:none;"   #uploadImgEl type="file" class="upload_btn"
+                (change)="uploadSkuEvent_Gifting($event.target.files)" />
+               
+              <div class="text-start">
+               
+                <h3 class="card-title dark">SKU List</h3>
+               
+                <span class="upload-btn-text" >
+                  <span class="upload-icon" *ngIf="hidetext && (selectedProductarray && selectedProductarray.length === 0)" class="sku-text"  (click)='selectProduct()'>
+                    <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px" alt="Img">
+                  </span>
+                  <span class="sku-text" *ngIf="hidetext && (selectedProductarray && selectedProductarray.length === 0)" (click)='uploadImgEl.click()'> Upload SKU /
+                    
+                  </span>
+                  <span *ngIf="hidetext && (selectedProductarray && selectedProductarray.length === 0)" class="sku-text"  (click)='selectProduct()'>  Select Product
+                    
+                  </span>
+                  <span *ngIf="selectedProductarray?.length>0"  class="sku-text" (click)='selectProduct()'>
+                    {{selectedProductarray.length}} SKUs selected
+                  </span>
+                </span>
+
+                <span *ngIf="warn1" class="mat-error"> Please upload sku or select product </span>
+
+                <span>
+                  <a [href]= "skuLink_url" [download]= "skuLink_url" class="sku-text">
+
+                     <u>{{skuXslFileName}} 
+                    
+                    </u>
+                  </a>
+                  <span *ngIf="skuXslFileName" (click)="removeSKU()" style="cursor: pointer;">&nbsp;
+                    <img alt="" src="assets/images/icons/filter_close_ico.png">
+                  </span>
+                </span>
+              </div>
+              </div>
+             
+             
+                <div class="col-md-3">
+                  <h3 class="card-title dark">Eligibility</h3>
+
+                        <mat-checkbox formControlName="moreThanOneGiftProduct" >
+                          
+                          <span style="color: #757474;">More than one gift allowed</span>
+                        </mat-checkbox>
+                
+                  </div>
+                  <div class="col-md-2">
+                    <div class="text-start">
+                      <h3 class="card-title dark">Upload Image</h3>
+
+                      <span class="upload-btn-text" >
+                        <span class="upload-icon">
+                          <!-- <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px" alt="Img"> -->
+                        </span>
+                        <div class="add-btn2 text-right" *ngIf="imagePath.length < 1">
+                          <input style='display: none;' type='file' (change)="uploadImage($event.target.files)" #selectFile>
+                          <span *ngIf="!imgloader" class="sku-text" (click)='selectFile.click()'> 
+                            <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px" alt="Img">
+
+                            Upload 
+                          
+                          </span>
+                          <div *ngIf="imgloader">
+                            <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px" alt="Img">
+
+                            Uploading<img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader" style="width: 25px;">
+                        </div>
+                          <!-- <div *ngIf="imgloader">
+                            <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader" style="width: 25px;">
+                        </div> -->
+                      </div> 
+                      
+                      
+                      </span>
+                    </div>
+                  </div>
+                  
+                  
+                    <div class="col-md-2">
+                      <div class="img-layout" *ngIf="imagePath.length > 0">
+                        <div class="grid img-block" *ngFor="let img of imagePath;let i = index;">
+                            <div class="images-placeholder" *ngIf="imagePath[i]!=''">
+                                <div class="img-container">
+                                    <img class="uploaded-image" [src]="filePathUrl+imagePath[i]" [class.uploaded-img]="imgUpload" style="width: 100px;">
+                                </div>
+                                <!-- <mat-radio-button [value]="i" (change)="onChange($event)" class="pt-8px text-center" [class.placeholder-img]="imgUpload">Default
+                                </mat-radio-button> -->
+                                <div class="remove-img">
+                                    <span (click)="removeImage(i)"> <img src="assets/images/icons/filter_close_ico.png"
+                      alt=""><label>Remove</label></span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                   
+
+                    <div *ngIf="imageErr" style="color:red; font-size: 10px;">{{imageErrMsg}}</div>
+               
+                    </div>
+                    </div>
+                        <!--new row outside end-->
+                        <!-- <p>is Product Form valid>>> {{addeventForm.controls['ProductFormList'].valid}}</p> -->
+                        <!-- <p> productMinVal - {{Prd.get('productMinVal').status}}</p>
+                        <p> productMaxVal - {{Prd.get('productMaxVal').status}}</p>
+                        <p> defineProduct - {{Prd.get('defineProduct').status}}</p>
+                        <p> maxDenomination - {{Prd.get('maxDenomination').status}}</p>
+
+                        <p> prodructMaxiEvent - {{Prd.get('prodructMaxiEvent').status}}</p>
+                        <p> productMaxiPerStore - {{Prd.get('productMaxiPerStore').status}}</p>
+                        <p> productmaxiPerLocation - {{Prd.get('productmaxiPerLocation').status}}</p> -->
+
+             <div class="row" style="padding-left:20px;" formArrayName="ProductFormList">
+              <div style="background-color: #F7F7F7;">
+                 <div class="col">
+               
+                  <div  *ngFor="let productDetils of addeventForm['controls']['ProductFormList']['controls'];let i = index;"
+                  [formGroupName]="i">
+               
+                   
+                      <div class="pannel-light" style="margin-top: 20px;">
+                     
+                      <div class="row">
+                      
+                        <div class="col-md-3">
+                          <mat-form-field class="field-style field-width" >
+                            <mat-select  matInput  placeholder="Define Product"  formControlName="defineProduct"  #dp (selectionChange)="getDefineProduct(dp.value)">
+                                <mat-option value="">Select</mat-option>
+                                <mat-option *ngFor="let p of productDropdown" value="{{p.skuCode}}" >
+                                    {{ p.productName }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="productDetils.get('defineProduct').hasError('required')">Please select product</mat-error>
+                            <mat-error *ngIf="productDetils.get('defineProduct').hasError('incorrect')">
+                              Please select product</mat-error>
+                        </mat-form-field>
+                        <div *ngIf="loaderStart">
+                          <img src="assets/images/loader-icons/Blue-loading-200px.svg" class="ldr" alt="Loader" style="width: 25px;">
+                       </div>
+                          </div>
+
+                       <div class="col-md-3">
+                        <mat-form-field>
+
+                           <input maxlength="3" #gift_keyword formControlName="maxDenomination" matInput placeholder="Enter Max 5 denomination*" (keypress)="numberOnly($event)">
+
+                        
+                          <button matRipple (click)= "showKeywordPRD(gift_keyword)"  class="button add-btn" type="button">
+                            <img src="assets/images/svg-icons/add_ico.svg" alt="">
+                          </button>
+                         
+                            <mat-error *ngIf="productDetils.get('maxDenomination').hasError('required')">
+                              Please enter max 5 denomination</mat-error>
+                        </mat-form-field>
+    <mat-error *ngIf="productDetils.get('maxDenomination').hasError('incorrect')">
+                        Please provide fixed value or range or both</mat-error>
+
+                        <div class="row addCardKeywords">
+                          <div class="ss" *ngFor='let key of maxDenomination ; let i = index;'>
+                            {{key}}
+                            <span  (click)="deleteProductFixedValue(i)" matTooltip="Remove">
+                              <mat-icon class="clear-icon">clear</mat-icon>
+                            </span>
+                          </div>
+                        </div>
+
+                      </div>
+                      
+                      <div class="col-md-2">
+                        <div style="position: relative;
+                        top: 13px;
+                        left: 10px;">
+
+                       
+                        <mat-checkbox formControlName="prodRangeValueSelection" [checked] = "prodRangeValueSelectionchkbox" (change)="allowRangeProduct($event)">
+                          <span style="font-size: 11px;">Range Value Selection</span>
+                        </mat-checkbox>
+                      </div>
+                      </div>
+
+                      <div class="col-md-2" [class.nonEditablenew]="Editablenew">
+                        <mat-form-field>
+                            <input maxlength="9" (keypress)="numberOnly($event)" formControlName="productMinVal" 
+                            (blur)="productMinValidate($event,'minValue')"
+                            matInput placeholder="Minimum Value">
+                            <mat-error *ngIf="productDetils.get('productMinVal').hasError('required')">
+                              Please enter min value range</mat-error>
+                              <mat-error *ngIf="productDetils.get('productMinVal').hasError('incorrect')">
+                                Value should be greater than zero</mat-error>
+                          </mat-form-field>
+                    </div>
+                    <div class="col-md-2" [class.nonEditablenew]="Editablenew">
+                      <mat-form-field>
+                          <input maxlength="9" formControlName="productMaxVal" matInput 
+                          (blur)="productMaxValidate($event,'maxValue')"
+                          (keypress)="numberOnly($event)"
+                          placeholder="Maximum Value">
+                          <mat-error *ngIf="productDetils.get('productMaxVal').hasError('required')">
+                             Please enter max value range</mat-error>
+  
+                            <mat-error *ngIf="productDetils.get('productMaxVal').hasError('incorrect')">
+                              Max value should be greater than min Value</mat-error>
+                           
+                        </mat-form-field>
+                  </div>
+                      </div>
+        
+                    
+                 
+                  <div class="row">
+                    <div class="col-md-3">
+                        <mat-form-field>
+                            <input maxlength="6" 
+                            (keypress)="numberOnly($event)"
+                            formControlName="prodructMaxiEvent" 
+                            matInput placeholder="Maximum for event*" 
+                            (blur)="productMaxOEvent($event)"
+                            (keypress)="numberOnly($event)">
+                            <mat-error *ngIf="productDetils.get('prodructMaxiEvent').hasError('required')">
+                              Please enter maximum rewards for event</mat-error>
+
+                              <mat-error *ngIf="productDetils.get('prodructMaxiEvent').hasError('incorrect')">
+                                Value should be greater than zero
+                                </mat-error>
+                          </mat-form-field>
+                    </div>
+                    <div class="col-md-3">
+
+<!-- 
+                      <mat-form-field>
+                        <input maxlength="12" 
+                        (keypress)="numberOnly($event)"
+                        formControlName="prodructMaxiEvent" 
+                        matInput placeholder="Maximum for event*" 
+                        (blur)="productMaxOEvent($event)"
+                        (keypress)="numberOnly($event)">
+                        <mat-error *ngIf="productDetils.get('prodructMaxiEvent').hasError('required')">
+                          Please enter maximum rewards for event</mat-error>
+
+                          <mat-error *ngIf="productDetils.get('prodructMaxiEvent').hasError('incorrect')">
+                            Value should be greater than zero
+                            </mat-error>
+                      </mat-form-field> -->
+
+
+                      <mat-form-field>
+                            <input maxlength="6"
+                             (keypress)="numberOnly($event)"
+                            (blur)="productMaxOStore($event)"
+                             formControlName="productMaxiPerStore" 
+                             matInput
+                              placeholder="Maximum per store/day*"
+                               (keypress)="numberOnly($event)">
+                            <mat-error *ngIf="productDetils.get('productMaxiPerStore').hasError('required')">
+                              Please enter maximum rewards for the store per day</mat-error>
+                              <mat-error *ngIf="productDetils.get('productMaxiPerStore').hasError('incorrect')">
+                                Value should be less than maximum rewards for the event
+
+                                </mat-error>
+
+                                <!-- <mat-error *ngIf="productDetils.get('prodructMaxiEvent').hasError('required')">
+                                  Please enter maximum rewards for event</mat-error>
+    
+                                  <mat-error *ngIf="productDetils.get('prodructMaxiEvent').hasError('incorrect')">
+                                    Value should be greater than zero
+                                    </mat-error> -->
+
+                          </mat-form-field>
+                    </div>
+                    <div class="col-md-3">
+                      <mat-form-field>
+                           <input maxlength="6" (keypress)="numberOnly($event)"
+                          (blur)="productMaxOLocation($event)"
+                           formControlName="productmaxiPerLocation" matInput placeholder="Maximum per location/day*" (keypress)="numberOnly($event)">
+                          <mat-error *ngIf="productDetils.get('productmaxiPerLocation').hasError('required')">
+                             Please enter maximum rewards per location per day</mat-error>
+                             <mat-error *ngIf="productDetils.get('productmaxiPerLocation').hasError('incorrect')">
+                               Value should be less than maximum rewards for the event
+
+                              </mat-error>
+                        </mat-form-field>
+                      </div>
+                      <div class="col-md-2">
+                        
+                        <div *ngIf = "productBtnText === 'INSERT'">
+                          <button [disabled]  = "addeventForm.controls['ProductFormList'].invalid" type="button" matRipple class="button insert-btn float-right" (click)="addProduct()">{{productBtnText}}</button>
+
+                        </div>
+                        <div *ngIf = "productBtnText === 'UPDATE'">
+                          <button [disabled]  = "addeventForm.controls['ProductFormList'].invalid" type="button" matRipple class="button insert-btn float-right" (click)="addProduct()">{{productBtnText}}</button>
+
+                        </div>
+
+                        </div>
+                  </div>
+
+
+                   <!--program insert grid -->
+                
+                      <!--grid end-->
+                </div>
+              </div>
+            </div>
+                  </div>
+                </div>
+                 </div>
+                
+                 <div class="pannel-inner">
+                  <div class="pannel-outer2">
+
+                  
+                    <table class="table custom-table-program">
+                     <thead class="thead">
+                      <tr>
+                        <th>SL NO.</th>
+                        <th>SKU</th>
+                        <!-- <th>PRODUCT</th> -->
+                        <th>VARIANT</th>
+                        <!-- <th>PRICE</th> -->
+                        <th>DENOMINATION</th>
+
+                        <th>START RANGE</th>
+                        <th>END RANGE</th>
+
+                        <th>MAX FOR EVENT</th>
+                        <th>MAX PER STORE/DAY</th>
+                        <th>MAX PER LOCATION/DAY</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor = "let item of insertProductArray;let index = index">
+                        <td>{{index+1}}</td>
+                        <td>{{item.skuCode}}</td>
+                        <td>{{item.variantTypeName}}</td>
+                        <td>{{item.maxDenomination}}</td>
+                       
+                        <td>{{item.minValue}}</td>
+                        <td>{{item.maxValue}}</td>
+
+                        <td>{{item.maxForEvent}}</td>
+                        <td>{{item.maxperStoreperDay}}</td>
+                        <td>{{item.maxPerLocation}}</td>
+                   
+                      </tr>
+                    
+                      
+                    </tbody>
+                  </table>
+                 </div>
+                 </div>
+                </div>
+        </div>
+      </mat-tab>
+
+    </mat-tab-group>
+
+  </div>
+  
+  
+</div>
+   <!-- GIFTING -->
+   
+  
+
+             <!--section 4 end-->
+               <!--section 5 - user start-->
+<div class="col-md-12  mb-20px">
+
+
+  <div class="loc-header">
+    <div class="row">
+      <div class="col-md-8">
+       <h3  class="card-title dark mt-10">Users</h3>
+       
+      </div>
+      <div class="col-md-4">
+      
+       <!-- <button matRipple class='button tertiary-btn  float-right' type="button" (click)= "addLocation()">SELECT LOCATION
+       </button>
+       <span *ngIf="selectLocationError" class="brand-msg2">Please Select Location</span> -->
+       <button matRipple class='button tertiary-btn float-right' matRipple  type="button" (click) = "addUsernew()"
+       [disabled]="CouponArray.length === 0 && addProgramResNew.length === 0 && insertProductArray.length === 0">
+       SELECT USER</button>
+      </div>
+    </div>
+    </div>
+
+  <!-- <mat-card class="mb-20px padding-one"> -->
+
+
+
+
+<div class="loc-header2">
+
+<div class="row">
+
+  <div class="col">
+   
+
+      <div class="form-wrap"  style='width:100%'>
+
+        <!-- <div class="table-mat table-wrap-inner"  style='width:100%'>
+
+            
+        <table mat-table [dataSource]="userdataSource" style="border: 1px solid #dadada;"  *ngIf="selectedUserArray.length>0">
+      
+          <ng-container matColumnDef="userId">
+            <th mat-header-cell *matHeaderCellDef> USER ID </th>
+            <td mat-cell *matCellDef="let element"> {{element.userId}} </td>
+          </ng-container>
+      
+          <ng-container matColumnDef="userName">
+            <th mat-header-cell *matHeaderCellDef>USER NAME	 </th>
+            <td mat-cell *matCellDef="let element"> {{element.userName}} </td>
+          </ng-container>
+
+        
+      
+          <ng-container matColumnDef="gifting">
+            <th mat-header-cell *matHeaderCellDef> ACTION </th>
+            <td mat-cell *matCellDef="let element">
+                <div>
+                  <u><a class="text-blue" (click) = "giftLimit(element.userId)">Gifting Limits</a></u>             
+
+                   </div>
+            </td>
+          
+        </ng-container>
+      
+        
+          
+            
+
+          <ng-container matColumnDef="remove">
+            <th mat-header-cell *matHeaderCellDef style="text-align: end;">
+              <button mat-icon-button (click)="removeAllUser()" matTooltip="Remove all">
+                <mat-icon>clear_all</mat-icon>
+              </button>
+            </th>
+            <td mat-cell *matCellDef="let score; let i = index;" style="text-align: end;">
+              <button mat-icon-button (click)="removeUserAt(i)" matTooltip="Remove">
+                <mat-icon>clear</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+        
+      
+          <tr mat-header-row *matHeaderRowDef="userdisplayedColumn"></tr>
+          <tr mat-row *matRowDef="let row; columns: userdisplayedColumn;"></tr>
+
+        </table>
+
+        <div class="loc-text" style='width:100%' *ngIf="selectedUserArray.length<1 && !noUserGifitng">
+          No users selected
+      </div>
+      
+      <div class="loc-text error-msg" *ngIf = "noUserGifitng">
+          Please Select Users
+      </div>
+      
+        <mat-paginator #firstPaginator [pageSizeOptions]="[5, 10, 20]" ></mat-paginator>
+
+      </div> -->
+   <!--new table start-->
+
+
+   <div class="table-mat table-wrap-inner"  style='width:100%'>
+        
+    <!-- <table mat-table [dataSource]="userdataSource" style="border: 1px solid #dadada;"  *ngIf="selectedUserArray.length>0"> -->
+
+  <table mat-table [dataSource]="userdataSource" style="border: 1px solid #dadada;">
+
+    <ng-container matColumnDef="userId">
+      <th mat-header-cell *matHeaderCellDef> USER ID </th>
+      <td mat-cell *matCellDef="let element"> {{element.userId}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="userName">
+      <th mat-header-cell *matHeaderCellDef>USER NAME	 </th>
+      <td mat-cell *matCellDef="let element"> {{element.userName}} </td>
+    </ng-container>
+
+    <!-- <ng-container matColumnDef="gifting">
+      <th mat-header-cell *matHeaderCellDef> GIFTING DETAILS	 </th>
+      <td mat-cell *matCellDef="let element" > {{element.giftingLimit}} </td>
+    </ng-container> -->
+
+    <ng-container matColumnDef="gifting">
+      <th mat-header-cell *matHeaderCellDef> ACTION </th>
+      <td mat-cell *matCellDef="let element">
+          <div>
+            <u><a class="text-blue"  (click) = "editGift(element.userId)">Gifting Limits</a></u>             
+
+
+            <!-- <u (click) = "giftLimit(element.userId)"><a class="text-blue">GIFTING DETAILS</a></u>              -->
+             </div>
+      </td>
+      <!-- <td mat-cell (click)="MoveToView(row.userId)" *matCellDef="let row">
+        <u><a 
+        class="text-blue">{{row.fullName}}</a></u>
+      </td> -->
+  </ng-container>
+
+  
+    
+      
+
+    <ng-container matColumnDef="remove">
+      <th mat-header-cell *matHeaderCellDef style="text-align: end;">
+        <!-- <button  type="button" mat-icon-button  (click)="removeAllUser('data')" matTooltip="Remove all">
+          <mat-icon>clear_all</mat-icon>
+        </button> -->
+        <button type="button" mat-icon-button>
+          <mat-icon>clear_all</mat-icon>
+        </button>
+      </th>
+      <td mat-cell *matCellDef="let score; let i = index;" style="text-align: end;">
+        <button type="button" mat-icon-button  (click)="removeUserAt(i)" matTooltip="Remove">
+          <mat-icon>clear</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+  
+
+    <tr mat-header-row *matHeaderRowDef="userdisplayedColumn"></tr>
+    <tr mat-row *matRowDef="let row; columns: userdisplayedColumn;"></tr>
+
+  </table>
+
+  <div class="loc-text" style='width:100%;text-align:center;padding: 20px;' *ngIf="selectedUserArray.length<1 && !noUserGifitng">
+    No users selected
+</div>
+
+<div class="loc-text error-msg" *ngIf = "noUserGifitng">
+  No users selected
+</div>
+
+  <!-- <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator> -->
+  <mat-paginator #firstPaginator [pageSizeOptions]="[5, 10, 20]" ></mat-paginator>
+
+</div>
+
+      <!--new table end-->
+
+      </div>
+
+    </div>
+  </div>
+    </div>      
+
+  </div>
+  <!-- <p>noUserGifitng >> {{noUserGifitng}}</p> -->
+             <!--section 5 end-->
+              <!--section 6 - t&c start-->
+              <div class="col-md-12  mb-20px">
+
+              
+               <div class="terms&conditions-block mb-20px">
+                <h3 class="card-title">Terms & Conditions</h3>
+
+                <mat-card class="description-card">
+                  <div class="expansion-panel" formArrayName="conditionArray">
+                    <mat-accordion>
+                      <mat-expansion-panel class="mat-expansion-panel"
+                        *ngFor="let program of addeventForm['controls']['conditionArray']['controls'];let i = index;"
+                        [formGroupName]="i" (opened)="panelOpenState = true;"
+                        (closed)="panelOpenState = false">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title>
+                            {{languageList[i].languageName}}
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <div class="pt-20px">
+                          <label>Content</label>
+                          <editor apiKey="test" formControlName="termAndCondition" *ngIf="languageList[i].languageName!='Arabic'">
+                          </editor>
+                          <editor apiKey="test" id="arabicIDtac" formControlName="termAndCondition"
+                            *ngIf="languageList[i].languageName=='Arabic'"></editor>
+                        </div>
+                      </mat-expansion-panel>
+                    </mat-accordion>
+                  </div>
+                </mat-card>
+                <p style="padding-top: 10px;" class="mat-error" *ngIf="addeventForm.controls['conditionArray'].invalid && myForm.submitted">
+                  Please enter terms & condition
+                </p>
+              </div>
+              </div>
+             <!--section 6 end-->
+
+               <!--section 7 -content start-->
+<!-- <div class="col-md-12  mb-20px"> -->
+  <!-- <h3 class="card-title">Content</h3> -->
+<!--  
+  <mat-card class="mb-20px">
+    <h3 class="card-title">Select Communication Type </h3> -->
+
+    <!-- <div class="d-flex flex-row bd-highlight mb-3">
+      <div class="p-2 bd-highlight">
+              
+        <mat-checkbox formControlName="isPushNotify"  (change)="appPushNotfy($event)">App Push Notification
+        </mat-checkbox>
+      </div>
+      <div class="p-2 bd-highlight"> <mat-checkbox formControlName="isSMS" (change)="appSMSNotfy($event)">SMS
+      </mat-checkbox>
+    </div>
+ 
+    </div> -->
+
+ 
+<!-- <p>{{addeventForm.get('isPushNotify').value}}</p>
+<p>{{addeventForm.get('isSMS').value}}</p> -->
+
+
+    <!-- notification start-->
+
+    <!-- <div class="expansion-panel">
+      <mat-accordion>
+          <mat-expansion-panel>
+              <mat-expansion-panel-header [collapsedHeight]="'38px'" [expandedHeight]="'38px'">
+                  <mat-panel-title>
+                      App-Push Notification
+                      {{addeventForm.controls['pushLocaleArray'].valid}}
+
+                  </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="panel-wrap" style="margin-top: 20px;">
+                  <div class="row">
+                      <div class="col-md-3">
+                          <mat-form-field>
+                              <mat-select placeholder="Select Template" formControlName="pushTemplate" (selectionChange)="onPushChange($event.value)">
+                                  <mat-option>Select Option
+                                  </mat-option>
+                                  <mat-option *ngFor="let push of pushData" [value]="push.templateId">{{push.templateName}}
+                                  </mat-option>
+                              </mat-select>
+                              <mat-error *ngIf="addeventForm.get('pushTemplate').hasError('required')">
+                                Please select value</mat-error>
+                          </mat-form-field>
+                      </div>
+                      <div class="col-md-3">
+                          <div class="field-container">
+                              <mat-form-field>
+                                  <mat-select placeholder="Link To" formControlName="pushLinkTo"  (selectionChange)="updateValidationHyperLink($event.value)">
+                                      <mat-option *ngFor="let link of pushList" [value]="link.value">
+                                          {{link.label}}
+                                      </mat-option>
+                                  </mat-select>
+                                  <mat-error *ngIf="addeventForm.get('pushLinkTo').hasError('required')">
+                                      Please select value</mat-error>
+                              </mat-form-field>
+                          </div>
+                      </div>
+                      <div class="col-md-3" *ngIf="addeventForm.get('pushLinkTo').value=='Our Brands'">
+                          <mat-form-field>
+                              <mat-select placeholder="Select Brand" formControlName="specificBrand" >
+                                  <mat-option *ngFor="let specificBrand of brandDropdown" [value]="specificBrand.brandId">
+                                      {{specificBrand.brandName}}
+                                  </mat-option>
+                              </mat-select>
+                              <mat-error *ngIf="addeventForm.get('specificBrand').hasError('required')">
+                                  Please select value</mat-error>
+                          </mat-form-field>
+                      </div>
+                      <div class="col-md-4">
+                          <div class="row"  *ngIf="addeventForm.get('pushLinkTo').value == 'Category'">
+                              <div class="col-md-5 selectedsm_col">
+                                  <button class='button tertiary-btn' (click)="openLinkToItemPopUP()"
+                                  type="button">ADD CATEGORY</button>
+                                  <mat-error *ngIf="linkToItemErr" style="font-size:11px">Please select category</mat-error>
+                              </div>
+                              <div class="col-md-7 selected-label" *ngIf="linkToIteamName != ''">
+                                  <p>Category selected</p>
+                                  <label>{{linkToIteamName}}</label>
+                              </div>
+                          </div>
+                          <div class="row" *ngIf="addeventForm.get('pushLinkTo').value == 'Product'">
+                              <div class="col-md-5 selectedsm_col">
+                                <button class='button tertiary-btn' (click)="openLinkToItemPopUP()"
+                                  type="button">ADD PRODUCT</button>
+                                <mat-error *ngIf="linkToItemErr" style="font-size:11px">Please select product</mat-error>
+                              </div>
+                              <div class="col-md-7 selected-label" *ngIf="linkToIteamName != ''">
+                                  <p>Product selected</p>
+                                  <label>{{linkToIteamName}}</label>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="row">
+                      <div class="col-md-12">
+                          <mat-form-field>
+                              <input matInput placeholder="Hyper Link" formControlName="pushHyperLink">
+                    
+                                  <mat-error *ngIf="addeventForm.get('pushHyperLink').hasError('required')">
+                                    Please enter value</mat-error>
+
+                                  <mat-error *ngIf="addeventForm.get('pushHyperLink').hasError('pattern')"> Give proper link
+                                    [Ex: https://facebook.com]
+                                  </mat-error>
+                          </mat-form-field>
+                      </div>
+                  </div>
+                  <div formArrayName="pushLocaleArray" class="customize-scroll" malihu-scrollbar [scrollbarOptions]="scrollbarOptions">
+                      <mat-card class="pushNotification-card mb-20px" *ngFor="let locale of addeventForm['controls']['pushLocaleArray']['controls'];let i = index;" [formGroupName]="i">
+                          <div class="lang-field {{languageDirection[i]}} {{langfieldname[i]}}" *ngIf="!pushTemplateChecked">
+                              <p>{{ languages[i].languageName}}</p>
+                          </div>
+                          <div class="row card-mb fieldtop">
+                              <div class="col-md-8 content-pushimg-block">
+                                  <div class="content-img-block">
+                              
+
+                                      <div class="text-fields {{languageDirection[i]}}">
+                                          <div class="d-flex">
+                                              <div class="w-75">
+                                              <mat-form-field [class.direction-right]="languages[i].languageName == 'Arabic'">
+                                                  <textarea matInput placeholder="Subject" formControlName="subject" [(ngModel)]="textAreaAppSubject[i]" #subInp maxLength="500" required></textarea>
+                                                  <mat-error *ngIf=" locale.hasError('required', 'subject')">
+                                                      Please enter value</mat-error>
+                                              </mat-form-field>
+                                              </div>
+                                        
+                                          </div>
+                                          <div class="d-flex">
+                                              <div class='w-75'>
+                                              <mat-form-field [class.direction-right]="languages[i].languageName == 'Arabic'">
+                                                  <textarea matInput placeholder="Content" formControlName="content" [(ngModel)]="textAreaAppContent[i]" [id]="'textareaPush' + i" required #content maxlength="640"></textarea>
+                                                  <mat-error *ngIf="locale.hasError('required', 'content')">
+                                                      Please enter value</mat-error>
+                                              </mat-form-field>
+                                              </div>
+                                          
+                                          </div>
+                                          <label class="count-length"> *Indicative characte length :{{content.value.length}}/640</label>
+                                      </div>
+                                  </div>
+
+                              </div>
+                              <div class="col-md-4 img-container">
+                                  <div class="preview-container">
+                                      <div class="img-preview">
+                                          <p class="text-preview">Notification Preview</p>
+                                          <img src="assets/images/svg-icons/mobile_frame.svg" alt="">
+                                          <div class="notification-content {{languageDirection[i]}}">
+                                              <div class="notification-description">
+                                                  <p>
+                                                      {{locale.get('content').value}}
+                                                  </p>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <div class="add-attribute">
+                                  </div>
+                              </div>
+                          </div>
+                      </mat-card>
+                  </div>
+              </div>
+          </mat-expansion-panel>
+          <mat-expansion-panel  (opened)="panelOpenState = true" (closed)="panelOpenState = false" *ngIf="smsChecked">
+              <mat-expansion-panel-header [collapsedHeight]="'38px'" [expandedHeight]="'38px'">
+                  <mat-panel-title>
+                      SMS
+                      {{addeventForm.controls['smsLocaleArray'].valid}}
+
+                  </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="panel-wrap" style="margin-top: 20px;">
+                  <div class="row">
+                      <div class="col-md-3">
+                          <mat-form-field>
+                              <mat-select placeholder="Select Template" formControlName="smsTemplate" (selectionChange)="onSMSChange($event.value)">
+                                  <mat-option *ngFor="let sms of smsData" [value]="sms.templateId">{{sms.templateName}}
+                                  </mat-option>
+                              </mat-select>
+                              <mat-error *ngIf="addeventForm.get('smsTemplate').hasError('required')">
+                                Please select value</mat-error>
+                          </mat-form-field>
+                      </div>
+                      <div class="col-md-3">
+                          <div class="field-container">
+                              <mat-form-field>
+                                  <mat-select placeholder="Sender ID11" formControlName="smsSenderId">
+                                      <mat-option *ngFor="let smsSenderId of smsSenderList" [value]="smsSenderId">
+                                          {{smsSenderId}}
+                                      </mat-option>
+                                  </mat-select>
+                                  <mat-error *ngIf="addeventForm.get('smsSenderId').hasError('required')">
+                                      Please Select a value</mat-error>
+                              </mat-form-field>
+                          </div>
+                      </div>
+                  </div>
+                  <div formArrayName="smsLocaleArray" class="customize-scroll" malihu-scrollbar [scrollbarOptions]="scrollbarOptions">
+                      <mat-card class="pushNotification-card mb-20px" *ngFor="let locale of addeventForm['controls']['smsLocaleArray']['controls'];let i = index;" [formGroupName]="i">
+                          <div class="lang-field {{languageDirection[i]}} {{langfieldname[i]}}" *ngIf="!smsTemplateChecked">
+                              <p>{{ languages[i].languageName}}</p>
+                          </div>
+                          <div class="lang-field {{languageDirection[i]}} {{langfieldname[i]}}" *ngIf="smsTemplateChecked">
+                              <p>{{locale.get('languageId').value}}</p>
+                          </div>
+                          <div class="row card-mb fieldtop">
+                              <div class="col-md-7">
+                                  <div class="text-fields {{languageDirection[i]}}">
+                                      <div class="field-container">
+                                          <mat-form-field [class.direction-right]="languages[i].languageName == 'Arabic'">
+                                              <textarea matInput placeholder="Content" formControlName="content" [id]="'textarea' + i"  #content maxlength="640"></textarea>
+                                            
+                                                  <mat-error *ngIf="smsArrayControl.get('content').hasError('required')">
+                                                    Please Select a value</mat-error>
+                                         
+                                          </mat-form-field>
+                                          <label class="count-length"> *Indicative
+                                              character
+                                              length :
+                                              {{content.value.length}}/640</label>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="col-md-5 img-container">
+                                  <div class="preview-container">
+                                      <div class="img-preview">
+                                          <p class="text-preview">Notification Preview</p>
+                                          <img src="assets/images/svg-icons/mobile_frame.svg" alt="">
+                                          <div class="notification-content {{languageDirection[i]}}">
+                                              <div class="notification-description">
+                                                  <p>
+                                                      {{locale.get('content').value}}
+                                                  </p>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <div class="add-attribute">
+                                  </div>
+                              </div>
+                          </div>
+                      </mat-card>
+                  </div>
+              </div>
+          </mat-expansion-panel>
+       
+      </mat-accordion>
+  </div> -->
+  <!-- <div *ngIf="contentError" class="color-red padl-23">Please fill all mandatory fields</div> -->
+       <!--notification end-->
+
+      
+<!-- 
+   
+  </mat-card>
+
+</div> -->
+
+
+<div class="col-md-12">
+  
+<!-- 
+  <pre>Invalid >> {{addeventForm.invalid}}</pre>
+  <p>Product Form array invaid>>> {{addeventForm.controls['ProductFormList'].invalid}}</p>
+  <p>Program Form array invaid>>> {{addeventForm.controls['ProgramFormList'].invalid}}</p>
+  <p>Coupon Form array invaid>>> {{addeventForm.controls['CouponFormList'].invalid}}</p>
+  <p>conditionArray Form array invaid>>> {{addeventForm.controls['conditionArray'].invalid}}</p>
+  <p>LocationFormList Form array invaid>>> {{addeventForm.controls['LocationFormList'].invalid}}</p> -->
+
+  
+  <!-- <pre>{{addeventForm.value | json}}</pre>  -->
+
+</div>
+
+             <!--section 7 end-->
+            
+
+
+           
+         </div>
+         <div class="d-flex justify-content-end">
+          <div class="btm-button-wrap">
+            <button matRipple class="button secondary-btn" type="button" [routerLink]="['/search-events']">CANCEL</button>
+            <!-- <button matRipple class="button primary-btn" type="button" (click) = "createEvents()">ADD</button> -->
+            <button matRipple class="button primary-btn" type="submit">ADD</button>
+
+        </div>
+         </div>
+        </form>
+     
+      </div>

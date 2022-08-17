@@ -1,0 +1,50 @@
+.delivery-page-wrap {
+    padding: 1.5rem;
+    .delivery-areas-card {
+        .master-fieldSet {
+            margin-bottom: 20px;
+            .language-fieldset {
+                padding: 0px 26px 10px;
+                border: 1px solid #dbdbdb;
+                border-radius: 5px;
+                .fieldset-heading {
+                    font-size: 14px;
+                    padding-inline-start: 7px;
+                    max-width: 23% !important;
+                }
+            }
+        }
+        .btn-block {
+            padding: 15px 0;
+            .button.tertiary-btn {
+                font-size: 10px;
+                line-height: 24px;
+            }
+        }
+    }
+    .store-access-card {
+        padding: 0;
+        .table-top-section {
+            background-color: #f5f5f5;
+            padding: 0.75rem 1.0625rem 5em;
+            border-top-left-radius: 7px;
+            border-top-right-radius: 7px;
+            p {
+                font-size: 15px;
+                color: #000;
+            }
+        }
+    }
+}
+
+tr {
+    border: 1px solid #e1e1e1!important;
+}
+
+.disable {
+    cursor: not-allowed;
+}
+
+.direction {
+    direction: rtl !important;
+}

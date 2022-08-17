@@ -1,0 +1,31 @@
+<div class="page-wrap">
+    <div class="header flex-container">
+        <h3></h3>
+        <div class="close-icon text-right">
+          <img src="assets/images/icons/filter_close_ico.png" alt="" (click)="onCloseClick()">
+        </div>
+    </div>
+    <form (submit)="dumpFlow(dumpFlowFormGroup.value)" [formGroup]="dumpFlowFormGroup">
+    <div class="row">
+      <div class="col-md-6">
+        <mat-form-field>
+          <input matInput [matDatepicker]="picker1" [OnlyNumber]="true" placeholder="Start Date"
+            formControlName="fromDate">
+          <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+          <mat-datepicker #picker1></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div class="col-md-6">
+        <mat-form-field>
+          <input matInput [matDatepicker]="picker2" [OnlyNumber]="true" placeholder="End date"
+            formControlName="endDate">
+          <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+          <mat-datepicker #picker2></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="button-wrap text-right">
+      <button type="submit" class="button primary-btn">EXPORT</button>
+   </div>
+  </form>
+</div>

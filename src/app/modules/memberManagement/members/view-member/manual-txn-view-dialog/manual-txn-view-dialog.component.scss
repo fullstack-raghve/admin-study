@@ -1,0 +1,37 @@
+.page-wrap {
+    padding: 1.5em;
+}
+
+/deep/.cdk-overlay-pane {
+    max-width: 42vw!important;
+}
+/deep/.mat-dialog-container {
+    min-width: 34vw!important;
+}
+.header {
+    margin-bottom: 20px;
+    h3 {
+        font-size: 24px;
+        color: #FF8E48;
+    }
+}
+.close-icon {
+    cursor: pointer;
+}
+.message {
+    p {
+        font-size: 14px;
+    }
+}
+.master-fieldSet {
+    .language-fieldset{
+        padding: 0px 26px 10px;
+        border: 1px solid #dbdbdb;
+        border-radius: 5px;
+        .fieldset-heading {
+            font-size: 14px;
+            padding-inline-start: 7px;
+            max-width: 49% !important;
+        }
+    }
+}

@@ -1,0 +1,27 @@
+<div class="bredcrumb-title-wrap">
+  <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+  <div class="title">
+    <h1>App Delivery</h1>
+  </div>
+</div>
+<div class="page-wrap">
+  <div class="row head">
+   
+       <h5>Delivery on Customer app</h5> 
+       <p> (Please tick the check box to enable delivery on customer app)</p>
+   
+    <!-- <div class="col-md-8">
+        (Please tick the check box to enable delivery on customer app)
+    </div> -->
+
+  </div>
+    <div>
+      <mat-card>
+        <mat-checkbox #checkValue (change)="toggle(checkValue)" [checked]="checkData">Delivery Enabled on Customer App</mat-checkbox>
+      </mat-card>
+    </div>
+    <div class="btm-button-wrap">
+        <!-- <button type="button" class="button secondary-btn" [routerLink]="['/search-brand-management']">CANCEL</button> -->
+        <button class="button primary-btn" (click)="openDialog()"  type="button">UPDATE</button>
+    </div>
+</div>

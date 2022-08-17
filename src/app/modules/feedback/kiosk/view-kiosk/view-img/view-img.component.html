@@ -1,0 +1,14 @@
+<div class="page-wrap">
+  <div class="close-update-icon text-right">
+    <img src="assets/images/icons/filter_close_ico.png" (click)="onCloseClick()" alt="">
+  </div>
+  <div class="text-center" *ngIf="KioskScreenShotImg == ''">
+    <p>Screenshot Image not available</p>
+  </div>
+  <div class="update-view-block" *ngIf="KioskScreenShotImg != '' && KioskScreenShotImg != null">
+      <img [src]="imgUrl+KioskScreenShotImg" alt="Update-Img">
+    </div>
+    <div *ngIf="pageLoader" class="select-store-block">
+      <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+    </div>
+</div>

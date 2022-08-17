@@ -1,0 +1,41 @@
+<div class="page-wrap">
+    <div class="categories-section">
+        <div class="header flex-container">
+            <h5>Select Categories</h5>
+            <div class="close-icon">
+                <img src="assets/images/icons/filter_close_ico.png" alt="close_icon" (click)="onCloseClick()">
+            </div>
+        </div>
+        <div class="pos-relative">
+            <div class="common-search">
+                <input #categoryInput type="text" (keydown.enter)="searchCategories()"
+                    placeholder="Search Categories" />
+                <span class="search-btn" (click)="searchCategories()"></span>
+            </div>
+            <div class="filter-btn-wrap" (click)="clearSearch()">
+                <span class="filter-btn close"></span>
+            </div>
+        </div>
+        <div class="category-wrapper">
+            <div class="category-item" *ngFor="let item of categoriesData; let i= index;">
+                <mat-checkbox (change)="onCategorySelect($event, item)"
+                    [checked]="categoryIds.includes(item.categoryId)">
+                    {{item.categoryName}}
+                </mat-checkbox>
+            </div>
+            <div class="messsage-info" *ngIf="categoriesData?.length == 0">
+                <p> No categories available</p>
+            </div>
+        </div>
+        <div *ngIf="categoryError" class="error-msg">
+            <p> Please select categories</p>
+        </div>
+
+        <div class="text-center m-2em">
+            <button type="button" class="button primary-btn" (click)="addCategories()">ADD</button>
+        </div>
+    </div>
+</div>
+<div *ngIf="loadingResponse" class="page-loader-block full-page-loader">
+    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+</div>

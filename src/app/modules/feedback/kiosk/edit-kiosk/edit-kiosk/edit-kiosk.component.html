@@ -1,0 +1,316 @@
+<div class="page-wrap">
+  <div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container">
+      <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg"
+            alt="leftArrow" [routerLink]="['/search-kiosk']"></span>Edit Kiosk</h1>
+      <div class="slider">
+        {{statusValue}} <mat-slide-toggle [(ngModel)]="toggleVal" (change)="toggleStatus($event)"
+          class="mat-slide-toggle">
+        </mat-slide-toggle>
+      </div>
+    </div>
+  </div>
+  <div class="form-wrap">
+    <form *ngIf="buildFlag" [formGroup]="searchKioskForm" #editKioskForm="ngForm"
+      (submit)="updateKiosk(searchKioskForm.value)">
+      <div class="row">
+        <div class="col-4">
+
+          <mat-card class="store-card">
+            <h3 class="card-title text-dark mb-10px">Device</h3>
+            <div class="row">
+              <div class="col-md-12">
+                <mat-form-field class="field-width">
+                  <input matInput placeholder="Name" formControlName="kioskName" required>
+                  <mat-error *ngIf="searchKioskForm.get('kioskName').hasError('required')">Please enter Device Name
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field class="field-width">
+                  <input matInput placeholder="Device Make" formControlName="kioskdevice" required>
+                  <mat-error *ngIf="searchKioskForm.get('kioskdevice').hasError('required')">Please enter Device Make
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field class="field-width">
+                  <input matInput placeholder="Device Tracking ID" formControlName="kioskDeviceTrackingId" required>
+                  <mat-error *ngIf="searchKioskForm.get('kioskDeviceTrackingId').hasError('required')">Please enter
+                    Tracking Id</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-12">
+                <mat-form-field class="field-width">
+                  <input matInput placeholder="Model Number" formControlName="kioskModelNumber" required>
+                  <mat-error *ngIf="searchKioskForm.get('kioskModelNumber').hasError('required')">Please enter Model
+                    Number</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-12">
+                <mat-form-field class="field-width">
+                  <input matInput placeholder="Device IMEI" formControlName="kioskDeviceIMEI" required>
+                  <mat-icon matSuffix (click)="generateQrCode()">
+                    <img class="pointer" src="assets/images/feedback/QR_code_icon.svg" alt="QR" width="20px"
+                      height="20px">
+                  </mat-icon>
+                  <mat-error *ngIf="searchKioskForm.get('kioskDeviceIMEI').hasError('required')">Please enter Device
+                    IMEI</mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="col-md-6">
+                <mat-form-field class="field-style field-width">
+                  <mat-select id="country" matInput placeholder="Device Status" formControlName="kioskDeviceStatus" required>
+                    <mat-option value="ON">ON</mat-option>
+                    <mat-option value="OFF">OFF</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="searchKioskForm.get('kioskDeviceStatus').hasError('required')">Please Select Device
+                    Status</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field class="field-style field-width">
+                  <mat-select id="country" matInput placeholder="Kiosk Type" formControlName="kisoktype" required>
+                    <mat-option value="STANDING">Standing</mat-option>
+                    <mat-option value="CASH_DESK">Cash Desk</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="searchKioskForm.get('kisoktype').hasError('required')">Please Select KioskType
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </mat-card>
+        </div>
+        <div class="col-4">
+
+          <mat-card class="store-card">
+            <h3 class="card-title text-dark mb-10px">Allocation</h3>
+            <div class="row">
+              <div class="col-md-6">
+                  <mat-form-field class="example-full-width">
+                      <input matInput placeholder="COUNTRY" name="somethingAutofillDoesntKnow" aria-label="COUNTRY" [matAutocomplete]="countryAutoComplete"
+                        [formControl]="countryCtrl" autocomplete="doNotAutoComplete" required>
+                      <mat-autocomplete #countryAutoComplete="matAutocomplete">
+                        <mat-option *ngFor="let country of filteredcountry | async" [value]="country.countryName"
+                        (click)="getAllCities(country.countryId) || getAllBrands(country.countryId)" #countryInput>
+                          <span>{{country.countryName}}</span>
+                        </mat-option>
+                      </mat-autocomplete>
+                      <mat-error *ngIf="countryCtrl.hasError('required')">Please enter value</mat-error>
+                    </mat-form-field>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field class="example-full-width">
+                  <input matInput placeholder="CITY" name="somethingAutofillDoesntKnow" aria-label="City" [matAutocomplete]="cityAutoComplete"
+                    [formControl]="cityCtrl" autocomplete="doNotAutoComplete" required>
+                  <mat-autocomplete #cityAutoComplete="matAutocomplete">
+                    <mat-option *ngFor="let city of filteredcities | async" [value]="city.cityName"
+                      (click)="getcityIdValue(city.cityId)" #cityInput>
+                      <span>{{city.cityName}}</span>
+                    </mat-option>
+                  </mat-autocomplete>
+                  <mat-error *ngIf="cityCtrl.hasError('required')">Please enter value</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field class="example-full-width">
+                  <input matInput placeholder="BRAND" name="somethingAutofillDoesntKnow" aria-label="Brand" [matAutocomplete]="brandAutoComplete"
+                    [formControl]="brandCtrl" autocomplete="doNotAutoComplete" required> 
+                  <mat-autocomplete #brandAutoComplete="matAutocomplete">
+                    <mat-option *ngFor="let brand of filteredbrands | async" [value]="brand.brandName"
+                      (click)="getAllMalls(brand.brandId)" #brandInput>
+                      <span>{{brand.brandName}}</span>
+                    </mat-option>
+                  </mat-autocomplete>
+                  <mat-error *ngIf="brandCtrl.hasError('required')">Please enter value</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field class="example-full-width">
+                  <input matInput placeholder="MALL" name="somethingAutofillDoesntKnow" aria-label="Mall" [matAutocomplete]="mallAutoComplete"
+                    [formControl]="mallCtrl" autocomplete="doNotAutoComplete" required>
+                  <mat-autocomplete #mallAutoComplete="matAutocomplete">
+                    <mat-option *ngFor="let mall of filteredmalls | async" [value]="mall.mallName"
+                      (click)="getAllStores(mall.mallId,brandId, countryId, cityId)" #mallInput>
+                      <span>{{mall.mallName}}</span>
+                    </mat-option>
+                  </mat-autocomplete>
+                  <mat-error *ngIf="mallCtrl.hasError('required')">Please enter value</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6">
+
+                  <mat-form-field class="example-full-width">
+                      <input matInput placeholder="Store" name="somethingAutofillDoesntKnow" aria-label="STORE" [matAutocomplete]="storeAutoComplete"
+                        [formControl]="storeCtrl" autocomplete="doNotAutoComplete" required>
+                      <mat-autocomplete #storeAutoComplete="matAutocomplete">
+                        <mat-option *ngFor="let store of filteredstores | async" [value]="store.storeName"
+                        (click)="getUsersList(store.storeId)" #storeInput>
+                          <span>{{store.storeName}}</span>
+                        </mat-option>
+                      </mat-autocomplete>
+                      <mat-error *ngIf="storeCtrl.hasError('required')">Please enter value</mat-error>
+                    </mat-form-field>
+
+                <p>Store Id: {{selectedStoreId}}</p>
+              </div>
+
+              <div class="col-md-6">
+                <mat-form-field class="field-width">
+                  <mat-select matInput placeholder="Assigned To" formControlName="kioskUserName">
+                    <mat-option [value]="user.staffOid" *ngFor="let user of users ">{{user?.userName}}</mat-option>
+                    <!-- <mat-option (click)="LoadUsers()">More </mat-option> -->
+                  </mat-select>
+                  <!-- <mat-error *ngIf="searchKioskForm.get('kioskUserName').hasError('required')">Please select User
+                  </mat-error> -->
+                </mat-form-field>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field class="field-width">
+                  <input matInput placeholder="Mobile Number" formControlName="kioskMobileNumber" OnlyNumber="true">
+                  <!-- <mat-error *ngIf="searchKioskForm.get('kioskMobileNumber').hasError('required')">Please Enter Mobile
+                    Number</mat-error> -->
+                </mat-form-field>
+              </div>
+              <div class="col-md-12">
+                <h3 class="card-title text-dark">Branding</h3>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field class="field-width">
+                  {{searchKioskForm.value.headerColor}}
+                  <input style="width: 15%;" matInput placeholder="Header Color" type="color" name="headercolor"
+                    formControlName="headerColor">
+                </mat-form-field>
+
+              </div>
+              <div class="col-md-6">
+                <mat-form-field class="field-width">
+                  {{searchKioskForm.value.FooterColor}}
+                  <input style="width: 15%;" type="color" matInput placeholder="Footer Color" name="footercolor"
+                    formControlName="FooterColor">
+                </mat-form-field>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field class="field-width">
+                  {{searchKioskForm.value.backgroundColor}}
+                  <input matInput placeholder="Background Color" style="width: 15%;" type="color" name="bgcolor"
+                    formControlName="backgroundColor">
+                </mat-form-field>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field class="field-style field-width">
+                  <mat-select matInput placeholder="Language" formControlName="language" required>
+                    <mat-option *ngFor="let lang of languages" [value]="lang.languageId">
+                      {{ lang.languageName }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="searchKioskForm.get('language').hasError('required')">Please select Language
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6">
+                <div class="img-block">
+                  <div class="avatar-zone">
+                    <span *ngIf="kioskBrandLogoPath==''" class="upload-text" [class.placeholder-img]="imgUpload">
+                      <span class="pgm-img-title">Brand Logo</span>
+                      <span class="pgm-img-size">
+                        Image Size W-90 * H-60
+                      </span>
+                    </span>
+                    <img *ngIf="kioskBrandLogoPath!=''" class="upload-img" [src]="imgBaseUrl+kioskBrandLogoPath"
+                      [class.uploaded-img]="imgUpload" width="252px" height="150px">
+                  </div>
+                  <div class="remove-img" *ngIf="kioskBrandLogoPath!=''">
+                    <span (click)="removeImage()" class="pointer"> <img src="assets/images/icons/filter_close_ico.png"
+                        alt=""><label>Remove</label></span>
+                  </div>
+                  <input style="display:none;" #uploadImgEl type="file" class="upload_btn"
+                    (change)="uploadImage($event.target.files)" />
+                  <div class="text-center" style="width: 94%;" *ngIf="kioskBrandLogoPath==''">
+                    <span class="upload-btn-text" (click)='uploadImgEl.click()'>
+                      <span class="upload-icon">
+                        <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px" alt="Img">
+                      </span>Upload Image
+                    </span>
+                  </div>
+                  <div class="image-error" style="color:red;padding-left: 5em;" *ngIf="showImageError">Please
+                    upload image</div>
+                </div>
+              </div>
+            </div>
+          </mat-card>
+        </div>
+        <div class="col-4">
+
+          <mat-card class="store-card">
+            <h3 class="card-title text-dark mb-10px">Feedback Flow</h3>
+            <div class="row">
+              <div class="col-md-12 pb-3">
+
+                Select Flows <button class="button primary-btn" type="button"
+                  (click)="selectedFlow(searchKioskForm.controls['kioskBrand'].value, searchKioskForm.controls['kioskCountry'].value )"
+                  [disabled]="true">Select
+                  Flow</button>
+                <div class="chip-list d-flex flex-wrap mt-2 mb-2" *ngIf="selectedFlows.length != 0">
+                  <mat-chip *ngFor="let User of selectedFlows;let valueIndex=index;" [selectable]="selectable"
+                    [removable]="removable" (removed)="removeFlow(User, valueIndex)">
+                    {{User.flowName}},
+                    {{User.startDate}},{{User.endDate}},
+                    {{User.startTime}},{{User.endTime}}
+                    <!-- <mat-icon style="cursor: pointer;" matChipRemove *ngIf="removable">cancel</mat-icon> -->
+                  </mat-chip>
+                </div>
+                <!-- <p *ngIf="selectedFlows.length == 0 && showSelectedFlow " class="color-red"
+                  style="font-size: 10px;margin-top: 7px;">Please Select Flow</p> -->
+              </div>
+              <div class="col-md-6">
+                <mat-form-field class="field-width">
+                  <input matInput placeholder="Idle Time Out" formControlName="idleTimeOut" OnlyNumber="true" required>
+                  <mat-hint class="hint-text">In seconds</mat-hint>
+                  <mat-error *ngIf="searchKioskForm.get('idleTimeOut').hasError('required')">Please Enter Idle time out
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field class="field-width">
+                  <input matInput placeholder="Final Page Duration" formControlName="finalPageDuration"
+                    OnlyNumber="true" required>
+                  <mat-hint class="hint-text">In seconds</mat-hint>
+                  <mat-error *ngIf="searchKioskForm.get('finalPageDuration').hasError('required')">Please Enter final
+                    page Duration</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6">
+                <mat-checkbox formControlName="sendEmail">Send Email to Customer</mat-checkbox>
+              </div>
+              <div class="col-md-6">
+                <mat-checkbox formControlName="sendSms">Send SMS to Customer</mat-checkbox>
+              </div>
+              <div class="col-md-12 mt-10px mb-10px">
+                Notify Users <button class="button primary-btn" type="button" (click)="Users()">Seleceted Users</button>
+              </div>
+              <div class="col-md-12">
+                <div class="chip-list d-flex flex-wrap ">
+                  <mat-chip *ngFor="let User of selectedUser" [selectable]="selectable" [removable]="removable"
+                    (removed)="removeuser(User)">
+                    {{User.userName}}
+                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                  </mat-chip>
+                </div>
+                <p *ngIf="selectedUser.length == 0 && showSelectedUser " class="color-red" style="font-size: 10px;">
+                  Please Select user</p>
+              </div>
+
+            </div>
+          </mat-card>
+        </div>
+        <div class="button-wrap text-right pt-20px col-md-12">
+          <button class='button secondary-btn' type="button" [routerLink]="['/search-kiosk']">CANCEL</button>
+          <button class='button primary-btn ' type="submit">UPDATE</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

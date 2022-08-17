@@ -1,0 +1,1281 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container">
+        <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          [routerLink]="['/search-member']"></span>View Member</h1>
+        <div class="slider">
+            <mat-slide-toggle [(ngModel)]="toggleVal" class="example-margin" [checked]="checked" (change)="toggleCustomerStatus($event)">
+                {{toggleVal==true ? "ACTIVE" : "INACTIVE"}}
+            </mat-slide-toggle>
+        </div>
+    </div>
+</div>
+<div *ngIf="viewMemberData" class="select-store-block">
+    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+</div>
+<div class="form-wrap">
+    <div class="view-members" *ngIf="basicDetails.length!=0">
+        <mat-tab-group animationDuration="0ms" class="tabs-align" [selectedIndex]=seletedTabIndex #tabGroup (selectedTabChange)="tabChanged($event)">
+            <mat-tab label="Basic Details">
+                <ng-template matTabContent>
+                    <div class="basic-details">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <h3 class="card-title">Profile</h3>
+                                <mat-card class="profile-card">
+                                    <div class="profile">
+                                        <div class="profile-completion">
+                                            <div class="profile-image-Details flex">
+                                                <div class="avatar-zone">
+                                                    <img class="upload-img" src="{{basicDetails.imageUrl ? filePathUrl+imageUrl : placeHolderImgUrl}}">
+                                                </div>
+                                                <div class="profile-details">
+                                                    <p class="member-name">{{basicDetails.firstName}} {{basicDetails.lastName}}</p>
+                                                    <p class="member-number">{{basicDetails.phoneNo}}</p>
+                                                    <p class="member-email">{{basicDetails.emailId}}</p>
+                                                </div>
+                                            </div>
+                                            <div class="profile-completion-circle">
+                                                <div class="progress-circle">
+                                                    <app-progress [value]="basicDetails.profileCompletionPrecentage"></app-progress>
+                                                </div>
+                                                <div class="profile-completeness-label">
+                                                    <p class="profile-complete">Profile Completeness</p>
+                                                    <img src="assets/images/icons/info_ico.svg" alt="edit-ico">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="inline-block">
+                                            <h3 class="member-category inline-block">{{basicDetails.tierName}} MEMBER</h3>
+                                            <div class="inline-block" (click)="openEditMemberDialog()">
+                                                <img src="assets/images/icons/edit_ico.svg" alt="edit-ico">
+                                            </div>
+                                        </div>
+                                        <div class="gender-dob mb-15px">
+                                            <div class="gender">
+                                                <img src="assets/images/gender_ico.png">
+                                                <span>{{basicDetails.gender === null ? '-' : basicDetails.gender}}</span>
+                                            </div>
+                                            <div class="dob">
+                                                <img src="assets/images/dob_ico.png">
+                                                <span>{{basicDetails.dateOfBirth === null ? '-' : basicDetails.dateOfBirth | date:'dd/MM/yyyy'}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="view-details-sec">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="view-details">
+                                                        <label>Last Activity On</label>
+                                                        <p>
+                                                            {{basicDetails.lastActiveTime === null ? '-' : basicDetails.lastActiveTime | date:'dd/MM/yyyy'}}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="view-details">
+                                                        <label>Nationality</label>
+                                                        <p>{{basicDetails.nationality === '' ? '-' : basicDetails.nationality}}</p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="view-details">
+                                                        <label>Address</label>
+                                                        <p>{{basicDetails.address === '' ? '-' : basicDetails.address}}</p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="view-details">
+                                                        <label>City</label>
+                                                        <p>{{basicDetails.city === '' ? '-' : basicDetails.city}}</p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="view-details">
+                                                        <label>Country</label>
+                                                        <p>{{basicDetails.country == '' ? '-': basicDetails.country}}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="flex-container">
+                                                <div class="change-history mt-15px text-left">
+                                                    <button class="button tertiary-btn" (click)="openChangeHistoryDialog()">CHANGE
+                            HISTORY</button>
+                                                </div>
+                                                <div class="text-right">
+                                                    <button type="button" class="button primary-btn" (click)="openEditProfileDialog()">EDIT</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-card>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="points-section">
+                                    <div class="points-header">
+                                        <div class="row spaceBet">
+                                            <div class="col-md-4">
+                                                <h3 class="card-title">Rewards</h3>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <mat-form-field class="select-currency-field">
+                                                    <mat-select placeholder="SELECT CURRENCY" #regionOid (selectionChange)="getCustomerWallet(regionOid.value)" class="select-currency">
+                                                        <mat-option *ngFor="let rc of regionCurrencies" [value]="rc.regionId">
+                                                            {{ rc.currencyCode }}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <mat-card class="points pad-lr-0">
+                                        <div class="table-wrap">
+                                            <div>
+                                                <div class="table-wrap-inner">
+                                                    <table mat-table [dataSource]="pointDataSource" matSort>
+                                                        <ng-container matColumnDef="programName">
+                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> BRAND NAME
+                                                            </th>
+                                                            <td mat-cell *matCellDef="let row" (click)="openExtenedExpiryDialog(row.loyaltyBrandOid,row.reedemType,row.freeProductType)">
+                                                                <u><a class="text-blue pointer">{{
+                                row.brandName }} </a></u></td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="balance">
+                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> BALANCE </th>
+                                                            <td mat-cell *matCellDef="let row"> {{row.rewardValue}}
+                                                                <span class="pts"> {{ row.reedemType == 'POINTS' ? 'Pts' : row.freeProductType}} </span>
+                                                                <span class="pts">| Worth {{row.rewardWorth}}
+                                  {{row.currencyCode}}</span>
+                                                                <span class="pts" *ngIf="row.stampDetails != null && row.stampDetails != ''"> |
+                                  {{row.stampDetails}}</span>
+                                                            </td>
+                                                        </ng-container>
+                                                        <tr mat-header-row *matHeaderRowDef="displayedPointsColumns"></tr>
+                                                        <tr mat-row *matRowDef="let row; columns: displayedPointsColumns;">
+                                                        </tr>
+                                                    </table>
+                                                    <mat-paginator [pageSize]="10" [pageSizeOptions]="[10,20,50,100]">
+                                                    </mat-paginator>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </mat-card>
+                                </div>
+                                <div class="customer-persona-blk">
+                                    <h3 class="card-title">Customer Persona</h3>
+                                    <iframe width="100%" height="100%" [src]="CUSTOMER_PERSONA_REPORT_URL | safe" target="_parent"></iframe>
+                                </div>
+                                <!-- <div class="body-type-section mt-20px">
+                                    <h3 class="card-title">Body Type</h3>
+                                    <mat-card class="body-type-card">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="image-body">
+                                                    <div class="body-type">
+                                                        <img class="upload-img" [src]="filePathUrl+viewData.clientImage">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <h3 class="card-title-points">Measurement</h3>
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <div class="view-details">
+                                                            <label>Shirt</label>
+                                                            <p>{{basicDetails.customerBodyType === null ? '-': basicDetails.customerBodyType.shirt}}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="view-details">
+                                                            <label>Trouser</label>
+                                                            <p>{{basicDetails.customerBodyType === null ? '-': basicDetails.customerBodyType.trouser}}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="view-details">
+                                                            <label>Shoe</label>
+                                                            <p>{{basicDetails.customerBodyType === null ? '-': basicDetails.customerBodyType.shoe}}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </mat-card>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-right flex-end">
+                        <!-- {{counter}} -->
+                        <button type="button" class="button primary-btn" *ngIf="showApprovalBtn" (click)="openSendOtpDialog();startTimerOtp();expanded = true" [disabled]="counter !== 0 && countVal == 'true'">SEND OTP
+            </button>
+
+                        <div class="otp_timer" *ngIf="expanded == true">
+                            <strong>{{smsOtpValue}}</strong>
+                            <span>
+                <img src="assets/images/icons/time_ico.svg" alt="clock-ico"
+                  style="width:25px;">{{countDown | async | formatTime}}</span>
+                        </div>
+                        <button type="button" class="button primary-btn" *ngIf="showEmailApprovalBtn" (click)="openSendVerificationDialog();startTimerEmail();expand = true" [disabled]="basicDetails.emailId==null || basicDetails.emailId==''">SEND EMAIL VERIFICATION
+              CODE</button>
+                        <div class="otp_timer" *ngIf="expand == true && basicDetails.emailId!='' && basicDetails.emailId!=null ">
+                            <strong>{{emailOtpValue}}</strong>
+                        </div>
+                        <!--  <span>
+                <img src="assets/images/icons/time_ico.svg" alt="clock-ico"
+                  style="width:25px;">{{countDownEmail | async | formatTime}}</span>
+            </div> -->
+                    </div>
+                </ng-template>
+            </mat-tab>
+
+            <mat-tab label="Transactions">
+                <ng-template matTabContent>
+                    <div class="">
+                        <form class="search-wrap filter-wrap" (submit)="transactionHistory()" [formGroup]="txnHistoryFormGroup">
+                            <div class="flex-container">
+                                <div class="common-search">
+                                    <input type="text" formControlName="txnSearchVal" placeholder="Search Transactions" />
+                                    <span class="search-btn" (click)="transactionHistory()"></span>
+                                    <div class="filter-btn-wrap">
+                                        <span class="filter-btn" (click)="openFilterTransaction();" [ngClass]="statusTransaction ? 'open' : 'close'"></span>
+                                    </div>
+                                </div>
+
+                                <div class="text-right">
+                                    <button class='button primary-btn' type="button" (click)="openAddTransactionDialog()">ADD</button>
+                                </div>
+                            </div>
+                            <div class="feild-search" *ngIf="!statusTransaction">
+                                <div class="row field-search-inner">
+                                    <div class="col-md-3">
+                                        <mat-form-field>
+                                            <input matInput placeholder="Transaction Id" formControlName="txnId">
+                                            <mat-error *ngIf="txnHistoryFormGroup.get('txnId').hasError('pattern')">Please enter valid Transaction Id.</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <mat-form-field>
+                                            <mat-select placeholder="Transaction Type" formControlName="txnType">
+                                                <mat-option value="PURCHASE">PURCHASE</mat-option>
+                                                <mat-option value="RETURN">RETURN</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-3">
+
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput placeholder="Select Brand" aria-label="brand" [matAutocomplete]="brandAutoComplete" [formControl]="brandCtrl">
+                                            <mat-autocomplete #brandAutoComplete="matAutocomplete">
+                                                <mat-option *ngFor="let brand of filteredBrands | async" [value]="brand.brandName" (click)="getAllBrand(brand.brandId)" #brandInput>
+                                                    <span>{{brand.brandName}}</span>
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-3">
+
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput placeholder="Store" aria-label="store" [matAutocomplete]="storeAutoComplete" [formControl]="storeCtrl">
+                                            <mat-autocomplete #storeAutoComplete="matAutocomplete">
+                                                <mat-option *ngFor="let store of filteredStores | async" [value]="store.storeName" (click)="getAllStore(store.storeOid)" #storeInput>
+                                                    <span>{{store.storeName}}</span>
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <mat-form-field>
+                                            <input matInput placeholder="Total Amount" formControlName="billAmount" OnlyNumber="true">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <mat-form-field>
+                                            <mat-select placeholder="Status" formControlName="txnStatus">
+                                                <mat-option value="COMPLETED">COMPLETED</mat-option>
+                                                <mat-option value="VOID">VOID</mat-option>
+                                                <mat-option value="DELIVERY_CONFIRMED">DELIVERY CONFIRMED</mat-option>
+                                                <mat-option value="ORDER_DELIVERED">ORDER DELIVERED</mat-option>
+                                                <mat-option value="ORDER_INITIATED">ORDER INITIATED</mat-option>
+                                                <mat-option value="ORDER_PICKED">ORDER PICKED</mat-option>
+                                                <mat-option value="ORDER_PLACED">ORDER PLACED</mat-option>
+                                                <mat-option value="ORDER_READY">ORDER READY</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <mat-form-field>
+                                            <mat-select placeholder="Payment Method" formControlName="paymentMethod">
+                                                <mat-option value="T4">Amex</mat-option>
+                                                <mat-option value="T19">Apparel Gift Card Purchase</mat-option>
+                                                <mat-option value="T23">BANK Coupons</mat-option>
+                                                <mat-option value="T13">Beam Wallet</mat-option>
+                                                <mat-option value="T16">Brand Coupons</mat-option>
+                                                <mat-option value="T11">Brand Gift Coupon</mat-option>
+                                                <mat-option value="T21">DB Plus Paid Booklet</mat-option>
+                                                <mat-option value="T22">DB Plus Paid Coupon</mat-option>
+                                                <mat-option value="T1">Cash</mat-option>
+                                                <mat-option value="T25">Corporate gift Cards Purchase</mat-option>
+                                                <mat-option value="T26">Corporate gift Cards Redeem</mat-option>
+                                                <mat-option value="T6">Coupon - Coupon (irredeemable)</mat-option>
+                                                <mat-option value="T14">Credit Note Issue</mat-option>
+                                                <mat-option value="T15">Credit Note Redeem</mat-option>
+                                                <mat-option value="T5">Currency (Foreign)</mat-option>
+                                                <mat-option value="T10">E-Gift Redeem(CA)</mat-option>
+                                                <mat-option value="T7">Gift Card(Redeemable)</mat-option>
+                                                <mat-option value="T17">Gulf News GV</mat-option>
+                                                <mat-option value="T12">Khaleej Gift Coupon(GN))</mat-option>
+                                                <mat-option value="T8">Loyalty redemption</mat-option>
+                                                <mat-option value="T18">Mall Redemption Coupon</mat-option>
+                                                <mat-option value="T3">Master</mat-option>
+                                                <mat-option value="T9">Other Cards</mat-option>
+                                                <mat-option value="T20">Pre-Printed GV</mat-option>
+                                                <mat-option value="T31">Refund Txn - Points Accrual</mat-option>
+                                                <mat-option value="T2">Visa</mat-option>
+                                                <mat-option value="T24">YouGotAGift Coupon Redeem</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <mat-form-field>
+                                            <input matInput [matDatepicker]="picker" readonly placeholder="Date" formControlName="txnDate">
+                                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                            <mat-datepicker #picker></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <button class='button quaternary-btn' type="button" (click)="resetTransaction()">RESET</button>
+                                    <button class='button tertiary-btn' [disabled]="txnHistoryFormGroup.invalid" type="submit">APPLY</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="table-wrap">
+                        <div>
+                            <div class="table-wrap-inner">
+                                <table mat-table [dataSource]="dataSource3" matSort (matSortChange)="sortTxnData($event)">
+
+                                    <ng-container matColumnDef="transactionId">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header="txnId" class="top-border"> TRANSACTION ID
+                                        </th>
+                                        <td mat-cell *matCellDef="let row" (click)="viewTransactionPage(row.oid)"><u><a
+                          class="text-blue">{{row.transactionId }}</a></u></td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="transactionType">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header="txnType" class="top-border"> TRANSACTION TYPE
+                                        </th>
+                                        <td mat-cell *matCellDef="let row">{{row.transactionType}}</td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="brandName">
+                                        <th mat-header-cell *matHeaderCellDef class="top-border"> BRAND NAME </th>
+                                        <td mat-cell *matCellDef="let row">{{row.brandName}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="storeName">
+                                        <th mat-header-cell *matHeaderCellDef class="top-border"> STORE NAME </th>
+                                        <td mat-cell *matCellDef="let row"> {{row.storeName}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="totalAmount">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header="billAmount" class="top-border"> TOTAL AMOUNT
+                                        </th>
+                                        <td mat-cell *matCellDef="let row"> {{row.totalAmount}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="transactionDate">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header="txnDate" class="top-border"> TRANSACTION DATE/TIME
+                                        </th>
+                                        <td mat-cell *matCellDef="let row">{{row.transactionDateTime}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="couponUsed">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header="couponCode" class="top-border">
+                                            COUPON CODE
+                                        </th>
+                                        <td mat-cell *matCellDef="let row">{{row.couponUsed}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="discountAmount">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header="totalDiscount" class="top-border">
+                                            DISCOUNT AMOUNT
+                                        </th>
+                                        <td mat-cell *matCellDef="let row">{{row.discountAmount}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="txnStatus">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header="txnStatus" class="top-border"> STATUS </th>
+                                        <td mat-cell *matCellDef="let row"> {{row.txnStatus}} </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedTransactionColumns"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedTransactionColumns;">
+                                    </tr>
+                                </table>
+                                <div *ngIf="searchStoreVal" class="select-store-block">
+                                    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                                </div>
+                                <div class="no-records" *ngIf="txnHistoryLength == 0">
+                                    No Records Found!
+                                </div>
+                                <mat-paginator (click)="transactionHistory()" [length]="txnHistoryLength" (change)="transactionHistory()" #paginator1 (page)="getTxnHistoryUpdate($event)" [pageSize]="10" [pageSizeOptions]="[10,20,50,100]">
+                                </mat-paginator>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </mat-tab>
+
+            <mat-tab label="Rewards">
+                <ng-template matTabContent>
+                    <div class="">
+                        <form class="search-wrap filter-wrap" (submit)="addManualCreditDebit()" [formGroup]="manualDebitCreditForm" #manualDebitCreditFormGroup="ngForm">
+                            <div class="text-right">
+                                <button class='button primary-btn' type="button" (click)="toggle()">MANUAL DEBIT / CREDIT</button>
+                            </div>
+                            <div class="manual-points-tab" *ngIf="manualPoints == true">
+                                <!-- <h3 class="card-title">Manual Debit/Credit Points</h3> -->
+                                <mat-card class="manual-points-card">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <mat-form-field>
+                                                        <mat-select placeholder="Select Program" #programId formControlName="programOid" (selectionChange)="changeExpiryDateRequiredValidation(programInput.value,transactionInput.value)" #programInput>
+                                                            <mat-option *ngFor="let program of programList " [value]="program">
+                                                                {{program.programName}}</mat-option>
+                                                        </mat-select>
+                                                        <mat-error *ngIf="pointFormSumited && manualDebitCreditForm.get('programOid').hasError('required')">
+                                                            Please select value
+                                                        </mat-error>
+                                                    </mat-form-field>
+
+                                                </div>
+                                                <div class="col-md-4" [class.disable-txns]="disableValuetxns">
+                                                    <mat-form-field>
+                                                        <mat-select placeholder="Credit/Debit" formControlName="transactionTypeCtrl" (selectionChange)="changeTranactionType(programInput.value,transactionInput.value)" #transactionInput>
+                                                            <mat-option value="CREDIT">Credit</mat-option>
+                                                            <mat-option value="DEBIT">Debit</mat-option>
+                                                        </mat-select>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-md-4" *ngIf="freeProductVal">
+                                                    <mat-form-field>
+                                                        <mat-select placeholder="Free Product / Stamps" formControlName="transactionFreeProductCtrl" (selectionChange)="changetransactionFreeProduct(transactionFreeProductInput.value)" #transactionFreeProductInput>
+                                                            <mat-option value="FREE_PRODUCT">Free Product</mat-option>
+                                                            <mat-option value="STAMPS">Stamps</mat-option>
+                                                        </mat-select>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <mat-form-field>
+                                                        <input matInput placeholder="{{dataValue}}" OnlyNumber="true" formControlName="noOfPoints" maxlength="6" required>
+                                                        <mat-error *ngIf="pointFormSumited && manualDebitCreditForm.get('noOfPoints').hasError('required')">
+                                                            Enter a {{dataValue}}</mat-error>
+                                                        <mat-error *ngIf="pointFormSumited && manualDebitCreditForm.get('noOfPoints').hasError('pattern')">
+                                                            Invalid {{dataValue}}</mat-error>
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+
+                                            <div class="master-fieldSet">
+                                                <div class="muti-fieldSet" formArrayName="manualDebitCreditLocale">
+                                                    <div *ngFor="let locale of manualDebitCreditForm['controls']['manualDebitCreditLocale']['controls'];let i = index;" [formGroupName]="i">
+                                                        <mat-form-field class="{{alignCss[i]}}">
+                                                            <input matInput placeholder="{{languageList[i].languageName}} Description" maxlength="200" formControlName="description" required>
+                                                            <mat-error *ngIf="pointFormSumited && locale.get('description').hasError('required')">
+                                                                Enter description</mat-error>
+                                                            <mat-error *ngIf="pointFormSumited && locale.get('description').hasError('pattern')">
+                                                                Invalid characters entered</mat-error>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <mat-form-field>
+                                                    <input matInput placeholder="Internal Comments" formControlName="internalComment" maxlength="200" required>
+                                                    <mat-error *ngIf="pointFormSumited && manualDebitCreditForm.get('internalComment').hasError('required')">
+                                                        Enter Internal Comment</mat-error>
+                                                    <mat-error *ngIf="pointFormSumited && manualDebitCreditForm.get('internalComment').hasError('pattern')">
+                                                        Invalid characters entered</mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="row" *ngIf="isExpiryDateRequired">
+                                                <div class="col-md-6">
+                                                    <div class="expiry-date">
+                                                        <mat-form-field>
+                                                            <input matInput [matDatepicker]="picker5" formControlName="expiryDate" [min]="minExpiryDate" placeholder="Expiry Date" readonly>
+                                                            <mat-datepicker-toggle matSuffix [for]="picker5"></mat-datepicker-toggle>
+                                                            <mat-datepicker #picker5></mat-datepicker>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="inlne-grid">
+                                                <label>Reason *</label>
+                                                <mat-radio-group formControlName="reason" (change)="changeValidation()">
+                                                    <mat-radio-button value="VOID_TRANSACTION" class="mr-10px">Void Transaction</mat-radio-button>
+                                                    <mat-radio-button value="OTHER_REASON">Other Reason</mat-radio-button>
+                                                </mat-radio-group>
+                                                <mat-error *ngIf="pointFormSumited && manualDebitCreditForm.get('reason').hasError('required')">
+                                                    Select Reason
+                                                </mat-error>
+                                            </div>
+                                            <div class="txn-btn-block" *ngIf="manualDebitCreditForm.get('reason').value=='VOID_TRANSACTION'">
+                                                <div class="tnsId inline-block">
+                                                    <!-- <mat-form-field>
+                            <input matInput placeholder="Transaction Id" formControlName="txnId">
+                            <mat-error
+                              *ngIf="pointFormSumited && manualDebitCreditForm.get('txnId').hasError('required')">Select
+                              Valid Transaction
+                            </mat-error>
+                          </mat-form-field> -->
+                                                    <div (click)="selectTransactionDialog()" class="txnid-class" *ngIf="!programSelected">
+                                                        <span>Select Transaction ID</span>
+                                                        <div *ngIf="editTxn" class="edit-ico">
+                                                            <img src="assets/images/icons/edit_ico.png" alt="edit">
+                                                        </div>
+                                                    </div>
+                                                    {{selectedtxns}}
+                                                </div>
+                                                <p *ngIf="programSelected" style="color: red"> please select program to view transaction</p>
+                                                <!-- <div class="mt-15px inline-block ml-20px">
+                          <button type="button" class="button tertiary-btn" (click)="verifyTransaction()"
+                            [disabled]="manualDebitCreditForm.get('txnId').value=='' || manualDebitCreditForm.get('txnId').value==null">VERIFY</button>
+                        </div> -->
+                                            </div>
+                                            <!-- <div class="txn-btn-block" *ngIf="selectedReason=='Void Transaction'">
+                        <label for="txn">Transaction ID</label>
+                        <p><a (click)="openSearchTxnIdDialog()">Select Transaction ID</a></p>
+                      </div> -->
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <button class='button secondary-btn' type="reset" (click)="manualPoints=!manualPoints">CANCEL</button>
+                                        <button class='button primary-btn' type="submit" [class.disableBtnValue]="disableBtnValue">
+                                            <span class="loading-img-hide" *ngIf="loadingResponse">
+                                                <img src="assets/images/loader-icons/White-loading-200px.svg" alt="loader">
+                                              </span>ADD</button>
+                                    </div>
+                                </mat-card>
+                            </div>
+                        </form>
+                    </div>
+
+                    <form class="search-wrap filter-wrap" (submit)="searchRewardHistory()" [formGroup]="txnRewardHistoryFormGroup">
+                        <div class="common-search">
+                            <input type="text" formControlName="SearchVal" placeholder="Search Rewards" />
+                            <span class="search-btn" (click)="searchRewardHistory()"></span>
+                            <div class="filter-btn-wrap">
+                                <span class="filter-btn" (click)="openFilter()" [ngClass]="status ? 'open' : 'close'"></span>
+                            </div>
+                        </div>
+                        <div class="feild-search" *ngIf="!status">
+                            <div class="row field-search-inner pad-gap">
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput [matDatepicker]="picker2" [max]="endDate.value=='' ? minDate : txnRewardHistoryFormGroup.get('endDate').value" #startDate formControlName="startDate" placeholder="Start Date" required>
+                                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker2></mat-datepicker>
+                                        <mat-error
+                                        *ngIf="txnRewardHistoryFormGroup.get('startDate').hasError('required')">
+                                        Please select value
+                                    </mat-error>
+                                    </mat-form-field>
+                                    <!-- <div *ngIf="dateError" class="color-red">Invalid Date</div> -->
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput [matDatepicker]="picker3" placeholder="End Date" formControlName="endDate" #endDate [min]="startDate.value=='' ? '' : txnRewardHistoryFormGroup.get('startDate').value" [max]="minDate" required>
+                                        <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker3></mat-datepicker>
+                                        <mat-error
+                                        *ngIf="txnRewardHistoryFormGroup.get('endDate').hasError('required')">
+                                        Please select value
+                                    </mat-error>
+                                    </mat-form-field>
+                                    <!-- <div *ngIf="dateError" class="color-red">Invalid Date</div> -->
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput placeholder="Select Program" aria-label="program" [matAutocomplete]="programFilterAutoComplete" [formControl]="programFilterCtrl" required>
+                                        <mat-autocomplete #programFilterAutoComplete="matAutocomplete">
+                                            <mat-option *ngFor="let program of filteredFilterPrograms | async" [value]="program.programName" (click)="getAllProgramFilter(program.programId)" #programFilterInput>
+                                                <span>{{program.programName}}</span>
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                         <mat-error *ngIf="programFilterCtrl.hasError('required')">
+                                            Please select value</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="filter-btn-wrap">
+                                    <button class='button quaternary-btn' type="button" (click)="searchRewardHistory();resetRewardHistory()">RESET</button>
+                                    <button class='button tertiary-btn' type="submit" (click)="getPointsDetails();setValidator();resetTransactionRewardHistory()">APPLY</button>
+                                </div>
+                            </div>
+                            <div class="points-history">
+                                <div class="points-redeemed">
+                                    <div class="view-details">
+                                        <label class="points-label">
+                    Opening Balance
+                    </label>
+                                        <p class="points-available">
+                                            {{null != openingBalance ? openingBalance : 0}}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="points-earned">
+                                    <div class="view-details">
+                                        <label class="points-label">
+                                        Points/Rewards Earned
+                                        </label>
+                                        <p class="points-available">
+                                            {{ null != accruedBonus ? accruedBonus : 0}}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="points-redeemed">
+                                    <div class="view-details">
+                                        <label class="points-label">
+                                         Points/Products Redeemed
+                                        </label>
+                                        <p class="points-available">
+                                            {{ null != redeemed ? redeemed : 0}}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="points-redeemed">
+                                    <div class="view-details">
+                                        <label class="points-label">
+                      Points/Products Reversed
+                    </label>
+                                        <p class="points-available">
+                                            {{ null != reversed ? reversed : 0}}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="points-reversed">
+                                    <div class="view-details">
+                                        <label class="points-label">
+                      Points/Products Expired
+                    </label>
+                                        <p class="points-available">
+                                            {{ null != expired ? expired : 0}}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="points-reversed">
+                                    <div class="view-details">
+                                        <label class="points-label">
+                      Closing Balance
+                    </label>
+                                        <p class="points-available">
+                                            {{ null != closingBalance ? closingBalance : 0}}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row field-search-inner pad-gap">
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput placeholder="Transaction Id" formControlName="txnOid">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-select placeholder="Reward Transaction Type" formControlName="txnType">
+                                            <mat-option value="purchase">Purchase</mat-option>
+                                            <mat-option value="return">Return</mat-option>
+                                            <mat-option value="bonus">Bonus</mat-option>
+                                            <mat-option value="manual">Manual</mat-option>
+                                            <mat-option value="expired">Expired</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="filter-btn-wrap">
+                                    <button class='button quaternary-btn' type="button" (click)="buildTransactionRewardHistoryForm();searchRewardTransactionHistory();resetTransactionRewardHistory()">RESET</button>
+                                    <button class='button tertiary-btn' type="submit" (click)="searchRewardTransactionHistory()">APPLY</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="table-wrap">
+                        <div>
+                            <div class="table-wrap-inner">
+                                <table mat-table [dataSource]="dataSource5" matSort (matSortChange)="sortTxnRewardData($event)">
+                                    <ng-container matColumnDef="txnRewardOid">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header="oid" class="top-border heading"> TRANSACTION REWARD OID </th>
+                                        <td mat-cell *matCellDef="let row" class="content"> {{ row.txnRewardOid }} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="txnOid">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header="txnOid" class="top-border heading">
+                                            TRANSACTION ID </th>
+                                        <ng-container>
+                                            <td mat-cell *matCellDef="let row" class="content"><u>
+                          <a class="text-blue pointer" *ngIf="row.txnType == 'MANUAL'"
+                            (click)="openManualTxnDialog(row.txnOid)">{{
+                          row.txnOid }}</a>
+                          <!-- <a class="text-blue pointer" *ngIf="row.txnType == 'TRANSACTION'"
+                            [routerLink]="['/view-transaction/'+row.txnOid]">{{
+                              row.txnId }}</a> -->
+                              <a class="text-blue pointer" *ngIf="row.txnType == 'TRANSACTION'"  (click)="viewPointsTransactionPage(row.txnOid)">{{
+                              row.txnId }}</a>
+                        </u> </td>
+                                        </ng-container>
+
+
+                                        <!--  -->
+                                    </ng-container>
+                                    <ng-container matColumnDef="txnDate">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header="createdTime" class="top-border heading">
+                                            TRANSACTION DATE </th>
+                                        <td mat-cell *matCellDef="let row" class="content"> {{ row.txnDate }} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="txnType">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header="txnType" class="top-border heading">
+                                            TRANSACTION TYPE </th>
+                                        <td mat-cell *matCellDef="let row" class="content">{{row.txnType}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="programName">
+                                        <th mat-header-cell *matHeaderCellDef class="top-border heading"> PROGRAM ID & NAME </th>
+                                        <td (click)="moveToView(row.program.programOid)" mat-cell *matCellDef="let row" class="content">
+                                            <span><a class="text-blue pointer">{{
+                                                null!=row.program ? row.program.programOid:''}}
+                                                {{null!=row.program ? ',':''}}
+                                            {{ null!=row.program ? row.program.programName:'-'}}</a></span> </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="earnRuleOid">
+                                        <th mat-header-cell *matHeaderCellDef class="top-border heading"> EARN RULE ID </th>
+                                        <td mat-cell *matCellDef="let row" class="content">
+                                            {{row.earnRuleOid}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="loyaltyType">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header="loyaltyType" class="top-border heading">
+                                            REWARD TYPE </th>
+                                        <td mat-cell *matCellDef="let row" class="content">{{row.loyaltyType}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="accrual">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header="accrual" class="top-border heading">
+                                            POINTS/REWARDS EARNED </th>
+                                        <td mat-cell *matCellDef="let row" class="content"> {{row.accrual}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="freeProductAccrued">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header="freeProductAccrued" class="top-border heading">
+                                            FREE PRODUCT ACCRUED </th>
+                                        <td mat-cell *matCellDef="let row" class="content"> {{row.freeProductAccrued}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="redeemed">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header="redeemed" class="top-border heading">
+                                            POINTS/PRODUCTS REDEEMED
+                                        </th>
+                                        <td mat-cell *matCellDef="let row" class="content"> {{row.redeemed}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="expired">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header="expired" class="top-border heading">
+                                            POINTS/PRODUCTS EXPIRED
+                                        </th>
+                                        <td mat-cell *matCellDef="let row" class="content"> {{row.expired}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="pointsReversed">
+                                        <th mat-header-cell *matHeaderCellDef class="top-border heading"> POINTS/PRODUCTS REVERSED
+                                        </th>
+                                        <td mat-cell *matCellDef="let row" class="content">{{null== row.reversed ? 0:row.reversed}}</td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedPointsTabColumns"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedPointsTabColumns;">
+                                    </tr>
+                                </table>
+                                <div *ngIf="searchStoreVal" class="select-store-block">
+                                    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                                </div>
+                                <div class="no-records" *ngIf="noRecordsPoints">
+                                    No Records Found!
+                                </div>
+                                <mat-paginator [length]="txnRewardHistoryLength" (click)="searchRewardHistory()" (change)="searchRewardHistory()" #paginator2 (page)="getTxnHistoryUpdate($event)" [pageSize]="10" [pageSizeOptions]="[10,20,50,100]">
+                                </mat-paginator>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </mat-tab>
+
+            <mat-tab label="Enquiries">
+                <ng-template matTabContent>
+                    <div>
+                        <div class="">
+                            <div class="text-right">
+                                <button type="button" class="site_btn orange_btn mr-20px" (click)="openAddEnquiryDialog()">
+                  ADD ENQUIRY
+                </button>
+                            </div>
+                            <form class="search-wrap filter-wrap" [formGroup]="searchEnquiriesForm" (submit)="searchEnquiry()">
+                                <div class="common-search">
+                                    <input type="text" formControlName="searchVal" placeholder="Search Enquiries" />
+                                    <span class="search-btn" (click)="searchEnquiry()"></span>
+                                    <div class="filter-btn-wrap">
+                                        <span class="filter-btn" (click)="openFilterEnquiries();" [ngClass]="statusEnquiries ? 'open' : 'close'"></span>
+                                    </div>
+                                </div>
+
+                                <div class="feild-search" *ngIf="!statusEnquiries">
+                                    <div class="row field-search-inner">
+                                        <div class="col-md-3">
+                                            <mat-form-field>
+                                                <input matInput placeholder="Reference ID" formControlName="referenceId">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <mat-form-field>
+                                                <mat-select matInput placeholder="Enquiry Type" formControlName="enquiryType">
+                                                    <mat-option *ngFor="let enquiryType of enquiryTypeList" [value]="enquiryType.enquiryTypeId">
+                                                        {{ enquiryType.enquiryTitle }}</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <!-- <mat-form-field>
+                        <mat-select id="country" matInput placeholder="Country Name" #countryInput
+                          formControlName="country" (selectionChange)="getAllCities(countryInput.value)">
+                          <mat-option *ngFor="let country of countries" [value]="country.countryId">
+                            {{ country.countryName }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <div *ngIf="showCountryError" style="color:red;margin-top:-2em">
+                        Please select country
+                      </div> -->
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Country" aria-label="Country" [matAutocomplete]="countryAutoComplete" [formControl]="countryCtrl">
+                                                <mat-autocomplete #countryAutoComplete="matAutocomplete">
+                                                    <mat-option *ngFor="let country of filteredCountries | async" [value]="country.countryName" (click)="getAllCitiesA(country.countryId);getAllcountry(country.countryId)" #countryInput>
+                                                        <span>{{country.countryName}}</span>
+                                                    </mat-option>
+                                                </mat-autocomplete>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <!-- <mat-form-field>
+                        <mat-select placeholder="City" formControlName="city" #cityInput
+                          (click)="isCountrySelected(countryInput.value)">
+                          <mat-option *ngFor="let city of cities" [value]="city.cityId">
+                            {{ city.cityName }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field> -->
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="City" aria-label="City" [matAutocomplete]="cityAutoComplete" [formControl]="cityCtrl">
+                                                <mat-autocomplete #cityAutoComplete="matAutocomplete">
+                                                    <mat-option *ngFor="let city of filteredCities | async" [value]="city.cityName" (click)="getAllcity(city.cityId)" #cityInput>
+                                                        <span>{{city.cityName}}</span>
+                                                    </mat-option>
+                                                </mat-autocomplete>
+                                            </mat-form-field>
+                                        </div>
+                                        <!-- <div class="col-md-3">
+                      <mat-form-field>
+                        <mat-select placeholder="City" formControlName="city" #cityInput
+                          (click)="isCountrySelected(countryInput.value)">
+                          <mat-option *ngFor="let city of cities" [value]="city.cityId">
+                            {{ city.cityName }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-3">
+                      <mat-form-field>
+                        <input matInput [matDatepicker]="startDate" placeholder="Start Date" formControlName="startDate"
+                          readonly>
+                        <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
+                        <mat-datepicker #startDate></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-3">
+                      <mat-form-field>
+                        <input matInput [matDatepicker]="endDate" placeholder="End Date" formControlName="endDate"
+                          readonly>
+                        <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
+                        <mat-datepicker #endDate></mat-datepicker>
+                      </mat-form-field>
+                    </div> -->
+                                        <div class="col-md-3">
+                                            <mat-form-field>
+                                                <input matInput [matDatepicker]="startDate" [min]="minDate" #startDate formControlName="startDate" placeholder="Start Date">
+                                                <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
+                                                <mat-datepicker #startDate></mat-datepicker>
+                                            </mat-form-field>
+                                            <!-- <div *ngIf="dateError" class="color-red">Invalid Date</div> -->
+                                        </div>
+                                        <div class="col-md-3">
+                                            <mat-form-field>
+                                                <input matInput [matDatepicker]="endDate" placeholder="End Date" formControlName="endDate" [min]="startDate.value=='' ? minDate : searchEnquiriesForm.get('startDate').value">
+                                                <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
+                                                <mat-datepicker #endDate></mat-datepicker>
+                                            </mat-form-field>
+                                            <!-- <div *ngIf="dateError" class="color-red">Invalid Date</div> -->
+                                        </div>
+                                        <div class="col-md-3">
+                                            <mat-form-field>
+                                                <mat-select placeholder="Status" formControlName="enquiryStatus">
+                                                    <mat-option value="CLOSE">CLOSE</mat-option>
+                                                    <mat-option value="INPROGRESS">INPROGRESS</mat-option>
+                                                    <mat-option value="OPEN">OPEN</mat-option>
+                                                    <mat-option value="REOPEN">REOPEN</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="filter-btn-wrap">
+                                            <button class='button quaternary-btn' type="button" (click)="resetEnquiryForm()">RESET</button>
+                                            <button class='button tertiary-btn' type="submit">APPLY</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="table-wrap">
+                            <div>
+                                <div class="table-wrap-inner">
+                                    <table mat-table [dataSource]="dataSource2" matSort (matSortChange)="sortEnquiryData($event)">
+                                        <ng-container matColumnDef="referenceId">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header="oid" class="top-border"> REFERENCE ID</th>
+                                            <td mat-cell *matCellDef="let row" (click)="viewEnquiry(row.referenceId, memberId)"><u><a class="text-blue"> {{
+                            row.referenceId }} </a></u></td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="enquiryType">
+                                            <th mat-header-cell *matHeaderCellDef class="top-border"> ENQUIRY TYPE </th>
+                                            <td mat-cell *matCellDef="let row">{{row.enquiryType}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="internalEnquiryType">
+                                            <th mat-header-cell *matHeaderCellDef class="top-border"> INTERNAL ENQUIRY TYPE
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">{{row.internalEnquiryType}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="countryName">
+                                            <th mat-header-cell *matHeaderCellDef class="top-border"> COUNTRY NAME </th>
+                                            <td mat-cell *matCellDef="let row"> {{row.countryName}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="cityName">
+                                            <th mat-header-cell *matHeaderCellDef class="top-border"> CITY NAME </th>
+                                            <td mat-cell *matCellDef="let row"> {{row.cityName}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="enquiryDate">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header="createdTime" class="top-border"> ENQUIRY DATE </th>
+                                            <td mat-cell *matCellDef="let row">{{row.eqnuiryDate}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="enquiryStatus">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header="enquiryStatus" class="top-border"> STATUS
+                                            </th>
+                                            <td mat-cell *matCellDef="let row"> {{row.enquiryStatus}} </td>
+                                        </ng-container>
+                                        <tr mat-header-row *matHeaderRowDef="displayedEnquiryColumns"></tr>
+                                        <tr mat-row *matRowDef="let row; columns: displayedEnquiryColumns;">
+                                        </tr>
+                                    </table>
+                                    <div *ngIf="searchStoreVal" class="select-store-block">
+                                        <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                                    </div>
+                                    <div class="no-records" *ngIf="noRecordsEnquiries">
+                                        No Records Found!
+                                    </div>
+
+                                    <mat-paginator (click)="searchEnquiry()" [length]="enquiryResultsLength" (change)="searchEnquiry()" #paginator3 (page)="getUpdate($event)" [pageSize]="10" [pageSizeOptions]="[10,20,50,100]">
+                                    </mat-paginator>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </mat-tab>
+            <mat-tab label="eWallet">
+                <ng-template matTabContent>
+                    <member-ewallet-details [memberId]='memberId'></member-ewallet-details>
+                </ng-template>
+            </mat-tab>
+            <mat-tab label="PersonalisedCoupons">
+                <ng-template matTabContent>
+                    <div>
+                        <div class="">
+                            <form class="search-wrap filter-wrap" [formGroup]="searchPersonalisedCouponsForm" (submit)="searchPersonalisedCoupons()">
+                                <div class="common-search">
+                                    <input type="text" formControlName="searchVal" placeholder="Search Personalised Coupons" />
+                                    <span class="search-btn" (click)="searchPersonalisedCoupons()"></span>
+                                    <div class="filter-btn-wrap">
+                                        <span class="filter-btn" (click)="openPersonalisedCoupons();" [ngClass]="statusPersonalisedCoupons ? 'open' : 'close'"></span>
+                                    </div>
+                                </div>
+
+                                <div class="feild-search" *ngIf="!statusPersonalisedCoupons">
+                                    <div class="row field-search-inner">
+                                        <div class="col-md-3">
+                                            <mat-form-field>
+                                                <input matInput placeholder="Coupon Id" formControlName="couponId">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <mat-form-field>
+                                                <input matInput placeholder="Coupon Title" formControlName="couponTitle">
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <mat-form-field>
+                                                <mat-select matInput placeholder="Coupon State" formControlName="couponState">
+                                                    <mat-option value="CLAIMED_ACTIVE">CLAIMED_ACTIVE</mat-option>
+                                                    <mat-option value="CLAIMED_EXPIRED">CLAIMED_EXPIRED</mat-option>
+                                                    <mat-option value="DELIVERED">DELIVERED</mat-option>
+                                                    <mat-option value="NOT_CLAIMED_EXPIRED">NOT_CLAIMED_EXPIRED</mat-option>
+                                                    <mat-option value="USED">USED</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <mat-form-field>
+                                                <input matInput [matDatepicker]="startDate" #startDate formControlName="startDate" placeholder="Start Date">
+                                                <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
+                                                <mat-datepicker #startDate></mat-datepicker>
+                                            </mat-form-field>
+                                            <!-- <div *ngIf="dateError" class="color-red">Invalid Date</div> -->
+                                        </div>
+                                        <div class="col-md-3">
+                                            <mat-form-field>
+                                                <input matInput [matDatepicker]="endDate" placeholder="End Date" formControlName="endDate" [min]="startDate.value=='' ? minDate : searchEnquiriesForm.get('startDate').value">
+                                                <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
+                                                <mat-datepicker #endDate></mat-datepicker>
+                                            </mat-form-field>
+                                            <!-- <div *ngIf="dateError" class="color-red">Invalid Date</div> -->
+                                        </div>
+                                        <div class="col-md-3">
+                                            <!-- <mat-form-field>
+                                                <mat-select placeholder="Brand" formControlName="brand">
+                                                    <mat-option *ngFor="let brand of brandList" value="{{brand.brandId}}">
+                                                        {{ brand.brandName }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field> -->
+                                            <mat-form-field class="example-full-width">
+                                                <input matInput placeholder="Select Brand" aria-label="brand" [matAutocomplete]="brandAutoComplete" [formControl]="brandCtrl">
+                                                <mat-autocomplete #brandAutoComplete="matAutocomplete">
+                                                    <mat-option *ngFor="let brand of filteredBrands | async" [value]="brand.brandName" (click)="getAllBrand(brand.brandId)" #brandInput>
+                                                        <span>{{brand.brandName}}</span>
+                                                    </mat-option>
+                                                </mat-autocomplete>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <mat-form-field>
+                                                <mat-select placeholder="Status" formControlName="status">
+                                                    <mat-option value="ONLINE">ONLINE</mat-option>
+                                                    <mat-option value="OFFLINE">OFFLINE</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="filter-btn-wrap">
+                                            <button class='button quaternary-btn' type="reset" (click)="resetPersonalisedCouponsForm()">RESET</button>
+                                            <button class='button tertiary-btn' type="submit">APPLY</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="table-wrap">
+                            <div>
+                                <div class="table-wrap-inner">
+                                    <table mat-table [dataSource]="dataSource7" matSort (matSortChange)="sortData($event)" *ngIf="dataSource7">
+                                        <ng-container matColumnDef="couponId">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header="couponId" class="top-border"> COUPON ID
+                                            </th>
+                                            <td mat-cell *matCellDef="let row"><u><a (click)="moveToViewCoupons(row.couponId)"
+                                                class="text-blue">
+                                                {{ row.couponId }}</a></u></td>
+                                            <!-- <td mat-cell *matCellDef="let row">
+                            {{ row.couponId }}</td> -->
+                                        </ng-container>
+                                        <ng-container matColumnDef="couponTitle">
+                                            <th mat-header-cell *matHeaderCellDef class="top-border"> COUPON TITLE </th>
+                                            <td mat-cell *matCellDef="let row">{{row.couponTitle}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="couponExpiryTime">
+                                            <th mat-header-cell *matHeaderCellDef class="top-border" mat-sort-header="couponExpiryTime">
+                                                COUPON VALID TILL
+                                            </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                <div class="word-wrap">
+                                                    {{row.couponExpiryTime}}
+                                                </div>
+                                            </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="couponStatus">
+                                            <th mat-header-cell *matHeaderCellDef class="top-border" mat-sort-header="couponStatus"> STATE
+                                            </th>
+                                            <td mat-cell *matCellDef="let row"> {{row.couponStatus}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="transactionId">
+                                            <th mat-header-cell *matHeaderCellDef class="top-border"> TRANSACTION ID </th>
+                                            <td mat-cell *matCellDef="let row">
+                                                <div class="word-wrap">
+                                                    {{row.transactionIds}}
+                                                </div>
+                                            </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="usageLimitPerUser">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header="usageLimitPerUser" class="top-border">
+                                                USER LIMIT FOR CUSTOMER</th>
+                                            <td mat-cell *matCellDef="let row">{{row.usageLimitPerUser}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="couponUsedCount">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header="couponUsedCount" class="top-border">
+                                                NO OF TIME COUPONS USED</th>
+                                            <td mat-cell *matCellDef="let row">{{row.couponUsedCount}} </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="status">
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header="status" class="top-border"> STATUS
+                                            </th>
+                                            <td mat-cell *matCellDef="let row"> {{row.status}} </td>
+                                        </ng-container>
+                                        <tr mat-header-row *matHeaderRowDef="displayedPersonalisedCouponsColumns"></tr>
+                                        <tr mat-row *matRowDef="let row; columns: displayedPersonalisedCouponsColumns;">
+                                        </tr>
+                                    </table>
+                                    <div *ngIf="searchStoreVal" class="select-store-block">
+                                        <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                                    </div>
+                                    <div class="no-records" *ngIf="noRecordsPersonalizedCoupons">
+                                        No Records Found!
+                                    </div>
+                                </div>
+                                <mat-paginator (click)="searchPersonalisedCoupons()" [length]="resultsLength" (change)="searchPersonalisedCoupons()" #paginator (page)="getMemberCouponUpdate($event)" [pageSize]="10" [pageSizeOptions]="[10,20,50,100]">
+                                </mat-paginator>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </mat-tab>
+
+            <mat-tab label="Communication">
+                <ng-template matTabContent>
+                    <div class="">
+                        <form class="search-wrap filter-wrap" [formGroup]="searchCommunicationFormGroup" (submit)="searchCommunications()">
+                            <div class="flex-container">
+                                <div class="common-search">
+                                    <input type="text" formControlName="searchVal" placeholder="Search Communication" />
+                                    <span class="search-btn" (click)="searchCommunications()"></span>
+                                    <div class="filter-btn-wrap">
+                                        <span class="filter-btn" (click)="openCommunication();" [ngClass]="statusCommunication ? 'open' : 'close'"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="feild-search" *ngIf="!statusCommunication">
+                                <div class="row field-search-inner">
+                                    <div class="col-md-3">
+                                        <mat-form-field>
+                                            <input matInput placeholder="Campaign Id" formControlName="campaignId">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <mat-form-field>
+                                            <input matInput placeholder="Campaign Title" formControlName="campaignTitle">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <mat-form-field>
+                                            <mat-select matInput placeholder="Communication Type" formControlName="communicationType">
+                                                <mat-option value="EMAIL">Email</mat-option>
+                                                <mat-option value="SMS">SMS</mat-option>
+                                                <mat-option value="PUSH">App Push Notification
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <mat-form-field>
+                                            <input matInput [matDatepicker]="startDate2" placeholder="Start Date" formControlName="startDate">
+                                            <mat-datepicker-toggle matSuffix [for]="startDate2"></mat-datepicker-toggle>
+                                            <mat-datepicker #startDate2></mat-datepicker>
+                                        </mat-form-field>
+                                        <!-- <div *ngIf="dateError" class="color-red">Invalid Date</div> -->
+                                    </div>
+                                    <div class="col-md-3">
+                                        <mat-form-field>
+                                            <input matInput [matDatepicker]="endDate2" placeholder="End Date" [min]="minDate" formControlName="endDate">
+                                            <mat-datepicker-toggle matSuffix [for]="endDate2"></mat-datepicker-toggle>
+                                            <mat-datepicker #endDate2></mat-datepicker>
+                                        </mat-form-field>
+                                        <!-- <div *ngIf="dateError" class="color-red">Invalid Date</div> -->
+                                    </div>
+                                    <div class="col-md-3">
+                                        <mat-form-field>
+                                            <mat-select matInput placeholder="Search by Activity" formControlName="activityId">
+                                                <mat-option *ngFor="let activity of activityList" value="{{activity.id}}">{{activity.value}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <mat-form-field>
+                                            <mat-select matInput placeholder="Status" formControlName="status">
+                                                <mat-option value="ONLINE">Online</mat-option>
+                                                <mat-option value="OFFLINE">Offline</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <button class='button quaternary-btn' type="button" (click)="resetCommunicationForm()">RESET</button>
+                                    <button class='button tertiary-btn' type="submit">APPLY</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="table-wrap">
+                        <div>
+                            <div class="table-wrap-inner">
+                                <table mat-table [dataSource]="dataSource8" matSort (matSortChange)="sortCommunicationData($event)" *ngIf="dataSource8">
+                                    <ng-container matColumnDef="campaignId">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header="oid" class="top-border"> CAMPAIGN ID
+                                        </th>
+                                        <!-- <td mat-cell *matCellDef="let row"><u><a [routerLink]="['/view-campaign/'+row.campaignOid]"
+                          class="text-blue">
+                          {{row.campaignOid}} </a></u></td> -->
+                                        <td mat-cell (click)="CampaignView(row.campaignOid)" *matCellDef="let row"><u><a class="text-blue">
+                          {{row.campaignOid}} </a></u></td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="campaignName">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header="campaignName" class="top-border"> CAMPAIGN TITLE
+                                        </th>
+                                        <td mat-cell *matCellDef="let row">{{row.campaignName}}</td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="activityType">
+                                        <th mat-header-cell *matHeaderCellDef class="top-border"> ACTIVITY TYPE </th>
+                                        <td mat-cell *matCellDef="let row">{{row.activityType}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="notificationDate">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header="deliveryDate" class="top-border">
+                                            NOTIFICATION DATE </th>
+                                        <td mat-cell *matCellDef="let row"> {{row.deliveryDate}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="communicationType">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header="communicationType" class="top-border">
+                                            COMMUNICATION TYPE
+                                        </th>
+                                        <td mat-cell *matCellDef="let row"> {{row.communicationType}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="campaignstatus">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header="status" class="top-border"> CAMPAIGN STATUS
+                                        </th>
+                                        <td mat-cell *matCellDef="let row">{{row.status}} </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedCommunication"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedCommunication;">
+                                    </tr>
+                                </table>
+                                <div *ngIf="searchStoreVal" class="select-store-block">
+                                    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                                </div>
+                                <div class="no-records" *ngIf="communicationResultsLength === 0">
+                                    No Records Found!
+                                </div>
+                                <mat-paginator (click)="searchCommunications()" [length]="communicationResultsLength" (change)="searchCommunications()" #paginator (page)="getCommunicationUpdate($event)" [pageSize]="10" [pageSizeOptions]="[10,20,50,100]">
+                                </mat-paginator>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+</div>

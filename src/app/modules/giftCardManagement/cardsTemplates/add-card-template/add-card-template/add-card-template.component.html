@@ -1,0 +1,228 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container template-title">
+      <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+            [routerLink]="['/search-card-template']"></span>Cards Template</h1>
+      <mat-slide-toggle class="example-margin text-right" [(ngModel)]="toggleVal" (change)="toggleStatus($event)">
+        {{statusValue}}
+      </mat-slide-toggle>
+    </div>
+  </div>
+  <div class="form-wrap">
+    <form [formGroup]="programFormGroup" (submit)="addCard(programFormGroup.value)">
+      <div class="row">
+        <div class="col-md-4">
+          <mat-card>
+            <div class="master-fieldSet">
+              <fieldset class="language-fieldset">
+                <legend class="fieldset-heading">Template Name</legend>
+                <div formArrayName="addGiftCardList">
+                  <div
+                    *ngFor="let cardLanguage of programFormGroup['controls']['addGiftCardList']['controls'];let i = index;"
+                    [formGroupName]="i">
+                    <mat-form-field class="{{alignCss[i]}}">
+                      <input matInput placeholder="{{languageList[i].languageName}}" required
+                        formControlName="templateName" maxlength="50">
+                      <mat-error *ngIf="cardLanguage.get('templateName').hasError('required')">
+                        Please enter value</mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+            <div class="template_for">
+              <mat-form-field>
+                <mat-select placeholder="Template For" formControlName="templateFor">
+                  <mat-option value="Corporate"> Corporate </mat-option>
+                  <mat-option value="Public">Public</mat-option>
+                </mat-select>
+                <mat-error *ngIf="programFormGroup.get('templateFor').hasError('required')">
+                    Please select value</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="chip-list">
+                <mat-form-field >
+                    <input placeholder="Keywords*"  [matChipInputFor]="chipList"
+                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                        [matChipInputAddOnBlur]="addOnBlur"
+                        (matChipInputTokenEnd)="addKeyword($event)" maxlength="20"
+                        required>
+                    <mat-chip-list #chipList>
+                    </mat-chip-list>
+                   
+                </mat-form-field>
+                         <mat-chip *ngFor="let key of keywordArray"
+                    [selectable]="selectable" [removable]="removable"
+                    (removed)="removeKeyword(key)">
+                    {{key}}
+                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                </mat-chip>
+                <div *ngIf="keywordErrorMsg"
+                style="color:red;font-size:10px;margin-top: -1em;" >
+                allowed only 5 keywords
+                </div>
+                <div *ngIf="keywordEmptyErrors"
+                style="color:red;font-size:10px;margin-top: -1em;" >
+                    Please enter keyword
+                </div>
+                <div *ngIf="requiredKeywordError"
+                  style="color:red;font-size:10px;margin-top: -1em;" >
+                  Duplicate key name can't be added
+                </div>
+            </div>
+         
+
+            <!-- <div class="keyword_for">
+              <mat-form-field>
+                <input matInput placeholder="Keyword" #gift_keyword formControlName="keywords" maxlength="50">
+                <mat-error *ngIf="programFormGroup.get('keywords').hasError('required')">
+                  Please enter keyword</mat-error>
+                <mat-error *ngIf="programFormGroup.get('keywords').hasError('maxlength')">
+                  maximum 50 characters are allowed</mat-error>
+              </mat-form-field>
+              <button  (click)=showKeyword(gift_keyword) class="button primary-btn add-button" type="button">
+                <img src="assets/images/svg-icons/add_ico.svg" alt="" ></button>
+              <p *ngIf="!keywordStatus" style="color:red">allowed only 5 keywords</p>
+              <p *ngIf="MissingKeys" style="color:red">Please enter keyword</p>
+              <div class="row addCardKeywords">
+                <p  class="" *ngFor='let key of keywords ; let i = index;'>{{key}}
+                  <img (click)=deleteKeyword(i) src="assets/images/icons/close_img_ico.png" ></p>
+              </div>
+            </div> -->
+  
+          </mat-card>
+        </div>
+        <div class="col-md-8">
+          <mat-card class="master-fieldSet">  
+            <div   formArrayName="addGiftCardList" >
+              <div *ngFor="let addCadd of programFormGroup['controls']['addGiftCardList']['controls'];let i = index;"
+                [formGroupName]="i">
+                <fieldset class=" language-fieldset gift-template">
+                  <legend  class="{{alignCss[i]}} fieldset-language">
+                      {{languageList[i].languageName}}
+                  </legend>
+                  <div class="row">
+                      <div class="col-md-5 messageOverwrite">
+                        <div class="avatar-zone1"  [ngStyle]="{'background-color':addCadd.get('backgroundColor').value}">
+                          <img [class.imgnot-empty] = "!imgNotEmpty" *ngIf="imagePath[i]!=''" [src]="addCadd.get('imagePath').value" width="277px;" height="160px;"
+                            style="object-fit: fill">
+                        </div>
+                      
+                        <!-- <div class="image-error" style="color:red; " *ngIf="showImageError">Please upload image</div> -->
+                        <div class="ImgHead">
+                            <div class="avatar-zone_logo">
+                                <img *ngIf="imagePathLogo[i]!=''"  [src]="addCadd.get('imagePathLogo').value" 
+                                  height="30px;" style="object-fit: fill;" [class.imgnot-empty1] = "!imgNotEmpty1">
+                              </div>
+                             
+                              <div class="messages" [ngStyle]="{'color':addCadd.get('textColor').value}">
+                                <h6>{{addCadd.get('headingMessage1').value}}</h6>
+                                <h3>{{addCadd.get('headingMessage2').value}}</h3>
+                                <p>{{addCadd.get('textMessage').value}}</p>
+                              </div>
+                        </div>
+                       
+                      </div>
+                    
+                      <div class="col-md-7 card-message">
+                        <mat-form-field class="{{alignCss[i]}}">
+                          <input matInput placeholder="Heading Message 1" formControlName="headingMessage1" maxlength="100"
+                            required>
+                          <mat-error *ngIf="addCadd.get('headingMessage1').hasError('required')">Please enter
+                            value</mat-error>
+                          <mat-error *ngIf="addCadd.get('headingMessage1').hasError('pattern')">Only Alphabets are allowed
+                          </mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="{{alignCss[i]}}">
+                          <input matInput placeholder="Heading Message 2" maxlength="100" formControlName="headingMessage2">
+                        </mat-form-field>
+                        <mat-form-field class="{{alignCss[i]}}">
+                          <input matInput placeholder="Text Message" maxlength="100" formControlName="textMessage">
+                          <mat-error *ngIf="addCadd.get('textMessage').hasError('required')">
+                            Please enter value</mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div   class="row" style="margin:10px 0px">
+                      <div class="col-md-3 blockCol">
+                        <div  class="textColor">
+                            <div class="view-label color-code-block">
+                              <mat-form-field class="VCblock">
+                               
+                                <input  type="color" style="width: 25%;height: 20px" matInput #input 
+                                placeholder="Text Color"
+                                  (change)="getColor(programFormGroup.value)" formControlName="textColor">
+                                  {{addCadd.get('textColor').value}}
+                              </mat-form-field>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-3 blockCol">
+                          <div   class="backgroundColor">
+                              <div class="view-label color-code-block">
+                                <mat-form-field class="VCblock">
+                                 
+                                  <input  style="width: 25%;height: 20px" matInput #input  type="color"
+                                    formControlName="backgroundColor" (change)="getColor(programFormGroup.value)"
+                                    placeholder="Background Color">
+                                   <!-- <p> -->
+                                      {{addCadd.get('backgroundColor').value}}
+                                   <!-- </p>  -->
+                                </mat-form-field>
+                              </div>
+                            </div>
+                        </div>
+                            <div class="col-md-3 blockCol">
+                                <div class="grid img-block">
+                                  <input type="file" class="upload_btn" (change)="uploadLogo($event.target.files,i)" />
+                                  <div class="overlay-layer">
+                                    Upload Logo
+                                  </div>
+                                  <!-- <div class="col-md-3"> -->
+                                      <div class="gift-card-logo">
+                                          <img width="40px;" height="20px;" src="assets/images/imageUpload.svg" style="object-fit: fill">
+                                        <!-- <img width="80px;" height="30px;" [src]="imagePathLogo[i]" style="object-fit: fill"> -->
+                                      </div>
+                                    <!-- </div> -->
+                                  <div *ngIf="showImageError" style="color:red">Please upload image</div>
+                                </div>
+                              </div>
+                            
+                      <div class="col-md-3 blockCol">
+                        <div class="grid img-block">
+                          <input type="file" class="upload_btn" (change)="uploadImage($event.target.files,i)" />
+                        
+                          <div class="overlay-layer">
+                            Upload Image
+                          </div>
+                          <!-- <div class="col-md-3"> -->
+                              <div class="gift-card-logo">
+                                  <img width="40px;" height="20px;" src="assets/images/imageUpload.svg" style="object-fit: fill">
+                                </div>
+                            <!-- </div> -->
+                          <div *ngIf="showImageError" style="color:red">Please upload image</div>
+                        </div>
+                      </div>
+                    </div>
+                </fieldset>
+                <!-- <div (click)="ReflectImage(i)"  >
+                    <u><a *ngIf=" (i+1) != TemplateData.length"
+                      class="text-blue">Card design same as English</a></u>                  
+                  </div>   -->
+                <div (click)="ReflectImage(i)"  >
+                    <u><a *ngIf=" (i+1) !=  languageList.length"
+                      class="text-blue">Card design same as English</a></u> 
+                    <!-- <mat-checkbox *ngIf=" (i+1) != languageList.length" >Card design same as English</mat-checkbox>                -->
+                  </div>            
+              </div>             
+            </div>
+          </mat-card>
+  
+          <div class="btm-button-wrap">
+            <button class="button secondary-btn" type="button" [routerLink]="['/search-card-template']">CANCEL</button>
+            <button class="button primary-btn" [disabled]="loading == true" type="submit">ADD</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>

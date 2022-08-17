@@ -1,0 +1,87 @@
+.select-date {
+    input {
+        border-left: 0;
+        outline: none;
+        border-right: 0;
+        border-top: 0;
+        border-bottom-width: thin;
+    }
+    label {
+        color: #a5a5a5;
+        cursor: pointer;
+    }
+}
+
+.select-date {
+    width: 100%;
+    input {
+        width: 100%;
+    }
+}
+
+td.mat-cell {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+}
+
+th.mat-header-cell {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+}
+
+table {
+    width: 100%;
+    overflow-y: hidden;
+    // display:block;
+}
+
+.select-date {
+    input {
+        border-left: 0;
+        outline: none;
+        border-right: 0;
+        border-top: 0;
+        border-bottom-width: thin;
+    }
+    label {
+        color: #a5a5a5;
+        cursor: pointer;
+    }
+}
+
+.select-store-block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    img {
+        width: 5rem;
+    }
+    span {
+        padding-left: 5px;
+    }
+}
+
+/deep/.mat-checkbox-inner-container {
+    height: 14px;
+    width: 14px;
+}
+
+.live-checkbox {
+    position: relative;
+    color: #777777;
+    top: 1em;
+}
+
+.loading-img-hide {
+    img {
+        width: 30px;
+    }
+}
+
+.disablebtn {
+    pointer-events: none;
+}
+
+.text-right {
+    text-align: right !important;
+}

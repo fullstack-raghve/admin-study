@@ -1,0 +1,177 @@
+.page-wrap{
+  .bredcrumb-title-wrap{
+    padding: 0.5em 1em;
+    background :#D3D3D3;
+    .title{
+      padding: 0.1em 1em;
+      h1{
+        font-size: 1.5em;
+      }
+    }
+    .filter-wrap{
+      width: 99%;
+      margin: 0 auto;
+      padding: 0em;
+        padding-bottom: 4em;
+      .common-search{
+        display: flex;
+        align-items: center;
+        margin: 0 auto;
+        text-align: center;
+        padding: 5px 0px;
+        position: relative;
+        .store-title {
+            padding-left: 0;
+            text-align: left;
+            h6 {
+                font-size: 1.5em;
+            }
+        }
+        input{
+          width: 70%;
+          border: 1px solid #EFEFEF;
+          border-radius: 5px;
+          padding: 0.5em;
+          outline: none;
+        }
+        .search-btn{
+          position: absolute;
+          right: 18%;
+          top: 9px;
+          display: inline-block;
+          background: url('../../../../assets/images/icons/search_ico.png');
+          width: 17px;
+          height: 17px;
+          background-repeat: no-repeat;
+          background-size: contain;
+          cursor: pointer;
+        }
+        .filter-btn-wrap{
+          display: inline-block;
+          position: absolute;
+          right: 11%;
+          top: 0px;
+          cursor: pointer;
+          .filter-btn{
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+            background: url('../../../../assets/images/svg-icons/filter_orange.svg');
+            &.open{
+              background: url('../../../../assets/images/svg-icons/filter_orange.svg');
+              border: 1px solid #dbdbdb;
+              background-repeat: no-repeat;
+              border-radius: 5px;
+              width: 30px;
+              height: 30px;
+              padding: 16px;
+              background-size: 80% 38%;
+              background-position: center center;
+            background-color: #fff
+            }
+            &.close{
+            background: url('../../../../assets/images/icons/filter_close_ico.svg');
+              border: solid;
+              border-width: 9px;
+              background-color: #FF8E48;
+              border-color: #FF8E48;
+              height: 31px;
+              width: 31px;
+              border-radius: 5px;
+              background-repeat: no-repeat;
+              opacity: 1;
+            }
+          }
+        }
+      }
+      .feild-search{
+        background-color: #FFFFFF;
+        border-radius: 5px;
+        padding: 0.2em;
+        margin-bottom: 0.5em;
+        width:100%;
+        .feild-search-inner{
+          width: 80%;
+          margin: 0 auto;
+          .col-md-4{
+            margin: 10px 0;
+          }
+        }
+      }
+    }
+  }
+  .form-wrap{
+    background: #fff;
+    width: 97%;
+    position: relative;
+    top: -56px;
+    left: 15px;
+    .card-title{
+      color: #5F5C5C;
+      font-size: 16px;
+    }
+  }
+}
+
+table{
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+thead{
+  border-bottom: 1px solid #000;
+}
+.flex-container{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.mat-form-field{width:100%;}
+.mat-select-panel{
+  position: relative !important;
+  top:35px !important;
+}
+.mat-table{
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+p{margin: 0;}
+.button-wrap{
+  text-align: right;
+  width: 100%;
+  position: absolute;
+}
+
+.no-records{
+  text-align: center;
+  padding:10px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.mat-dialog-container {
+     padding: 0!important;
+}
+.form-wrap {
+    .table-wrap-inner{
+        max-height: 350px;
+        overflow-y: scroll;
+        th.mat-header-cell {
+           padding: 3px 20px;
+        }
+        td.mat-cell, td.mat-footer-cell, th.mat-header-cell {
+        padding: 3px 20px;
+       }
+        tr.mat-header-row {
+        height: 56px;
+        }
+        td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type, th.mat-header-cell:first-of-type {
+            // padding-left: 50px;
+        }
+    }
+}
+.filter-btn-wrap {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}

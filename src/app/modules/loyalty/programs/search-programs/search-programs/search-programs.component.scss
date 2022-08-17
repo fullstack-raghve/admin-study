@@ -1,0 +1,13 @@
+.text-blue{
+    word-break: break-all;
+}
+
+/deep/ .mat-autocomplete-panel{
+    /deep/ .mat-option{
+        /deep/ .mat-option-text{
+            span{
+                font-size: 12px;
+            }
+        }
+    }
+}

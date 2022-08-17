@@ -1,0 +1,46 @@
+<div *ngIf="contentLoader" class="page-loader-block full-page-loader">
+  <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+</div>
+<div class="flex">
+  <div class="left-column-cotent">
+    <div class="page-title">
+      <div class="header flex-container">
+        <h3>Select Category</h3>
+        <div class="close-icon">
+          <img src="assets/images/icons/filter_close_ico.png" alt="" (click)="onCloseClick()">
+        </div>
+      </div>
+    </div>
+    <div class="page-content">
+      <div class="products-list">
+        <dx-list #list [dataSource]="categoryList" [height]="400" [searchEnabled]="true" searchExpr="categoryName"
+          searchMode="contains">
+          <ul>
+            <li *dxTemplate="let data of 'item'">
+              <div class="flex-container pb-1em">
+                <div class="flex row pimg">
+                  <div class="col-md-12 flex-center mr-5px ckclass">
+                    <div class="productData">
+                      <span class="productName">{{data.categoryName}} </span>
+                    </div>
+                    <div class="checkboxClass">
+                      <mat-radio-button (change)="toggleVisibility($event,data)" [checked]="data.checked">
+                      </mat-radio-button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </dx-list>
+      </div>
+      <div>
+        <p *ngIf="ShowError" style="color:red; font-size: 13px;
+        margin-left: 10px;">please select category</p>
+      </div>
+      <div *ngIf="categoryList.length >0" style="margin: 10px;" class=" footer text-center footer-addon">
+        <button type="button" class="button primary-btn" (click)="createList()">ADD</button>
+      </div>
+    </div>
+  </div>
+</div>

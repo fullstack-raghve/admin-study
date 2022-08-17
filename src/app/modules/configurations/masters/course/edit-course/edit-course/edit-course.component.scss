@@ -1,0 +1,91 @@
+.master-fieldSet {
+    .language-fieldset{
+        padding: 0px 26px 10px;
+        border: 1px solid #dbdbdb;
+        border-radius: 5px;
+        .fieldset-heading {
+            font-size: 14px;
+            padding-inline-start: 7px;
+            max-width: 50% !important;
+        }
+    }
+}
+.mt-30px{
+    margin-top: 0%;
+}
+.img-block{
+    .avatar-zone{
+        position: relative;
+        // opacity: 0.8;
+        width:120px;
+        height:80px;
+        background-color: #F2F2F2;
+        text-align: center;
+        border: 1px dashed #dbdbdb;
+    }
+    .upload-icon {
+        width: 12px;
+        height: 12px;
+        margin-right: 5px;
+        cursor: pointer;
+    }
+    .remove-image-text{
+        position: absolute;
+        color: whitesmoke;
+    }
+   .remove-image-icon{
+    // position: absolute;
+    // top: 38px;
+    // left: 118px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    img{
+        position: absolute;
+        right: 8px;
+        top: 6px;
+    }
+   }
+}
+.image-error{
+    color: red;
+    padding-top: 1em;
+    padding-left: 1em;
+}
+.remove-img {
+    display: flex;
+    justify-content: center;
+    padding-top: 10px;
+    width: 85%;
+   img {
+       width: 20px;
+   }
+   label {
+       font-size: 15px;
+       color: grey;
+       padding-left: 5px;
+   }
+}
+.upload-text {
+    font-size: 11px;
+    color: #095bd0;
+    cursor: pointer;
+}
+.image-text{
+    color: rgb(112, 106, 106);
+}
+
+.imgbg{
+    position: absolute;
+    display: flex;
+    width: 120px;
+    height: 80px;
+    bottom: 0px;
+    background-color: #00000059;
+    align-items: center;
+    justify-content: center;
+}
+.edit-text{
+    color: grey;
+}

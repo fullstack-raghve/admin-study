@@ -1,0 +1,97 @@
+<div *ngIf="currencyCodesData.length != 0">
+  <div class="">
+    <mat-card class="mb-10px">
+      <div class="feild-search">
+        <div class="row field-search-inner">
+          <div class="col-md-3">
+            <mat-form-field>
+              <mat-select [(value)]="currencyCode" placeholder="Currency">
+                <mat-option *ngFor="let cc of currencyCodesData" [value]="cc.currencyCode" (click)="getWalletData(cc)">
+                  {{ cc.currencyCode }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-md-3">
+            <label>Created On</label>
+            <p>{{selectedwalletData?.createdOn}}</p>
+          </div>
+          <div class="col-md-3">
+            <label>Status</label>
+            <p *ngIf="selectedwalletData?.status != ''">{{selectedwalletData?.status =='ONLINE' ? 'Active' : 'Inactive'}}</p>
+          </div>
+          <div class="col-md-3">
+            <label>Balance</label>
+            <p>{{selectedwalletData?.currentBalance}}</p>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+
+  <div class="table-wrap">
+    <div>
+      <div class="table-wrap-inner">
+        <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortWalletData($event)" *ngIf="dataSource">
+          <ng-container matColumnDef="slNo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="slNo" class="top-border">
+              S.NO</th>
+            <td mat-cell *matCellDef="let element;let i = index;">{{i+1}}</td>
+          </ng-container>
+          <ng-container matColumnDef="txnID">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="txnID" class="top-border"> TRANSACTION ID
+            </th>
+            <td mat-cell *matCellDef="let row"><u><a
+              class="text-blue">{{row.txnID }}</a></u></td>
+          </ng-container>
+          <ng-container matColumnDef="txnAmount">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="txnAmount" class="top-border"> AMOUNT </th>
+            <td mat-cell *matCellDef="let row">{{row.txnAmount}} </td>
+          </ng-container>
+          <ng-container matColumnDef="credit">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="credit" class="top-border">
+              CREDIT </th>
+            <td mat-cell *matCellDef="let row">
+              <img *ngIf="row.txnType == 'Cr'" class="success-img" src="assets/images/right.png">
+              <p *ngIf="row.txnType != 'Cr'" class="ml-1em">-</p>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="debit">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="debit" class="top-border">
+              DEBIT
+            </th>
+            <td mat-cell *matCellDef="let row">
+              <img *ngIf="row.txnType == 'Dr'" class="success-img" src="assets/images/right.png">
+              <p *ngIf="row.txnType != 'Dr'" class="ml-1em">-</p>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="balance">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="balance" class="top-border">
+              BALANCE
+            </th>
+            <td mat-cell *matCellDef="let row"> {{row.currentBalance}} </td>
+          </ng-container>
+          <ng-container matColumnDef="txnDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="txnDate" class="top-border">
+              DATE & TIME
+            </th>
+            <td mat-cell *matCellDef="let row"> {{row.txnDate}} </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedWalletDetails"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedWalletDetails;">
+          </tr>
+        </table>
+        <div *ngIf="loadingEwalletResponse" class="table-loader">
+          <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+        </div>
+        <div class="no-records" *ngIf="eWalletResultsLength === 0">
+          No Records Found!
+        </div>
+        <mat-paginator [length]="eWalletResultsLength" #walletPaginator [pageSize]="10"
+        [pageSizeOptions]="[10,20,50,100]"></mat-paginator>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="error-message" *ngIf="noWalletsFound">
+  No wallets found
+</div>

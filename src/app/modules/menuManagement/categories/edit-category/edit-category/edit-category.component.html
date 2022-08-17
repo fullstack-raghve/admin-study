@@ -1,0 +1,204 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container">
+        <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          [routerLink]="['/search-category']"></span>Edit Categories</h1>
+        <div class="slider">
+            <mat-slide-toggle [(ngModel)]="toggleVal" class="example-margin text-right" (change)="toggleStatus($event)">
+                {{toggleVal==true ? "ONLINE" : "OFFLINE"}}
+            </mat-slide-toggle>
+        </div>
+    </div>
+</div>
+<form *ngIf="buildFlag" (submit)="createCategory(editCategoryGroup.value)" [formGroup]="editCategoryGroup" #editCategoryForm="ngForm">
+    <div class="form-wrap">
+        <div class="row">
+            <div class="col-md-4">
+                <mat-card class="category">
+                    <div>
+                        <mat-form-field>
+                            <mat-select (selectionChange)="getCategory(brandID.value)" #brandID placeholder="Select Brand" formControlName="brandId" required>
+                                <mat-option value="">Select Brand</mat-option>
+                                <mat-option *ngFor="let p of brandList" [value]="p.brandId">
+                                    {{ p.brandName }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="editCategoryGroup.get('brandId').hasError('required')">Please select value
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div>
+                        <mat-form-field>
+                            <mat-select placeholder="Select Parent" #parentInput formControlName="parent" (selectionChange)="getSortOrder(parentInput.value)" required>
+                                <mat-option value="0">None</mat-option>
+                                <mat-option *ngFor="let parent of parentList" value="{{parent.categoryId}}">
+                                    {{ parent.categoryName }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="editCategoryGroup.get('parent').hasError('required')">Please select value
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div>
+                        <mat-form-field>
+                            <input matInput placeholder="Sort Order" maxlength="3" OnlyNumber="true" formControlName="sortorder" required>
+                            <mat-error *ngIf="editCategoryGroup.get('sortorder').hasError('required')">Please enter value
+                            </mat-error>
+                            <mat-error *ngIf="editCategoryGroup.get('sortorder').hasError('max')">Please enter sort order less than suggested</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <!-- <div class="row">
+            <div class="col-md-6">
+              <div class="timer-block">
+                <label class="timer-label">
+                  Available From <img src="assets/images/icons/time_ico.svg" width="20px" alt="">
+                  <input class="time-picker" #ref readonly [owlDateTimeTrigger]="availFrom" [owlDateTime]="availFrom"
+                    formControlName="availableFrom" (ngModelChange)="changeValidation(ref.value);">
+                  <owl-date-time [pickerType]="'timer'" #availFrom></owl-date-time>
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="timer-block">
+                <label class="timer-label">
+                  Available To <img src="assets/images/icons/time_ico.svg" width="20px" alt="">
+                  <input class="time-picker" [min]="editCategoryGroup.get('availableFrom').value" readonly
+                    [owlDateTimeTrigger]="availTo" [owlDateTime]="availTo" formControlName="availableTo">
+                  <owl-date-time [pickerType]="'timer'" #availTo></owl-date-time>
+                </label>
+                <p *ngIf="editCategoryForm.submitted && editCategoryGroup.get('availableTo').hasError('required') || editCategoryForm.submitted && editCategoryGroup.get('availableTo').hasError('required')"
+                  style="color:red; font-size: 10px;">Please select availableTo time</p>
+              </div>
+            </div>
+          </div> -->
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <label class="example-input-wrapper timer-label">
+  Available From* <img src="assets/images/icons/time_ico.svg" width="20px" alt="">
+  <mat-form-field>
+      <input matInput [owlDateTimeTrigger]="dt2"  class="available-input"  [owlDateTime]="dt2"
+       formControlName="availableFrom">
+    <owl-date-time [pickerType]="'timer'" #dt2>
+    </owl-date-time>
+    <mat-error
+    *ngIf="editCategoryGroup.get('availableFrom').hasError('required')">
+    Please enter value</mat-error>
+  </mat-form-field>
+ 
+</label>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="example-input-wrapper timer-label-to">
+  Available To* <img src="assets/images/icons/time_ico.svg" width="20px" alt="">
+  <mat-form-field >
+    <input matInput [owlDateTimeTrigger]="dt" [owlDateTime]="dt" class="available-input" [min]="editCategoryGroup.get('availableFrom').value"
+      formControlName="availableTo">
+    <owl-date-time [pickerType]="'timer'" #dt>
+    </owl-date-time>
+    <mat-error
+      *ngIf="editCategoryGroup.get('availableTo').hasError('required')">
+      Please enter value</mat-error>
+      <mat-error *ngIf="editCategoryGroup.get('availableTo').value < editCategoryGroup.get('availableFrom').value">Please select value greater than Available From
+      </mat-error>
+      
+  </mat-form-field>
+</label>
+                        </div>
+                    </div>
+                    <!-- <div>
+                        <mat-checkbox formControlName="isCakeCategory"> Is Cake Category? </mat-checkbox>
+                    </div> -->
+                    <div class="flex">
+                        <div class="">
+                            <button class='button tertiary-btn' type="button" (click)="openDialog()">SELECT
+                STORES</button>
+                        </div>
+                        <div class="select-store-block">
+                            <div *ngIf="selectStoreVal">
+                                <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                            </div>
+                            <div class="view-details">
+                                <p *ngIf="dataStore">{{selectedStorearray.length}}</p>
+                                <span>Stores Selected</span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="grid img-block">
+                        <div class="avatar-zone">
+                            <label class="upload-text" [class.placeholder-img]="imgUpload">Category Image</label>
+                            <img class="upload-img" *ngIf="imagePath!=''" [src]="filePathUrl+imagePath" [class.uploaded-img]="imgUpload" width="80px">
+                        </div>
+                        <div class="remove-img" *ngIf="imagePath!=''" style="margin:0 0em 0 0">
+                            <span (click)="removeImage()"> <img src="assets/images/icons/filter_close_ico.png"
+                  alt=""><label class="pointer">Remove</label></span>
+                        </div>
+                        <input style="display:none;" type="file" class="upload_btn" (click)="uploadCategoryImg.value = null" (change)="uploadImage($event.target.files)" #uploadCategoryImg />
+                        <!-- <div class="overlay-layer">
+                        <img class="upload-icon" src="assets/images/svg-icons/uploadgray_ico.svg" alt="">Upload Image
+                    </div> -->
+
+                        <!-- <input style="display:none;" type="file" #uploadEl class="upload_btn" (change)="uploadImage($event.target.files,i)"/> -->
+                        <div class="text-center" style="width: 100%;" *ngIf="imagePath==''">
+                            <span class="upload-btn-text" (click)='uploadCategoryImg.click()'>
+                <span class="upload-icon">
+                  <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px" alt="Img">
+                </span>Upload Image
+                            </span>
+                        </div>
+                        <div class="imgInfo">
+                            <p class="left">Upload format: GIF,JPEG,PNG,MP4</p>
+                            <p class="right">Image size: 1125x750</p>
+                        </div>
+                        <div *ngIf="imageErr" style="color:red; font-size: 10px;">{{imageErrMsg}}</div>
+                    </div>
+                </mat-card>
+            </div>
+            <div class="col-md-8" formArrayName="categoryFormArray">
+                <mat-card class="multi-lang">
+                    <mat-card class="faq-card mb-20px" *ngFor="let ln of editCategoryGroup['controls']['categoryFormArray']['controls'];let i = index;" [formGroupName]="i">
+                        <div class="lang-field" [class.right-text]="viewData.categoryLocales[i].langName=='Arabic'">
+                            <p>{{viewData.categoryLocales[i].langName}}</p>
+                        </div>
+                        <div class="row card-mb">
+                            <div class="col-md-11 text-fields {{languageDirection[i]}}">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <mat-form-field [class.direction-right]="languageList[i].languageName == 'Arabic'">
+                                            <input matInput placeholder="Category Name" maxlength="200" formControlName="categoryName" required>
+                                            <mat-error *ngIf="ln.get('categoryName').hasError('required')">Please enter value
+                                            </mat-error>
+                                            <!-- <mat-error *ngIf="ln.get('categoryName').hasError('pattern')">Only Alphabets are allowed</mat-error> -->
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <mat-form-field [class.direction-right]="languageList[i].languageName == 'Arabic'">
+                                            <input matInput placeholder="Meta Tag Keywords" formControlName="metaTag">
+                                            <mat-error *ngIf="ln.get('metaTag').hasError('pattern')">Only Alphabets are allowed
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="field-container">
+                                    <mat-form-field [class.direction-right]="languageList[i].languageName == 'Arabic'">
+                                        <textarea matInput placeholder="Description" formControlName="description" required></textarea>
+                                        <mat-error *ngIf="ln.get('description').hasError('required')">Please enter value
+                                        </mat-error>
+                                        <!-- <mat-error *ngIf="ln.get('description').hasError('pattern')">Only Alphabets are allowed</mat-error> -->
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-card>
+                </mat-card>
+
+            </div>
+
+        </div>
+        <div class="btm-button-wrap">
+            <button type="button" class="button secondary-btn" [routerLink]="['/search-category']">CANCEL</button>
+            <button class="button primary-btn" type="submit">UPDATE</button>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,160 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container">
+        <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg"
+                    alt="leftArrow" [routerLink]="['/search-about-us']"></span>Add About Us</h1>
+        <mat-slide-toggle [(ngModel)]="toggleVal" class="example-margin text-right" [checked]="checked"
+            [disabled]="disabled">
+            {{toggleVal==true ? "ONLINE" : "OFFLINE"}}
+        </mat-slide-toggle>
+    </div>
+</div>
+<form (submit)="createAboutUs(aboutUsFormGroup.value)" [formGroup]="aboutUsFormGroup" #createAboutUsForm="ngForm">
+    <div class="page-wrap">
+        <mat-card class="card">
+            <div class="row">
+                <div class="col-md-3">
+                    <mat-form-field>
+                        <mat-select placeholder="Select Country" #countryInput formControlName="countryId"
+                            (selectionChange)="getContentForList(countryInput.value)" required>
+                            <mat-option value="">Select</mat-option>
+                            <mat-option *ngFor="let country of countryList" value="{{country.countryId}}">
+                                {{ country.countryName }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="aboutUsFormGroup.get('countryId').hasError('required')">Please select value
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-md-3">
+                    <mat-form-field>
+                        <mat-select placeholder="Content For" #contentInput formControlName="contentFor"
+                            (selectionChange)="getLocales(contentInput.value);getSelectedContent($event)" required>
+                            <mat-option value="">Select</mat-option>
+                            <mat-option *ngFor="let cont of contentForList" value="{{cont.aboutUsCategoryId}}">
+                                {{ cont.contentFor }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="aboutUsFormGroup.get('contentFor').hasError('required')">Please select value
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div formArrayName="aboutUsFormArray">
+                <div *ngFor="let ln of aboutUsFormGroup['controls']['aboutUsFormArray']['controls'];let i = index;"
+                    [formGroupName]="i">
+                    <mat-card class="faq-card mb-20px" *ngIf="languageList[i].languageName!=undefined">
+                        <div class="lang-field {{langfieldname[i]}}">
+                            <p>{{languageList[i].languageName}}</p>
+                        </div>
+                        <div class="row card-mb">
+                            <div class="col-md-7 text-fields">
+                                <div class="mb-20px">
+                                    <!-- <editor formControlName="content"></editor> -->
+                                    <editor *ngIf="languageList[i].languageName!='Arabic'" [init]="{
+                                                          plugins: 'code, preview ,print,fullpage, searchreplace, directionality, visualblocks, visualchars, fullscreen, image, link, media, template, codesample, table, charmap, hr, pagebreak, nonbreaking, anchor, toc, insertdatetime, advlist, lists, wordcount, imagetools, textpattern, help',
+                                                          toolbar:'code preview',
+                                                          height : '200'
+                                                                }" required formControlName="content">
+                                    </editor>
+                                    <editor id="arabicID" *ngIf="languageList[i].languageName=='Arabic'" [init]="{
+                                                          plugins: 'code, preview ,print,fullpage, searchreplace, directionality, visualblocks, visualchars, fullscreen, image, link, media, template, codesample, table, charmap, hr, pagebreak, nonbreaking, anchor, toc, insertdatetime, advlist, lists, wordcount, imagetools, textpattern, help',
+                                                          toolbar:'code preview',
+                                                          height : '200'
+                                                                }" required formControlName="content">
+                                    </editor>
+                                    <mat-error
+                                        *ngIf="createAboutUsForm.submitted && ln.get('content').hasError('required')">
+                                        Please enter value
+                                    </mat-error>
+                                </div>
+                                <div class="field-container">
+                                    <mat-form-field class="{{alignCss[i]}}">
+                                        <input matInput placeholder="Video Url" maxlength="500"
+                                            formControlName="videoUrl">
+                                        <mat-error *ngIf="ln.get('videoUrl').hasError('minlength')">Minimum 8
+                                            character(s) required
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="col-md-5 img-container">
+                                <div class="flex">
+                                    <div class="store-image" style="margin-right: 25px;">
+                                        <div class="grid img-block">
+                                            <div class="avatar-zone">
+                                                <label class="upload-text" *ngIf="!uploadFlag[i]"
+                                                    [class.placeholder-img]="imgUploadList">List Image</label>
+                                                <img class="upload-img" *ngIf="imagePath.length!=0 && imagePath[i]!=''"
+                                                    [class.uploaded-img]="imgUploadList"
+                                                    [src]="filePathUrl+imagePath[i]">
+                                            </div>
+                                            <div class="remove-img" *ngIf="uploadFlag[i]==true"
+                                                style="margin:0 1em 0 3em">
+                                                <span> <img src="assets/images/icons/filter_close_ico.png" alt=""
+                                                        (click)="removeListImage(i)"><label
+                                                        style="cursor:pointer;">Remove</label></span>
+                                            </div>
+                                            <input style="display:none;" #uploadEl type="file" class="upload_btn"
+                                                (change)="uploadImage($event.target.files,i)" required
+                                                formControlName="listImage" />
+                                            <div class="text-center upload-image-text" *ngIf="!uploadFlag[i]">
+                                                <span class="upload-btn-text" (click)='uploadEl.click()'>
+                                                    <span class="upload-icon">
+                                                        <img src="assets/images/svg-icons/uploadgray_ico.svg"
+                                                            width="12px" alt="Img">
+                                                    </span><span style="cursor:pointer;">Upload Image</span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="ln.get('listImage').hasError('required') && createAboutUsForm.submitted"
+                                            class="image-error" style="color:red">
+                                            Please upload image
+                                        </div>
+                                    </div>
+                                    <div class="store-image">
+                                        <div class="grid img-block">
+                                            <div class="avatar-zone">
+                                                <label class="upload-text" *ngIf="!storeImgFlag[i]"
+                                                    [class.placeholder-img]="imgUpload">Detail Image</label>
+                                                <img class="upload-img"
+                                                    *ngIf="fullImagePath.length!=0 && fullImagePath[i]!=''"
+                                                    [class.uploaded-img]="imgUpload"
+                                                    [src]="filePathUrl+fullImagePath[i]">
+                                            </div>
+                                            <div class="remove-img" *ngIf="storeImgFlag[i]==true"
+                                                style="margin:0 1em 0 3em">
+                                                <span> <img src="assets/images/icons/filter_close_ico.png" alt=""
+                                                        (click)="removeDetailImage(i)"><label
+                                                        style="cursor:pointer;">Remove</label></span>
+                                            </div>
+                                            <input style="display:none;" #uploadImgEl type="file" class="upload_btn"
+                                                (change)="uploadFullImage($event.target.files,i)" required
+                                                formControlName="detailImage" />
+                                            <div class="text-center upload-image-text" *ngIf="!storeImgFlag[i]">
+                                                <span class="upload-btn-text" (click)='uploadImgEl.click()'>
+                                                    <span class="upload-icon">
+                                                        <img src="assets/images/svg-icons/uploadgray_ico.svg"
+                                                            width="12px" alt="Img">
+                                                    </span><span style="cursor:pointer;">Upload Image</span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="ln.get('detailImage').hasError('required') && createAboutUsForm.submitted"
+                                            class="image-error" style="color:red">
+                                            Please upload image
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-card>
+                </div>
+            </div>
+        </mat-card>
+        <div class="btm-button-wrap">
+            <button type="button" class="button secondary-btn" [routerLink]="['/search-about-us']">CANCEL</button>
+            <button class="button primary-btn" type="submit">ADD</button>
+        </div>
+    </div>
+</form>

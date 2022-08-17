@@ -1,0 +1,28 @@
+table {
+  width: 100%;
+  .mat-cell {
+    border-bottom-style: none !important;
+  }
+  .mat-header-cell {
+    border-bottom-color: rgb(227, 236, 248);
+  }
+}
+
+.mat-elevation-z8 {
+  box-shadow: none;
+}
+
+.page-wrap {
+  margin: 20px 20px 20px 20px;
+}
+.primary-btn {
+  float: right;
+}
+.btn-light {
+  border: 1px solid orange;
+  line-height: 1.1 !important;
+}
+
+.mat-card {
+  box-shadow: none;
+}

@@ -1,0 +1,140 @@
+<div class="bredcrumb-title-wrap">
+  <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+  <div class="title flex-container template-title">
+    <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          [routerLink]="['/search-search-gift-cards']"></span>Edit Card Details</h1>
+  </div>
+</div>
+<div *ngIf="loadingResponse" class="select-store-block">
+    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+  </div>
+  <div class="form-wrap" *ngIf="!loadingResponse">
+<form *ngIf="buildFlag" [formGroup]="editSearchGiftCardFormGroup"
+  (submit)="statusUpdate(editSearchGiftCardFormGroup.value)">
+  <div class="page-wrap">
+    <div class="row">
+      <div class="col-md-3 view-label">
+        <mat-card>
+          <h5>{{viewDataDetails.cardUtilizes}}</h5>
+          <label>ID</label>
+          <p>{{viewDataDetails.cardcode}}</p>
+
+          <label>Security Code</label>
+          <p>{{viewDataDetails.secretCode}}</p>
+
+          <label>Card Type</label>
+          <p>{{viewDataDetails.cardType}}</p>
+          <div class="value-selection">
+            <mat-form-field>
+              <input type="text" matInput placeholder="Add Label" #label_keyword formControlName="keywords"
+                maxlength="50">
+                <mat-error *ngIf="editSearchGiftCardFormGroup.get('keywords').hasError('pattern')">Invalid Pattern
+                  
+                </mat-error>
+                <mat-error *ngIf="editSearchGiftCardFormGroup.get('keywords').hasError('required')">Please enter value
+                  
+                </mat-error>
+            </mat-form-field>
+            <button (click)=showKeyword(label_keyword) class="button primary-btn add-button" type="button">
+              <img src="assets/images/svg-icons/add_ico.svg" alt=""></button>
+            <p *ngIf="!keywordStatus" style="color:red">Minimum 1 and Maximum 5 values allowed</p>
+            <p *ngIf="keywordSta" style="color:red">Please enter value</p>
+            <div class="row addCardKeywords">
+              <p class="" *ngFor='let key of keywords ; let i = index;'>{{key}}
+                <img (click)=deleteKeyword(i) src="assets/images/icons/close_img_ico.png"></p>
+            </div>
+          </div>
+          <label>Created Date</label>
+          <p>{{viewDataDetails.createdDate |date:"dd-MM-yyyy"}}</p>
+
+          <label>Created by</label>
+          <p>{{viewDataDetails.createdBy}}</p>
+
+          <label>Status</label>
+          <p>{{viewDataDetails.status}}</p>
+
+          <label *ngIf="viewDataDetails.cardAssigned=='STORE'">Store</label>
+          <label *ngIf="viewDataDetails.cardAssigned=='CORPORATE'">Corporate</label>
+          <p>{{viewDataDetails.corporateName}}</p>
+
+          <label *ngIf="viewDataDetails.cardAssigned=='CORPORATE'">Corporate ID</label>
+          <label *ngIf="viewDataDetails.cardAssigned=='STORE'">Store ID</label>
+          <p>{{viewDataDetails.corporateId}}</p>
+
+          <label>Member ID</label>
+          <p><u><a class="text-blue">{{viewDataDetails.memberId}}</a></u></p>
+
+          <label>Balance</label>
+          <p>{{viewDataDetails.balance}}<span>INR</span><span><button type="button" class="btn btn-light float-right"
+                (click)="historyDialog()">History</button></span></p>
+
+        </mat-card>
+      </div>
+      <div class="col-md-9">
+        <mat-card>
+
+          <mat-form-field>
+            <input matInput placeholder="Enter Reason" formControlName="reason">
+          </mat-form-field>
+
+          <h6>Mark as</h6>
+          <div class="row">
+
+            <div class="col-md-1">
+              <button type="button" class="btn btn-light" (click)="blockedData('BLOCK')">Blocked</button>
+            </div>
+            <div class="col-md-2 offset-md-1" *ngIf="viewDataDetails.status=='GIFTED'">
+              <button type="button" class="btn btn-light" (click)="redeemed(redeemed)">Redeemed</button>
+            </div>
+            <p style="color:red" *ngIf="redeemedblockedCon">Please select Redeemed or Blocked</p>
+          </div>
+
+          <h5>Status Change History</h5>
+          <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+            <!-- FROM Column -->
+            <ng-container matColumnDef="oldStatus">
+              <th mat-header-cell *matHeaderCellDef> FROM </th>
+              <td mat-cell *matCellDef="let element"> {{element.oldStatus}} </td>
+            </ng-container>
+
+            <!-- TO Column -->
+            <ng-container matColumnDef="newStatus">
+              <th mat-header-cell *matHeaderCellDef> TO </th>
+              <td mat-cell *matCellDef="let element"> {{element.newStatus}} </td>
+            </ng-container>
+
+            <!-- BY Column -->
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef> BY </th>
+              <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+            </ng-container>
+
+            <!-- DATE & TIME Column -->
+            <ng-container matColumnDef="dateTime">
+              <th mat-header-cell *matHeaderCellDef> DATE & TIME </th>
+              <td mat-cell *matCellDef="let element"> {{element.dateTime}} </td>
+            </ng-container>
+
+            <!-- COMMENT Column -->
+            <ng-container matColumnDef="comment">
+              <th mat-header-cell *matHeaderCellDef> COMMENT </th>
+              <td mat-cell *matCellDef="let element"> {{element.comment}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+
+          <mat-paginator [pageSizeOptions]="[10,20,50,100]"></mat-paginator>
+        </mat-card>
+        <button type="button" class="button primary-btn" style="margin-top:8px;"
+          type="submit">UPDATE</button>
+
+        <button type="button" class="button secondary-btn" style="margin-top:8px;"
+          [routerLink]="['/edit-search-gift-cards']">CANCEL</button>
+      </div>
+    </div>
+  </div>
+</form>
+</div>

@@ -1,0 +1,536 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container">
+        <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          [routerLink]="['/search-products']"></span>View Product</h1>
+        <div class="slider">
+            <mat-slide-toggle [(ngModel)]="toggleVal" class="example-margin" [checked]="checked" [disabled]="true">
+                {{toggleVal==true ? "ONLINE" : "OFFLINE"}}
+            </mat-slide-toggle>
+        </div>
+    </div>
+</div>
+<div class="page-wrap">
+    <mat-tab-group animationDuration="0ms" class="tabs-align">
+        <mat-tab label="Product Details">
+            <ng-template matTabContent>
+                <div class="basic-details">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="left-col">
+                                <mat-card class="product-images add-card">
+                                    <div class="card-title">
+                                        <h6>Product Images</h6>
+                                    </div>
+                                    <mat-divider></mat-divider>
+                                    <div class="img-layout" malihu-scrollbar [scrollbarOptions]="scrollbarOptions">
+                                        <div class="grid img-block flex-wrap">
+                                            <div class="images-placeholder" *ngFor="let img of viewData['productImages'];">
+                                                <div class="img-container">
+                                                    <img class="uploaded-image" [src]="filePathUrl+img.imgPath" [class.uploaded-img]="imgUpload">
+                                                </div>
+                                                <label *ngIf="img.isDefault" class="image-label">Default Image</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-card>
+                                <mat-card class="product-details add-card">
+                                    <div class="view-label">
+                                        <label>Brand</label>
+                                        <p>{{brandName}}</p>
+                                    </div>
+                                    <div class="view-label">
+                                        <label>Category</label>
+                                        <p>{{categories}}</p>
+                                    </div>
+                                    <div class="view-label">
+                                        <label>Sort Order</label>
+                                        <p>{{viewData['sortOrder']}}</p>
+                                    </div>
+                                    <div class="mb-10px">
+                                        <div>
+                                            <div *ngIf="exclusiveProducts == ''">
+                                                <mat-checkbox [checked]="viewData['exclusive']" disabled> Exclusive
+                                                </mat-checkbox>
+                                            </div>
+                                            <div *ngIf="exclusiveProducts != ''">
+                                                <mat-checkbox [checked]="viewData['exclusive']" disabled> {{exclusiveProducts}}
+                                                </mat-checkbox>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div *ngIf="limitedTimeProducts == ''">
+                                                <mat-checkbox [checked]="viewData['limitedTimeCategory']" disabled> Limited Time Category
+                                                </mat-checkbox>
+                                            </div>
+                                            <div *ngIf="limitedTimeProducts != ''">
+                                                <mat-checkbox [checked]="viewData['limitedTimeCategory']" disabled> {{limitedTimeProducts}}
+                                                </mat-checkbox>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div *ngIf="healthyProducts == ''">
+                                                <mat-checkbox [checked]="viewData['healthy']" disabled>Healthy
+                                                </mat-checkbox>
+                                            </div>
+                                            <div *ngIf="healthyProducts != ''">
+                                                <mat-checkbox [checked]="viewData['healthy']" disabled>{{healthyProducts}}
+                                                </mat-checkbox>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div *ngIf="hotSellerProducts == ''">
+                                                <mat-checkbox [checked]="viewData['hotSeller']" disabled> Hotseller
+                                                </mat-checkbox>
+                                            </div>
+                                            <div *ngIf="hotSellerProducts != ''">
+                                                <mat-checkbox [checked]="viewData['hotSeller']" disabled> {{hotSellerProducts}}
+                                                </mat-checkbox>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="view-label">
+                                                <label>Available From</label>
+                                                <p>{{viewData['availableFrom']}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="view-label">
+                                                <label>Available To</label>
+                                                <p>{{viewData['availableTo']}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- <div>
+                                        <div class="view-label">
+                                            <label class="label-inline wid-60">Default Cake Size</label>
+                                            <p>{{viewData['defaultCakeSize']}}</p>
+                                        </div>
+                                        <div class="view-label">
+                                            <label>Disclaimer</label>
+                                            <p>{{viewData['disclaimer']}}</p>
+                                        </div>
+                                    </div> -->
+                                    <div class="row mb-10px">
+                                        <div class="col-md-6" *ngIf="viewData['productType'] == 'VEG'">
+                                            <img src="assets/images/svg-icons/veg_ico.svg" width="12px" alt=""> Vegetarian
+                                        </div>
+                                        <div class="col-md-6" *ngIf="viewData['productType'] == 'NONVEG'">
+                                            <img src="assets/images/svg-icons/nonveg_ico.svg" width="12px" alt=""> Non-Vegetarian
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="view-label">
+                                                <label>Discount %</label>
+                                                <p>{{viewData['discountPercentage']}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="view-label">
+                                                <label>Packing Charges</label>
+                                                <p>{{viewData['packingCharge']}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-card>
+                                <mat-card class="add-card">
+                                    <div class="diatry">
+                                        <div class="card-title">
+                                            <h6>Dietary</h6>
+                                        </div>
+                                        <mat-divider></mat-divider>
+                                        <div class="dieatry-container">
+                                            <div class="img-layout">
+                                                <div class="grid img-block flex">
+                                                    <div class="images-placeholder" *ngFor="let item of viewData['productDieatry'];">
+                                                        <div class="img-container">
+                                                            <img class="uploaded-image" [src]="filePathUrl+item.imgPath" [class.uploaded-img]="imgUploadDieatry">
+                                                        </div>
+                                                        <label *ngIf="item.name" class="image-label">{{item.name}}</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="alergion" style="margin-top: 1em;">
+                                        <div class="card-title">
+                                            <h6>Allergen</h6>
+                                        </div>
+                                        <mat-divider></mat-divider>
+                                        <div class="dieatry-container">
+                                            <div class="img-layout">
+                                                <div class="grid img-block flex">
+                                                    <div class="images-placeholder" *ngFor="let item of viewData['productAlergion'];">
+                                                        <div class="img-container">
+                                                            <img class="uploaded-image" [src]="filePathUrl+item.imgPath" width="80px" [class.uploaded-img]="imgUploadAlergion">
+                                                        </div>
+                                                        <label *ngIf="item.name" class="image-label">{{item.name}}</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-card>
+                            </div>
+                        </div>
+                        <div class="col-md-8 mb-20px">
+                            <mat-card class="terms-conditions-card">
+                                <div class="faq-card mb-20px">
+                                    <div class="expansion-panel" *ngFor="let ln of viewData['productLocales']">
+                                        <mat-accordion>
+                                            <mat-expansion-panel [class.right-panel]="ln.language == 'Arabic'">
+                                                <mat-expansion-panel-header>
+                                                    <mat-panel-title>
+                                                        {{ln.language}}
+                                                    </mat-panel-title>
+                                                </mat-expansion-panel-header>
+                                                <div class="row card-mb" [class.text-right]="ln.language == 'Arabic'">
+                                                    <div class="col-md-11 text-fields">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <label>Name</label>
+                                                                <p [innerHTML]="ln.productName"></p>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label>Ingredients</label>
+                                                                <p [innerHTML]="ln.ingredients"></p>
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            <label>Meta Tag Keywords</label>
+                                                            <p [innerHTML]="ln.metaTag"></p>
+                                                        </div>
+                                                        <div class="field-container">
+                                                            <label>Description</label>
+                                                            <p [innerHTML]="ln.productDesc"></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </mat-expansion-panel>
+                                        </mat-accordion>
+                                    </div>
+                                </div>
+                            </mat-card>
+                        </div>
+                    </div>
+                    <div class="btm-button-wrap">
+                        <button class="button primary-btn" type="button" [routerLink]="['/edit-products/'+id+'/edit']">EDIT</button>
+                    </div>
+                </div>
+            </ng-template>
+        </mat-tab>
+        <mat-tab label="Variants">
+            <ng-template matTabContent>
+                <form class="search-wrap filter-wrap" [formGroup]="variantsFormGroup" (ngSubmit)="variantsForm(variantsFormGroup.value)" #variantsCreateUpdateForm="ngForm">
+                    <div>
+                        <mat-card class="add-card">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-select placeholder="Select Variants" formControlName="variantName" (SelectionChange)="getOnlineVariants()" [(value)]="selectedVariant" required>
+                                            <mat-option *ngFor="let variant of variantList" [value]="variant.variantOid">
+                                                {{ variant.variantName }}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="variantsFormGroup.get('variantName').hasError('required')">Please enter value
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class=" button-wrap">
+                                    <button class='button tertiary-btn' type="button" (click)="getAllVariants(selectedVariant,variantsData,pre)">APPLY</button>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="variants">
+                                    <div class=" row">
+                                        <div class="col-md-12 padlr0">
+                                            <div class="sku-table" style="overflow-y: auto;">
+                                                <div>
+                                                    <table class="GeneratedTable">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>
+                                                                    <mat-checkbox (change)="$event ? selection.toggle(row) : null;" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()" disabled="{{isDisabled}}">
+                                                                    </mat-checkbox>
+                                                                </th>
+                                                                <th>VARIANT TYPE</th>
+                                                                <th>IMAGE</th>
+                                                                <th>SKU CODE</th>
+                                                                <th>DISPLAY PRICE</th>
+                                                                <th>COST PRICE</th>
+                                                                <th>INVENTORY</th>
+                                                                <th>MINIMUM INVENTORY</th>
+                                                                <th>TAX RATES</th>
+                                                                <th>WEIGHT</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody formArrayName="productVariants">
+                                                            <tr *ngFor="let regionLocale of variantsFormGroup['controls']['productVariants']['controls'];let j = index;" [formGroupName]="j">
+                                                                <td>
+                                                                    <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? masterToggle() : null" [checked]="selection.isSelected(row)" formControlName="isVariantTypeSelected">
+                                                                    </mat-checkbox>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="table-cell">
+                                                                        <mat-form-field>
+                                                                            <input matInput formControlName="variantTypeName" required [readonly]="!editable">
+                                                                        </mat-form-field>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="grid img-block">
+                                                                        <div class="grid img-block">
+                                                                            <div class="avatar-zone avatar-width">
+                                                                                <img *ngIf="imagePath.length!=0 && imagePath[j]!=''" class="upload-img" [class.uploaded-img]="imgUpload" [src]="filePathUrl+imagePath[j]" width="80px" height="50px">
+                                                                            </div>
+                                                                            <div class="remove-img" *ngIf="uploadFlag[j]==true && imagePath[j]!=''" style="margin:0 2em 0 0">
+                                                                                <span (click)="removeVariantImage(j)" style="cursor: pointer"> <img src="assets/images/icons/filter_close_ico.png" alt=""><label>Remove</label></span>
+                                                                            </div>
+                                                                            <input style="display:none;" type="file" formControlName="imagePath" #uploadEl class="upload_btn" (change)="uploadImage($event.target.files,j)" required />
+                                                                            <div class="text-center" *ngIf="uploadFlag[j]==false || imagePath[j]==''">
+                                                                                <span class="upload-btn-text" (click)='uploadEl.click()'><span class="upload-icon" style="cursor: pointer"><img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px" alt="Img"></span>Upload
+                                                                                Image
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div *ngIf="uploadError[j]==true && isVariantTypeSelected[j] == true" class="image-error" style="color:red;">
+                                                                            Please upload image
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="table-input">
+                                                                        <mat-form-field>
+                                                                            <input matInput formControlName="skuCode" maxlength="10" required>
+                                                                            <mat-error *ngIf="isVariantTypeSelected[j] == true && regionLocale.get('skuCode').hasError('required')">
+                                                                                Please enter value
+                                                                            </mat-error>
+                                                                        </mat-form-field>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="table-input">
+                                                                        <mat-form-field>
+                                                                            <input matInput formControlName="displayPrice" required OnlyNumber="true">
+                                                                            <mat-error *ngIf="isVariantTypeSelected[j] == true && regionLocale.get('displayPrice').hasError('required')">
+                                                                                Please enter value
+                                                                            </mat-error>
+                                                                        </mat-form-field>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="table-input">
+                                                                        <mat-form-field>
+                                                                            <input matInput formControlName="costPrice" OnlyNumber="true">
+                                                                        </mat-form-field>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="table-input">
+                                                                        <mat-form-field>
+                                                                            <input matInput formControlName="inventory" OnlyNumber="true">
+                                                                        </mat-form-field>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="table-input">
+                                                                        <mat-form-field>
+                                                                            <input matInput formControlName="minimumInventory" OnlyNumber="true">
+                                                                        </mat-form-field>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="table-input">
+                                                                        <mat-form-field>
+                                                                            <input matInput formControlName="taxRate" OnlyNumber="true">
+                                                                        </mat-form-field>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="table-input">
+                                                                        <mat-form-field>
+                                                                            <input matInput formControlName="weight" OnlyNumber="true">
+                                                                        </mat-form-field>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-card>
+                    </div>
+                    <div>
+                        <mat-card class="add-card">
+                            <div class="card-title">
+                                <h6>Stores</h6>
+                                <div>
+                                    <button class='button tertiary-btn' type="button" (click)="openAddStoreDialog()">SELECT STORES</button>
+                                </div>
+                            </div>
+                            <mat-divider></mat-divider>
+                            <div>
+                            </div>
+                            <div class="selected-stores text-center">
+                                <p>{{selectedStorearray.length}} Stores Selected <span class="grey-label">of {{totalCount}} Stores</span></p>
+                            </div>
+                            <div class="text-center" *ngIf="selectedStorearray.length > 0">
+                                <p class="view-stores" (click)="openViewStoreDialog()">View Stores</p>
+                            </div>
+                        </mat-card>
+                    </div>
+                    <div>
+                        <div class="btm-button-wrap">
+                            <button type="button" class="button secondary-btn" [routerLink]="['/search-products']">CANCEL</button>
+                            <button class="button primary-btn" type="submit">ADD</button>
+                        </div>
+                    </div>
+                </form>
+            </ng-template>
+        </mat-tab>
+        <mat-tab label="Customization" class="customization">
+            <ng-template matTabContent>
+                <div class="customization">
+                    <div>
+                        <mat-card class="add-card">
+                            <div class="card-title">
+                                <h6>Cross Sell</h6>
+                                <div>
+                                    <button class='button tertiary-btn' type="button" (click)="openAddOnsDialog($event, 'ADDON')">ADD Cross Sell</button>
+                                    <p *ngIf="addonRequired" style="color:red; font-size: 10px;">{{addonSelectionErrorMsg}}</p>
+                                </div>
+                            </div>
+                            <mat-divider></mat-divider>
+                            <div class="add-on-images" malihu-scrollbar [scrollbarOptions]="scrollbarOptions">
+                                <div class="row">
+                                    <div class="col-md-2 add-ons" *ngFor="let item of selectedAddonsResult; let i=index;">
+                                        <div class="image-block">
+                                            <div class="image-container">
+                                                <span class="close" (click)="removeAddonImage(i)"><img class="close-img" src="assets/images/icons/filter_close_ico.png" alt="close_icon"></span>
+                                                <img *ngIf="item.imagePath != ''" [src]="filePathUrl+item.imagePath" alt="Addon Image">
+                                                <img *ngIf="item.imagePath == ''" src="assets/images/no_image.png" alt="Addon Image">
+                                            </div>
+                                        </div>
+                                        <div class="info crossSell">
+                                            <p class="title">{{item.productName}}</p>
+                                            <p class="price-info">Price: {{item.price}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-card>
+                    </div>
+                    <div class="customization-section">
+                        <form [formGroup]="customizationForm" (ngSubmit)="createOrEdit(customizationForm.value)">
+                            <mat-card class="add-card">
+                                <div class="card-title">
+                                    <h6>Customize Add ons</h6>
+                                    <div class="add-btn text-right">
+                                        <button type="button" class="button primary-btn" (click)="getGroupData()">
+                                            <span class="add-plus">
+                                                <img src="assets/images/svg-icons/add_ico.svg" alt="add" class="plus-icon">
+                                            </span>ADD Customize Add ons
+                                        </button>
+                                    </div>
+                                </div>
+                            </mat-card>
+                            <div class="customazation-details">
+                                <div formArrayName="contentBlock">
+                                    <div *ngFor="let ln of customizationForm['controls']['contentBlock']['controls'];let i = index;" [formGroupName]="i">
+                                        <mat-card class="mb-20px">
+                                            <div class="close-icon row">
+                                                <img src="assets/images/icons/filter_close_ico.png" alt="close_icon" (click)="onCloseClick(i)">
+                                            </div>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <div class="master-fieldSet" formArrayName="labelLocale">
+                                                        <fieldset class="language-fieldset">
+                                                            <legend class="fieldset-heading">Label Name</legend>
+                                                            <div *ngFor="let locale of ln['controls']['labelLocale']['controls'];let j = index;" [formGroupName]="j">
+                                                                <div class="example-container {{languageDirection[j]}}">
+                                                                    <mat-form-field class="{{alignCss[j]}}">
+                                                                        <input matInput placeholder="{{languageList[j].languageName}}" maxlength="100" formControlName="labelName" required>
+                                                                        <mat-error *ngIf="locale.get('labelName').hasError('required')">Please enter value
+                                                                        </mat-error>
+                                                                        <mat-error *ngIf="locale.get('labelName').hasError('minlength')">Minimum 2 characters required</mat-error>
+                                                                        <mat-error *ngIf="locale.get('labelName').hasError('pattern')">Invalid characters entered
+                                                                        </mat-error>
+                                                                    </mat-form-field>
+                                                                </div>
+                                                            </div>
+                                                        </fieldset>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="flex-bet">
+                                                        <div class="row">
+                                                            <div class="markDefault">
+                                                                <mat-checkbox formControlName="isFreeProduct">Free Product</mat-checkbox>
+                                                                <mat-checkbox class="mandatory" formControlName="isMandatory">Mandatory</mat-checkbox>
+                                                                <button class='button tertiary-btn text-right' type="button" (click)="openVarientDialog($event, 'CUSTOMISATION',ln['controls'],i)">Select Quantity</button>
+                                                                <p class="text-right" *ngIf="customizeQuantity && ln['controls']['customQuantity'].value.length == 0" style="color:red; font-size: 10px;">
+                                                                    Please select Quantity</p>
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            <button class='button tertiary-btn text-right' type="button" (click)="openAddOnsCustomizationDialog($event, 'CUSTOMISATION',ln['controls'],i)">ADD Customize Add ons</button>
+                                                            <p *ngIf="customizeAddonRequired && ln['controls']['addonArray'].value.length == 0" style="color:red; font-size: 10px;">
+                                                                {{customizeAddonSelectionErrorMsg}}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="add-on-images" malihu-scrollbar [scrollbarOptions]="scrollbarOptions">
+                                                        <div class="row" formArrayName="customQuantity">
+                                                            <div *ngFor="let addon of ln['controls']['customQuantity']['controls'];let k = index;" [formGroupName]="k">
+                                                                <div style="margin-left: 15px;">
+                                                                    <input readonly formControlName="DisplayData" class="input-border">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="add-on-images" malihu-scrollbar [scrollbarOptions]="scrollbarOptions">
+                                                        <div class="row" formArrayName="addonArray">
+                                                            <div *ngFor="let addon of ln['controls']['addonArray']['controls'];let k = index;" [formGroupName]="k">
+                                                                <div class="image-block">
+                                                                    <div class="image-container">
+                                                                        <span class="close" (click)="removeCustomization(i,k)">
+                                                                        <img class="close-img" src="assets/images/icons/filter_close_ico.png" alt="close_icon"></span>
+                                                                        <img *ngIf="addon.addonImagePath != '' && customImages[i].image[k] == ''" src="assets/images/no_image.png" alt="Addon Image">
+                                                                        <img *ngIf="addon.addonImagePath != '' && customImages[i].image[k] != ''" [src]="filePathUrl+customImages[i].image[k]" alt="Addon Image">
+                                                                    </div>
+                                                                </div>
+                                                                <div style="margin-left: 20px;">
+                                                                    <div class="info">
+                                                                        <input formControlName="addonName" class="input-border">
+                                                                    </div>
+                                                                    <div class="info">
+                                                                        <span>Price: <input formControlName="displayPrice" class="input-border"></span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </mat-card>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <button type="submit" class="button primary-btn">ADD</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </ng-template>
+        </mat-tab>
+
+    </mat-tab-group>
+</div>

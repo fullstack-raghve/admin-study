@@ -1,0 +1,363 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container">
+        <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          [routerLink]="['/search-products']"></span>Add Product</h1>
+        <div class="slider">
+            <mat-slide-toggle [(ngModel)]="toggleVal" class="example-margin text-right">
+                {{toggleVal==true ? "ONLINE" : "OFFLINE"}}
+            </mat-slide-toggle>
+        </div>
+    </div>
+</div>
+
+<div class="page-wrap">
+    <form [formGroup]="addProductGroup" (submit)="createProduct(addProductGroup.value, $event)" #createProductForm="ngForm">
+        <div class="row">
+            <div class="col-md-4">
+                <mat-card class="add-images add-card">
+                    <div class="card-title">
+                        <h6>Add Image</h6>
+                        <div class="add-btn text-right" *ngIf="imagePath.length < 5">
+                            <input style='display: none;' type='file' (change)="uploadImage($event.target.files)" #selectFile>
+                            <button type="button" class="btn primary-button m-0px" (click)='selectFile.click()'>
+                <span class="add-plus">
+                  <img src="assets/images/svg-icons/add_ico.svg" alt="add" class="plus-icon">
+                </span>ADD
+              </button>
+                        </div>
+                    </div>
+                    <mat-divider></mat-divider>
+                    <div class="centered-text" *ngIf="imagePath.length == 0">
+                        <p>Upload Images</p>
+                    </div>
+                    <div class="img-layout" *ngIf="imagePath.length > 0">
+                        <div class="grid img-block" *ngFor="let img of imagePath;let i = index;">
+                            <div class="images-placeholder" *ngIf="imagePath[i]!=''">
+                                <div class="img-container">
+                                    <img class="uploaded-image" [src]="filePathUrl+imagePath[i]" [class.uploaded-img]="imgUpload">
+                                </div>
+                                <mat-radio-button [value]="i" (change)="onChange($event)" class="pt-8px text-center" [class.placeholder-img]="imgUpload">Default
+                                </mat-radio-button>
+                                <div class="remove-img">
+                                    <span (click)="removeImage(i)"> <img src="assets/images/icons/filter_close_ico.png"
+                      alt=""><label>Remove</label></span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="flex-class">
+                        <p class="first-flex-child">Upload format: GIF,JPEG,PNG,MP4</p>
+                        <p class="second-flex-child">Image size: 1125x750</p>
+                    </div>
+
+                    <div *ngIf="imageErr" style="color:red; font-size: 10px;">{{imageErrMsg}}</div>
+                </mat-card>
+                <mat-card class="add-card product-details">
+                    <mat-form-field>
+                        <mat-select placeholder="Select Brand" formControlName="brandId" #brandInput (selectionChange)="getParentList(brandInput.value)" required>
+                            <mat-option value="">Select Brand</mat-option>
+                            <mat-option *ngFor="let p of brandList" [value]="p.brandId">
+                                {{ p.brandName }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="addProductGroup.get('brandId').hasError('required')">Please select value</mat-error>
+                    </mat-form-field>
+                    <mat-select-autocomplete name="Categories" ngDefaultControl [placeholder]="'Select Category*'" [options]="categoriesList" [display]="'categoryName'" [value]="'value'" #categoryInput [multiple]='true' [labelCount]="1" [selectedOptions]="selectedCategoryOptions"
+                        [formControl]="addProductGroup.controls['parentId']" [class.auto-select-errMsg]="createProductForm.submitted && addProductGroup.get('parentId').hasError('required')">
+                    </mat-select-autocomplete>
+                    <mat-error style="margin-top: -25px;font-size: 10px;" *ngIf="createProductForm.submitted && addProductGroup.get('parentId').hasError('required')">
+                        Please select value</mat-error>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <mat-form-field>
+                                <input matInput placeholder="Sort Order" maxlength="5" OnlyNumber="true" formControlName="sortorder" required>
+                                <mat-error *ngIf="addProductGroup.get('sortorder').hasError('required')">Please enter value</mat-error>
+                                <mat-error *ngIf="addProductGroup.get('sortorder').hasError('max')">Please enter sort order less than suggested</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-6">
+                            <mat-form-field>
+                                <input matInput placeholder="Quantity Threshold" maxlength="6" formControlName="quantityThreshold">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <!-- <div class="mb-10px">
+                        <div>
+                            <mat-checkbox formControlName="isExclusive"> Exclusive</mat-checkbox>
+                        </div>
+                        <div>
+                            <mat-checkbox formControlName="isLimitedTimeCategory"> Limited Time Category
+                            </mat-checkbox>
+                        </div>
+                        <div>
+                            <mat-checkbox formControlName="isHealthy"> Healthy</mat-checkbox>
+                        </div>
+                        <div>
+                            <mat-checkbox formControlName="isHotSeller"> Hotseller</mat-checkbox>
+                        </div>
+                    </div> -->
+                    <div class="mb-10px">
+                        <div>
+                            <div *ngIf="exclusiveProducts == ''">
+                                <mat-checkbox formControlName="isExclusive"> Exclusive</mat-checkbox>
+                            </div>
+                            <div *ngIf="exclusiveProducts != ''">
+                                <mat-checkbox formControlName="isExclusive">{{exclusiveProducts}} </mat-checkbox>
+                            </div>
+                        </div>
+                        <div>
+                            <div *ngIf="limitedTimeProducts == ''">
+                                <mat-checkbox formControlName="isLimitedTimeCategory"> Limited Time Category</mat-checkbox>
+                            </div>
+                            <div *ngIf="limitedTimeProducts != ''">
+                                <mat-checkbox formControlName="isLimitedTimeCategory">{{limitedTimeProducts}} </mat-checkbox>
+                            </div>
+                        </div>
+                        <div>
+                            <div *ngIf="healthyProducts == ''">
+                                <mat-checkbox formControlName="isHealthy"> Healthy</mat-checkbox>
+                            </div>
+                            <div *ngIf="healthyProducts != ''">
+                                <mat-checkbox formControlName="isHealthy">{{healthyProducts}} </mat-checkbox>
+                            </div>
+                        </div>
+                        <div>
+                            <div *ngIf="hotSellerProducts == ''">
+                                <mat-checkbox formControlName="isHotSeller"> Hotseller</mat-checkbox>
+                            </div>
+                            <div *ngIf="hotSellerProducts != ''">
+                                <mat-checkbox formControlName="isHotSeller">{{hotSellerProducts}} </mat-checkbox>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="example-input-wrapper timer-label">
+                Available From* <img src="assets/images/icons/time_ico.svg" width="20px" alt="">
+                <mat-form-field>
+                    <input matInput [owlDateTimeTrigger]="dt2"  class="available-input"  [owlDateTime]="dt2"
+                     formControlName="availFrom">
+                  <owl-date-time [pickerType]="'timer'" #dt2>
+                  </owl-date-time>
+                  <mat-error
+                  *ngIf="addProductGroup.get('availFrom').hasError('required')">
+                  Please enter value</mat-error>
+                </mat-form-field>
+               
+              </label>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="example-input-wrapper timer-label-to">
+                Available To* <img src="assets/images/icons/time_ico.svg" width="20px" alt="">
+                <mat-form-field >
+                  <input matInput [owlDateTimeTrigger]="dt" [owlDateTime]="dt" class="available-input"
+                    formControlName="availTo">
+                  <owl-date-time [pickerType]="'timer'" #dt>
+                  </owl-date-time>
+                  <mat-error
+                    *ngIf="addProductGroup.get('availTo').hasError('required')">
+                    Please enter value</mat-error>
+                </mat-form-field>
+              </label>
+                        </div>
+                    </div>
+                    <!-- <div>
+                        <div class="table-input flex">
+                            <label class="label-inline wid-60">Default Cake Size</label>
+                            <div class="label-inline">
+                                <mat-form-field>
+                                    <input numeric decimals="2" matInput formControlName="defaultCakeSize" maxlength="5">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="table-input">
+                            <mat-form-field>
+                                <label>Disclaimer</label>
+                                <input matInput formControlName="disclaimer" maxlength="100">
+                            </mat-form-field>
+                        </div>
+                    </div> -->
+                    <div class="food-type">
+                        <mat-radio-group class="flex" formControlName="productType">
+                            <mat-radio-button class="mr-5px" value="VEG" [checked]="true"> <img src="assets/images/svg-icons/veg_ico.svg" width="12px" alt=""> Vegetarian
+                            </mat-radio-button>
+                            <mat-radio-button class="mr-5px" value="EGG"><img src="assets/images/icons/Egg_1x.png" width="12px" alt=""> Egg</mat-radio-button>
+                            <mat-radio-button value="NONVEG"><img src="assets/images/svg-icons/nonveg_ico.svg" width="12px" alt=""> Non Vegetarian</mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+                    <div>
+                        <mat-form-field>
+                            <input matInput placeholder="Calories (kcal)" maxlength="6">
+                        </mat-form-field>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <mat-form-field>
+                                <input matInput placeholder="Discount %" maxlength="3" formControlName="discount" required>
+                                <mat-error *ngIf="addProductGroup.get('discount').hasError('required')">Please enter value</mat-error>
+                                <mat-error *ngIf="addProductGroup.get('discount').hasError('maxlength')">Please enter discount % less than suggested</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-6">
+                            <mat-form-field>
+                                <input matInput placeholder="Packing Charges" maxlength="4" formControlName="packing">
+                                <!-- <mat-error *ngIf="addProductGroup.get('packing').hasError('required')">Please
+                  enter value</mat-error> -->
+                                <mat-error *ngIf="addProductGroup.get('packing').hasError('maxlength')">Please enter packing charges less than suggested</mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </mat-card>
+                <mat-card class="add-card">
+                    <div class="diatry">
+                        <div class="card-title">
+                            <h6>Dietary</h6>
+                            <button type="button" class="btn primary-button m-0px" (click)="openDieatryDialog()">
+                  <span class="add-plus">
+                    <img src="assets/images/svg-icons/add_ico.svg" alt="add" class="plus-icon">
+                  </span>ADD
+                </button>
+
+                        </div>
+                        <mat-divider></mat-divider>
+                        <div class="centered-text" *ngIf="imagePathDieatry.length == 0">
+                            <p>Upload Dietary Images</p>
+                        </div>
+                        <div class="img-layout" *ngIf="imagePathDieatry.length > 0">
+                            <div class="grid img-block" *ngFor="let item of imagePathDieatry;let i = index;">
+                                <div class="images-placeholder" *ngIf="imagePathDieatry[i]!=''">
+                                    <div class="img-container">
+                                        <img class="uploaded-image" [src]="filePathUrl+item?.imgPath" [class.uploaded-img]="imgUploadDieatry">
+                                    </div>
+                                    <label class="text-center">{{ item?.name }}</label>
+                                    <div class="remove-img">
+                                        <span (click)="removeImageDieatry(i)"> <img src="assets/images/icons/filter_close_ico.png"
+                          alt=""><label>Remove</label></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="">
+                            <div class="imgInfo info1">
+                                <p>Image size: 150 x 150 (Circle)</p>
+                            </div>
+                        </div>
+
+                        <div *ngIf="imageErr" style="color:red; font-size: 10px;">{{imageErrMsg}}</div>
+
+                    </div>
+
+                    <div class="alergion pt-10px">
+                        <div class="card-title">
+                            <h6>Allergen</h6>
+
+                            <button type="button" class="btn primary-button m-0px" (click)="openAlergionDialog()">
+                  <span class="add-plus">
+                    <img src="assets/images/svg-icons/add_ico.svg" alt="add" class="plus-icon">
+                  </span>ADD
+                </button>
+
+                        </div>
+                        <mat-divider></mat-divider>
+
+                        <div class="centered-text" *ngIf="imagePathAlergion.length == 0">
+                            <p>Upload Alergin Images</p>
+                        </div>
+                        <div class="img-layout" *ngIf="imagePathAlergion.length > 0">
+                            <div class="grid img-block" *ngFor="let item of imagePathAlergion;let i = index;">
+                                <div class="images-placeholder" *ngIf="imagePathAlergion[i]!=''">
+                                    <div class="img-container">
+                                        <img class="uploaded-image" [src]="filePathUrl+item?.imgPath" [class.uploaded-img]="imgUploadAlergion">
+                                    </div>
+                                    <label class="text-center">{{item?.name}}</label>
+                                    <div class="remove-img">
+                                        <span (click)="removeImageAlergion(i)"> <img src="assets/images/icons/filter_close_ico.png"
+                          alt=""><label>Remove</label></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="">
+                            <div class="imgInfo info1">
+                                <p>Image size: 150 x 150 (Circle)</p>
+                            </div>
+                        </div>
+
+                        <div *ngIf="imageErr" style="color:red; font-size: 10px;">{{imageErrMsg}}</div>
+
+                    </div>
+                </mat-card>
+            </div>
+            <div class="col-md-8 mb-20px">
+                <mat-card class="terms-conditions-card">
+                    <div class="" formArrayName="productFormArray">
+                        <div class="expansion-panel" *ngFor="let ln of addProductGroup['controls']['productFormArray']['controls'];let i = index;" [formGroupName]="i">
+                            <mat-accordion>
+                                <mat-expansion-panel class="mat-expansion-panel {{rightPanel[i]}}" (opened)="panelOpenState = true;expandDataEmail();expandDataEmailDescrtipion();" (closed)="panelOpenState = false">
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>
+                                            {{languageList[i].languageName}}
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
+                                    <div class="row card-mb">
+                                        <div class="col-md-11 text-fields">
+                                            <div class="row {{languageDirection[i]}}">
+                                                <div class="col-md-6">
+                                                    <mat-form-field [class.direction-right]="languageList[i].languageName == 'Arabic'">
+                                                        <input matInput placeholder="Name" maxlength="200" formControlName="name" required>
+                                                        <mat-error *ngIf="ln.get('name').hasError('required')">Please enter value</mat-error>
+                                                        <mat-error *ngIf="ln.get('name').hasError('pattern')">Only AlphaNumeric are allowed</mat-error>
+                                                    </mat-form-field>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <mat-form-field [class.direction-right]="languageList[i].languageName == 'Arabic'">
+                                                        <input matInput placeholder="Meta Tag Keywords" formControlName="metaTag">
+                                                        <mat-error *ngIf="ln.get('metaTag').hasError('pattern')">Only Alphanumeric are allowed</mat-error>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-md-12 mt-15px ">
+                                                    <label>
+                            Ingredients
+                          </label>
+                                                    <editor *ngIf="languageList[i].languageName!='Arabic'" apiKey="test" [init]="{plugins: 'link'}" formControlName="ingredients">
+                                                    </editor>
+                                                    <editor id="arabicID" *ngIf="languageList[i].languageName=='Arabic'" apiKey="test" [init]="{plugins: 'link'}" formControlName="ingredients">
+                                                    </editor>
+                                                </div>
+                                                <div class="col-md-12 mt-15px">
+                                                    <label>
+                            Description
+                          </label>
+                                                    <editor *ngIf="languageList[i].languageName!='Arabic'" apiKey="test" [init]="{plugins: 'link'}" formControlName="description">
+                                                    </editor>
+                                                    <editor id="arabicIDDescrtipion" *ngIf="languageList[i].languageName=='Arabic'" apiKey="test" [init]="{plugins: 'link'}" formControlName="description">
+                                                    </editor>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-expansion-panel>
+
+                            </mat-accordion>
+
+                        </div>
+                    </div>
+                </mat-card>
+
+                <div *ngIf=" createProductForm.submitted && addProductGroup.get('productFormArray').invalid" style="color:red">Please enter valid value</div>
+
+            </div>
+        </div>
+        <div class="btm-button-wrap">
+            <button type="button" class="button secondary-btn" [routerLink]="['/search-products']">CANCEL</button>
+            <button class="button primary-btn" type="submit" [disabled]="loading">ADD</button>
+        </div>
+    </form>
+</div>
+<div *ngIf="pageLoader" class="page-loader-block full-page-loader">
+    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+</div>

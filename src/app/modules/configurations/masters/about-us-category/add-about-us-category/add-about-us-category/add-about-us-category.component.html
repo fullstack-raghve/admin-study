@@ -1,0 +1,72 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title">
+        <h1>Masters</h1>
+    </div>
+</div>
+<div class="page-wrap-masters">
+    <div class="row master-cards">
+        <div class="col-md-3 master-list master-left">
+            <mat-card>
+                <ul class="master_listing">
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-customer-type']">Customer Type</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-merchant']">Merchant</a></li> -->
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-brand']">Brand</a></li> -->
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-country']">Countries</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-cities']">Cities</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-malls']">Malls</a></li>
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-course']">Course</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-cuisine']">Cuisine</a></li> -->
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-currency']">Currency</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-currency-conversion']">Currency Conversion</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-brand-category']">Brand Category</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-language']">Language</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-faq-category']">FAQ Category</a></li>
+                    <li class="master-list-selected"><a href="javascript:void(0)" [routerLink]="['/search-about-us-category']">About Us Category</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-feedback']">Feedback</a></li>
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-partner']">Partner</a></li> -->
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-enquiry-type']">Enquiry Type</a></li>
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/add-taxation']">Taxation</a></li> -->
+                    <li><a href="javascript:void(0)" [routerLink]="['/add-product-tag']">Product Tag</a></li>
+
+
+                </ul>
+            </mat-card>
+        </div>
+        <div class="col-md-9 master-right">
+            <mat-card class="master-content">
+                <div class="country-card">
+                    <div class="subtitle flex-center">
+                        <h3><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/left_arrow.png" alt="leftArrow" [routerLink]="['/search-about-us-category']"></span>Add About Us Category</h3>
+                        <div class="slider">
+                            <mat-slide-toggle [(ngModel)]="toggleVal" class="example-margin" [checked]="checked">
+                                {{toggleVal==true ? "ONLINE" : "OFFLINE"}}
+                            </mat-slide-toggle>
+                        </div>
+                    </div>
+                    <form (submit)="createAboutUs(aboutUsFormGroup.value)" [formGroup]="aboutUsFormGroup">
+                        <div class="master-fieldSet">
+                            <fieldset class="language-fieldset">
+                                <legend class="fieldset-heading">Content For</legend>
+                                <div formArrayName="contentLocale">
+                                    <div class="example-container" *ngFor="let ln of aboutUsFormGroup['controls']['contentLocale']['controls'];let i = index;" [formGroupName]="i">
+                                        <mat-form-field class="field-style {{alignCss[i]}}">
+                                            <input matInput placeholder="{{languageList[i].languageName}}" maxlength="50" formControlName="contentFor" required>
+                                            <mat-error *ngIf="ln.get('contentFor').hasError('required')">Please enter value</mat-error>
+                                            <mat-error *ngIf="ln.get('contentFor').hasError('pattern')">Invalid characters entered</mat-error>
+                                            <mat-error *ngIf="ln.get('contentFor').hasError('minLength')">Minimum 2 characters required</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="btm-button-wrap">
+                            <button type="button" class="site_btn gray_btn" [routerLink]="['/search-about-us-category']">CANCEL</button>
+                            <button type="submit" class="button primary-btn" [disabled]="loading == true">ADD</button>
+                        </div>
+                    </form>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+</div>

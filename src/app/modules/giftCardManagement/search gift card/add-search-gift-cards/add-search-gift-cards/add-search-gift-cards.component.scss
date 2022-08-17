@@ -1,0 +1,73 @@
+.firstFormGroup {
+  .row {
+    margin-top: 30px;
+  }
+  .radioButton {
+    padding-top: 15px !important;
+    text-align: center;
+  }
+}
+
+mat-horizontal-stepper {
+  margin: 20px 20px 20px 20px !important;
+}
+
+.mat-card {
+  box-shadow: none;
+}
+.statusCol {
+  p {
+    margin-bottom: 4rem !important;
+  }
+}
+.quantityCol {
+  p {
+    margin-bottom: 4rem !important;
+  }
+}
+
+.mat-card {
+  margin-left: 2rem;
+  margin-right: 2rem;
+}
+.cardStatus{
+  padding-top:11px;
+  max-width:20%!important;
+  padding-left: 0px;
+  padding-right:0px;
+ p{
+font-size: 9px;
+ }
+}
+.movedTo{
+  padding-top: 14px;
+  font-size: 9px;
+
+}
+.movedToCol{
+  max-width: 18%;
+}
+
+.confirmationBlock{
+  .col-md-1{
+    padding-left: 0px;
+    padding-right: 0px;
+    font-size: 10px;
+  }
+  col{
+    padding:0px
+  }
+  .col-md-5{
+    display: -webkit-inline-box;
+    font-size: 9px;
+  }
+}
+.selectQuantityStyle{
+  p{
+    text-decoration:underline;
+    text-decoration-color: #2EBCE6;
+    margin-top: 11px;
+    color: #2EBCE6;
+  }
+ 
+}

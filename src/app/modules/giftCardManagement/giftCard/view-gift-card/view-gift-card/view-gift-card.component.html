@@ -1,0 +1,267 @@
+<div class="bredcrumb-title-wrap">
+  <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+  <div class="title flex-container template-title">
+    <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          [routerLink]="['/search-gift-card']"></span>Gift Card</h1>
+    <mat-slide-toggle class="example-margin text-right" [(ngModel)]="toggleVal"
+      (change)="toggleStatus($event); statusCall()">
+      {{statusValue}}
+    </mat-slide-toggle>
+  </div>
+</div>
+<div *ngIf="loadingResponse" class="select-store-block">
+    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+  </div>
+  <div *ngIf="!loadingResponse" class="page-wrap">
+<div class="form-wrap">
+  <form [formGroup]="programFormGroup">
+    <div class="row firstRow">
+      <div class="col-md-8">
+        <mat-card>
+          <div class="row ">
+            <div class="col-md-6">
+              <div class="row">
+                <div class="col-md-5 messageOverwrite" *ngFor="let logoDetail of  logoDetails">
+                  <div class="avatar-zone1" [ngStyle]="{'background-color':logoDetail.backgroundColor}">
+                    <span *ngIf="logoDetail.backgroundImage!=''">
+                      <img [src]="logoDetail.backgroundImage" width="277px;" height="160px;" style="object-fit: fill">
+                    </span>
+                  </div>
+                  <div class="ImgHead">
+                    <div *ngIf="logoImage!=''" class="avatar-zone_logo">
+                      <img [src]="logoDetail.logoImage" width="auto" height="30px;" style="object-fit: fill;">
+                    </div>
+                    <div class="messages" [ngStyle]="{'color':logoDetail.textColor}">
+                      <h6>{{logoDetail.headingMessage1}}</h6>
+                      <h3>{{logoDetail.headingMessage2}}</h3>
+                      <p>{{logoDetail.textMessage}}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="master-fieldSet">
+                <fieldset class="language-fieldset">
+                  <legend class="fieldset-heading">Card Name</legend>
+                  <div *ngFor="let cardName of cardNames">
+                    <div [class.araText]="cardName.languageCode=='AR'">
+                      <label>{{cardName.languageName}}</label>
+                      <p>{{cardName.cardNames}}</p>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+      <div class="col-md-4">
+        <mat-card>
+          <div class="row">
+            <div class="col-md-7" *ngIf="cardIdDetails.publishStatus=='AWAITS APPROVAL'"></div>
+            <div class="col-md-9" *ngIf="cardIdDetails.publishStatus!='AWAITS APPROVAL'"></div>
+            <div>
+              <p class="new-playicon" *ngIf="cardIdDetails.publishStatus!='LIVE'">
+                {{cardIdDetails.publishStatus}}&nbsp;<span><img style="margin-bottom: 3px"
+                    src="assets/images/icons/flaticon1558687912-svg.svg"></span></p>
+              <p class="new-playicon" *ngIf="cardIdDetails.publishStatus=='LIVE'">
+                {{cardIdDetails.publishStatus}}&nbsp;<span><img
+                    style="width:11.984px;height:14.156px;margin-bottom: 3px"
+                    src="assets/images/icons/green-play-icon.png"></span></p>
+            </div>
+          </div>
+          <div>
+            <label>Card for</label>
+            <p>{{cardIdDetails.cardFor}}</p>
+          </div>
+          <div class="card-codes">
+            <p>Card Codes</p>
+            <div class="row">
+              <div class="col-md-6 view-label">
+                <label>Prefix</label>
+                <p>{{cardIdDetails.prefix}}</p>
+              </div>
+              <div class="col-md-6 view-label">
+                <label>Suffix</label>
+                <p>{{cardIdDetails.suffix}}</p>
+              </div>
+              <div class="col-md-6 view-label">
+                <label>Date of Publishing</label>
+                <p>{{cardIdDetails.publishDate |date:"dd-MM-yyyy"}}</p>
+              </div>
+              <div class="col-md-6 view-label">
+                <mat-radio-group aria-label="Select an option">
+                  <mat-radio-button>{{cardIdDetails.usageType}}</mat-radio-button>
+                </mat-radio-group>
+              </div>
+            </div>
+          </div>
+          <!-- <p>Single Use</p> -->
+        </mat-card>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4" style="display: grid;">
+        <mat-card>
+          <h6>Card Value</h6>
+          <div class="row">
+            <div class="col-md-6">
+              <label>Value Type</label>
+              <p>{{cardIdDetails.valueType}}</p>
+            </div>
+            <div class="col-md-6" *ngIf="cardIdDetails.valueType != 'AMOUNT'">
+              <label>Select SKU Code</label>
+              <p>{{cardIdDetails.productName}}</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6" *ngIf="cardIdDetails.valueType != 'AMOUNT'">
+              <label>Cost of 1</label>
+              <p>{{cardIdDetails.costOfOne}}</p>
+            </div>
+            <div class="col-md-6">
+              <label>Currency</label>
+              <p>{{cardIdDetails.currency}}</p>
+            </div>
+          </div>
+          <div *ngIf="keywords.length>0">
+            <label>Fixed value selection</label>
+            <div class="row">
+              <div class="col-md-3 fixed-value" *ngFor="let fixedValue of keywords">
+                <p>{{fixedValue}}</p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="range-value">
+              <p
+                *ngIf="cardIdDetails.minVal!='' && cardIdDetails.minVal!=null && cardIdDetails.maxVal!='' && cardIdDetails.maxVal!=null">
+                <img class="range-value-checkbox" src="assets/images/tick.svg" width="10px" height="20px">Range Value
+                Selection</p>
+            </div>
+            <div class="row">
+              <div class="col-md-6" *ngIf="cardIdDetails.minVal!='' && cardIdDetails.minVal!=null">
+                <label>Min Value</label>
+                <p>{{cardIdDetails.minVal}}</p>
+              </div>
+              <div class="col-md-6" *ngIf="cardIdDetails.maxVal!='' && cardIdDetails.maxVal!=null">
+                <label>Max Value</label>
+                <p>{{cardIdDetails.maxVal}}</p>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+      <div class="col-md-4" style="display: grid;">
+        <mat-card>
+          <h6>Discount & Charges</h6>
+          <div class="row">
+            <div class="col-md-6">
+              <label>Enter Percentage</label>
+              <p *ngIf="cardIdDetails.discount=='' ||  cardIdDetails.discount==null">
+                No percentage value entered
+              </p>
+              <p *ngIf="cardIdDetails.discount!='' &&  cardIdDetails.discount!=null">{{cardIdDetails.discount}}%</p>
+            </div>
+            <div class="col-md-6">
+              <label>Select Coupon</label>
+              <p *ngIf="cardIdDetails.couponTitle=='' || cardIdDetails.couponTitle==null">
+                No coupons selected
+              </p>
+              <p>{{cardIdDetails.couponTitle}}</p>
+            </div>
+          </div>
+          <div class="add-charges">
+            <label>Additional Charges</label>
+            <p *ngIf="cardIdDetails.additionalCharges=='' || cardIdDetails.additionalCharges==null">No additional charges entered</p>
+            <p>{{cardIdDetails.additionalCharges}}</p>
+          </div>
+        </mat-card>
+      </div>
+      <div class="col-md-4" style="display: grid;">
+        <mat-card>
+          <h6>Eligibility</h6>
+          <p>Expiry Date / No of days</p>
+          <div class="row">
+            <div class="col-md-6" *ngIf="cardIdDetails.expiryDate!='' && cardIdDetails.expiryDate!=null">
+              <label>Select Date</label>
+              <p>{{cardIdDetails.expiryDate |date:"dd-MM-yyyy"}}</p>
+            </div>
+            <div class="col-md-6" *ngIf="cardIdDetails.noOfDay!='' && cardIdDetails.noOfDay!=null">
+              <label>No.of Days</label>
+              <p>{{cardIdDetails.noOfDay}}</p>
+            </div>
+          </div>
+          <div>
+            <p>Eligibility</p>
+            <label>Applicable brands or stores</label>
+            <div class="stores_product" style="display: flex;">
+
+              <div *ngIf="cardIdDetails.valueType == 'PRODUCT' || cardIdDetails.valueType == 'AMOUNT' ">
+                <p style="margin-bottom: 0px;">{{this.storeIdCount}}<span>Store</span>&nbsp;&nbsp;</p>
+                <p><span class="text-blue" (click)="openStoresDialog()">
+                  <u *ngIf="this.storeIdCount>0">view</u></span>
+                </p>
+              </div>
+              <div *ngIf="cardIdDetails.valueType != 'PRODUCT'">
+                <p style="margin-bottom: 0px;">{{ this.mappedProductIdsCount}} <span>Product</span>&nbsp; &nbsp;</p>
+                <p> <span class="text-blue" (click)="openProductDialog()"><u
+                      *ngIf=" this.mappedProductIdsCount>0">view</u></span></p>
+              </div>
+              <div *ngIf="this.skuFileNameUrl!=''">
+                <p style="margin-bottom: 0px;"><span>SKU Product File</span>&nbsp;</p>
+                <p style="padding-left:5px;"><a [href]="this.skuFileNameUrl"
+                    style="color:#43c2e8">{{this.skuFileName}}</a></p>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6" *ngIf="cardIdDetails.maxTxnValuePerDay!='' && cardIdDetails.maxTxnValuePerDay!=null">
+              <label>Max transaction value allowed per day</label>
+              <p>{{cardIdDetails.maxTxnValuePerDay}}</p>
+            </div>
+            <div class="col-md-6" *ngIf="cardIdDetails.maxTxnPerDay!='' && cardIdDetails.maxTxnPerDay!=null">
+              <label>Max no of transactions allowed per day</label>
+              <p>{{cardIdDetails.maxTxnPerDay}}</p>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+    <div class="description-block">
+      <h3 class="card-title">Terms & Conditions </h3>
+      <mat-card class="description-card">
+        <div class="expansion-panel" formArrayName="descriptionArray">
+          <mat-accordion>
+            <mat-expansion-panel *ngFor="let termConditions of termCondition;let i =index" class="mat-expansion-panel">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  {{termConditions.languageName}}
+                </mat-panel-title>
+
+              </mat-expansion-panel-header>
+              <div class="view-content" [class.araText]="termConditions.languageCode=='AR'">
+                <label>Content</label>
+                <!-- <p [innerHTML]="descriptionText[i]"></p> -->
+                <p [innerHTML]='termConditions.termAndCondition' readonly></p>
+                <!-- <editor apiKey="test" formControlName="termAndCondition" *ngIf="viewData['TNC'][i]['languageName']!='Arabic'" ></editor> -->
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </mat-card>
+    </div>
+    <div class="btm-button-wrap">
+      <button class="button primary-btn" *ngIf="cardIdDetails.publishStatus=='NEW'" (click)="sendForApproval()">Send for
+        Approval</button>
+      <button class="button primary-btn" *ngIf="IssendForApproval && cardIdDetails.publishStatus=='AWAITS APPROVAL'"
+        (click)="approved()">Approve</button>
+      <button class="button primary-btn" [routerLink]="['/edit-gift-card/'+RP_OID]"
+        *ngIf="(cardIdDetails.publishStatus!='LIVE') && (cardIdDetails.publishStatus=='AWAITS APPROVAL') || (cardIdDetails.publishStatus=='NEW')">EDIT</button>
+      <!-- <button>Approved</button> -->
+    </div>
+
+  </form>
+</div>
+</div>

@@ -1,0 +1,224 @@
+<div class="page-wrap">
+    <div class="search-panel-block">
+        <div class="bredcrumb-title-wrap">
+            <div class="search-container-block">
+                <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+                <div class="search-list">
+                    <form class="filter-wrap" [formGroup]="searchFlowFormGroup" (submit)="searchVal()" #searchFlowForm="ngForm">
+                        <div class="row title-search-row">
+                            <div class="col-md-4 title-search-col">
+                                <div class="title">
+                                    <h1>Search Flow</h1>
+                                </div>
+                            </div>
+                            <div class="col-md-5 title-search-col">
+                                <div class="searchform-block">
+                                    <div class="common-search">
+                                        <input type="text" formControlName="searchVal" placeholder="Search Flow" />
+                                        <span class="search-btn" (click)="searchVal()"></span>
+                                        <div class="filter-btn-wrap">
+                                            <span class="filter-btn" (click)="openFilter();" [ngClass]="status ? 'open' : 'close'"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 title-search-col">
+                                <div class="add-btn text-right">
+                                    <button class="button primary-btn" type="button" (click)='uploadJson.click()'>
+                  IMPORT
+                  <input style="display:none;" type="file" class="upload_btn"
+                    (change)="uplodFlow($event.target.files)" #uploadJson />
+                </button>
+                                    <button type="button" class="button primary-btn m-0px" [routerLink]="['/create-flow']">
+                  <span class="add-plus">
+                    <img src="assets/images/svg-icons/add_ico.svg" alt="add" class="plus-icon">
+                  </span>ADD
+                </button>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="feild-search" *ngIf="!status">
+                            <div class="row feild-search-inner">
+
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput [matDatepicker]="picker1" [OnlyNumber]="true" placeholder="Start Date" formControlName="fromDate">
+                                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker1></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput [matDatepicker]="picker2" [OnlyNumber]="true" placeholder="End date" formControlName="endDate">
+                                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker2></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-label>Select Brands</mat-label>
+                                        <mat-select formControlName="brandOid" #brandInput>
+                                            <mat-option *ngFor="let brand of brand" [value]="brand.brandId" (click)="getAllCountries(brandInput.value)">
+                                                {{brand.brandName}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-label>Select Country</mat-label>
+                                        <mat-select formControlName="countryOid">
+                                            <mat-option *ngFor="let country of countries" [value]="country.countryId">
+                                                {{ country.countryName }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="button-wrap">
+                                    <div class="">
+                                        <button class='button quaternary-btn' (click)="reset()">RESET</button>
+                                        <button class='button tertiary-btn' type="submit">APPLY</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="form-wrap">
+            <div class="table-wrap">
+                <div class="table-wrap-inner">
+                    <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)" *ngIf="dataSource">
+                        <ng-container matColumnDef="flowId">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="oid" class="top-border"> FLOW ID </th>
+                            <td mat-cell *matCellDef="let row">{{ row.flowId }} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="flowName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="flowName" class="top-border"> FLOW NAME </th>
+                            <td mat-cell *matCellDef="let row">
+                                <u><a [routerLink]="['/view-flow/',row.flowId ]" class="text-blue">{{row.flowName}}</a></u> </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="communicationType">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> CHANNELS </th>
+                            <td mat-cell *matCellDef="let row">
+                                {{row.communicationType }} </td>
+                        </ng-container>
+
+
+                        <ng-container matColumnDef="countryName">
+                            <th mat-header-cell *matHeaderCellDef class="top-border"> COUNTRY NAME </th>
+                            <td mat-cell *matCellDef="let row">
+                                <small> {{row.countryName | slice:0:40}} <small *ngIf="row.countryName?.length > 40">...</small></small>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="brandName">
+                            <th mat-header-cell *matHeaderCellDef class="top-border"> BRAND NAME </th>
+                            <td mat-cell *matCellDef="let row">
+                                <small> {{row.brandName | slice:0:40}} <small *ngIf="row.brandName?.length > 40">...</small> </small>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="feedbackCount">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="feedbackCount" class="top-border"> FEEDBACK COUNT </th>
+                            <td mat-cell *matCellDef="let row">
+                                {{row.feedBackCount}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="createdBy">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> CREATED BY </th>
+                            <td mat-cell *matCellDef="let row">
+                                {{row.createdBy}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="createdTime">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> CREATED DATE & TIME </th>
+                            <td mat-cell *matCellDef="let row"> {{row.createdTime | date:'dd/MM/yyyy h:mm a'}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="preview">
+                            <th mat-header-cell *matHeaderCellDef class="top-border"> PREVIEW </th>
+                            <td mat-cell *matCellDef="let row">
+                                <p class="pointer">
+                                    <a href="{{flowURL}}/flow/?flowId={{row.flowId}}&kioskId=0&channelType=EMAIL&ispreview=true" target="_blank"> <img src="assets/images/svg-icons/preview_icon.svg" alt="preview_icon" width="20px;"></a>
+                                </p>
+                            </td>
+                        </ng-container>
+                        <!-- Added copyURl -->
+                        <ng-container matColumnDef="channelType">
+                            <th mat-header-cell *matHeaderCellDef class="top-border"> COPY URL </th>
+                            <td mat-cell *matCellDef="let row">
+
+                                <!-- FOR UAT -->
+
+                                <!-- https://danbro-uat.reciproci.com/flow/?brandId=3&txnOid=4473&channelType=ONLINE&type=FNB_TRANSACTION&language=EN -->
+                                <div *ngIf="row.channelType != null">
+                                    <p class="copyurl" *ngIf="API_EndPoint == 'https://danbro-api-uat.reciproci.com/'">
+                                        <img *ngIf="row.channelType['EMAIL'] == 'YES'" src="assets/images/svg-icons/Email_icon.svg" class="pointer" alt="email_icon" width="15px;" (click)="emailCopy('https://danbro-uat.reciproci.com/flow/?flowId='+row.flowId+'&channelType=EMAIL')">&nbsp;
+                                        <img *ngIf="row.channelType['SMS'] == 'YES'" src="assets/images/svg-icons/sms_icon.svg" alt="sms_icon" width="15px;" class="pointer" (click)="messageCopy('https://danbro-uat.reciproci.com/flow/?flowId='+row.flowId+'&channelType=SMS')">&nbsp;
+                                        <img *ngIf="row.channelType['KIOSK'] == 'YES'" src="assets/images/svg-icons/Push_notification_icon.svg" alt="notification_icon" class="pointer" width="15px;" (click)="notificationCopy('https://danbro-uat.reciproci.com/flow/?flowId='+row.flowId+'&channelType=PUSH')">
+                                    </p>
+                                </div>
+
+                                <!-- FOR PRE-PRODUCTION -->
+                                <div *ngIf="row.channelType != null">
+                                    <p class="copyurl" *ngIf="API_EndPoint == 'https://danbro-preprod-admin-api.reciproci.com/'">
+                                        <img *ngIf="row.channelType['EMAIL'] == 'YES'" src="assets/images/svg-icons/Email_icon.svg" class="pointer" alt="email_icon" width="15px;" (click)="emailCopy('https://danbro-preprod.reciproci.com/flow/?flowId='+row.flowId+'&channelType=EMAIL')">&nbsp;
+                                        <img *ngIf="row.channelType['SMS'] == 'YES'" src="assets/images/svg-icons/sms_icon.svg" alt="sms_icon" width="15px;" class="pointer" (click)="messageCopy('https://danbro-preprod.reciproci.com/flow/?flowId='+row.flowId+'&channelType=SMS')">&nbsp;
+                                        <img *ngIf="row.channelType['KIOSK'] == 'YES'" src="assets/images/svg-icons/Push_notification_icon.svg" alt="notification_icon" class="pointer" width="15px;" (click)="notificationCopy('https://danbro-preprod.reciproci.com/flow/?flowId='+row.flowId+'&channelType=PUSH')">
+                                    </p>
+                                </div>
+
+                                <!-- FOR PRODUCTION -->
+                                <div *ngIf="row.channelType != null">
+                                    <p class="copyurl" *ngIf="API_EndPoint == 'https://danbro-admin-api.reciproci.com/'">
+                                        <img *ngIf="row.channelType['EMAIL'] == 'YES'" src="assets/images/svg-icons/Email_icon.svg" class="pointer" alt="email_icon" width="15px;" (click)="emailCopy('https://danbro.reciproci.com/flow/?flowId='+row.flowId+'&channelType=EMAIL')">&nbsp;
+                                        <img *ngIf="row.channelType['SMS'] == 'YES'" src="assets/images/svg-icons/sms_icon.svg" alt="sms_icon" width="15px;" class="pointer" (click)="messageCopy('https://danbro.reciproci.com/flow/?flowId='+row.flowId+'&channelType=SMS')">&nbsp;
+                                        <img *ngIf="row.channelType['KIOSK'] == 'YES'" src="assets/images/svg-icons/Push_notification_icon.svg" alt="notification_icon" class="pointer" width="15px;" (click)="notificationCopy('https://danbro.reciproci.com/flow/?flowId='+row.flowId+'&channelType=PUSH')">
+                                    </p>
+                                </div>
+                            </td>
+                        </ng-container>
+                        <!-- end -->
+                        <ng-container matColumnDef="action">
+                            <th mat-header-cell *matHeaderCellDef class="top-border"> Action </th>
+                            <td mat-cell *matCellDef="let row">
+                                <div *ngIf="row.assignmentStatus == 'NEW'">
+                                    <u><a [routerLink]="['/edit-flow/'+row.flowId+'/edit' ]"> <img src="assets/images/flow_icons/edit.png"
+                      alt="edit_icon">
+                  </a></u>
+                                </div>
+                                <div *ngIf="row.assignmentStatus != 'NEW'">
+                                    <p style="color: #FF8E48; font-size:12px;">{{row.assignmentStatus}}</p>
+                                </div>
+                                <!-- <u><a [routerLink]="['/edit-flow/',row.flowId ]"> Edit{{row.isEditable}}
+               </a></u> -->
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="clone">
+                            <th mat-header-cell *matHeaderCellDef class="top-border"> CLONE </th>
+                            <td mat-cell *matCellDef="let row">
+                                <a [routerLink]="['/edit-flow/'+row.flowId+'/clone' ]" class="button primary-btn">CLONE</a>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                        </tr>
+                    </table>
+                    <div *ngIf="searchResults" class="select-store-block">
+                        <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                    </div>
+                    <div class="no-records" *ngIf="resultsLength === 0 && buildFlag">
+                        No Records Found!
+                    </div>
+                </div>
+                <mat-paginator [length]="resultsLength" #paginator (page)="getUpdate($event)" [pageSize]="10" [pageSizeOptions]="[10,20,50,100]">
+                </mat-paginator>
+            </div>
+        </div>
+    </div>
+</div>

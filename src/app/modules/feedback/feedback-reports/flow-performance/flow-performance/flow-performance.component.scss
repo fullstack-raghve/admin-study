@@ -1,0 +1,48 @@
+.search-panel-block .form-wrap{
+  top: -58px;
+}
+
+.datepickericon_report{
+  position: absolute;
+  top: -2px;
+  right: 3px;
+}
+.all_emoji_icon{
+  padding: 10px 0px;
+  margin-right: 4px;
+  justify-content: center;
+  align-items: center;
+  img{
+    width: 15px;
+    height: 15px;
+  }
+}
+.top_feedback_count_div{
+  height: 120px;
+}
+.search-panel-block .filter-wrap {
+  padding: 0 0 4em 0;
+}
+.search-panel-block .feild-search {
+  margin-top: 2em !important;
+}
+.search-panel-block .filter-btn-wrap {
+  top: 5px;
+  right: 26px!important;
+}
+.right-btn{
+  margin-right: 4rem;
+}
+.flow-btn-block{
+  display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: flex-end;
+    .searchform-block{
+      position: relative;
+      top: 2px;
+      .filter-btn-wrap{
+        position: initial !important;
+      }
+    }
+}

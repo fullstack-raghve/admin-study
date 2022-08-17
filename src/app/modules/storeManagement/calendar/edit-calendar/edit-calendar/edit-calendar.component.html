@@ -1,0 +1,222 @@
+<div class="bredcrumb-title-wrap">
+  <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+  <div class="title flex-container">
+    <h1><span class="left-arrow"><img class="left-img"
+          src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          [routerLink]="['/search-calendar']"></span>Edit Calendar</h1>
+          <mat-slide-toggle [(ngModel)]="toggleVal" class="example-margin" [checked]="checked">
+            {{toggleVal==true ? "ONLINE" : "OFFLINE"}}
+        </mat-slide-toggle>
+  </div>
+</div>
+<div class="calender-page-wrap">
+    <form *ngIf="buildFlag" [formGroup]="calendarFormGroup" (submit)="updateCalendar(calendarFormGroup.value)" #updateCalendarForm="ngForm">
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="card-title">Calendar Details</h3>
+      <mat-card class="calendar-details-card">
+        <div class="row">
+          <div class="col-md-6">
+            <mat-form-field>
+              <mat-select placeholder="Calendar Type" formControlName="calendarType" required (selectionChange)="setCalendarType($event.value)">
+                <mat-option value="BUSINESS_HOURS">Set Business Hours</mat-option>
+                <mat-option value="HOLIDAY">Set Holiday</mat-option>
+                <mat-option value="FESTIVAL_HOURS">Set Festival Hours</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-md-6"> 
+            <mat-form-field>
+                <mat-select placeholder="Country" formControlName="countryId" required>
+                    <mat-option *ngFor="let country of countryList" value="{{country.countryId}}">{{country.countryName}}</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="calendarFormGroup.get('countryId').hasError('required')">Please select value</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field>
+              <mat-select formControlName="brand"   
+              placeholder="Brand">
+               <mat-option *ngFor="let brands of BrandList" value="{{brands.brandId}}">
+                 {{ brands.brandName }}
+               </mat-option>
+             </mat-select>
+             <!-- <mat-error *ngIf="calendarFormGroup.get('brand').hasError('required')">Please select value</mat-error> -->
+
+            </mat-form-field>
+        </div>
+          <div class="col-md-6">
+            <mat-form-field>
+                <input matInput placeholder="Calendar Title" formControlName="calendarTitle" required maxlength="40">
+                <mat-error *ngIf="calendarFormGroup.get('calendarTitle').hasError('required')">Please enter value</mat-error>
+                <mat-error *ngIf="calendarFormGroup.get('calendarTitle').hasError('pattern')">This special character(s) is not allowed </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-md-6" *ngIf="calendarType == 'HOLIDAY' || calendarType == 'FESTIVAL_HOURS'">
+            <mat-form-field>
+                <input matInput #ref readonly [matDatepicker]="startDate" [min]="currenctDate" placeholder="Start Date" formControlName="startDate"  required>
+              <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
+              <mat-datepicker #startDate></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="col-md-6" *ngIf="calendarType == 'HOLIDAY' || calendarType == 'FESTIVAL_HOURS'">
+            <mat-form-field>
+                <input matInput #ref [min]="calendarFormGroup.get('startDate').value =='' ? currenctDate : calendarFormGroup.get('startDate').value" readonly [matDatepicker]="endDate" placeholder="End Date" formControlName="endDate" required>
+              <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
+              <mat-datepicker #endDate></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="business-delivery-block"
+          *ngIf="calendarType == 'BUSINESS_HOURS' || calendarType == 'FESTIVAL_HOURS' ">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="flex-center mb-10px">
+                <p class="group-heading">Business Hours</p>
+                <button class="button tertiary-btn" type="button" (click)="cloneTime(calendarFormGroup.value)" >Apply Same Everyday</button>
+              </div>
+              <div class="timings-block" formArrayName="businessTimings">
+                <div class="daily" *ngFor="let time of calendarFormGroup['controls']['businessTimings']['controls'];let i = index;" [formGroupName]="i">
+                  <div class="flex-center">
+                    <mat-checkbox #holiday (change)="changeValidation(time, i);" formControlName="isHoliday">{{festivalWeekDays[i] == 'SUNDAY'?'SUN':festivalWeekDays[i] == 'MONDAY'?'MON':festivalWeekDays[i] == 'TUESDAY'?'TUE':festivalWeekDays[i] == 'WEDNESDAY'?'WED':festivalWeekDays[i] == 'THURSDAY'?'THU':festivalWeekDays[i] == 'FRIDAY'?'FRI':'SAT'}} </mat-checkbox>
+                    <p class="holiday-text" *ngIf="!holiday.checked">Holiday</p>
+                  </div>
+                  <div class="timings-row flex">
+                    <label class="timer-label">
+                      Open Time <img src="assets/images/icons/time_ico.svg" width="20px" alt="">
+                      <input class="time-picker" readonly  [owlDateTimeTrigger]="bhsuno" [owlDateTime]="bhsuno" formControlName="openTime" >
+                      <owl-date-time [pickerType]="'timer'" [disabled]="!holiday.checked" #bhsuno ></owl-date-time>
+                    </label>
+                    <div class="vl">&nbsp;</div>
+                    <label class="timer-label">
+                      Close Time <img src="assets/images/icons/time_ico.svg" width="20px"
+                        alt="">
+                      <input class="time-picker" readonly [min]="time.get('openTime').value" [owlDateTimeTrigger]="bhsunc" [owlDateTime]="bhsunc" formControlName="closeTime" >
+                      <owl-date-time [pickerType]="'timer'" [disabled]="!holiday.checked" #bhsunc></owl-date-time>
+                    </label> 
+                    <button class="button primary-btn" type="button" [disabled]="!holiday.checked" (click)="addTimeSlot(time['controls'])"><img
+                        src="assets/images/svg-icons/add_ico.svg" alt=""></button>
+                  </div>
+                  <div class="clone-time-row" formArrayName="addBusinessTimings" *ngIf="holiday.checked">
+                    <div class="timings-row flex" *ngFor="let addTime of time['controls']['addBusinessTimings']['controls']; let j = index;" [formGroupName]="j">
+                      <label class="timer-label">
+                        Open Time <img src="assets/images/icons/time_ico.svg" width="20px"
+                          alt="">
+                          <input class="time-picker" readonly [min]="time.get('closeTime').value" [owlDateTimeTrigger]="dtsuno" [owlDateTime]="dtsuno" formControlName="addOpenTime" >
+                          <owl-date-time [pickerType]="'timer'" #dtsuno></owl-date-time>
+                      </label>
+                      <div class="vl">&nbsp;</div>
+                      <label class="timer-label">
+                        Close Time <img src="assets/images/icons/time_ico.svg" width="20px"
+                          alt="">
+                          <input class="time-picker" readonly [min]="addTime.get('addOpenTime').value" [owlDateTimeTrigger]="dtsunc" [owlDateTime]="dtsunc" formControlName="addCloseTime" >
+                        <owl-date-time [pickerType]="'timer'" #dtsunc></owl-date-time>
+                      </label>
+                      <button class="button secondary-btn" (click)="removeBusinessTimeSlot(time['controls']['addBusinessTimings']['controls'],i,j)" type="button"><img
+                          src="assets/images/svg-icons/minus_ico.svg" alt=""></button>
+                    </div>
+                  </div>
+                  <p *ngIf="updateCalendarForm.submitted && time.get('openTime').hasError('required')" style="color:red; font-size: 10px;">Please select start time</p>
+                  <p *ngIf="updateCalendarForm.submitted && time.get('closeTime').hasError('required')" style="color:red; font-size: 10px;">Please select close time</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <p class="group-heading ptb">Delivery Hours</p>
+              <div class="timings-block" formArrayName="deliveryTimings">
+                <div class="daily" *ngFor="let time of calendarFormGroup['controls']['deliveryTimings']['controls'];let i = index;" [formGroupName]="i">
+                  <div class="flex-center">
+                    <mat-checkbox #deliveryHoliday (change)="changeValidation(time, i);" formControlName="isHoliday" >{{festivalWeekDays[i] == 'SUNDAY'?'SUN':festivalWeekDays[i] == 'MONDAY'?'MON':festivalWeekDays[i] == 'TUESDAY'?'TUE':festivalWeekDays[i] == 'WEDNESDAY'?'WED':festivalWeekDays[i] == 'THURSDAY'?'THU':festivalWeekDays[i] == 'FRIDAY'?'FRI':'SAT'}}</mat-checkbox>
+                    <p class="holiday-text" *ngIf="!deliveryHoliday.checked">Holiday</p>
+                  </div>
+                  <div class="timings-row flex">
+                    <label class="timer-label">
+                      Open Time <img src="assets/images/icons/time_ico.svg" width="20px" alt="">
+                      <input readonly class="time-picker" [owlDateTimeTrigger]="dhsuno" [owlDateTime]="dhsuno" formControlName="openTime" >
+                      <owl-date-time [pickerType]="'timer'" [disabled]="!deliveryHoliday.checked" #dhsuno></owl-date-time>
+                    </label>
+                    <div class="vl">&nbsp;</div>
+                    <label class="timer-label">
+                      Close Time <img src="assets/images/icons/time_ico.svg" width="20px"
+                        alt="">
+                        <input class="time-picker" readonly [min]="time.get('openTime').value" [owlDateTimeTrigger]="dhsunc"  [owlDateTime]="dhsunc" formControlName="closeTime" >
+                      <owl-date-time [pickerType]="'timer'" [disabled]="!deliveryHoliday.checked" #dhsunc></owl-date-time>
+                    </label>
+                    <button class="button primary-btn" type="button" [disabled]="!deliveryHoliday.checked" (click)="addTimeSlot1(time['controls'])"><img
+                        src="assets/images/svg-icons/add_ico.svg" alt=""></button>
+                  </div>
+                  <div class="clone-time-row" formArrayName="addDeliveryTimings" *ngIf="deliveryHoliday.checked">
+                    <div class="timings-row flex" *ngFor="let addTime of time['controls']['addDeliveryTimings']['controls']; let j = index;" [formGroupName]="j">
+                      <label class="timer-label">
+                        Open Time <img src="assets/images/icons/time_ico.svg" width="20px"
+                          alt="">
+                          <input class="time-picker" readonly [min]="time.get('closeTime').value" [owlDateTimeTrigger]="dhsuno" [owlDateTime]="dhsuno" formControlName="openTime" >
+                        <owl-date-time [pickerType]="'timer'" #dhsuno></owl-date-time>
+                      </label>
+                      <div class="vl">&nbsp;</div>
+                      <label class="timer-label">
+                        Close Time <img src="assets/images/icons/time_ico.svg" width="20px"
+                          alt="">
+                          <input class="time-picker" readonly [min]="addTime.get('openTime').value" [owlDateTimeTrigger]="dhsunc" [owlDateTime]="dhsunc" formControlName="closeTime" >
+                        <owl-date-time [pickerType]="'timer'" #dhsunc></owl-date-time>
+                      </label>
+                      <button class="button secondary-btn" type="button" (click)="removeDeliveryTimeSlot(time['controls']['addDeliveryTimings']['controls'],i,j)"><img
+                          src="assets/images/svg-icons/minus_ico.svg" alt=""></button>
+                    </div>
+                  </div>
+                  <p *ngIf="updateCalendarForm.submitted && time.get('openTime').hasError('required')" style="color:red; font-size: 10px;">Please select start time</p>
+                  <p *ngIf="updateCalendarForm.submitted && time.get('closeTime').hasError('required')" style="color:red; font-size: 10px;">Please select close time</p>
+                </div> 
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+    <div class="col-md-6">
+      <h3 class="card-title">Store Access</h3>
+      <mat-card class="store-access-card search-panel-block">
+        <div class="table-top-section flex-center">
+          <p>{{dataSource.data.length}} Stores selected of {{totalCount}}</p>
+          <button class="button tertiary-btn" type="button" (click)="openDialog()">SELECT STORES</button>
+        </div>
+        <div class="form-wrap" *ngIf="dataSource.data.length>0">
+          <div class="table-wrap">
+            <div class="table-wrap-inner">
+              <table mat-table [dataSource]="dataSource" matSort>
+                <ng-container matColumnDef="storeId">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> STORE ID </th>
+                  <td mat-cell *matCellDef="let row">{{row.storeId }}</td>
+                </ng-container>
+                <ng-container matColumnDef="storeName">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> STORE NAME </th>
+                  <td mat-cell *matCellDef="let row">{{ row.storeName }}</td>
+                </ng-container>
+                <ng-container matColumnDef="address">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> ADDRESS </th>
+                  <td mat-cell *matCellDef="let row">{{ row.storeAddress }}</td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                </tr>
+              </table>
+            </div>
+            <div>
+              <mat-paginator [pageSize]="10" [pageSizeOptions]="[10,20,50,100]">
+              </mat-paginator>
+            </div>
+            <div class="no-records" *ngIf="dataSource.data.length === 0">
+                No Records Found!
+            </div>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+  <div class="btm-button-wrap">
+    <button type="button" class="button secondary-btn" [routerLink]="['/search-calendar']">CANCEL</button>
+    <button type="submit" class="button primary-btn">UPDATE</button>
+  </div>
+</form>
+</div>

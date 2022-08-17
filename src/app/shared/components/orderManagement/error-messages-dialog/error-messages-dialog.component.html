@@ -1,0 +1,19 @@
+<div class="page-wrap">
+  <div class="header">
+    <h3>High Alert</h3>
+    <div class="close-icon text-right">
+      <!-- <button class="button primary-btn">DELETE</button> -->
+      <img src="assets/images/icons/filter_close_ico.png" alt="close_icon" (click)="onCloseClick()">
+    </div>
+  </div>
+  <div *ngIf="errorMessagesList?.length === 0"><p class="text-alert">No Alert messages found.</p></div>
+  <div class="error-messages" *ngIf="errorMessagesList?.length !=0">
+    <div class="error" *ngFor="let error of errorMessagesList; let i = index;">
+      <p class="text">{{error.txnId}}: "{{error.response}}"</p><span class="delete-icon pointer"
+        (click)="deleteMsg(error.deliveryDetailOid)">&#10005;</span>
+    </div>
+  </div>
+</div>
+<div *ngIf="pageLoader" class="page-loader-block full-page-loader">
+  <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+</div>

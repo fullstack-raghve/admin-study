@@ -1,0 +1,24 @@
+.upload-btn-text{
+    float: left;
+    font-size: 9px;
+    .upload-icon{
+      img{
+          width:9px
+      }  
+    }
+}
+.downloadTemplate{
+    text-align: end;
+    font-size: 9px;
+}
+button{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    float: right;
+}
+.mat-card{
+    box-shadow: none;
+}
+.text-center{
+    color:rgb(58, 142, 237);
+}

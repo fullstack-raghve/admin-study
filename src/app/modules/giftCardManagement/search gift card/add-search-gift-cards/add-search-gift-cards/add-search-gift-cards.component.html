@@ -1,0 +1,462 @@
+<div class="page-wrap">
+
+  <div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container template-title">
+      <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg"
+            alt="leftArrow" [routerLink]="['/search-search-gift-cards']"></span>Bulk Movement</h1>
+    </div>
+  </div>
+
+  <mat-horizontal-stepper  #stepper [selectedIndex]="selectedIndex" linear>
+
+    <mat-step [stepControl]="firstFormGroup">
+
+      <form class="firstFormGroup" [formGroup]="firstFormGroup" (submit)="goFromFirstForm(firstFormGroup.value)">
+        <mat-card>
+          <div class="row">
+
+            <ng-template matStepLabel >Search Range</ng-template>
+            <div class="col-md-3">
+              <mat-form-field>
+                <mat-select formControlName="cardType" placeholder="Card type">
+                  <mat-option *ngFor="let cardDetail of cardDetails" value="{{cardDetail.id}}">{{cardDetail.cardName}}
+                  </mat-option>
+                 
+                </mat-select>
+                <mat-error *ngIf="firstFormGroup.get('cardType').hasError('required')">
+                  Please select value</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-3 radioButton">
+              <mat-radio-group aria-label="Select an option" formControlName="rangeUpload">
+                <mat-radio-button value="Range" (click)="checkType('Range')">Range</mat-radio-button>&nbsp;
+                <mat-radio-button value="Upload" (click)="uploadImgEl.click();checkType('Upload')">Upload</mat-radio-button>
+
+                <mat-error *ngIf="firstFormGroup.get('rangeUpload').hasError('required')">Please Select a option
+                </mat-error>
+              </mat-radio-group>
+                   <p style="color:red" *ngIf="rangeError">Please select  one option</p>
+            </div>
+            <div class="col-md-3" style="padding-top: 18px;" *ngIf="firstFormGroup.get('rangeUpload').value=='Upload'">
+              <p class="upload-btn-text">{{filePathName}}</p>
+            </div>
+            <input style="display:none;" #uploadImgEl type="file" class="upload_btn"
+              (change)="uploadImage($event.target.files)" />
+
+            
+
+
+
+
+
+            <div class="col" *ngIf="range">
+              <mat-form-field>
+                <input matInput placeholder="Start Range" formControlName="startRange" maxlength="19" required pattern="[a-zA-Z0-9\s]*$">
+                <mat-error *ngIf="firstFormGroup.get('startRange').hasError('required')">Please enter value
+                </mat-error>
+                <mat-error *ngIf="firstFormGroup.get('startRange').hasError('pattern')">Invalid characters entered
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col" *ngIf="range">
+              <mat-form-field>
+                <input matInput type="number" pattern="^[1-9]+[0-9]*$" placeholder="Range Quantity" formControlName="rangeQuantity" minlength="1" required onKeyPress="if(this.value.length==12) return false;">
+                <mat-error *ngIf="firstFormGroup.get('rangeQuantity').hasError('required')">Please enter value
+                </mat-error>
+                <mat-error *ngIf="firstFormGroup.get('rangeQuantity').hasError('pattern')">Invalid characters entered
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+          </div>
+        </mat-card>
+     
+      <div *ngIf="commError" class="color-red text-center">Please Check value</div>
+      <div>
+        <!-- <button mat-button type="button" class="button primary-btn float-right" (click)="goFromFirstForm(stepper)"
+          >SEARCH</button> -->
+          <button mat-button type="button" type="submit" class="button primary-btn float-right"
+          >SEARCH</button>
+      </div>
+    </form>
+    </mat-step>
+
+    <mat-step [stepControl]="secondFormGroup">
+      <form [formGroup]="secondFormGroup">
+        <ng-template matStepLabel>Movements</ng-template>
+        <mat-card>
+
+          <div class="row">
+
+            <div class="col-md-3 view-label">
+              <label>Starting Card ID</label>
+              <p>{{cardsDetail.startingCardID}}</p>
+            </div>
+            <div class="col-md-3 view-label">
+              <label>Ending Card ID</label>
+              <p>{{cardsDetail.endtingCardID}}</p>
+            </div>
+            <div class="col-md-3 view-label">
+              <label>Quantity</label>
+              <p>{{cardsDetail.quantity}}</p>
+            </div>
+
+          </div>
+          <div class="row">
+            <table style="width:80%;padding-left:12px">
+              <tr class="row">
+                <th class="col-md-3" style="color:#727272">Status</th>
+                <th class="col-md-3" style="color:#727272">Selected quantity</th>
+                <th class="col-md-3" style="color:#727272">New Status</th>
+                <th class="col-md-3" style="color:#727272"> <label>Comment</label></th>
+              </tr>
+              <div formArrayName="commentConditionArray">
+                <div
+                  *ngFor="let comment of secondFormGroup['controls']['commentConditionArray']['controls'];let i = index;"
+                  [formGroupName]="i">
+                  <div class="row">
+                    <div class="col-md-3">
+                      <mat-form-field>
+                        <input matInput formControlName="cardStatus" placeholder="Status Name" #myInput maxlength="100"
+                          readonly>
+                      </mat-form-field>
+
+                    </div>
+                    <div class="col-md-3 selectQuantityStyle">
+                      <!-- <p  (click)="cardStatus(myInput.value)">{{giftArrayLength.length}}</p> -->
+                      <p *ngIf="comment.get('CardValue').value=='GIFTED'" (click)="cardStatus(myInput.value)">
+                        {{giftLength}}</p>
+                      <p *ngIf="comment.get('CardValue').value=='BLOCKED'" (click)="cardStatus(myInput.value)">
+                        {{blockLength}}</p>
+                      <p *ngIf="comment.get('CardValue').value=='EXPIRED'" (click)="cardStatus(myInput.value)">
+                        {{expiredLength}}</p>
+                      <p *ngIf="comment.get('CardValue').value=='ASSIGNED'" (click)="cardStatus(myInput.value)">
+                        {{assignedLength}}</p>
+                      <p *ngIf="comment.get('CardValue').value=='GENERATED'" (click)="cardStatus(myInput.value)">
+                        {{generatedLength}}</p>
+                      <p *ngIf="comment.get('CardValue').value=='PRINTING'" (click)="cardStatus(myInput.value)">
+                        {{printingLength}}</p>
+                      <p *ngIf="comment.get('CardValue').value=='AVAILABLE'" (click)="cardStatus(myInput.value)">
+                        {{availableLength}}</p>
+                      <p *ngIf="comment.get('CardValue').value=='MISSING'" (click)="cardStatus(myInput.value)">
+                        {{missingLength}}</p>
+                      <p *ngIf="comment.get('CardValue').value=='DAMAGED'" (click)="cardStatus(myInput.value)">
+                        {{damagedLength}}</p>
+                      <p *ngIf="comment.get('CardValue').value=='ACTIVE'" (click)="cardStatus(myInput.value)">
+                        {{activeLength}}</p>
+                      <p *ngIf="comment.get('CardValue').value=='SOLD'" (click)="cardStatus(myInput.value)">
+                        {{soldLength}}</p>
+                    </div>
+
+                    <div class="col-md-3">
+                      <mat-form-field *ngIf="comment.get('CardValue').value=='GIFTED'">
+                        <mat-select formControlName="name" placeholder="New Status" required  >
+                          <mat-option *ngFor="let CCode of GiftArray" value="{{CCode}}">
+                            {{ CCode }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+
+                      <mat-form-field *ngIf="comment.get('CardValue').value=='ASSIGNED'" >
+                        <mat-select formControlName="name" placeholder="New Status" required>
+                          <mat-option *ngFor="let CCode of AssgnArray" value="{{CCode}}">
+                            {{ CCode }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+
+                      <!-- <mat-form-field *ngIf="comment.get('CardValue').value=='BLOCKED'">
+                        <mat-select formControlName="name" placeholder="new Status" disabled>
+                          <mat-option *ngFor="let CCode of BlockedArray" value="{{CCode}}">
+                            {{ CCode }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field> -->
+
+                      <!-- <mat-form-field *ngIf="comment.get('CardValue').value=='EXPIRED'">
+                        <mat-select formControlName="name" placeholder="new Status"  disabled>
+                          <mat-option *ngFor="let CCode of ExpiredArray" value="{{CCode}}">
+                            {{ CCode }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field> -->
+
+                      <mat-form-field *ngIf="comment.get('CardValue').value=='GENERATED'">
+                        <mat-select formControlName="name" placeholder="New Status" required>
+                          <mat-option *ngFor="let CCode of GeneratedArray" value="{{CCode}}">
+                            {{ CCode }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                     <mat-form-field *ngIf="comment.get('CardValue').value=='PRINTING'">
+                        <mat-select formControlName="name" placeholder="New Status" required>
+                          <mat-option *ngFor="let CCode of PrintArray" value="{{CCode}}">
+                            {{ CCode }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <mat-form-field *ngIf="comment.get('CardValue').value=='AVAILABLE'">
+                        <mat-select formControlName="name" placeholder="New Status" required>
+                          <mat-option *ngFor="let CCode of AvailabArray" value="{{CCode}}">
+                            {{ CCode }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <mat-form-field *ngIf="comment.get('CardValue').value=='MISSING'">
+                        <mat-select formControlName="name" placeholder="New Status" required>
+                          <mat-option *ngFor="let CCode of MissinArray" value="{{CCode}}">
+                            {{ CCode }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+
+                      <!-- <mat-form-field *ngIf="comment.get('CardValue').value=='DAMAGED'" disabled>
+                        <mat-select formControlName="name" placeholder="new Status">
+                          <mat-option *ngFor="let CCode of DamageArray" value="{{CCode}}">
+                            {{ CCode }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field> -->
+
+                      <mat-form-field *ngIf="comment.get('CardValue').value=='ACTIVE'">
+                        <mat-select formControlName="name" placeholder="New Status" required>
+                          <mat-option *ngFor="let CCode of ActivArray" value="{{CCode}}">
+                            {{ CCode }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <mat-form-field *ngIf="comment.get('CardValue').value=='SOLD'">
+                        <mat-select formControlName="name" placeholder="New Status" required>
+                          <mat-option *ngFor="let CCode of SolArray" value="{{CCode}}">
+                            {{ CCode }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-3">
+                      <mat-form-field *ngIf="comment.get('CardValue').value!='BLOCKED' && comment.get('CardValue').value!='EXPIRED'  && comment.get('CardValue').value!='DAMAGED'">
+                        <input type="text" matInput formControlName="comment" placeholder="Enter Comment" maxlength="100" required>
+                        <mat-error *ngIf="comment.hasError('required','comment')">Please enter value
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+
+                  </div>
+                </div>
+              
+              </div>
+            </table>
+          </div>
+
+        </mat-card>
+        <div>
+          <button type="button" mat-button class="button primary-btn float-right" style="margin-left: 8px;" matStepperNext
+            (click)="goFromSecondForm(stepper);patchToThirdForm()" [disabled]="disableStatus">NEXT</button>
+          <button mat-button class="button secondary-btn float-right" matStepperPrevious>BACK</button>
+        </div>
+      </form>
+    </mat-step>
+
+  <!-- third form -->
+   <mat-step [stepControl]="thirdFormGroup">
+      <form [formGroup]="thirdFormGroup">
+        <ng-template matStepLabel>Confirmation</ng-template>
+        <mat-card>
+    
+          <div class="row">
+            <div class="col-md-2 view-label">
+                 <label>Starting Card ID</label>
+                 <mat-form-field >
+                  <input matInput formControlName="ScarId" readonly>
+                  <mat-error *ngIf="thirdFormGroup.hasError('required')">Please enter value
+                  </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-md-3 view-label">
+                 <label>Ending Card ID</label>
+                 <mat-form-field >
+                  <input matInput formControlName="EcarId" readonly>
+                  <mat-error *ngIf="thirdFormGroup.hasError('required')">Please enter value
+                  </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-md-3 view-label">
+                <label>Quantity</label>
+                 <mat-form-field >
+                  <input matInput formControlName="quan" readonly>
+                  <mat-error *ngIf="thirdFormGroup.hasError('required')">Please enter value
+                  </mat-error>
+                 </mat-form-field>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="offset-md-1 col-md-5">
+                <h6>Status Movement</h6> 
+            </div>
+            <div class="offset-md-2 col-md-3" style="padding-left:3%">
+                <h6 style="display:content">Comment</h6> 
+            </div>
+             
+            <div class="col-md-11 offset-md-1 statusCol view-label" *ngFor="let thirdFormViewData of thirdFormdata">
+              <div class="row confirmationBlock" >
+                  <!-- GIFTED -->
+                <div *ngIf="thirdFormViewData.CardValue=='GIFTED'" class="col-md-12" style="display: flex;">
+                  <div class="col-md-8">
+                    <mat-form-field >
+                      <input matInput formControlName="Giftedkey" readonly >
+                      <mat-error *ngIf="thirdFormGroup.hasError('required')">Please enter value
+                      </mat-error>
+                  </mat-form-field>
+
+                  </div>
+                  <div class="col-md-3">
+                    <mat-form-field >
+                      <input matInput formControlName="GiftedkeyComment" readonly>
+                      <mat-error *ngIf="thirdFormGroup.hasError('required')">Please enter value
+                      </mat-error>
+                  </mat-form-field>
+                  </div>
+                </div>
+                <!-- ASSIGNED -->
+                <div *ngIf="thirdFormViewData.CardValue=='ASSIGNED'" style="display: contents;">
+                  <div class="col-md-8">
+                    <mat-form-field >
+                      <input matInput formControlName="Assignekey" readonly>
+                      <mat-error *ngIf="thirdFormGroup.hasError('required')">Please enter value
+                      </mat-error>
+                  </mat-form-field>
+
+                  </div>
+                  <div class="col-md-3">
+                    <mat-form-field >
+                      <input matInput formControlName="AssignedkeyComment" readonly>
+                      <mat-error *ngIf="thirdFormGroup.hasError('required')">Please enter value
+                      </mat-error>
+                  </mat-form-field>
+                  </div>
+                </div>
+                <!-- PRINTING -->
+                <div *ngIf="thirdFormViewData.CardValue=='PRINTING'" style="display: contents;">
+                      <div class="col-md-8">
+                        <mat-form-field >
+                          <input matInput formControlName="Printingkey" readonly>
+                          <mat-error *ngIf="thirdFormGroup.hasError('required')">Please enter value
+                          </mat-error>
+                      </mat-form-field>
+
+                      </div>
+                      <div class="col-md-3">
+                        <mat-form-field >
+                          <input matInput formControlName="PrintingkeyComment" readonly>
+                          <mat-error *ngIf="thirdFormGroup.hasError('required')">Please enter value
+                          </mat-error>
+                      </mat-form-field>
+                      </div>
+                </div>
+                <!-- GENERATED -->
+                <div *ngIf="thirdFormViewData.CardValue=='GENERATED'" style="display: contents;">
+                  <div class="col-md-8">
+                    <mat-form-field >
+                      <input matInput formControlName="Generatedkey" readonly >
+                      <mat-error *ngIf="thirdFormGroup.hasError('required')">Please enter value
+                      </mat-error>
+                  </mat-form-field>
+
+                  </div>
+                  <div class="col-md-3">
+                    <mat-form-field >
+                      <input matInput formControlName="GeneratedkeyComment" readonly >
+                      <mat-error *ngIf="thirdFormGroup.hasError('required')">Please enter value
+                      </mat-error>
+                  </mat-form-field>
+                  </div>
+                </div>
+                <!-- AVAILABLE -->
+                <div *ngIf="thirdFormViewData.CardValue=='AVAILABLE'" style="display: contents;">
+                  <div class="col-md-8">
+                    <mat-form-field >
+                      <input matInput formControlName="Availablekey" readonly>
+                      <mat-error *ngIf="thirdFormGroup.hasError('required')">Please enter value
+                      </mat-error>
+                  </mat-form-field>
+
+                  </div>
+                  <div class="col-md-3">
+                    <mat-form-field >
+                      <input matInput formControlName="AvailablekeyComment"  readonly>
+                      <mat-error *ngIf="thirdFormGroup.hasError('required')">Please enter value
+                      </mat-error>
+                  </mat-form-field>
+                  </div>
+                </div>
+                <!-- MISSING -->
+                <div *ngIf="thirdFormViewData.CardValue=='MISSING'" style="display: contents;">
+                  <div class="col-md-8">
+                    <mat-form-field >
+                      <input matInput formControlName="Missingkey" readonly>
+                      <mat-error *ngIf="thirdFormGroup.hasError('required')">Please enter value
+                      </mat-error>
+                  </mat-form-field>
+
+                  </div>
+                  <div class="col-md-3">
+                    <mat-form-field >
+                      <input matInput formControlName="MissingkeyComment"  readonly>
+                      <mat-error *ngIf="thirdFormGroup.hasError('required')">Please enter value
+                      </mat-error>
+                  </mat-form-field>
+                  </div>
+                </div>
+                  <!-- ACTIVE -->
+                <div *ngIf="thirdFormViewData.CardValue=='ACTIVE'" style="display: contents;">
+                  <div class="col-md-8">
+                    <mat-form-field >
+                      <input matInput formControlName="Activekey" readonly>
+                      <mat-error *ngIf="thirdFormGroup.hasError('required')">Please enter value
+                      </mat-error>
+                  </mat-form-field>
+
+                  </div>
+                  <div class="col-md-3">
+                    <mat-form-field >
+                      <input matInput formControlName="ActivekeyComment"  readonly>
+                      <mat-error *ngIf="thirdFormGroup.hasError('required')">Please enter value
+                      </mat-error>
+                  </mat-form-field>
+                  </div>
+                </div>
+                <!-- SOLD -->
+                <div *ngIf="thirdFormViewData.CardValue=='SOLD'" style="display: contents;">
+                  <div class="col-md-8">
+                    <mat-form-field >
+                      <input matInput formControlName="Soldkey" readonly>
+                      <mat-error *ngIf="thirdFormGroup.hasError('required')">Please enter value
+                      </mat-error>
+                  </mat-form-field>
+
+                  </div>
+                  <div class="col-md-3">
+                    <mat-form-field >
+                      <input matInput formControlName="SoldkeyComment"  readonly>
+                      <mat-error *ngIf="thirdFormGroup.hasError('required')">Please enter value
+                      </mat-error>
+                  </mat-form-field>
+                  </div>
+                </div>
+             </div>
+            </div>
+          </div>
+     </mat-card>
+        <div>
+          <button type="button" type="button" class="button primary-btn float-right" style="margin-left: 8px;"
+            (click)="finalSubmition()">CONFIRM</button>
+          <button mat-button class="button secondary-btn float-right" matStepperPrevious>BACK</button>
+        </div>
+      </form>
+    </mat-step>
+  </mat-horizontal-stepper>
+
+
+</div>

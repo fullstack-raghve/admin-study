@@ -1,0 +1,432 @@
+<div class="page-wrap">
+  <div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container">
+      <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg"
+            alt="leftArrow" [routerLink]="['/search-feedbacksurvey']"></span>Edit Feedback Survey</h1>
+      <div class="slider">
+        {{statusValue}} <mat-slide-toggle [(ngModel)]="toggleVal" (change)="toggleStatus($event)"
+          class="mat-slide-toggle">
+        </mat-slide-toggle>
+      </div>
+    </div>
+  </div>
+  <div class="form-wrap">
+    <form *ngIf="buildFlag" (submit)="updatefeedbacksurvey(editFeedbacksurveyFormgroup.value)" [formGroup]="editFeedbacksurveyFormgroup"
+      #editfeedbacksurveyForm="ngForm">
+      <div class="row">
+        <div class="col-3">
+
+          <mat-card class="store-card">
+            <h3 class="card-title text-dark mb-10px">Survey Details</h3>
+            <div class="row">
+              <div class="col-md-12">
+                <mat-form-field class="field-width">
+                  <input matInput placeholder="Survey Name" formControlName="surveyName" maxlength="100">
+                  <mat-error *ngIf="editFeedbacksurveyFormgroup.get('surveyName').hasError('required')">Please enter Survey
+                    Name
+                  </mat-error>
+                  <mat-error *ngIf="editFeedbacksurveyFormgroup.get('surveyName').hasError('maxlength')">Maximum 150 characters allowed
+                    </mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="col-md-12" style="margin-top: -13px;">
+                <mat-select-autocomplete name="Country" ngDefaultControl [placeholder]="'Select Country'"
+                  [options]="allBrandCountryList" [display]="'countryName'" [value]="'value'" [multiple]='true'
+                  [labelCount]="1" (selectionChange)="getAllCities($event) || getAllBrands($event)"
+                  [formControl]="editFeedbacksurveyFormgroup.controls['countryOid']">
+                </mat-select-autocomplete>
+              </div>
+              <div class="col-md-12" style="margin-top: -13px;">
+                <mat-select-autocomplete name="City" ngDefaultControl [placeholder]="'Select City'"
+                  [options]="allBrandCountryCityList" [display]="'cityName'" [value]="'value'" [multiple]='true'
+                  [labelCount]="1" 
+                  [formControl]="editFeedbacksurveyFormgroup.controls['cityOid']">
+                </mat-select-autocomplete>
+              </div>
+              <div class="col-md-12" style="margin-top: -13px;">
+                <mat-select-autocomplete name="Brand" ngDefaultControl [placeholder]="'Select Brand'"
+                  [options]="brandList" [display]="'brandName'" [value]="'value'" [multiple]='true' [labelCount]="1"
+                  (selectionChange)="getAllMalls($event,countryOid,cityOid)"
+                 
+                  [formControl]="editFeedbacksurveyFormgroup.controls['brandOid']">
+                </mat-select-autocomplete>
+              </div>
+              <div class="col-md-12" style="margin-top: -13px;">
+                <mat-select-autocomplete name="Mall" ngDefaultControl [placeholder]="'Select Mall'"
+                  [options]="mallListValues" [display]="'mallName'" [value]="'value'" [multiple]='true'
+                  [labelCount]="1" [formControl]="editFeedbacksurveyFormgroup.controls['mallOid']">
+                </mat-select-autocomplete>
+              </div>
+
+
+              <div class="col-md-12">
+                <div class="toggle-block">
+                  <div class="toggle-panel">
+                    <p *ngIf="includeExclude=='Include'">
+                      Other Channels
+                    </p>
+                    <p>
+                      <span>
+                        <mat-slide-toggle formControlName="ruleType" (change)="toggleIncludeExclude($event)"
+                          class="example-margin" [checked]="checked" disabled></mat-slide-toggle>
+                      </span>
+                    </p>
+                    <p *ngIf="includeExclude=='Exclude'">
+                      Kiosk
+                    </p>
+                  </div>
+                </div>
+                <div class="row" *ngIf="includeExclude=='Include'">
+                  <mat-checkbox class="checkbox1" formControlName="channel_email">Email</mat-checkbox>
+                  <mat-checkbox class="checkbox" formControlName="channel_sms">SMS</mat-checkbox>
+                  <mat-checkbox class="checkbox" formControlName="channel_push">Push</mat-checkbox>
+                </div>
+              </div>
+            </div>
+          </mat-card>
+        </div>
+        <div class="col-4">
+          <mat-card class="store-card">
+            <h3 class="card-title text-dark mb-10px">Header</h3>
+            <div class="row">
+
+              <div class="col-md-6">
+                <div class="row" *ngIf="includeExclude=='Include'">
+                  <mat-checkbox class="checkbox1" formControlName="header_email">Email</mat-checkbox>
+                  <mat-checkbox class="checkbox" formControlName="header_sms">SMS</mat-checkbox>
+                  <mat-checkbox class="checkbox" formControlName="header_push">Push</mat-checkbox>
+                </div>
+                <div>
+                  <mat-form-field class="field-width">
+                    {{editFeedbacksurveyFormgroup.value.headerBackgroundColor}}
+                    <input matInput placeholder="Background Color" style="width: 15%;" type="color"
+                      [(ngModel)]="headercolor" name="headercolor" formControlName="headerBackgroundColor">
+                  </mat-form-field>
+                </div>
+              </div>
+
+
+              <div class="col-md-6">
+                <div class="img-block">
+
+                  <div class="avatar-zone">
+                    <span *ngIf="kioskBrandLogoPath==''" class="upload-text" [class.placeholder-img]="imgUpload">
+                      <span class="pgm-img-title">Header Image</span>
+                      <span class="pgm-img-size">
+                        (Size 90 * 50)
+                      </span>
+                    </span>
+                    <img *ngIf="kioskBrandLogoPath!=''" class="upload-img" [src]="imgBaseUrl+kioskBrandLogoPath"
+                      [class.uploaded-img]="imgUpload" width="252px" height="150px">
+                  </div>
+                  <div class="remove-img" *ngIf="kioskBrandLogoPath!=''">
+                    <span (click)="removeImage()" class="pointer"> <img src="assets/images/icons/filter_close_ico.png"
+                        alt=""><label>Remove</label></span>
+                  </div>
+                  <input style="display:none;" #uploadImgEl type="file" class="upload_btn"
+                    (change)="uploadImage($event.target.files)" />
+                  <div class="text-center" style="width: 72%;" *ngIf="kioskBrandLogoPath==''">
+                    <span class="upload-btn-text" (click)='uploadImgEl.click()'>
+                      <span class="upload-icon">
+                        <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px" alt="Img">
+                      </span>Upload Image
+                    </span>
+                  </div>
+
+                </div>
+              </div>
+              <div class="col-md-12">
+                <mat-form-field class="field-width">
+                  <input matInput placeholder="Text" formControlName="headerText" maxlength="100">
+                  <mat-error *ngIf="editFeedbacksurveyFormgroup.get('headerText').hasError('maxlength')">Maximum 100 characters allowed
+                    </mat-error>
+                  <!-- <mat-error *ngIf="feedbacksurvey.get('idleTimeOut').hasError('required')">Please Enter Idle Time Out
+                    </mat-error> -->
+                </mat-form-field>
+              </div>
+            </div>
+          </mat-card>
+          <mat-card class="store-card">
+            <h3 class="card-title text-dark mb-10px">Body</h3>
+            <div class="row">
+              <div class="col-md-6">
+                <mat-form-field class="field-width">
+                  {{editFeedbacksurveyFormgroup.value.bodybackgroundColor}}
+                  <input matInput placeholder="Background Color" style="width: 15%;" type="color" [(ngModel)]="bgcolor"
+                    name="bgcolor" formControlName="bodybackgroundColor">
+                </mat-form-field>
+              </div>
+              <div class="col-md-6">
+                <div class="img-block">
+                  <!-- <span class="pgm-img-size">
+                       (Size 90 * 50)
+                        </span> -->
+                  <div class="avatar-zone">
+                    <span *ngIf="bodyIamge==''" class="upload-text" [class.placeholder-img]="imgUpload">
+                      <span class="pgm-img-title">Body Image</span>
+                      <span class="pgm-img-size">
+                        (Size 90 * 50)
+                      </span>
+                    </span>
+                    <img *ngIf="bodyIamge!=''" class="upload-img" [src]="imgBaseUrl+bodyIamge"
+                      [class.uploaded-img]="imgUpload" width="252px" height="150px">
+                  </div>
+                  <div class="remove-img" *ngIf="bodyIamge!=''">
+                    <span (click)="removeBodyImage()" class="pointer"> <img
+                        src="assets/images/icons/filter_close_ico.png"
+                        alt=""><label>Remove</label></span>
+                  </div>
+                  <input style="display:none;" #uploadImgElBodyRef type="file" class="upload_btn"
+                    (change)="uploadBodyImage($event.target.files)" />
+                  <div class="text-center" style="width: 72%;" *ngIf="bodyIamge==''">
+                    <span class="upload-btn-text" (click)='uploadImgElBodyRef.click()'>
+                      <span class="upload-icon">
+                        <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px" alt="Img">
+                      </span>Upload Image
+                    </span>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+
+
+          </mat-card>
+          <mat-card class="store-card">
+            <h3 class="card-title text-dark mb-10px">Footer</h3>
+            <div class="row">
+
+              <div class="col-md-6">
+                <div class="row" *ngIf="includeExclude=='Include'">
+                  <mat-checkbox class="checkbox1" formControlName="footer_email">Email</mat-checkbox>
+                  <mat-checkbox class="checkbox" formControlName="footer_sms">SMS</mat-checkbox>
+                  <mat-checkbox class="checkbox" formControlName="footer_push">Push</mat-checkbox>
+                </div>
+                <div>
+                  <mat-form-field class="field-width">
+                    {{editFeedbacksurveyFormgroup.value.footerbackgroundColor}}
+                    <input matInput placeholder="Background Color" style="width: 15%;" type="color"
+                      [(ngModel)]="footercolor" name="footercolor" formControlName="footerbackgroundColor">
+                  </mat-form-field>
+                </div>
+              </div>
+
+
+              <div class="col-md-6">
+                <div class="img-block">
+
+                  <div class="avatar-zone">
+                    <span *ngIf="footerIamge==''" class="upload-text" [class.placeholder-img]="imgUpload">
+                      <span class="pgm-img-title">Footer Image</span>
+                      <span class="pgm-img-size">
+                        (Size 90 * 50)
+                      </span>
+                    </span>
+                    <img *ngIf="footerIamge!=''" class="upload-img" [src]="imgBaseUrl+footerIamge"
+                      [class.uploaded-img]="imgUpload" width="252px" height="150px">
+                  </div>
+                  <div class="remove-img" *ngIf="footerIamge!=''">
+                    <span (click)="removeFooterImage()" class="pointer"> <img
+                        src="assets/images/icons/filter_close_ico.png" alt=""><label>Remove</label></span>
+                  </div>
+                  <input style="display:none;" #uploadImgElFooterRef type="file" class="upload_btn"
+                    (change)="uploadFooterImage($event.target.files)" />
+                  <div class="text-center" style="width: 72%;" *ngIf="footerIamge==''">
+                    <span class="upload-btn-text" (click)='uploadImgElFooterRef.click()'>
+                      <span class="upload-icon">
+                        <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px" alt="Img">
+                      </span>Upload Image
+                    </span>
+                  </div>
+
+                </div>
+              </div>
+              <div class="col-md-12">
+                <mat-form-field class="field-width">
+                  <input matInput placeholder="Text" formControlName="footerText" maxlength="100">
+                  <mat-error *ngIf="editFeedbacksurveyFormgroup.get('footerText').hasError('maxlength')">Maximum 100 characters allowed
+                    </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </mat-card>
+        </div>
+        <div class="col-5">
+          <mat-card class="store-card">
+            <div class="row">
+              <div class="col-md-6">
+                <h3 class="card-title text-dark mb-10px">Feedback Flow</h3>
+              </div>
+              <div class="col-md-6 button-select">
+                <button class="button primary-btn" type="button" [class.other-channel-select]="otherChannelSelection"
+                  (click)="selectedFlow(editFeedbacksurveyFormgroup.controls['brandOid'].value, editFeedbacksurveyFormgroup.controls['countryOid'].value )">
+                  Select</button>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12 pb-10px">
+                <div class="chip-list d-flex flex-wrap mt-3" *ngIf="selectedFlows.length != 0">
+                  <table>
+                    <tr>
+                      <th>Flow Name</th>
+                      <th>Start & End Date</th>
+                      <th>Start Time</th>
+                    </tr>
+                    <tr *ngFor="let User of selectedFlows;let valueIndex=index;">
+                      <td> {{User.flowName}},</td>
+                      <td> {{User.startDate}},{{User.endDate}},</td>
+                      <td> {{User.startTime}},{{User.endTime}}</td>
+                      <td (removed)="removeFlow(User, valueIndex)">
+
+                        <span class="remove-coupon" (click)="removeFlow(User, valueIndex)">
+                          <img src="assets/images/icons/filter_close_ico.png" alt="Close_Bttn">
+                        </span>
+                      </td>
+                    </tr>
+                  </table>
+
+                </div>
+                <p *ngIf="selectedFlows.length == 0 && showSelectedFlow " class="color-red"
+                  style="font-size: 10px;margin-top: 7px;">Please Select Flow</p>
+              </div>
+
+              <div class="col-md-12 mt-10px mb-10px">
+                <div class="row">
+                  <div class="col-md-6">
+                    <p>Notify Users</p>
+                  </div>
+                  <div class="col-md-6 button-select">
+                    <button class="button primary-btn button-selection" type="button" (click)="selectedUsers()">SELECT
+                      USERS</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-12">
+                <div class="chip-list d-flex flex-wrap ">
+                  <mat-chip *ngFor="let User of selectedUser" [selectable]="selectable" [removable]="removable"
+                    (removed)="removeuser(User)">
+                    {{User?.userName}}
+                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                  </mat-chip>
+                </div>
+                <p *ngIf="selectedUser.length == 0 && showSelectedUser " class="color-red" style="font-size: 10px;">
+                  Please Select user</p>
+              </div>
+            </div>
+          </mat-card>
+        </div>
+
+        <div class="attach-coupon-bg col-md-12" *ngIf="includeExclude=='Exclude'">
+          <div class="attach-coupon-reg">
+            <div class="attach-coupon-regtitle">
+              <p>
+                Kiosk
+              </p>
+            </div>
+            <div class="attach-bttn">
+              <a class='button tertiary-btn p-5px' (click)="selectKiosk()">SELECT</a>
+            </div>
+          </div>
+          <div class="selected-coupon">
+            <div class="search-panel-block">
+              <div class="add-table-wrap">
+                <div class="table-wrap">
+                  <div class="table-wrap-inner">
+                    <div class="rule-coupon">
+                      <table mat-table [dataSource]="dataSource" matSort>
+                        <ng-container matColumnDef="deviceId">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+                          <td mat-cell *matCellDef="let row"> {{row.deviceId}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="deviceName">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>NAME</th>
+                          <td mat-cell *matCellDef="let row">
+                            <u><a [routerLink]="['/view-kiosk/', row.deviceId]"
+                                class="text-blue">{{row.deviceName}}</a></u>
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="storeName">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> STORE NAME </th>
+                          <td mat-cell *matCellDef="let row"> {{row.storeName}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="countryName">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> COUNTRY NAME </th>
+                          <td mat-cell *matCellDef="let row"> {{row.countryName}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="brandName">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> BRAND NAME </th>
+                          <td mat-cell *matCellDef="let row"> {{row.brandName}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="deviceStatus">
+                          <th mat-header-cell *matHeaderCellDef> CONNECTION </th>
+                          <td mat-cell *matCellDef="let row"> {{row.deviceStatus}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="lastOnline">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> LAST ONLINE </th>
+                          <td mat-cell *matCellDef="let row">{{row.lastOnline | date:'short'}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="batteryPercentage">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> BATTERY </th>
+                          <td mat-cell *matCellDef="let row">
+
+                            <p *ngIf="row.batteryPercentage">{{row.batteryPercentage }}%</p>
+                            <p *ngIf="!row.batteryPercentage">0%</p>
+                          </td>
+                        </ng-container>
+                        <ng-container matColumnDef="status">
+                          <th mat-header-cell *matHeaderCellDef> STATUS </th>
+                          <td mat-cell *matCellDef="let row"> {{row.status}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="verificationCode">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header> CODE </th>
+                          <td mat-cell *matCellDef="let row"> {{row.verificationCode}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="preview">
+                          <th mat-header-cell *matHeaderCellDef class="top-border"> PREVIEW </th>
+                          <td mat-cell *matCellDef="let row">
+                            <p class="pointer">
+                              <a href="{{flowURL}}/flow/?flowId={{row.assingedFlow}}&kioskId={{row.deviceId}}&ispreview=true&kiosk=true&channelType=EMAIL"
+                                target="_blank"> <img src="assets/images/svg-icons/preview_icon.svg" alt="preview_icon"
+                                  width="20px;"></a>
+                            </p>
+                          </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                        </tr>
+                      </table>
+                      <div *ngIf="searchResults" class="select-store-block">
+                        <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                      </div>
+                      <div class="no-records" *ngIf="kioskErrorMsg">
+                        Please select atleast one kiosk
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="pageLoader" class="page-loader-block full-page-loader">
+          <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+        </div>
+        <div class="button-wrap text-right pt-20px col-md-12">
+          <button class='button secondary-btn' type="button" [routerLink]="['/search-feedbacksurvey']">CANCEL</button>
+          <button class='button primary-btn ' type="submit">UPDATE</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

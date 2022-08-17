@@ -1,0 +1,146 @@
+<div class="page-wrap">
+    <div class="search-panel-block">
+        <div class="bredcrumb-title-wrap">
+            <div class="search-container-block">
+                <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+                <div class="search-list">
+                    <form class="filter-wrap" [formGroup]="searchUserForm" (submit)="searchKey()">
+                        <div class="row title-search-row">
+                            <div class="col-md-4 title-search-col">
+                                <div class="title">
+                                    <h1>Search User</h1>
+                                </div>
+                            </div>
+                            <div class="col-md-5 title-search-col">
+                                <div class="searchform-block">
+                                    <div class="common-search">
+                                        <input type="text" spaceTrim="searchUserForm.valuesearchVal" formControlName="searchVal" placeholder="Search User" />
+                                        <span class="search-btn" (click)="searchKey()"></span>
+                                        <div class="filter-btn-wrap">
+                                            <span class="filter-btn" (click)="openFilter();" [ngClass]="status ? 'open' : 'close'"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 title-search-col">
+
+                            </div>
+                        </div>
+                        <div class="feild-search" *ngIf="!status">
+                            <div class="row feild-search-inner">
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput type="text" formControlName="fullName" placeholder="Full Name" />
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput type="email" formControlName="emailId" placeholder="Email ID" />
+                                        <mat-error *ngIf="searchUserForm.get('emailId').hasError('pattern')">Invalid emailId entered
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput OnlyNumber="true" maxLength="10" type="text" formControlName="phoneNumber" placeholder="Phone Number" />
+                                        <mat-error *ngIf="searchUserForm.get('emailId').hasError('pattern')">Invalid charecters entered
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput placeholder="Role" aria-label="Role" [matAutocomplete]="roleAutoComplete" [formControl]="roleCtrl">
+                                        <mat-autocomplete #roleAutoComplete="matAutocomplete">
+                                            <mat-option *ngFor="let role of filteredRoles | async" [value]="role.roleName" #roleInput (click)="getRoleId(role.roleId)">
+                                                <span>{{role.roleName}}</span>
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput type="text" formControlName="storeName" placeholder="Store Name" />
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-select placeholder="Status" formControlName="status">
+                                            <mat-option value="Offline">Offline</mat-option>
+                                            <mat-option value="Online">Online</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="button-wrap">
+                                    <div class="">
+                                        <button class='button quaternary-btn' type="button" (click)="resetForm()">RESET</button>
+                                        <button class='button tertiary-btn' type="submit">APPLY</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="form-wrap">
+            <div class="table-wrap">
+                <div class="table-wrap-inner">
+                    <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
+                        <ng-container matColumnDef="userId">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="oid"> USER ID </th>
+                            <td mat-cell *matCellDef="let row"> {{ row.userId }} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="fullName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> FULL NAME </th>
+                            <!-- <td mat-cell *matCellDef="let row"><u><a [routerLink]="['/view-user/'+ row.userId]"
+                    class="text-blue">{{row.fullName}}</a></u></td> -->
+                            <td mat-cell (click)="MoveToView(row.userId)" *matCellDef="let row"><u><a 
+                      class="text-blue">{{row.fullName}}</a></u></td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="roles">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> ROLE </th>
+                            <td mat-cell *matCellDef="let row"> {{row.roleTitle}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="phoneNumber">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> PHONE NUMBER </th>
+                            <td mat-cell *matCellDef="let row"> {{row.phoneNumber}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="emailId">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> EMAIL ID </th>
+                            <td mat-cell *matCellDef="let row"> {{row.emailId}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="createdTime">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> CREATED ON </th>
+                            <td mat-cell *matCellDef="let row"> {{row.createdTime}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="status">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> STATUS </th>
+                            <td mat-cell *matCellDef="let row"> {{row.status}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="resetPin">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> RESET PIN </th>
+                            <td mat-cell *matCellDef="let row">
+                                <div>
+                                    <img (click)="resetPin(row.emailId,row.userName)" src="assets/images/flow_icons/ResetPIN.png" alt="reset_icon">
+                                </div>
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                        </tr>
+                    </table>
+                    <!-- <div *ngIf="searchStoreVal" class="select-store-block">
+            <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+          </div> -->
+                    <div class="no-records" *ngIf="noRecords">
+                        No Records Found!
+                    </div>
+                </div>
+                <mat-paginator [length]="resultsLength" (change)="searchVal()" #paginator (page)="getUpdate($event)" [pageSize]="paginationData.pageSize" [pageSizeOptions]="[10,20,50,100]">
+                </mat-paginator>
+            </div>
+        </div>
+    </div>
+</div>

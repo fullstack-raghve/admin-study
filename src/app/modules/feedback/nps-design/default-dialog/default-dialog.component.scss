@@ -1,0 +1,18 @@
+.confirm-dialog{
+    padding: 1rem;
+    .details{
+        margin-bottom: 1em;
+        height: 125px;
+        overflow-x: auto;
+        // height: 140px;
+        // overflow-x: auto;
+    }
+    p{
+        margin-bottom: 5px;
+    }
+    h6{
+        font-size: 1.5em;
+        color: #fa8d47;
+        margin-bottom: 1em;
+    }
+}

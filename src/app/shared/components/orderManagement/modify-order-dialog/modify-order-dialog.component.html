@@ -1,0 +1,189 @@
+<form [formGroup]="modifyOrderFormGroup" #modifyOrderForm="ngForm">
+  <div class="modify-order-page flex">
+    <div class="left-column-cotent">
+      <div class="page-title">
+        <div class="header flex-container">
+          <h3>Add Items</h3>
+          <div class="close-icon">
+            <img src="assets/images/icons/filter_close_ico.png" alt="" (click)="onCloseClick()">
+          </div>
+        </div>
+      </div>
+      <div class="page-content">
+        <mat-accordion>
+          <mat-expansion-panel *ngFor="let item of formattedData;">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                {{item.categoryName}}
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="panel-body-content">
+
+            <div class="products-list">
+              <ul>
+                <li *ngFor="let product of item.products" [ngClass]="{'greyed-out': !product.productAvailable}">
+                  <div class="flex-container padding-1em">
+                    <div class="flex">
+                      <div class="product-img-block">
+                        <img [src]="product.productImage" alt="item_ico">
+                      </div>
+                      <div>
+                        <span class="flex-center mr-5px">
+                          <span [ngClass]="{'veg-icon': product.productType === 'VEG'}"></span>
+                          <span [ngClass]="{'nonVeg-icon': product.productType === 'NONVEG'}"></span>
+                          <span [ngClass]="{'egg-icon': product.productType === 'EGG'}"></span>
+                          {{ product.productName }}
+                        </span>
+                        <p class="price"><span class="currency-label">{{ currency }} </span>{{ product.productPrice }} </p>
+                      </div>
+                    </div>
+                    <div class="modify-buttons" *ngIf="product.selectedQty !== 0">
+                      <label class="subtract-btn" (click)="itemDecrement(product)">-</label>
+                      <p>{{product.selectedQty}}</p>
+                      <label class="add-btn" (click)="itemIncrement(product)">+</label>
+                    </div>
+                    <div class="button-container" *ngIf="product.selectedQty === 0">
+                      <button class="button tertiary-btn" type="button" (click)="addItem(product)">ADD</button>
+                      <div class="small-font" *ngIf="isCustomizable(product)">Customization</div>
+                    </div>
+                  </div>
+
+                </li>
+              </ul>
+            </div>
+
+            <div *ngFor="let subCat of item.subCategories;">
+              <mat-panel-title class="sub-category-title">
+                {{subCat.categoryName}}
+              </mat-panel-title>
+              <div class="products-list">
+                <ul>
+                  <li *ngFor="let product of subCat.products" [ngClass]="{'greyed-out': !product.productAvailable}">
+                    <div class="flex-container padding-1em">
+                      <div class="flex">
+                        <div class="product-img-block">
+                          <img [src]="product.productImage" alt="item_ico">
+                        </div>
+                        <div>
+                          <span class="flex-center mr-5px">
+                            <span [ngClass]="{'veg-icon': product.productType === 'VEG'}"></span>
+                            <span [ngClass]="{'nonVeg-icon': product.productType === 'NONVEG'}"></span>
+                            <span [ngClass]="{'egg-icon': product.productType === 'EGG'}"></span>
+                            {{ product.productName }}
+                          </span>
+                          <p class="price"><span class="currency-label">{{ currency }} </span>{{ product.productPrice }} </p>
+                        </div>
+                      </div>
+                      <div class="modify-buttons" *ngIf="product.selectedQty !== 0">
+                        <label class="subtract-btn" (click)="itemDecrement(product)">-</label>
+                        <p>{{product.selectedQty}}</p>
+                        <label class="add-btn" (click)="itemIncrement(product)">+</label>
+                      </div>
+                      <div class="button-container" *ngIf="product.selectedQty === 0">
+                        <button class="button tertiary-btn" type="button" (click)="addItem(product)">ADD</button>
+                        <div class="small-font" *ngIf="isCustomizable(product)">Customization</div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+      <div class="page-footer flex-container">
+        <div class="price-details">
+          <div class="total-items-selected white-color-text">{{ totalItemsSelected }} item selected</div>
+          <div class="total-price white-color-text">{{ currency }} {{ totalPrice }}</div>
+        </div>
+        <button class="button primary-btn" type="button" (click)="addtoCart()">ADD TO CART</button>
+      </div>
+    </div>
+    <div class="right-column-cotent" *ngIf="showCustomizationList">
+      <div class="flex-container">
+        <h6 class="header-title">Customise Options</h6>
+        <button class="button primary-btn" type="button" (click)="addVariantDetails(customizableProduct)">ADD</button>
+      </div>
+      <div *ngIf="error" class="error">
+        {{ errorMsg }}
+      </div>
+
+      <p class="sub-title">{{ customizableProduct.productVariant.variantName }}</p>
+      <div class="customize-options flex-container"
+        *ngFor="let variant of customizableProduct.productVariant.productVariants">
+        <!-- <mat-checkbox> -->
+        <div class="row flex-center" style="width: 100%;">
+          <div class="col-md-7">
+            <span>{{variant.variantName}}</span>
+          </div>
+          <div class="col-md-5 pad-0 text-right">
+            <div class="flex-center">
+              <span>{{ currency }} {{variant.displayPrice}}</span>
+              <div>
+                <span><button class="button tertiary-btn" type="button"
+                  *ngIf="customizableProduct.productVariant.selectedVariantQty === 0 ||
+                  customizableProduct.productVariant.selectedVariant !== variant.skuCode"
+                  (click)="addVariant(customizableProduct,variant)">ADD</button></span>
+              <span>
+                <div class="modify-buttons"
+                  *ngIf="customizableProduct.productVariant.selectedVariantQty !== 0 &&
+                  customizableProduct.productVariant.selectedVariant === variant.skuCode">
+                  <label class="subtract-btn" (click)="variantDecrement(customizableProduct,variant)">-</label>
+                  <p>{{customizableProduct.productVariant.selectedVariantQty}}</p>
+                  <label class="add-btn" (click)="variantIncrement(customizableProduct,variant)">+</label>
+                </div>
+              </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div >
+        </div>
+
+        <!-- </mat-checkbox> -->
+      </div>
+      <div *ngFor="let customizeAddon of customizableProduct.customizeAddons">
+        <div *ngIf="customizeAddon.addons.length > 0">
+          <p class="sub-title">{{ customizeAddon.labelName }}
+            <span class="mandatory">
+              {{ customizeAddon.isMandatory ? 'mandatory' : '' }}
+            </span>
+            <span *ngIf ="customizeAddon.maxQuantity">
+              ( max Quantity : {{ customizeAddon.maxQuantity }}
+            </span>
+            <span *ngIf ="customizeAddon.maxSelection">
+              max Selection : {{ customizeAddon.maxSelection }} )
+            </span>
+          </p>
+          <div class="customize-options flex-container" *ngFor="let addOn of customizeAddon.addons">
+            <mat-checkbox [checked]="isSelectedAddOn(customizableProduct,addOn)"
+              (change)="addOnSelected($event,customizableProduct,addOn,customizeAddon)">
+              <div class="flex-center">
+                <div style="width: 180px;">{{ addOn.addonName }}</div>
+                <div style="margin-right: 37px;">{{ currency }} {{ addOn.displayPrice }}</div>
+                <div class="modify-buttons">
+                  <label class="subtract-btn" (click)="addOnDecrement(customizableProduct,addOn,customizeAddon)">-</label>
+                  <p>{{addOn.selectedAddOnQty ? addOn.selectedAddOnQty : 0}}</p>
+                  <label class="add-btn" (click)="addOnIncrement(customizableProduct,addOn,customizeAddon)">+</label>
+                </div>
+              </div>
+              <!-- <div class="row">
+                <div class="col-md-7">
+                  <span>{{ addOn.addonName }}</span>
+                </div>
+                <div class="col-md-5">
+                  <span>{{ currency }} {{ addOn.displayPrice }}</span>
+                </div>
+              </div> -->
+            </mat-checkbox>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</form>
+<div *ngIf="contentLoader" class="page-loader-block full-page-loader">
+  <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+</div>

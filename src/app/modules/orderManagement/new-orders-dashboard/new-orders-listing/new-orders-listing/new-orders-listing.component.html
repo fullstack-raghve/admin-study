@@ -1,0 +1,171 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div *ngIf="beepLoader" (click)="beepLoader=false" class="page-loader-block full-page-loader">
+        <p class="beep-loader">Please Tap to get orders</p>
+    </div>
+    <div class="title flex-container">
+        <div class="flex-end">
+            <h1>New Orders</h1>
+            <!-- <p class="alert-message pointer" (click)="openErrorMessageDialog()"><span class="alert_icon"></span><u> High Alert</u></p> -->
+        </div>
+        <div class="flex text-right">
+            <div class="p-r-1rem">
+                <mat-form-field>
+                    <mat-select [(value)]="searchBrandId" (selectionChange)="brandChange($event.value)" placeholder="Select Brand">
+                        <mat-option (click)="getStoresList(brand.brandId)" *ngFor="let brand of brandList" [value]="brand.brandId">
+                            {{ brand.brandName }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="p-r-1rem">
+                <mat-form-field>
+                    <mat-select [(value)]="searchStoreId" (selectionChange)="storeChange($event.value)" placeholder="Select Store">
+                        <mat-option *ngFor="let store of storeList" [value]="store.storeOid">
+                            {{ store.storeName }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <div *ngIf="storeloader" class="select-store-block">
+                    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                </div>
+            </div>
+            <div>
+                <button type="button" (click)="selectedOrderId({},'');getAllNewOrders()" class="button primary-btn float-right">APPLY
+        </button>
+                <button type="hidden" id="auto_trigger" (click)="this.beep(true)" class="btn hidden"></button>
+            </div>
+        </div>
+    </div>
+    <p class="title">Last updated on:<span class="time">  {{currentTimeStamp | date:'dd-MM-yyyy hh:mm'}}</span></p>
+    <!-- <div class="text-center" *ngIf="!internetStatus">
+        <p class="internet-status-message">Internet connection lost</p>
+    </div> -->
+</div>
+
+<div class="page-wrap">
+    <mat-card class="order-listing-status">
+        <div class="row m-0px">
+            <div class="col-md-4 p-0px">
+                <div class="pos-relative">
+                    <div class="common-search">
+                        <input #orderId type="text" (keydown.enter)="searchOrder(orderId.value)" placeholder="Search Order" />
+                        <span class="search-btn" (click)="searchOrder(orderId.value)"></span>
+                    </div>
+                    <div class="filter-btn-wrap" (click)="orderId.value=''">
+                        <span class="filter-btn close"></span>
+                    </div>
+                </div>
+                <div class="order-status">
+                    <div *ngIf="noOrderFound" class="no-order-found error">
+                        Oops! No Order found, please recheck Order ID
+                    </div>
+                    <mat-accordion>
+                        <mat-expansion-panel #newPanel [expanded]="isNewPanelOpen">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    <span [matBadge]="newOrdersList.new.length" matBadgeSize="medium" matBadgePosition="below before" matBadgeOverlap="false" class="badgeColor">New Orders</span>
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <ul>
+                                <li class="order-menu flex-container" *ngFor="let item of newOrdersList.new;
+                  let i = index;" (click)="selectedOrderId(item,'new')" [ngClass]="{'highlight': highlightedOrder.orderId === item.orderId}">
+                                    <div class="order-list">
+                                        <label>Order ID</label>
+                                        <h5>{{item.txnId}}</h5>
+                                        <label>{{item.noOfItems}} Items</label>
+                                    </div>
+                                    <div class="time-group">
+                                        <div class="flex">
+                                            <span [ngClass]="{'modified-active-icon': item.modifiedOrder && highlightedOrder.orderId === item.orderId}"></span>
+                                            <span [ngClass]="{'modified-inactive-icon': item.modifiedOrder && highlightedOrder.orderId !== item.orderId}"></span>
+                                            <span [ngClass]="{'delivery-active-icon': item.orderType === 'DELIVERY' && highlightedOrder.orderId === item.orderId}"></span>
+                                            <span [ngClass]="{'delivery-inactive-icon': item.orderType === 'DELIVERY' && highlightedOrder.orderId !== item.orderId}"></span>
+                                            <span [ngClass]="{'pickup-active-icon' : item.orderType === 'PICKUP' && highlightedOrder.orderId === item.orderId}"></span>
+                                            <span [ngClass]="{'pickup-inactive-icon' : item.orderType === 'PICKUP' && highlightedOrder.orderId !== item.orderId}"></span>
+                                            <span [ngClass]="{'curbside-active-icon' : item.orderType === 'CURBSIDE' && highlightedOrder.orderId === item.orderId}"></span>
+                                            <span [ngClass]="{'curbside-inactive-icon' : item.orderType === 'CURBSIDE' && highlightedOrder.orderId !== item.orderId}"></span>
+                                        </div>
+                                        <label>Elapsed Time</label>
+                                        <p>{{item.timeElapsed}}</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </mat-expansion-panel>
+                        <mat-expansion-panel [expanded]="isAcceptedPanelOpen">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    <span [matBadge]="newOrdersList.accepted.length" matBadgeSize="medium" matBadgePosition="below before" matBadgeOverlap="false" class="badgeColor">Food Preparing</span>
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <ul>
+                                <li class="order-menu flex-container" *ngFor="let item of newOrdersList.accepted;
+                  let i = index;" (click)="selectedOrderId(item,'accepted')" [ngClass]="{'highlight': highlightedOrder.orderId === item.orderId}">
+                                    <div class="order-list">
+                                        <label>Order ID</label>
+                                        <h5>{{item.txnId}}</h5>
+                                        <label>{{item.noOfItems}} Items</label>
+                                    </div>
+                                    <div class="time-group">
+                                        <div class="flex">
+                                            <span [ngClass]="{'modified-active-icon': item.modifiedOrder && highlightedOrder.orderId === item.orderId}"></span>
+                                            <span [ngClass]="{'modified-inactive-icon': item.modifiedOrder && highlightedOrder.orderId !== item.orderId}"></span>
+                                            <span [ngClass]="{'delivery-active-icon': item.orderType === 'DELIVERY' && highlightedOrder.orderId === item.orderId}"></span>
+                                            <span [ngClass]="{'delivery-inactive-icon': item.orderType === 'DELIVERY' && highlightedOrder.orderId !== item.orderId}"></span>
+                                            <span [ngClass]="{'pickup-active-icon' : item.orderType === 'PICKUP' && highlightedOrder.orderId === item.orderId}"></span>
+                                            <span [ngClass]="{'pickup-inactive-icon' : item.orderType === 'PICKUP' && highlightedOrder.orderId !== item.orderId}"></span>
+                                            <span [ngClass]="{'curbside-active-icon' : item.orderType === 'CURBSIDE' && highlightedOrder.orderId === item.orderId}"></span>
+                                            <span [ngClass]="{'curbside-inactive-icon' : item.orderType === 'CURBSIDE' && highlightedOrder.orderId !== item.orderId}"></span>
+                                        </div>
+                                        <label>Elapsed Time</label>
+                                        <p>{{item.timeElapsed}}</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </mat-expansion-panel>
+                        <mat-expansion-panel [expanded]="isReadyPanelOpen">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    <span [matBadge]="newOrdersList.ready.length" matBadgeSize="medium" matBadgePosition="below before" matBadgeOverlap="false" class="badgeColor">Ready for Pickup</span>
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <ul>
+                                <li class="order-menu flex-container" *ngFor="let item of newOrdersList.ready;
+                  let i = index;" (click)="selectedOrderId(item,'ready')" [ngClass]="{'highlight': highlightedOrder.orderId === item.orderId}">
+                                    <div class="order-list">
+                                        <label>Order ID</label>
+                                        <h5>{{item.txnId}}</h5>
+                                        <label>{{item.noOfItems}} Items</label>
+                                    </div>
+                                    <div class="time-group">
+                                        <div class="flex">
+                                            <span [ngClass]="{'modified-active-icon': item.modifiedOrder && highlightedOrder.orderId === item.orderId}"></span>
+                                            <span [ngClass]="{'modified-inactive-icon': item.modifiedOrder && highlightedOrder.orderId !== item.orderId}"></span>
+                                            <span [ngClass]="{'delivery-active-icon': item.orderType === 'DELIVERY' && highlightedOrder.orderId === item.orderId}"></span>
+                                            <span [ngClass]="{'delivery-inactive-icon': item.orderType === 'DELIVERY' && highlightedOrder.orderId !== item.orderId}"></span>
+                                            <span [ngClass]="{'pickup-active-icon' : item.orderType === 'PICKUP' && highlightedOrder.orderId === item.orderId}"></span>
+                                            <span [ngClass]="{'pickup-inactive-icon' : item.orderType === 'PICKUP' && highlightedOrder.orderId !== item.orderId}"></span>
+                                            <span [ngClass]="{'curbside-active-icon' : item.orderType === 'CURBSIDE' && highlightedOrder.orderId === item.orderId}"></span>
+                                            <span [ngClass]="{'curbside-inactive-icon' : item.orderType === 'CURBSIDE' && highlightedOrder.orderId !== item.orderId}"></span>
+                                        </div>
+                                        <label>Elapsed Time</label>
+                                        <p>{{item.timeElapsed}}</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </mat-expansion-panel>
+
+                    </mat-accordion>
+                </div>
+
+            </div>
+            <div class="col-md-8 p-0px">
+                <new-orders-details [newOrdersData]='selectedOrder' (changeStatusEvent)="changeOrderStatus($event)" (internetConnection)="receiveInternetUpdate($event)"></new-orders-details>
+            </div>
+        </div>
+    </mat-card>
+</div>
+<div *ngIf="statusLoader" class="page-loader-block full-page-loader">
+    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+</div>
+<!-- <app-timer></app-timer> -->

@@ -1,0 +1,73 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container">
+          <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow" [routerLink]="['/search-amenities']"></span>Edit Amenity</h1>
+          <mat-slide-toggle [(ngModel)]="toggleVal" class="text-right" (change)="toggleStatus($event)" [checked]="checked" [disabled]="disabled">
+            {{statusValue}}
+          </mat-slide-toggle>
+        </div>
+  </div>
+  <div class="page-wrap" *ngIf="buildFlag">
+        <form id="updateAmenityForm" [formGroup]="amenityFormGroup" #editAmenityForm="ngForm" (submit)="updateAmenity(amenityFormGroup.value)">
+        <mat-card class="amenities-card">
+            <div class="row">
+                <div class="col-md-3"> 
+                    <mat-form-field>
+                        <mat-select formControlName="brand"   
+                        placeholder="Brand">
+                         <mat-option *ngFor="let brands of BrandList" value="{{brands.brandId}}">
+                           {{ brands.brandName }}
+                         </mat-option>
+                       </mat-select>
+            
+                      </mat-form-field>
+                </div>
+            </div>
+          <div class="row">
+              <div class="col-md-10">
+                <div class="master-fieldSet">
+                  <fieldset class="language-fieldset">
+                     <legend class="fieldset-heading">Amenity Title*</legend>
+                     <div class="" formArrayName="amenityTitleArray">
+                            <div class="example-container"  *ngFor="let locale of amenityFormGroup['controls']['amenityTitleArray']['controls']; let i=index" [formGroupName]="i">
+                                <mat-form-field class="{{alignCss[i]}}">
+                                    <input matInput placeholder="{{languageList[i].languageName}}" maxlength="30" required formControlName="amenityTitle">
+                                    <mat-error *ngIf="locale.get('amenityTitle').hasError('required')">Please enter value</mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                  </fieldset>
+              </div>
+              </div>
+              <div class="col-md-2 p-10px"> 
+                    <div class="img-block">
+                            <div class="avatar-zone">
+                                    <label class="upload-text" *ngIf="imagePath ==''" [class.placeholder-img]="imgUpload">Icon</label>
+                                <img class="upload-img" *ngIf="imagePath!=''" [src]="filePathUrl+imagePath" [class.uploaded-img]="imgUpload" width="100px">
+                            </div>
+                            <div class="remove-img" *ngIf="imagePath!=''">
+                                    <span> <img src="assets/images/icons/filter_close_ico.png" alt="" (click)="removeAmenityImage()"><label>Remove</label></span>
+                                </div>
+                            <input style="display:none;" type="file" class="upload_btn" (change)="amenityImg($event.target.files)" #amenityImgFile/>
+                            <span class="upload-btn-text text-center" (click)='amenityImgFile.click()'>
+                                <div class="text-center" *ngIf="imagePath==''" style="width:71%;">
+                                    <span class="upload-icon">
+                                        <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px" alt="Img">
+                                    </span>Upload Icon
+                                </div>
+                            </span>
+                        </div>
+              </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12"   >
+                <mat-checkbox  [checked]="selectStore"   (change)=checkStore($event.checked) >Apply to all stores</mat-checkbox>
+            </div>
+        </div>
+        </mat-card>
+          <div class="btm-button-wrap">
+              <button type="button" class="button secondary-btn" [routerLink]="['/search-amenities']">CANCEL</button>
+              <button type="submit" class="button primary-btn">UPDATE</button>
+          </div>
+          </form>
+  </div>

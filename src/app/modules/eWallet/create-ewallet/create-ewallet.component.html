@@ -1,0 +1,175 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container">
+        <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          [routerLink]="['/search-eWallet']"></span>Add E-Wallet</h1>
+        <mat-slide-toggle [(ngModel)]="toggleVal" (change)="toggleStatus($event)" class="mat-slide-toggle">
+            {{statusValue}}</mat-slide-toggle>
+    </div>
+</div>
+<div class="page-wrap">
+    <div class="form-wrap">
+        <form [formGroup]="eWalletFormGroup" (keydown.enter)="$event.preventDefault()" (submit)="addWallet(eWalletFormGroup.value)">
+            <div class="row">
+                <div class="col-md-5">
+                    <h3 class="card-title">Basic Details</h3>
+                    <mat-card>
+                        <div class="row mb-1em">
+                            <div class="col-md-6">
+                                <mat-form-field>
+                                    <input type="text" formControlName="walletName" matInput placeholder="Wallet Name" maxlength="200" autocomplete="off" required>
+                                    <mat-error *ngIf="eWalletFormGroup.get('walletName').hasError('required')">
+                                        Please enter the Wallet name </mat-error>
+                                    <mat-error *ngIf="eWalletFormGroup.get('walletName').hasError('pattern')">
+                                        Invalid character entered</mat-error>
+                                    <mat-error *ngIf="eWalletFormGroup.get('walletName').hasError('minlength')">
+                                        Minimum 3 characters required</mat-error>
+                                    <mat-error *ngIf="eWalletFormGroup.get('walletName').hasError('maxlength')">
+                                        Maximum 200 characters allowed</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6">
+                                <mat-form-field>
+                                    <mat-select placeholder="Select Currency" formControlName="currencyName" required>
+                                        <mat-option *ngFor="let item of regionCurrencies" [value]="item.currency">
+                                            {{item.currency}}</mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="eWalletFormGroup.get('currencyName').hasError('required')">
+                                        Please select the Currency</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6">
+                                <mat-form-field>
+                                    <input matInput #minBalance placeholder="Minimum Reload Balance" maxlength="9" formControlName="minBalance" OnlyNumber="true" (input)="checkBalance(minBalance.value,maxBalance.value,'','','')" autocomplete="off" required>
+                                    <mat-error *ngIf="eWalletFormGroup.get('minBalance').hasError('required')">
+                                        Please enter the minimum amount</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6">
+                                <mat-form-field>
+                                    <input matInput #maxBalance placeholder="Maximum Reload Balance" maxlength="9" formControlName="maxBalance" OnlyNumber="true" (input)="checkBalance(minBalance.value,maxBalance.value,'','','')" autocomplete="off" required>
+                                    <mat-error *ngIf="eWalletFormGroup.get('maxBalance').hasError('required')">
+                                        Please enter the maximum amount </mat-error>
+                                </mat-form-field>
+                                <div *ngIf="maxBalErr" class="errMsg mb-0em">
+                                    Maximum Balance cannot be less than Minimum Balance </div>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="info-label">Recharge Denominations <img src="assets/images/icons/info_icon.png" alt="info">
+                                </p>
+                                <mat-form-field class="mb-0em">
+                                    <input type="text" matInput placeholder="Add Amount" maxlength="10" OnlyNumber="true" autocomplete="off" #denominationInput>
+                                    <button mat-button matSuffix mat-icon-button aria-label="Clear" type="button" (click)="addDenominations(denominationInput.value); denominationInput.value = ''">
+                    <span class="add_icon"><img src="assets/images/icons/add_icon.png" alt="add"></span>
+                  </button>
+                                </mat-form-field>
+                                <ul class="added_denominations">
+                                    <li *ngFor="let item of denominationsArray; let i=index;">
+                                        {{ item }}
+                                        <a href="javascript:void(0);" (click)="deleteAmount(i)">
+                                            <img src="assets/images/icons/remove_icon.png" alt="close">
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div class="errMsg" *ngIf="denomiErrMsg">
+                                    <p>Denominations should be less than or equal to 5</p>
+                                </div>
+                                <div class="errMsg" *ngIf="denominationsMaxValueError">
+                                    <p>Denomination values should be less than Maximum reload balance</p>
+                                </div>
+                                <div class="errMsg" *ngIf="denominationsMinValueError">
+                                    <p>Denomination values should be greater than Minimum reload balance</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </mat-card>
+                </div>
+                <div class="col-md-7">
+                    <h3 class="card-title">Stores</h3>
+                    <mat-card>
+                        <div class="row">
+                            <!-- <div class="col-md-6 mb-1em">
+                <mat-form-field>
+                  <input formControlName="maxSingleAmtLoading" #maxAmountLoad maxlength="9"
+                    (input)="checkBalance(minBalance.value,maxBalance.value,maxAmountLoad.value,'','')" matInput
+                    placeholder="Maximum Single Amount Loading" OnlyNumber="true" autocomplete="off" required>
+                  <mat-error *ngIf="eWalletFormGroup.get('maxSingleAmtLoading').hasError('required')">
+                    Please enter the maximum single amount which can be loaded </mat-error>
+                </mat-form-field>
+                <div *ngIf="maxSingleErr" class="errMsg mb-0em">
+                      Please enter the Amount with in the range of Minimum and Maximum Balance </div>
+              </div>
+              <div class="col-md-6 mb-1em">
+                <mat-form-field>
+                  <input formControlName="maxTransactionDay" #maxTransactionDay maxlength="9" matInput
+                    (input)="checkBalance(minBalance.value,maxBalance.value,maxAmountLoad.value,maxTransactionDay.value,maxTransactionMonth.value)"
+                    placeholder="Maximum Transaction Volume (Day)" OnlyNumber="true" autocomplete="off" required>
+                  <mat-error *ngIf="eWalletFormGroup.get('maxTransactionDay').hasError('required')">
+                    Please enter value</mat-error>
+                  <mat-error *ngIf="maxPerMonthErr1">
+                      Please enter the Amount less than Maximum Transaction Volume (Month)</mat-error>
+                </mat-form-field>
+                <div *ngIf="maxPerDayErr" class="errMsg mb-0em">
+                  Please enter the Amount with in the range of Minimum and Maximum Balance</div>
+              </div>
+              <div class="col-md-6 mb-1em">
+                <mat-form-field>
+                  <input formControlName="maxTransactionMonth" #maxTransactionMonth maxlength="9" matInput
+                    (input)="checkBalance(minBalance.value,maxBalance.value,maxAmountLoad.value,maxTransactionDay.value,maxTransactionMonth.value)"
+                    placeholder="Maximum Transaction Volume (Month)" OnlyNumber="true" autocomplete="off" required>
+                  <mat-error *ngIf="eWalletFormGroup.get('maxTransactionMonth').hasError('required')">
+                    Please enter value</mat-error>
+                </mat-form-field>
+                <div *ngIf="maxPerMonthErr" class="errMsg mb-0em">
+                  Please enter the Amount with in the range of Minimum and Maximum Balance</div>
+                <div *ngIf="maxPerMonthErr1" class="errMsg mb-em">
+                  Please enter the Amount greater than Maximum Transaction Volume (Day)</div>
+              </div> -->
+                            <div class="col-md-6 mb-1em">
+                                <div class="btm-button-wrap store-select-btn flex">
+                                    <button class="button primary-btn" type="button" (click)="openStoresDialog()">SELECT
+                    STORES</button>
+                                    <p class="stores-selected">{{selectedStore.length}} stores selected</p>
+                                </div>
+                                <div class="errMsg" *ngIf="storeRequired">Please select stores</div>
+                            </div>
+                        </div>
+                    </mat-card>
+                </div>
+            </div>
+            <div class="terms-conditions pt-20px">
+                <h3 class="card-title">Terms & Conditions *</h3>
+                <mat-card class="description-card">
+                    <div class="expansion-panel mb-1em" formArrayName="termAndConditionArray">
+                        <mat-accordion>
+                            <mat-expansion-panel class="mat-expansion-panel" *ngFor="let lang of languageList;let i = index;" [formGroupName]="i">
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        {{lang.languageName}}
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <div class="pt-20px">
+                                    <label>Content</label>
+                                    <editor apiKey="test" formControlName="termsAndCondition">
+                                    </editor>
+                                </div>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </div>
+                    <div class="errMsg" *ngIf="tcError && eWalletFormGroup.controls['termAndConditionArray'].invalid">
+                        Please Enter the Terms & Conditions
+                    </div>
+                </mat-card>
+            </div>
+
+            <div class="btm-button-wrap">
+                <button class="button secondary-btn" [routerLink]="['/search-eWallet']">CANCEL</button>
+                <button class="button primary-btn" type="submit" [disabled]="btnLoader">ADD</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div *ngIf="pageLoader" class="page-loader-block full-page-loader">
+    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+</div>

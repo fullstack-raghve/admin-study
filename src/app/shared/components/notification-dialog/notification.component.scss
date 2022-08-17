@@ -1,0 +1,11 @@
+.dialog-wrap {
+    padding: 1rem;
+}
+/deep/ .mat-dialog-actions {
+     margin-bottom: 0;
+     padding: 7px 22px 10px;
+    display: block;
+}
+/deep/ .mat-dialog-container {
+    min-width: 20vw;
+}

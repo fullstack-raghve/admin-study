@@ -1,0 +1,146 @@
+<div class="bredcrumb-title-wrap">
+  <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+  <div class="title">
+    <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          [routerLink]="['/view-client-on-boarding']"></span>Add Client On Boarding</h1>
+  </div>
+</div>
+<div class="form-wrap">
+  <div class="row">
+    <div class="col-md-4">
+      <mat-card class="add-color">
+        <form id="addClientOnBoarding" [formGroup]="addClientOnBoardingGroup">
+          <div class="grid img-block">
+            <div class="avatar-zone">
+              <img *ngIf="imagePath!=''" [src]="filePathUrl+imagePath" width="270px;" height="160px;"
+                style="object-fit: fill">
+            </div>
+            <input type="file" class="upload_btn" (change)="uploadImage($event.target.files) ; showImageError=false" />
+            <div class="overlay-layer">
+              <img class="upload-icon" src="assets/images/svg-icons/uploadgray_ico.svg" alt="">Upload
+              Image
+            </div>
+            <div *ngIf="showImageError" style="color:red ;text-align: center;">Please upload image</div>
+          </div>
+          <div class="color-container">
+            <div class="select-color">
+              <mat-form-field class="form-field">
+                <input matInput #input maxlength="10" placeholder="Primary Color" formControlName="primaryColor">
+                <mat-icon matSuffix><i class="material-icons">colorize</i></mat-icon>
+              </mat-form-field>
+            </div>
+            <div class="select-color">
+              <mat-form-field class="form-field">
+                <input matInput #input maxlength="10" placeholder="Secondary Color" formControlName="secondaryColor">
+                <mat-icon matSuffix><i class="material-icons">colorize</i></mat-icon>
+              </mat-form-field>
+            </div>
+            <div class="select-category-block">
+              <div class="select-category">
+                <mat-checkbox formControlName="includeMall"> Include Malls</mat-checkbox>
+              </div>
+              <div class="select-category">
+                <mat-checkbox formControlName="includeBrand"> Include Brands</mat-checkbox>
+              </div>
+            </div>
+          </div>
+        </form>
+      </mat-card>
+    </div>
+
+    <div class="col-md-8">
+      <mat-card class="add-country">
+        <div class="row">
+          <div class="col-md-4 name-field">
+            <mat-form-field class="form-field field-width" style="margin-bottom: -11px;">
+              <input matInput placeholder="Name" maxlength="20" [(ngModel)]="name" required>
+            </mat-form-field>
+            <div style="color: red" *ngIf="(name==''|| name==undefined) && formSubmitted">Please select value</div>
+          </div>
+        </div>
+        <div class="text-right btn-addCountry">
+          <button type="button" class="button primary-btn" (click)="onAddRow()">
+            <span class="add-plus">
+              <img src="assets/images/svg-icons/add_ico.svg" alt="add" class="plus-icon">
+            </span>ADD COUNTRY
+          </button>
+        </div>
+        <div class="country-card">
+          <mat-card class="country-details mb-15px" id="dynamicId{{i}}" *ngFor="let row of regionList; let i = index">
+            <div class="row">
+              <div class="col-md-6">
+                <mat-form-field class="field-style field-width">
+                  <mat-select placeholder="{{i==0?'Base Country': 'Country'}}"
+                    (selectionChange)="getCurrency(countryInput.value, i)" #countryInput name="row.countryId"
+                    [(ngModel)]="row.countryId" required>
+                    <mat-option *ngFor="let coun of countries" value="{{coun.countryId}}">
+                      {{ coun.countryName }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <div style="color: red" *ngIf="(row.countryId=='' || row.countryId==undefined) && formSubmitted">Please
+                  select value</div>
+              </div>
+              <div class="col-md-6">
+
+                <p>{{row.currency}} </p>
+                <!-- <mat-error *ngIf="countryFormGroup.get('currency').hasError('required')">Please select value</mat-error> -->
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <mat-form-field class="field-style field-width">
+                  <mat-select placeholder="Language" name="row.languageId" [(ngModel)]="row.languageId" required>
+                    <mat-option *ngFor="let language of languages" [value]="language.languageId">
+                      {{ language.languageName }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <div style="color: red" *ngIf="(row.languageId=='' || row.languageId==undefined) && formSubmitted">
+                  Please select value</div>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field class="field-width">
+                  <input matInput type="text" maxlength="5" OnlyNumber="true" placeholder="Tier Engagements Days"
+                    name="row.tierEngegementDays" [(ngModel)]="row.tierEngegementDays" required>
+                </mat-form-field>
+                <div style="color: red"
+                  *ngIf="(row.tierEngegementDays=='' || row.tierEngegementDays==undefined) && formSubmitted">Please
+                  select
+                  value</div>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field class="field-width">
+                  <input matInput type="text" placeholder="Delivery Charge" maxlength="5" formControlName="deliveryCharge">
+                </mat-form-field>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field class="field-width">
+                  <input matInput class="time-picker wid" placeholder="Delivery Time" [owlDateTimeTrigger]="dtsuno"
+                    [owlDateTime]="dtsuno" formControlName="setTime">
+                  <img src="assets/images/icons/time_ico.svg" width="20px" alt="">
+                  <owl-date-time [pickerType]="'timer'" #dtsuno></owl-date-time>
+                </mat-form-field>
+              </div>
+              <div class="button-wrap mb-10px" style="width: 100%;" *ngIf="i > 0">
+                <div class="text-right">
+                  <button class='button tertiary-btn btn-border' (click)="onRemoveRow(i)">REMOVE</button>
+                </div>
+              </div>
+            </div>
+          </mat-card>
+          <div class="row">
+            <div class="col-md-12">
+            </div>
+          </div>
+        </div>
+      </mat-card>
+      <div class="btm-button-wrap">
+        <button class="button secondary-btn" type="button">CANCEL</button>
+        <button class="button primary-btn" (click)="createClientOnBoarding(addClientOnBoardingGroup.value)"
+          type="submit">SAVE</button>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,305 @@
+<div class="page-wrap-se">
+  <div class="search-panel-block">
+    <div class="bredcrumb-title-wrap pb-50">
+      <div class="search-container-block">
+        <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+        <div class="search-list ">
+          <form class="filter-wrap no-padd" [formGroup]="searcheventGiftingForm" (submit)="filterAndGetEvents()">
+            <div class="row title-search-row">
+              <div class="col-md-3 title-search-col">
+                <div class="title">
+                  <h1>Search Events</h1>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-3">
+              </div>
+           
+              <div class="col-md-6 title-search-col">
+                <div class="searchform-block">
+                  <div class="common-search">
+                    <!-- <input type="text" (keyup)="applyFilter($event.target.value)" formControlName="searchcardOid"
+                    placeholder="Search by Event Name" /> -->
+                    <input type="text" formControlName="searchcardOid"
+                      placeholder="Search by Event Name" maxlength="50" />
+                    <span class="search-btn" (click)="filterAndGetEvents()"></span>
+                    <div class="filter-btn-wrap">
+                      <span class="filter-btn" (click)="openFilter();" [ngClass]="status ? 'open' : 'close'"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3 title-search-col">
+                <button matRipple type="button" class="button primary-btn float-right" [routerLink]="['/add-events']"
+               >
+                <img alt="add" class="plus-icon" src="assets/images/svg-icons/add_ico.svg">
+                ADD
+            </button>
+            <!-- <button type="button" class="button primary-btn float-right"
+            [routerLink]="['/add-events']">
+            <img alt="add" class="plus-icon" src="assets/images/svg-icons/add_ico.svg">
+            ADD
+        </button> -->
+              </div>
+            </div>
+            <div class="feild-search ng-star-inserted" *ngIf="!status" style="width:100%">
+              <div class="row feild-search-inner" >
+             <div class="row" style="width:100%!important">
+                  <!-- <div class="col-md-3">
+                 
+
+                    <mat-select-autocomplete name="Country" ngDefaultControl [placeholder]="'Country'"
+                     [options]="countryList" [display]="'countryName'"
+                    [value]="'value'" [multiple]='true' [labelCount]="1"
+                    (selectionChange)="getAllCities($event)"
+                    [selectedOptions]="selectedCountryOptions"
+                    [formControl]="searcheventGiftingForm.controls['Country']" #countryyInput>
+                  </mat-select-autocomplete>
+                  </div> -->
+                 
+<!--                 
+                  <div class="col-md-3">
+                    <mat-select-autocomplete name="CITY" ngDefaultControl [placeholder]="'City'" [options]="cityList"
+                      [display]="'cityName'" [value]="'value'" [multiple]='true' [labelCount]="1"
+                       [selectedOptions]="selectedCityOptions"
+                      [formControl]="searcheventGiftingForm.controls['cityName']">
+                    </mat-select-autocomplete>
+                  </div> -->
+
+                  <div class="col-md-3">               
+                    <mat-select-autocomplete name="BRAND" ngDefaultControl [placeholder]="'Brand'"
+                      [options]="allBrands" [display]="'brandName'" [value]="'value'" [multiple]='true'
+                      [labelCount]="1" [selectedOptions]="selectedBrandOptions"
+                      [formControl]="searcheventGiftingForm.controls['Brand']" #brandType>
+                    </mat-select-autocomplete>
+                  </div>
+
+                  <div class="col-md-3">
+                    <mat-select-autocomplete name="rewardType" ngDefaultControl [placeholder]="'Reward Type'"
+                      [options]="rewardDetails" [display]="'rewardDETAIL'"
+                      [selectedOptions]="selectedrewardType"
+                       [value]="'value'" [multiple]='true'
+                      [labelCount]="1" [formControl]="searcheventGiftingForm.controls['rewardType']" #rewardType>
+                    </mat-select-autocomplete>
+
+
+                  </div>
+
+
+
+                  <div class="col-md-3">
+                    <mat-form-field style="padding-top:12px;">
+                      <mat-label>From Date</mat-label>
+                      <input matInput [matDatepicker]="picker" formControlName="startDate" readonly>
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-3">
+                    <mat-form-field style="padding-top:12px;">
+                      <mat-label>To Date</mat-label>
+                      <input matInput [matDatepicker]="modifiedTo" formControlName="endDate"
+                        [min]="searcheventGiftingForm.get('startDate').value=='' ? 'minDate' : searcheventGiftingForm.get('startDate').value"
+                        readonly>
+                      <mat-datepicker-toggle matSuffix [for]="modifiedTo"></mat-datepicker-toggle>
+                      <mat-datepicker #modifiedTo></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+               
+
+
+             
+            </div>
+
+
+                <div class="row" style="width:100%!important">
+                  <div class="col-md-3">
+
+                 
+
+                    <mat-select-autocomplete ngDefaultControl  name="location"  [placeholder]="'Location'" [options]="allLocation" [display]="'locationName'"
+                    [value]="'value'" [multiple]='true' [labelCount]="1" [selectedOptions]="selectedLocationOptions"
+                    [formControl]="searcheventGiftingForm.controls['location']" #locationField>
+                  </mat-select-autocomplete>
+
+                  </div>
+
+                  <div class="col-md-3">
+                    <mat-select-autocomplete name="status" ngDefaultControl [placeholder]="'Status'"
+                      [options]="sstatusDetails" [display]="'storeDETAIL'"
+                      [selectedOptions]="selectedstatusOptions"
+                       [value]="'value'" [multiple]='true'
+                      [labelCount]="1" [formControl]="searcheventGiftingForm.controls['status']"  #statusType>
+                    </mat-select-autocomplete>
+                  </div>
+
+                  <div class="col-md-3">
+                    <mat-select-autocomplete name="status" ngDefaultControl [placeholder]="'Approval Status'"
+                      [options]="aprovetatusDetails" [display]="'storeDETAIL'"
+                      [selectedOptions]="selectedstatusOptions"
+                       [value]="'value'" [multiple]='true'
+                      [labelCount]="1" [formControl]="searcheventGiftingForm.controls['approveStats']" #approveType>
+                    </mat-select-autocomplete>
+                  </div>
+
+                 
+
+                  
+
+
+                 
+                </div>
+              
+              </div>
+              <div class="row" style="width:90%!important">
+                <div class="col button-wrap">
+                  <button class='button quaternary-btn' (click)="resetForm()">RESET</button>
+                  <button class='button tertiary-btn' type="submit">APPLY</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    </div>
+
+ 
+    <div class="col-md-12">
+
+    <div class="form-wrap fw-custom">
+      <div class="table-wrap">
+
+        <!-- <div *ngIf="searchGiftVal" class="select-store-block">
+          <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+        </div> -->
+        <div *ngIf="searchGiftVal" class="page-loader-block full-page-loader">
+          <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+        </div>
+        <div class="table-wrap-inner" [class.nodatafound]="noRecords">
+
+          <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)" *ngIf="dataSource" style="white-space: nowrap;">
+
+
+            <ng-container matColumnDef="eventId">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>EVENT ID</th>
+              <td mat-cell *matCellDef="let row"> {{row.eventId}}</td>
+            </ng-container>
+
+
+            <ng-container matColumnDef="eventName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>EVENT NAME</th>
+
+              <td mat-cell *matCellDef="let row" class="break-spaces">
+                <u><a [routerLink]="['/view-events/'+row.eventId]"
+                    class="text-blue">{{row.eventName}}</a></u>
+                    <!-- <u><a
+                      class="text-blue">{{row.eventName | titlecase}}</a></u> -->
+                  </td>
+            </ng-container>
+
+            <ng-container matColumnDef="BRAND_NAME">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> BRAND </th>
+              <td mat-cell *matCellDef="let row" > {{row.BRAND_NAME}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="rewardType">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> REWARD TYPE </th>
+              <td mat-cell *matCellDef="let row"> {{row.rewardType}}</td>
+            </ng-container>
+
+            
+
+       
+
+           <ng-container matColumnDef="userCount">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> USERS COUNT </th>
+              <td mat-cell *matCellDef="let row" class="text-center">{{row.userCount}}</td>
+            </ng-container> 
+ 
+            <ng-container matColumnDef="storesCount">
+               <th mat-header-cell *matHeaderCellDef mat-sort-header>STORES COUNT</th>
+              <td mat-cell *matCellDef="let row" class="text-center">{{row.storesCount}}</td>
+            </ng-container>
+
+            
+            <ng-container matColumnDef="locationCount">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>LOCATION COUNT</th>
+              <td mat-cell *matCellDef="let row" class="text-center">{{row.locationCount}}</td>
+            </ng-container>
+
+       
+
+            <!-- <ng-container matColumnDef="customersAccepted">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>COUSTOMERS ACCEPTED</th>
+              <td mat-cell *matCellDef="let row">{{row.customersAccepted}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="customersRecivedGifts">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> CUSTOMERS RECEIVED GIFTS</th>
+              <td mat-cell *matCellDef="let row">{{row.customersRecivedGifts}}</td>
+            </ng-container> -->
+
+            <ng-container matColumnDef="eventStartDate">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> EVENT START DATE </th>
+              <td mat-cell *matCellDef="let row">{{row.eventStartDate | date:"dd/MM/yyyy"}}</td>
+            </ng-container>
+
+     
+
+            <ng-container matColumnDef="eventEndDate">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> EVENT END DATE </th>
+              <td mat-cell *matCellDef="let row">{{row.eventEndDate | date:"dd/MM/yyyy"}}</td>
+            </ng-container>
+            
+
+        
+
+            <ng-container matColumnDef="createdOn">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>CREATED ON</th>
+              <td mat-cell *matCellDef="let row">{{row.createdOn | date:"dd/MM/yyyy"}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="lastModified">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>LAST MODIFIED</th>
+              <td mat-cell *matCellDef="let row">{{row.lastModified | date:"dd/MM/yyyy"}}</td>
+            </ng-container>
+
+            
+
+            <ng-container matColumnDef="ApprovalStatus">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>APPROVAL STATUS</th>
+              <td mat-cell *matCellDef="let row" class="break-spaces">{{row.ApprovalStatus}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>STATUS</th>
+              <td mat-cell *matCellDef="let row">{{row.status}}</td>
+            </ng-container>
+
+
+
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+            </tr>
+          </table>
+          <div class="no-records" *ngIf = "noRecords">
+            No Records Found!
+          </div>
+          <!-- <div *ngIf="searchGiftVal" class="select-gift-block">
+            <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+          </div> -->
+
+          
+        </div>
+        <!-- <mat-paginator [pageSizeOptions]="[10,20,50,100]"></mat-paginator> -->
+
+        <mat-paginator [length]="resultsLength" (change)="filterAndGetEvents()" #paginator (page)="getUpdate($event)" [pageSize]="paginationData.pageSize" 
+        [pageSizeOptions]="[10,20,50,100]">
+        </mat-paginator>
+      </div>
+    </div>
+</div>
+</div>

@@ -1,0 +1,41 @@
+.page-wrap {
+    padding: 1.8em 1.8em 4em 1.8em;
+    .left-col {
+        min-height: 300px;
+        height: 100%;
+    }
+    .right-col {
+        .sub-title {
+            font-size: 16px;
+            color: #000;
+        }
+        min-height: 300px;
+        height: 100%;
+        .variants-table {
+            table {
+                border-collapse: collapse;
+                width: 100%;
+            }
+            .table-head {
+                font-size: 14px;
+                font-weight: normal;
+                color: #b7b7b7;
+                background-color: #f2f3f2;
+            }
+            th,
+            td {
+                text-align: left;
+                padding: 8px 8px 8px 20px;
+                color: #292929;
+            }
+            tr:nth-child(odd) {
+                background-color: #fcfcfc;
+            }
+        }
+    }
+}
+
+.direction {
+    direction: rtl !important;
+    text-align: right;
+}

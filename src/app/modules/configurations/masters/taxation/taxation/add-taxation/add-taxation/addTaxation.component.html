@@ -1,0 +1,108 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title">
+        <h1>Masters</h1>
+    </div>
+</div>
+<div class="page-wrap-masters">
+    <div class="row master-cards">
+        <div class="col-md-3 master-list master-left">
+            <mat-card>
+                <ul class="master_listing">
+                    <li class="master-list-selected"><a href="javascript:void(0)" [routerLink]="['/search-country']">Countries</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-cities']">Cities</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-malls']">Malls</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-currency']">Currency</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-currency-conversion']">Currency
+                            Conversion</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-brand-category']">Brand Category</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-language']">Language</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-faq-category']">FAQ Category</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-about-us-category']">About Us Category</a>
+                    </li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-feedback']">Feedback</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-enquiry-type']">Enquiry Type</a></li>
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/add-taxation']">Taxation</a></li> -->
+                </ul>
+            </mat-card>
+        </div>
+        <div class="col-md-9 master-right">
+            <mat-card class="master-content">
+                <div class="country-card">
+                    <div class="subtitle flex-center">
+                        <h3>Add Taxation</h3>
+                    </div>
+
+                    <form (submit)="createTaxation(createTaxationFormGroup.value)" [formGroup]="createTaxationFormGroup" #createTaxationForm="ngForm">
+                        <div class="add-taxation">
+                            <span class="add-tax">
+                                Add Taxation 
+                            </span>
+                            <button class="button primary-btn" type="button" (click)="addRow(createTaxationFormGroup.value)"><img
+                                src="assets/images/icons/add_ico.png" alt=""></button>
+                        </div>
+                        <div class="table-wrap-inner">
+                            <table class="GeneratedTable">
+                                <thead>
+                                    <tr>
+                                        <th class="headers">Tax Type</th>
+                                        <th class="headers">Amount</th>
+                                        <th class="headers">Tax Unit</th>
+                                        <th class="headers"></th>
+                                    </tr>
+                                </thead>
+                                <tbody formArrayName="taxDetails">
+                                    <tr *ngFor="let regionLocale of createTaxationFormGroup['controls']['taxDetails']['controls'];let j = index;" [formGroupName]="j">
+                                        <td>
+                                            <div class="table-cell">
+                                                <mat-form-field>
+                                                    <input matInput formControlName="taxType" required>
+                                                    <mat-error *ngIf="regionLocale.get('taxType').hasError('required')">
+                                                        Please enter value
+                                                    </mat-error>
+                                                    <mat-error *ngIf="regionLocale.get('taxType').hasError('pattern')">Only alphanumerics are allowed</mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="table-input">
+                                                <mat-form-field>
+                                                    <input matInput formControlName="amount" OnlyNumber="true" required>
+                                                    <mat-error *ngIf="regionLocale.get('amount').hasError('required')">
+                                                        Please enter value
+                                                    </mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                <mat-form-field>
+                                                    <mat-select placeholder="Select Tax Unit" formControlName="taxUnit" required>
+                                                        <mat-option value="PERCENTAGE">Percentage</mat-option>
+                                                        <mat-option value="FIXED_AMOUNT">Fixed Amount</mat-option>
+                                                    </mat-select>
+                                                    <mat-error *ngIf="regionLocale.get('taxUnit').hasError('required')">
+                                                        Please enter value
+                                                    </mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                        </td>
+                                        <td class="rows">
+                                            <div class="col-md-1 text-right">
+                                                <button class="button secondary-btn" (click)="onRemoveRow(regionLocale,j)" type="button"><img src="assets/images/svg-icons/minus_ico.svg" alt=""></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="btm-button-wrap">
+                            <button type="button" class="site_btn gray_btn" [routerLink]="['/add-taxation']">CANCEL</button>
+                            <button type="submit" class="button primary-btn">SAVE</button>
+                        </div>
+                    </form>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+</div>

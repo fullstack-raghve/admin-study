@@ -1,0 +1,63 @@
+<div class="page-wrap">
+    <div class="header">
+        <!-- <h3>{{response.message}}</h3> -->
+        <h3>Add Transaction</h3>
+        <div class="close-icon">
+            <img src="assets/images/icons/filter_close_ico.png" alt="" (click)="onCloseClick(customerOid)">
+        </div>
+    </div>
+    <div class="txn-details">
+        <div class="row">
+            <div class="col-5">
+                <label>Transaction ID</label>
+                <p>{{txnId}}</p>
+            </div>
+            <div class="col-5">
+                <label>Member ID</label>
+                <p>{{customerOid}}</p>
+            </div>
+        </div>
+        <table>
+            <tr class="text-center">
+                <th style="color: #8f8c8c">Base Points Accrued</th>
+                <th style="color: #8f8c8c">
+                    {{ response.businessType == 'FNB' ? 'Stamps Accrued' : 'Brand Points Accrued'}}
+                </th>
+            </tr>
+            <tr>
+                <td>{{response.accruedBasePoints}}</td>
+                <td *ngIf="response.businessType == 'FNB'">
+                    <span>
+            <span *ngIf="response.accruedStamps.iceCreamStamps>0">
+              	{{response.accruedStamps.iceCreamStamps}} Ice Cream
+            </span>
+                    </span>
+                    <span>
+             <span *ngIf="response.accruedStamps.iceCreamCakeStamps>0">
+              <span *ngIf="response.accruedStamps.iceCreamStamps>0">, </span> {{response.accruedStamps.iceCreamCakeStamps}} Ice Cream Cake
+                    </span>
+                    </span>
+                    <span>
+            <span *ngIf="response.accruedStamps.beveragesStamps>0">
+              {{response.accruedStamps.beveragesStamps}} Beverages
+            </span>
+                    </span>
+                    <span>
+            <span *ngIf="response.accruedStamps.sandwichStamps>0">
+              <span *ngIf="response.accruedStamps.beveragesStamps>0">, </span> {{response.accruedStamps.sandwichStamps}} Sandwich
+                    </span>
+                    </span>
+                    <span *ngIf="response.accruedStamps.sandwichStamps==0 && response.accruedStamps.beveragesStamps==0 && response.accruedStamps.iceCreamStamps==0 && response.accruedStamps.iceCreamCakeStamps==0">
+             0
+          </span>
+                </td>
+                <td *ngIf="response.businessType != 'FNB'">
+                    {{response.accruedBrandPoints}}
+                </td>
+            </tr>
+        </table>
+        <div class="button-wrap text-right">
+            <button type="submit" class="button primary-btn" (click)="onCloseClick(customerOid)">DONE</button>
+        </div>
+    </div>
+</div>

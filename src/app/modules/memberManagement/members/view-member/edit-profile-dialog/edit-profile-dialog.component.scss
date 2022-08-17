@@ -1,0 +1,41 @@
+.page-wrap {
+    padding: 1.5em;
+}
+
+/deep/.cdk-overlay-pane {
+    max-width: 42vw!important;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    h3 {
+        font-size: 24px;
+        color: #FF8E48;
+    }
+}
+
+.close-icon {
+    cursor: pointer;
+}
+
+.edit-profile {
+    padding: 25px 0 0 0;
+    .member-details {
+        .page-title {
+            color: #f9943d;
+            font-size: 14px;
+        }
+    }
+}
+
+/deep/ .mat-autocomplete-panel {
+    /deep/ .mat-option {
+        /deep/ .mat-option-text {
+            span {
+                font-size: 12px;
+            }
+        }
+    }
+}

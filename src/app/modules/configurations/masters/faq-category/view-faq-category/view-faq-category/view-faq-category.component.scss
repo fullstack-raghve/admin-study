@@ -1,0 +1,87 @@
+.master-content{
+    border-radius: 8px;
+    .bottom-margin{
+        margin-bottom: 15px
+    }
+}
+.faq-card {
+    background-color: #F8F8F8;
+}
+.img-block{
+     .overlay-layer{
+         width: 86px;
+         height: 40px;
+         position: absolute;
+         margin-top: 68px;
+         opacity: 0.5 ;
+         z-index: 0;
+         font-size: 8px;
+         color: #095bd0;
+         text-align: center;
+         line-height: 40px;
+         font-weight: 500;
+     }
+     .upload_btn{
+        position:absolute;
+        width: 80px;
+        height:40px;
+        margin-top:68px;
+        z-index:10;
+        opacity: 0;
+    }
+    .avatar-zone{
+        width:80px;
+        height:80px;
+        background-color: #F2F2F2;
+        text-align: center;
+        border: 1px dashed #dbdbdb;
+    }
+    .upload-img {
+        width: 80px;
+    }
+
+    .upload-icon {
+        width: 12px;
+        height: 12px;
+        margin-right: 5px;
+    }
+
+}
+.grid {
+    display: grid;
+}
+.lang-field {
+    padding-left: 0px;
+    position: absolute;
+    top: 0px;
+        .faq-lang {
+        background-color: #E6E6E6;
+        border-radius: 0px;
+        height: 33px;
+        width: 80px;
+        padding: 7px 10px;
+    }
+}
+
+.mat-card>:last-child:not(.mat-card-footer) {
+    margin-bottom: 10px;
+}
+
+.faq-card {
+    padding-bottom: 45px;
+    position: relative;
+    .title {
+        right: 10px;
+        left: 40px;
+        top: 28px;
+        .mat-form-field {
+            display: inline;
+            position: relative;
+            text-align: left;
+        }
+    }
+}
+.browse-block {
+    position: absolute;
+    right: 18px;
+}

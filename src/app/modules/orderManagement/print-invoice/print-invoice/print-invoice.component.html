@@ -1,0 +1,16 @@
+<div class="invoice">
+    <div class="pad-t pad-b">
+        <span class="oid">Reciproci Order ID : </span><span>
+        {{invoiceData.transactionId}}
+    </span>
+    </div>
+    <div *ngFor="let invoiceDataProduct of invoiceDataProductDetails" class="pad-t pad-b">
+        {{invoiceDataProduct.productQuantity}} X {{invoiceDataProduct.productName}}
+    </div>
+    <div class="pad-t pad-b">
+        {{invoiceData.txnDate}}
+    </div>
+    <div class="pad-t pad-b">
+        {{invoiceData.phoneNumber}}
+    </div>
+</div>

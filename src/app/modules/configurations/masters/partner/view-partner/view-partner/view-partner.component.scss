@@ -1,0 +1,82 @@
+.master-cards {
+    margin: 1px 5px 58px 5px;
+    .master-list {
+        .mat-card {
+            padding: 0 0 10px 0;
+            border-radius: 8px;
+            ul,
+            li {
+                // margin: 10px 0;
+                padding: 7px 0 0px 0px;
+                list-style: none;
+            }
+            ul li a:hover,
+            ul li.active a {
+                border-left-style: solid;
+            }
+            a {
+                color: #000;
+                text-decoration: none;
+                padding: 9px 20px;
+                width: 100%;
+                display: block;
+                font-size: 14px;
+                &:hover {
+                    color: #FF8E48;
+                    background-color: #f5f5f5;
+                    text-decoration: none;
+                }
+            }
+        }
+    }
+}
+
+.highlight_list {
+    background-color: #ddd;
+    a {
+        padding-left: 10px !important;
+    }
+}
+
+.left-arrow {
+    width: 100%;
+    margin-right: 10px;
+    .left-img {
+        height: 12px;
+        outline: none;
+        width: 15px;
+        color: #7B7B7B;
+        cursor: pointer;
+    }
+}
+
+.add-btn {
+    position: absolute;
+    bottom: 2px;
+    right: 0;
+    width: 30px;
+    border: none;
+    background-color: transparent;
+}
+
+.multi-select{
+    .example-additional-selection {
+      opacity: 0.75;
+      font-size: 0.75em;
+    }
+}
+.master-content{
+    border-radius: 8px;
+}
+.master-fieldSet {
+    .language-fieldset{
+        padding: 0px 26px 10px;
+        border: 1px solid #dbdbdb;
+        border-radius: 5px;
+        .fieldset-heading {
+            font-size: 14px;
+            padding-inline-start: 7px;
+            max-width: 34% !important;
+        }
+    }
+}

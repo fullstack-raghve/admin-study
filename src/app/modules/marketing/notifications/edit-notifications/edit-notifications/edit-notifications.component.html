@@ -1,0 +1,613 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container">
+        <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg"
+                    alt="leftArrow" [routerLink]="['/search-notifications']"></span>Edit Notification</h1>
+        <mat-slide-toggle class="example-margin text-right" [(ngModel)]="toggleVal" (change)="toggleStatus($event)">
+            {{statusValue}}
+        </mat-slide-toggle>
+    </div>
+</div>
+<div class="page-wrap">
+    <form>
+        <div class="notification-block">
+            <mat-horizontal-stepper #stepper class="campaign-stepper" linear>
+                <mat-step [stepControl]="firstFormGroup">
+                    <form [formGroup]="firstFormGroup">
+                        <ng-template matStepLabel>Basic Details</ng-template>
+                        <div class="basic-details">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label>Select Activity</label>
+                                    <p>{{ activity }}</p>
+                                </div>
+                                <div class="col-md-3" *ngIf="transactedStores">
+                                    <mat-form-field>
+                                        <mat-select placeholder="Select Mall" formControlName="mallCtrl">
+                                            <mat-option *ngFor="let mall of mallList" [value]="mall.mallId" (click)="getMallVal(mall.mallId)">
+                                                {{mall.mallName}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="firstFormGroup.get('mallCtrl').hasError('required')">Please select value</mat-error>
+                                    </mat-form-field>
+
+                                </div>
+                                <div class="col-md-4 transactedStores-val" *ngIf="transactedStores">
+
+                                    <mat-select-autocomplete name="STORE" ngDefaultControl [placeholder]="'Store'" [options]="storeListALL" [display]="'storeName'" [value]="'value'" [multiple]='true' [labelCount]="1" [selectedOptions]="selectedStoreOptions" [formControl]="firstFormGroup.controls['storeId']"
+                                        #storeInput>
+                                    </mat-select-autocomplete>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <mat-form-field>
+                                        <input matInput placeholder="Notification Name" formControlName="notificationName" (ngModelChange)="getNotificationData()" required>
+                                        <mat-error *ngIf="firstFormGroup.get('notificationName').hasError('required')">
+                                            Please Enter value</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-4" *ngIf="transactedBrands">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput placeholder="Select Brand" aria-label="brand" [matAutocomplete]="brandAutoComplete" [formControl]="brandCtrl" required>
+                                        <mat-autocomplete #brandAutoComplete="matAutocomplete">
+                                            <mat-option *ngFor="let brand of filteredBrands | async" [value]="brand.brandName" (click)="getAllBrand(brand.brandId)" #brandInput>
+                                                <span>{{brand.brandName}}</span>
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <mat-error *ngIf="brandCtrl.hasError('required')">
+                                            Please select value</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-4" *ngIf="noofTransactionSelect">
+                                    <mat-form-field>
+                                        <input matInput placeholder="Enter X Number of Transactions" OnlyNumber="true" formControlName="noofTransactions">
+                                        <mat-error *ngIf="firstFormGroup.get('noofTransactions').hasError('required')">
+                                            Please Enter value</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-4" *ngIf="noofPlaysSelect">
+                                    <mat-form-field>
+                                        <input matInput placeholder="XX No of Plays" OnlyNumber="true" formControlName="noofPlays">
+                                        <mat-error *ngIf="firstFormGroup.get('noofPlays').hasError('required')">
+                                            Please Enter value</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-6 mb-20px">
+                                    <mat-form-field>
+                                        <textarea matInput placeholder="Description" formControlName="notificationDesc" maxLength="500" required></textarea>
+                                        <mat-error *ngIf="firstFormGroup.get('notificationDesc').hasError('required')">
+                                            Please Enter value</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="card-title">Select Communication Type *</p>
+                                    <div class="communication-types">
+                                        <mat-checkbox formControlName="communication" *ngFor="let item of communicationTypes" [checked]='isSelected(item.checked)' (change)="updateCheckedOptions(item.name)" [value]="item.name">
+                                            {{item.viewValue}}</mat-checkbox>
+                                    </div>
+                                    <div *ngIf="commError" class="color-red text-center">Please select value</div>
+                                </div>
+                            </div>
+                            <div class="attach-coupon-bg" *ngIf="attachCoupon">
+                                <div class="attach-coupon-reg">
+                                    <div class="attach-coupon-regtitle">
+                                        <p>
+                                            Coupons
+                                        </p>
+                                    </div>
+                                    <div class="attach-bttn">
+                                        <a class='button tertiary-btn p-5px' (click)="addCoupon()">ATTACH COUPON</a>
+                                    </div>
+                                </div>
+                                <div class="selected-coupon">
+                                    <div class="search-panel-block">
+                                        <div class="add-table-wrap">
+                                            <div class="table-wrap">
+                                                <div class="table-wrap-inner">
+                                                    <div class="rule-coupon">
+                                                        <table mat-table [dataSource]="dataSource" matSort>
+                                                            <ng-container matColumnDef="couponId">
+                                                                <th mat-header-cell *matHeaderCellDef mat-sort-headerclass="top-border"> COUPON ID </th>
+                                                                <td mat-cell *matCellDef="let row">
+                                                                    {{ row.couponId }}
+                                                                </td>
+                                                            </ng-container>
+                                                            <ng-container matColumnDef="couponTitle">
+                                                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> COUPON TITLE
+                                                                </th>
+                                                                <td mat-cell *matCellDef="let row">{{ row.couponTitle }}
+                                                                </td>
+                                                            </ng-container>
+                                                            <ng-container matColumnDef="discountType">
+                                                                <th mat-header-cell *matHeaderCellDef class="top-border"> DISCOUNT TYPE </th>
+                                                                <td mat-cell *matCellDef="let row">
+                                                                    {{ row.discountType }}</td>
+                                                            </ng-container>
+                                                            <ng-container matColumnDef="discountValue">
+                                                                <th mat-header-cell *matHeaderCellDef class="top-border"> DISCOUNT VALUE </th>
+                                                                <td mat-cell *matCellDef="let row">{{row.discountValue}}
+                                                                </td>
+                                                            </ng-container>
+                                                            <ng-container matColumnDef="startDate">
+                                                                <th mat-header-cell *matHeaderCellDef class="top-border"> START DATE </th>
+                                                                <td mat-cell *matCellDef="let row">{{row.startDate}}
+                                                                </td>
+                                                            </ng-container>
+                                                            <ng-container matColumnDef="endDate">
+                                                                <th mat-header-cell *matHeaderCellDef class="top-border"> END DATE </th>
+                                                                <td mat-cell *matCellDef="let row">{{row.endDate}}</td>
+                                                            </ng-container>
+                                                            <ng-container matColumnDef="delete">
+                                                                <th mat-header-cell *matHeaderCellDef class="top-border"> </th>
+                                                                <td mat-cell *matCellDef="let row">
+                                                                    <span class="remove-coupon" (click)="removeCoupon(row.couponId)">
+                                                                        <img src="assets/images/icons/filter_close_ico.png"
+                                                                            alt="Close_Bttn">
+                                                                    </span>
+                                                                </td>
+                                                            </ng-container>
+                                                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                                            <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p *ngIf="errorValue" class="color-red">
+                                Please Select Coupons
+                            </p>
+                            <div class="attach-coupon-bg" *ngIf="noofTransactionSelect">
+                                <div class="attach-coupon-reg">
+                                    <div class="attach-coupon-regtitle">
+                                        <p>
+                                            Stores
+                                        </p>
+                                    </div>
+                                    <div class="attach-bttn">
+                                        <div class="nooftxnsselect">
+                                            <div class="exclude-store-card">
+                                                <div class="toggle-panel">
+                                                    <p *ngIf="includeExclude=='Include'">
+                                                        Include Stores
+                                                    </p>
+                                                    <p>
+                                                        <span>
+                                                            <mat-slide-toggle formControlName="ruleType"
+                                                                (change)="toggleIncludeExclude($event)"
+                                                                class="example-margin" [checked]="checked">
+                                                            </mat-slide-toggle>
+                                                        </span>
+                                                    </p>
+                                                    <p *ngIf="includeExclude=='Exclude'">
+                                                        Exclude Stores
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="attach-bttn select-store-bttn">
+                                                <a class='button tertiary-btn p-5px' (click)="openStoresDialog()">SELECT
+                                                    STORES</a>
+                                                <div class="select-store-block">
+                                                    <div *ngIf="selectStoreVal">
+                                                        <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                                                    </div>
+                                                    <p *ngIf="dataStore">{{selectedStore.length}}</p><span>Stores
+                                                        Selected</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="attach-coupon-bg" *ngIf="coursesSelect">
+                                <div class="attach-coupon-reg">
+                                    <div class="attach-coupon-regtitle">
+                                        <p>
+                                            Course
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-right mr-20px">
+                            <button matStepperNext class="button secondary-btn text-right" type="button" [routerLink]="['/search-notifications']">CANCEL</button>
+                            <button matStepperNext class="button primary-btn text-right" type="button" (click)="goBackToFirst(stepper)">CONTINUE</button>
+                        </div>
+                    </form>
+                </mat-step>
+                <mat-step>
+                    <form [formGroup]="secondFormGroup" #updateContentForm="ngForm">
+                        <ng-template matStepLabel>Content</ng-template>
+                        <div class="third-template">
+                            <div class="summary">
+                                <div class="summary-details">
+                                    <div class="">
+                                        <p>{{notificationName}}</p>
+                                    </div>
+                                    <div class="vl">
+                                    </div>
+                                    <div class="">
+                                        <p>{{notificationStartDate}} || {{notificationEndDate}} ,</p>
+                                        <p>{{activity}}</p>
+                                    </div>
+                                    <div class="vl">
+                                    </div>
+                                    <div class="">
+                                        <p *ngIf="pushChecked">App-Push Notification</p>
+                                        <p *ngIf="emailChecked">Email</p>
+                                        <p *ngIf="smsChecked">SMS</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="expansion-panel">
+                                <mat-accordion>
+                                    <mat-expansion-panel *ngIf="pushChecked">
+                                        <mat-expansion-panel-header [collapsedHeight]="'38px'" [expandedHeight]="'38px'">
+                                            <mat-panel-title>
+                                                App-Push Notification
+                                            </mat-panel-title>
+                                        </mat-expansion-panel-header>
+                                        <div class="panel-wrap">
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <mat-form-field>
+                                                        <mat-select placeholder="Select Template" formControlName="pushTemplate" (selectionChange)="onPushChange($event.value)">
+                                                            <mat-option>Select Option
+                                                            </mat-option>
+                                                            <mat-option *ngFor="let push of pushData" [value]="push.templateId">{{push.templateName}}
+                                                            </mat-option>
+                                                        </mat-select>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="field-container">
+                                                        <mat-form-field>
+                                                            <mat-select placeholder="Link To" formControlName="pushLinkTo" required (selectionChange)="updateValidationHyperLink($event.value)">
+                                                                <mat-option *ngFor="let link of pushList" [value]="link.value">
+                                                                    {{link.label}}
+                                                                </mat-option>
+                                                            </mat-select>
+                                                            <mat-error *ngIf="secondFormGroup.get('pushLinkTo').hasError('required')">
+                                                                Please select value</mat-error>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3" *ngIf="secondFormGroup.get('pushLinkTo').value=='Our Brands'">
+                                                    <mat-form-field>
+                                                        <mat-select placeholder="Select Brand" formControlName="specificBrand" required>
+                                                            <mat-option *ngFor="let specificBrand of specificBrands" [value]="specificBrand.brandId">
+                                                                {{specificBrand.brandName}}
+                                                            </mat-option>
+                                                        </mat-select>
+                                                        <mat-error *ngIf="secondFormGroup.get('specificBrand').hasError('required')">
+                                                            Please select value</mat-error>
+                                                    </mat-form-field>
+                                                </div>
+                                                 <div class="col-md-4">
+                                                    <div class="row"  *ngIf="secondFormGroup.get('pushLinkTo').value == 'Category'">
+                                                        <div class="col-md-5 selectedsm_col">
+                                                            <button class='button tertiary-btn' (click)="openLinkToItemPopUP()"
+                                                            type="button">ADD CATEGORY</button>
+                                                            <mat-error *ngIf="linkToItemErr" style="font-size:11px">Please select category</mat-error>
+                                                        </div>
+                                                        <div class="col-md-7 selected-label" *ngIf="linkToIteamName != ''">
+                                                            <p>Category selected</p>
+                                                            <label>{{linkToIteamName}}</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" *ngIf="secondFormGroup.get('pushLinkTo').value == 'Product'">
+                                                        <div class="col-md-5 selectedsm_col">
+                                                          <button class='button tertiary-btn' (click)="openLinkToItemPopUP()"
+                                                            type="button">ADD PRODUCT</button>
+                                                            <mat-error *ngIf="linkToItemErr" style="font-size:11px">Please select product</mat-error>
+                                                        </div>
+                                                        <div class="col-md-7 selected-label" *ngIf="linkToIteamName != ''">
+                                                            <p>Product selected</p>
+                                                            <label>{{linkToIteamName}}</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <mat-form-field>
+                                                        <input matInput placeholder="Hyper Link" formControlName="pushHyperLink">
+                                                    </mat-form-field>
+                                                    <p *ngIf="pushHyperLinkReq" class="hyper-link-err">Please enter a value</p>
+                                                </div>
+                                            </div>
+                                            <div formArrayName="pushLocaleArray" class="customize-scroll" malihu-scrollbar [scrollbarOptions]="scrollbarOptions">
+                                                <mat-card class="pushNotification-card mb-20px" *ngFor="let locale of secondFormGroup['controls']['pushLocaleArray']['controls'];let i = index;" [formGroupName]="i">
+                                                    <div class="lang-field {{languageDirection[i]}} {{langfieldname[i]}}" *ngIf="!pushTemplateChecked">
+                                                        <p>{{ languages[i].languageName}}</p>
+                                                    </div>
+                                                    <div class="lang-field {{languageDirection[i]}} {{langfieldname[i]}}" *ngIf="pushTemplateChecked">
+                                                        <p>{{locale.get('languageId').value}}</p>
+                                                    </div>
+                                                    <div class="row card-mb fieldtop">
+                                                        <div class="col-md-8  content-pushimg-block">
+                                                            <div class="content-img-block">
+                                                                <div>
+                                                                    <div class="grid img-block">
+                                                                        <p class="note-text"><span>image size
+                                                                            200x200</span></p>
+                                                                        <div class="avatar-zone">
+                                                                            <label *ngIf="uploadFlag[i]==false && !prePopulateImg[i]" class="upload-text" [class.placeholder-img]="imgUpload">Notification Icon Image</label>
+                                                                            <img *ngIf="imagePath.length!=0 && imagePath[i]!='' && imagePath[i]!= undefined" class="upload-img" [class.uploaded-img]="imgUpload" [src]="filePathUrl+imagePath[i]" width="80px" height="70px">
+                                                                        </div>
+                                                                        <div class="remove-img" *ngIf="prePopulateImg[i]">
+                                                                            <span> <img
+                                                                                src="assets/images/icons/filter_close_ico.png"
+                                                                                alt=""
+                                                                                (click)="removeImage(i)"><label class="cursor">Remove</label></span>
+                                                                        </div>
+                                                                        <input #uploadEl type="file" class="upload_btn display-none" (change)="uploadImage($event.target.files,i)" />
+
+                                                                        <div class="text-center wid-100" *ngIf="uploadFlag[i]==false  && !prePopulateImg[i]">
+                                                                            <span class="upload-btn-text" (click)='uploadEl.click()'>
+                                                                            <span class="upload-icon">
+                                                                                <img src="assets/images/svg-icons/uploadgray_ico.svg"
+                                                                                    width="12px" alt="Img">
+                                                                            </span>Upload Image
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="store-image">
+                                                                        <div class="grid img-block">
+                                                                            <p class="note-text"><span>image size
+                                                                                1024x512</span></p>
+                                                                            <div class="avatar-zone">
+                                                                                <label class="upload-text" *ngIf="!storeImgFlag[i]" [class.placeholder-img]="imgUpload">Notification Detail Image</label>
+                                                                                <img class="upload-img" *ngIf="imagePathTwo.length!=0 && imagePathTwo[i]!=''" [class.uploaded-img]="imgUpload" [src]="filePathUrl+imagePathTwo[i]" width="100px" height="100px">
+                                                                            </div>
+                                                                            <div class="remove-img" *ngIf="storeImgFlag[i]==true">
+                                                                                <span> <img src="assets/images/icons/filter_close_ico.png" alt=""
+                                                                                (click)="removeDetailImage(i)">
+                                                                                <span>
+                                                                                    <label class="cursor">Remove</label>  
+                                                                                </span></span>
+                                                                            </div>
+                                                                            <input #uploadImgEl type="file" class="upload_btn display-none" (change)="uploadFullImage($event.target.files,i)" required />
+                                                                            <div class="text-center upload-image-text" *ngIf="!storeImgFlag[i]">
+                                                                                <span class="upload-btn-text" (click)='uploadImgEl.click()'>
+                                                                            <span class="upload-icon" class="cursor">
+                                                                                <img src="assets/images/svg-icons/uploadgray_ico.svg"
+                                                                                    width="12px" alt="Img">
+                                                                            </span>Upload Image
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="text-fields {{languageDirection[i]}}">
+                                                                    <div class="d-flex">
+                                                                        <div class='w-75'>
+                                                                        <mat-form-field [class.direction-right]="languages[i].languageName == 'Arabic'">
+                                                                            <textarea matInput placeholder="Subject" formControlName="subject" [(ngModel)]="textAreaAppSubject[i]" #subInp maxLength="500" required></textarea>
+                                                                            <mat-error *ngIf=" locale.hasError('required', 'subject')">
+                                                                                Please enter value</mat-error>
+                                                                            <!-- <mat-error *ngIf=" locale.hasError('pattern', 'subject')">Invalid characters entered</mat-error> -->
+                                                                        </mat-form-field>
+                                                                        </div>
+                                                                        <div>
+                                                                            <div id="emojiBtn" (click)="toggleEmojiPicker(i)" style="cursor: pointer;position: absolute;top: 35px;font-size: large;">😀</div>
+                                                                            <div style='position: absolute;top: 58px;z-index: 999;'>
+                                                                                <emoji-mart class="emoji-mart" set="{{set}}" *ngIf="showEmojiPicker[i]" (emojiSelect)="addEmojiAppSubject($event,i)" title="Pick your emoji…"></emoji-mart>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="d-flex">
+                                                                        <div class='w-75'>
+                                                                        <mat-form-field [class.direction-right]="languages[i].languageName == 'Arabic'">
+                                                                            <textarea matInput placeholder="Content" formControlName="content" [(ngModel)]="textAreaAppContent[i]" [id]="'textareaPush' + i" required maxlength="640" #content></textarea>
+                                                                            <mat-error *ngIf="locale.hasError('required', 'content')">
+                                                                                Please enter value</mat-error>
+                                                                            <!-- <mat-error *ngIf=" locale.hasError('pattern', 'content')">Invalid characters entered</mat-error> -->
+                                                                        </mat-form-field>
+                                                                        </div>
+                                                                        <div>
+                                                                            <div id="emojiContentBtn" (click)="toggleEmojiPickerAppContent(i)" style="cursor: pointer;position: absolute;top: 117px;font-size: large;" >😀</div>
+                                                                            <div style='position: absolute;top: 143px;z-index: 999;'>
+                                                                                <emoji-mart class="emoji-mart" set="{{set}}" *ngIf="showEmojiPickerAppCOntent[i]" (emojiSelect)="addEmojiAppContent($event,i)" title="Pick your emoji…"></emoji-mart>
+                                                                            </div>
+                                                                        </div>
+                                                                       
+                                                                    </div>
+                                                                    <label class="count-length"> *Indicative
+                                                                        character
+                                                                        length :
+                                                                        {{content.value.length}}/640</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4 img-container">
+                                                            <div class="preview-container">
+                                                                <div class="img-preview">
+                                                                    <p class="text-preview">Notification Preview</p>
+                                                                    <img src="assets/images/svg-icons/mobile_frame.svg" alt="">
+                                                                    <div class="notification-content">
+                                                                        <div class="notification-description {{langfieldname[i]}}">
+                                                                            <h6>
+                                                                                {{locale.get('subject').value}}
+                                                                            </h6>
+                                                                            <p>
+                                                                                {{locale.get('content').value}}
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="add-attribute">
+                                                                <button class='button tertiary-btn' (click)="attributeDialog(i , 'PUSH')">PERSONALISE</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </mat-card>
+                                            </div>
+                                        </div>
+                                    </mat-expansion-panel>
+                                    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" *ngIf="smsChecked">
+                                        <mat-expansion-panel-header [collapsedHeight]="'38px'" [expandedHeight]="'38px'">
+                                            <mat-panel-title>
+                                                SMS
+                                            </mat-panel-title>
+                                        </mat-expansion-panel-header>
+                                        <div class="panel-wrap">
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <mat-form-field>
+                                                        <mat-select placeholder="Select Template" formControlName="smsTemplate" (selectionChange)="onSMSChange($event.value)">
+                                                            <mat-option *ngFor="let sms of smsData" [value]="sms.templateId">{{sms.templateName}}
+                                                            </mat-option>
+                                                        </mat-select>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="field-container">
+                                                        <mat-form-field>
+                                                            <mat-select placeholder="Sender ID" formControlName="smsSenderId" required>
+                                                                <mat-option *ngFor="let smsSenderId of smsSenderList" [value]="smsSenderId">
+                                                                    {{smsSenderId}}
+                                                                </mat-option>
+                                                            </mat-select>
+                                                            <mat-error *ngIf="secondFormGroup.get('smsSenderId').hasError('required')">
+                                                                Please Select a value</mat-error>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div formArrayName="smsLocaleArray" class="customize-scroll" malihu-scrollbar [scrollbarOptions]="scrollbarOptions">
+                                                <mat-card class="pushNotification-card mb-20px" *ngFor="let locale of secondFormGroup['controls']['smsLocaleArray']['controls'];let i = index;" [formGroupName]="i">
+                                                    <div class="lang-field {{languageDirection[i]}} {{langfieldname[i]}}" *ngIf="!smsTemplateChecked">
+                                                        <p>{{ languages[i].languageName}}</p>
+                                                    </div>
+                                                    <div class="lang-field {{languageDirection[i]}} {{langfieldname[i]}}" *ngIf="smsTemplateChecked">
+                                                        <p>{{locale.get('languageId').value}}</p>
+                                                    </div>
+                                                    <div class="row card-mb fieldtop">
+                                                        <div class="col-md-7">
+                                                            <div class="text-fields {{languageDirection[i]}}">
+                                                                <div class="field-container">
+                                                                    <mat-form-field [class.direction-right]="languages[i].languageName == 'Arabic'">
+                                                                        <textarea matInput placeholder="Content" formControlName="content" [id]="'textarea' + i" required maxlength="640" #content></textarea>
+                                                                        <mat-error *ngIf="locale.hasError('required', 'content')">
+                                                                            Please enter value</mat-error>
+                                                                        <mat-error *ngIf="locale.hasError('pattern','content')" class="ft-12">
+                                                                            Special character(s) is not allowed
+                                                                        </mat-error>
+                                                                    </mat-form-field>
+                                                                    <label class="count-length"> *Indicative
+                                                                        character
+                                                                        length :
+                                                                        {{content.value.length}}/640</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-5 img-container">
+                                                            <div class="preview-container">
+                                                                <div class="img-preview">
+                                                                    <p class="text-preview">Notification Preview</p>
+                                                                    <img src="assets/images/svg-icons/mobile_frame.svg" alt="">
+                                                                    <div class="notification-content">
+                                                                        <div class="notification-description {{langfieldname[i]}}">
+                                                                            <div>
+                                                                                <p>
+                                                                                    {{locale.get('content').value}}
+                                                                                </p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="add-attribute">
+                                                                <button class='button tertiary-btn' (click)="attributeDialog(i , 'SMS')">PERSONALISE</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </mat-card>
+                                            </div>
+                                        </div>
+                                    </mat-expansion-panel>
+                                    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" *ngIf="emailChecked">
+                                        <mat-expansion-panel-header [collapsedHeight]="'38px'" [expandedHeight]="'38px'">
+                                            <mat-panel-title>
+                                                Email
+                                            </mat-panel-title>
+                                        </mat-expansion-panel-header>
+                                        <div class="email-panel">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="view-camp-block">
+                                                        <div class="view-camp">
+                                                            <mat-form-field>
+                                                                <mat-select placeholder="Select Template" formControlName="emailTemplate" (selectionChange)="onEmailChange($event.value)">
+                                                                    <mat-option *ngFor="let email of emailData" [value]="email.templateId" (click)="selectedEmail(email)">
+                                                                        {{email.templateName}}
+                                                                    </mat-option>
+                                                                </mat-select>
+                                                            </mat-form-field>
+                                                        </div>
+                                                        <div class="view-camp">
+                                                            <mat-form-field>
+                                                                <mat-select placeholder="Sender Email ID" formControlName="emailSenderId" required>
+                                                                    <mat-option *ngFor="let emailSenderId of emailSenderList" [value]="emailSenderId">
+                                                                        {{emailSenderId}}
+                                                                    </mat-option>
+                                                                </mat-select>
+                                                                <mat-error *ngIf="secondFormGroup.get('emailSenderId').hasError('required')">
+                                                                    Please enter value</mat-error>
+                                                            </mat-form-field>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div formArrayName="emailLocaleArray" class="col-md-12">
+                                                    <mat-accordion (selectedTabChange)="call($event)">
+                                                        <mat-expansion-panel (opened)="panelOpenState = true;expandDataEmail()" [class.right-panel]="languages[i].languageName=='Arabic'" (closed)="panelOpenState = false" *ngFor="let locale of secondFormGroup['controls']['emailLocaleArray']['controls'];let i = index;"
+                                                            [formGroupName]="i">
+                                                            <mat-expansion-panel-header [collapsedHeight]="'38px'" [expandedHeight]="'38px'">
+                                                                <mat-panel-title *ngIf="!emailTemplateChecked">
+                                                                    {{ languages[i].languageName}}
+                                                                </mat-panel-title>
+                                                                <mat-panel-title *ngIf="emailTemplateChecked">
+                                                                    {{locale.get('languageId').value}}
+                                                                </mat-panel-title>
+                                                            </mat-expansion-panel-header>
+                                                            <div class="flex-center mb-20px mt-20px {{languageDirection[i]}}">
+                                                                <mat-form-field [class.direction-right]="languages[i].languageName == 'Arabic'">
+                                                                    <input matInput placeholder="Subject" formControlName="subject" maxLength="500" required>
+                                                                    <mat-error *ngIf="locale.hasError('required', 'subject')">
+                                                                        Please enter value</mat-error>
+                                                                </mat-form-field>
+                                                                <div class="preview-title">
+                                                                    <a class='button tertiary-btn p-5px' (click)="attributeDialog(i , 'EMAIL')">PERSONALISE</a>
+                                                                </div>
+                                                            </div>
+                                                            <div class=""></div>
+                                                            <editor *ngIf="languages[i].languageName != 'Arabic'" [init]="{
+                                                            plugins: 'code, preview ,print,fullpage, searchreplace, directionality, visualblocks, visualchars, fullscreen, image, link, media, template, codesample, table, charmap, hr, pagebreak, nonbreaking, anchor, toc, insertdatetime, advlist, lists, wordcount, imagetools, textpattern, help',
+                                                            toolbar:'code preview',
+                                                            height : '480'}" formControlName="content" (onChange)="onChangeInEditor($event)" (onSelectionChange)="onChangeInEditor($event)" required>
+                                                            </editor>
+                                                        </mat-expansion-panel>
+                                                    </mat-accordion>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </mat-expansion-panel>
+                                </mat-accordion>
+                            </div>
+                            <div *ngIf="contentError" class="color-red padl-23">Please fill all mandatory fields</div>
+                        </div>
+                        <div class="text-right mr-15px">
+                            <button class="button secondary-btn text-right" type="button" [routerLink]="['/search-notifications']">CANCEL</button>
+                            <button class="button primary-btn text-right" type="button" (click)="updateNotification()">UPDATE</button>
+                        </div>
+                    </form>
+                </mat-step>
+            </mat-horizontal-stepper>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,22 @@
+.page-wrap {
+    padding: 1.5em;
+    .header {
+        margin-bottom: 20px;
+        h3 {
+            font-size: 18px;
+            color: #000;
+        }
+    }
+    .close-icon {
+        cursor: pointer;
+        position: relative;
+        right: 0;
+        top: -20px;
+    }
+}
+
+/deep/ .reject-order-dialogue{
+    /deep/.mat-dialog-container {
+        min-width: 25vw !important;
+    }
+}

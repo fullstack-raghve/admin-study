@@ -1,0 +1,102 @@
+<div class="page-wrap">
+  <div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container">
+      <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow" [routerLink]="['/search-role']"></span>Add Roles & Permissions</h1>
+      <mat-slide-toggle [(ngModel)]="toggleVal" class="example-margin" [checked]="checked" [disabled]="disabled">
+        {{toggleVal==true ? "ONLINE" : "OFFLINE"}}
+      </mat-slide-toggle>
+    </div>
+  </div>
+  <div class="form-wrap">
+    <div class="row" style="margin: 0;
+    padding-bottom: 3rem;">
+      <div class="col-md-4 role-form-col" style="position: initial;">
+        <form [formGroup]="createRoleFormGroup">
+          <h3 class="card-title">Basic Details</h3>
+              <mat-card class="mat-card">
+            <div class="form-warpper">
+                  <div class="">
+                    <mat-form-field>
+                      <input matInput type="text" placeholder="Role" maxlength="50" minlength="4" required formControlName="role"/>
+                      <mat-error *ngIf="createRoleFormGroup.get('role').hasError('required')">Please enter value</mat-error>
+                      <mat-error *ngIf="createRoleFormGroup.get('role').hasError('minlength')">Minimum 4 characters required</mat-error>
+                      <mat-error *ngIf="createRoleFormGroup.get('role').hasError('pattern')">Invalid charecters entered</mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="">
+                    <mat-form-field>
+                      <textarea matInput type="text" minlength="4" maxlength="250" placeholder="Role Description"
+                        formControlName="roleDescription"></textarea>
+                        <mat-error *ngIf="createRoleFormGroup.get('roleDescription').hasError('minlength')">Minimum 4 characters required</mat-error>
+                        <mat-error *ngIf="createRoleFormGroup.get('role').hasError('pattern')">Invalid charecters entered</mat-error>
+                      </mat-form-field>
+                  </div>
+            </div>
+        </mat-card>
+          <div class="bttn-block" style="position: absolute;
+          bottom: 50px;
+          right: 50px;
+          width: 100%;
+          z-index: 9;">
+            <div class="button-wrap">
+                <button class="button secondary-btn" type="button" [routerLink]="['/search-role']">CANCEL</button>
+                <button class="button primary-btn" (click)='addRole(acessList , createRoleFormGroup.value)'>ADD</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="col-md-8">
+        <h3 class="card-title">Role Permissions</h3>
+        <!-- <div class="card"> -->
+        <mat-card class="mat-card">
+          <div class="heading">
+            <div class="">
+              <div class="selected-stores">
+              </div>
+              <!-- <div class="role-title">
+                <h5>Campaign Manager</h5>
+              </div> -->
+            </div>
+          </div>
+          <div class="permission-tab-wrapper">
+            <div class="row heading">
+              <div class="col-md-3">
+                <h5 class="title">
+                  Module
+                </h5>
+              </div>
+              <div class="col-md-9 p-0px">
+                <h5 class="title">
+                  Permission
+                </h5>
+              </div>
+            </div>
+            <div class="row" *ngFor='let permission of acessList; let i = index;'>
+              <div class="col-md-3">
+                <div class="module-title">
+                  {{permission.displayName}}
+                </div>
+              </div>
+              <div class="col-md-9 p-0px">
+                <div class="module-permission" *ngFor="let moduleName of permission.children; let j= index;">
+                  <div class="permission-title">
+                    <mat-checkbox *ngIf="moduleName.children.length===0" [(ngModel)]="moduleName.checked">{{moduleName.displayName}}</mat-checkbox>
+                    <label *ngIf="moduleName.children.length!=0">{{moduleName.displayName}}</label>
+                  </div>
+                  <ul>
+                    <li *ngFor='let access of moduleName.children;'>
+                      <mat-checkbox [(ngModel)]="access.checked">{{access.displayName}}</mat-checkbox>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          </mat-card>
+          <p *ngIf="showErr" class="color-red">Please select a role</p>
+        <!-- </div> -->
+      </div>
+    </div>
+  </div>
+</div>

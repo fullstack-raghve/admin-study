@@ -1,0 +1,32 @@
+<div class="page-wrap">
+    <div class="header flex-container">
+        <h3>NEW ENQUIRY</h3>
+        <div class="close-icon">
+          <img src="assets/images/icons/filter_close_ico.png" alt="" (click)="onCloseClick()">
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <mat-form-field>
+          <mat-select placeholder="Select Enquiry Type">
+            <mat-option *ngFor="let item of enquiryList" value="{{item.id}}" >
+              {{ item.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-md-6">
+        <mat-form-field>
+          <input matInput placeholder="Enter value applicable"  OnlyNumber="true">
+        </mat-form-field>
+      </div>
+      <div class="col-md-8">
+        <mat-form-field>
+          <textarea matInput placeholder="Description"></textarea>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="button-wrap text-right">
+      <button type="submit" class="button primary-btn">ADD</button>
+   </div>
+</div>

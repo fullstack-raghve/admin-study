@@ -1,0 +1,16 @@
+<svg id="create_ico" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 21.82 21.82">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: url(#linear-gradient);
+      }
+    </style>
+    <linearGradient id="linear-gradient" x1="0.863" y1="0.156" x2="0.203" y2="0.824" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#f47da5"/>
+      <stop offset="1" stop-color="#fcaf7f"/>
+    </linearGradient>
+  </defs>
+  <g id="Group_42540" data-name="Group 42540">
+    <path id="Path_17959" data-name="Path 17959" class="cls-1" d="M20.968,10.058H11.762V.852a.852.852,0,1,0-1.7,0v9.205H.852a.852.852,0,1,0,0,1.7h9.205v9.205a.852.852,0,1,0,1.7,0V11.762h9.205a.852.852,0,1,0,0-1.7Z"/>
+  </g>
+</svg>

@@ -1,0 +1,78 @@
+<div class="page-wrap">
+    <div class="bredcrumb-title-wrap">
+      <div class="search-wrap filter-wrap">
+        <div class="row common-search">
+            <div class="col-md-5 store-title" style="text-align: left;">
+              <h6>Select Card</h6>
+            </div>
+            <div class="col-md-7">
+              
+            </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-wrap">
+        <div class="table-wrap">
+        <div class="table-wrap-inner" >
+          <table mat-table [dataSource]="dataSource" matSort>
+              <ng-container matColumnDef="select">
+                  <th mat-header-cell *matHeaderCellDef class="matHeader" >
+                      <mat-checkbox (change)="$event ? masterToggle() : null"
+                          [checked]="selection.hasValue() && isAllSelected()"
+                          [indeterminate]="selection.hasValue() && !isAllSelected()"
+                          >
+                      </mat-checkbox> ALL
+                  </th>
+                  <td mat-cell *matCellDef="let row">
+                      <mat-checkbox (click)="$event.stopPropagation()"
+                          (change)="$event ? selection.toggle(row) : null"
+                          [checked]="selection.isSelected(row)" >
+                      </mat-checkbox>
+                  </td>
+              </ng-container>
+    
+                <ng-container matColumnDef="BARCODE">
+                  <th mat-header-cell *matHeaderCellDef> ID</th>
+                  <td mat-row *matCellDef="let row"> {{row.BARCODE}} </td>
+                </ng-container>
+                <ng-container matColumnDef="secretCode">
+                  <th mat-header-cell *matHeaderCellDef> SECURITY CODE</th>
+                  <td mat-row *matCellDef="let row"> {{row.secretCode}} </td>
+                </ng-container>
+                <!-- <ng-container matColumnDef="giftcardCodeId">
+                  <th mat-header-cell *matHeaderCellDef> ID </th>
+                  <td mat-row *matCellDef="let row"> {{row.giftcardCodeId}} </td>
+                </ng-container> -->
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table> 
+            <div class="no-records" *ngIf="resultsLength === 0">
+                No Records Found!
+              </div>
+            </div>
+           
+          </div>
+          <div class=" row  total-val-block">
+              <div class="col-md-5 total-value-block" *ngIf="totalFilterRecordVal">
+                <div class="total-value">
+                  <p>Total Cards : </p>
+                  <span>{{total}}</span>
+                </div>
+              </div>
+      
+      
+            </div>
+          <div class="button-wrap">
+            <div class="">
+              <button class="button secondary-btn" [mat-dialog-close]="{
+                'buttonName': 'CANCEL'
+              }">CANCEL</button>
+              <button class="button primary-btn" [mat-dialog-close]="{
+                'buttonName': 'SELECT',
+                'tableData': selection.selected,
+                'totalCount':resultsLength
+              }">SELECT</button>
+            </div>
+          </div>
+      </div>
+    </div>

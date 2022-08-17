@@ -1,0 +1,15 @@
+.subtitle {
+    margin-bottom: 20px;
+}
+.master-fieldSet {
+    .language-fieldset{
+        padding: 0px 26px 10px;
+        border: 1px solid #dbdbdb;
+        border-radius: 5px;
+        .fieldset-heading {
+            font-size: 14px;
+            padding-inline-start: 7px;
+            max-width: 45% !important;
+        }
+    }
+}

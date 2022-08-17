@@ -1,0 +1,43 @@
+// card start
+.card {
+    border: 0;
+    border-radius: 10px;
+    background-color: #fff;
+    padding: 30px;
+    min-height: 100%;
+    h3.card_title {
+        font-size: 20px;
+        color: #EA942C;
+        margin: 0 0 15px;
+    }
+    h3.card_subheading {
+        font-family: 'Lato';
+        font-size: 18px;
+        color: #5F605F;
+        margin: 0 0 5px;
+    }
+}
+// master card start
+.country-card {
+    border: 0;
+    border-radius: 5px;
+    background-color: #fff;
+    padding: 0px 10px;
+    .subtitle {
+        display: flex;
+        margin-bottom: 15px;
+        h3{
+            font-size: 20px;
+            color: #FF8E48;
+            font-weight: 400;
+        }
+        // h3.card-title {
+        //     font-size: 20px;
+        //     color: #EA942C;
+        //     margin: 0 0 15px;
+        // }
+    }
+}
+.master-content {
+    border-radius: 8px;
+}

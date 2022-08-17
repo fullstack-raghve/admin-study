@@ -1,0 +1,38 @@
+<div class="page-wrap">
+    <div class="header flex-container">
+        <h3>NEW ENQUIRY</h3>
+        <div class="close-icon">
+          <img src="assets/images/icons/filter_close_ico.png" alt="" (click)="onCloseClick()">
+        </div>
+    </div>
+    <form (submit)="createEnquiry(addEnquiryFormGroup.value)" [formGroup]="addEnquiryFormGroup">
+    <div class="row">
+      <div class="col-md-6">
+        <mat-form-field>
+          <mat-select placeholder="Select Enquiry Type" formControlName="enquiryType">
+            <mat-option [value]="item.enquiryTypeId" *ngFor="let item of enquiryList" >
+              {{ item.enquiryTitle }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="addEnquiryFormGroup.get('enquiryType').hasError('required')">Please Select Enquiry Type</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-md-6">
+        <mat-form-field>
+          <input matInput placeholder="Enter value applicable" formControlName="valueApplicable" maxlength="50">
+          <mat-error *ngIf="addEnquiryFormGroup.get('valueApplicable').hasError('required')">Please enter value</mat-error>
+          <mat-error *ngIf="addEnquiryFormGroup.get('valueApplicable').hasError('pattern')">Invalid charecters entered</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-md-8">
+        <mat-form-field>
+          <textarea matInput placeholder="Description" formControlName="description" maxlength="250"></textarea>
+          <mat-error *ngIf="addEnquiryFormGroup.get('description').hasError('required')">Please enter value</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="button-wrap text-right">
+      <button type="submit" class="button primary-btn">ADD</button>
+   </div>
+  </form>
+</div>

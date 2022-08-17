@@ -1,0 +1,208 @@
+.form-wrap {
+    padding: 1.8em;
+    .category {
+        padding: 20px;
+        .img-block {
+            .avatar-zone {
+                width: 100%;
+                height: 154px;
+                background-color: #F2F2F2;
+                text-align: center;
+                border: 1px dashed #dbdbdb;
+                .image-uploadText {
+                    color: #a7a7a7;
+                    font-size: 18px;
+                    padding: 44px;
+                }
+                .upload-text {
+                    color: #a7a7a7;
+                    font-size: 20px;
+                    padding: 60px;
+                }
+                img {
+                    width: 100%;
+                    height: 150px;
+                }
+            }
+            .upload-icon {
+                width: 12px;
+                height: 12px;
+                margin-right: 5px;
+            }
+        }
+        .placeholder-img {
+            display: none;
+        }
+    }
+    .multi-lang {
+        padding: 20px;
+        .faq-card {
+            background-color: #F8F8F8;
+            position: relative;
+            .lang-field {
+                position: absolute;
+                top: 0px;
+                left: 0px;
+                background-color: #c3c3c3;
+                p {
+                    margin-bottom: 0px;
+                    margin: 8px;
+                }
+            }
+            .text-fields {
+                left: 22px;
+                top: 26px;
+                right: 15px;
+                padding-bottom: 30px;
+                .field-container {
+                    .mat-form-field {
+                        display: block;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.mat-form-field {
+    display: block;
+}
+
+.button-wrap {
+    margin-bottom: 50px;
+    text-align: right;
+    margin-top: 15px;
+}
+
+.view-details {
+    p {
+        font-size: 14px;
+        margin-bottom: 0;
+    }
+    label {
+        font-size: 10px;
+        color: #7C7B7B;
+    }
+}
+
+.upload-btn-text {
+    font-size: 11px;
+    color: #095bd0;
+    cursor: pointer;
+}
+
+// .timer-label {
+//   width: 90%;
+//   color: #7c7b7b;
+//   font-size: 9px;
+//   img {
+//     width: 18px;
+//   }
+//   .time-picker {
+//     width: 100%;
+//     border-bottom: 1px solid #dedede;
+//     border-top: 0;
+//     border-left: 0;
+//     border-right: 0;
+//     outline: none;
+//     border-radius: 0px;
+//     padding: 0;
+//     font-size: 10px;
+//     background-color: transparent;
+//   }
+// }
+.time-picker {
+    width: 100%;
+    border-bottom: 1px solid #f2eded;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    outline: none;
+    border-radius: 0px;
+    padding: 4px 0px;
+    font-size: 12px;
+    background-color: transparent;
+}
+
+.timer-label {
+    color: #7c7b7b;
+    font-size: 10px;
+    padding-bottom: 3em;
+    margin-bottom: 10px;
+}
+
+.timer-label-to {
+    color: #7c7b7b;
+    font-size: 10px;
+    padding-bottom: 0.9em;
+    margin-bottom: 10px;
+}
+
+.select-store-block {
+    display: flex;
+    align-items: center;
+    img {
+        width: 25px;
+    }
+    span {
+        padding-left: 5px;
+    }
+    p {
+        margin: 0;
+    }
+}
+
+.flex-col {
+    align-items: center;
+}
+
+.view-details {
+    display: flex;
+    align-items: center;
+}
+
+.right-text {
+    left: auto !important;
+    right: 0;
+}
+
+.remove-img {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    img {
+        width: 15px;
+    }
+    label {
+        font-size: 13px;
+        color: grey;
+        padding-left: 5px;
+        margin-bottom: 0;
+    }
+}
+
+// .ImgInfo{
+//   color: #9A9A9A;
+//   .right{
+//     text-align: right;
+//   }
+//   .left{
+//     text-align: left;
+//   }
+// }
+.imgInfo {
+    display: flex;
+    justify-content: space-between;
+    .right {
+        font-size: 10px;
+        color: #9A9A9A;
+    }
+    .left {
+        @extend .right;
+    }
+}
+
+.direction {
+    direction: rtl !important;
+}

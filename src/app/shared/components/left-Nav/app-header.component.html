@@ -1,0 +1,31 @@
+<div class="left-sidenav-panel">
+    <div class="menu-button">
+        <button id="menu" class="main-menu-btn" mat-icon-button [class.diabled]="!isMenuActive" (click)="toggle()">
+            <!-- <mat-icon class="menu-button">menu</mat-icon> -->
+            <div id="nav-icon">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+        </button>
+
+    </div>
+
+    <mat-sidenav-container>
+        <mat-sidenav #appDrawer mode="over" opened="false" class="left-sideNav"  malihu-scrollbar [scrollbarOptions]="scrollbarOptions">
+            <mat-nav-list>
+        <div class="sidenax-text"></div>
+                <div *ngFor="let item of navItems">
+                    <app-menu-list-item (updatedMenu)="navItems = $event" (isReports)="getIsReportValue($event)" *ngIf="item.isMenuYes && navigationArray!=undefined && navigationArray.indexOf(item.menuId) != -1"
+                            [item]="item" [navItems]="navItems" [isMenuActive]="isMenuActive" [navigationArray]="navigationArray">
+                    </app-menu-list-item>
+                </div>
+                <!-- <app-menu-list-item *ngFor="let item of navItems" [item]="item" [isMenuActive]="isMenuActive"></app-menu-list-item> -->
+            </mat-nav-list>
+        </mat-sidenav>
+        <app-top-nav fxHide.xs></app-top-nav>
+    </mat-sidenav-container>
+</div>
+<!-- <div malihu-scrollbar [scrollbarOptions]="scrollbarOptions">
+   Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...
+</div> -->

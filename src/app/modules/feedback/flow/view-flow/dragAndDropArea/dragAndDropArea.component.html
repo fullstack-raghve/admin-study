@@ -1,0 +1,1576 @@
+<div class="page-wrap">
+  <section *ngIf="model && !report" class="dndDropArea" style="height:560px; overflow-y: auto;" dndDropzone
+    [ngClass]="{'empty':model.attributes.length == 0}" cdkDropList class="example-list"
+    (cdkDropListDropped)="drop($event)">
+    <div class="drag-placeholder" *ngIf="model.attributes == ''">
+      <p>
+        Please drop a question here from the Toolbox on the left.
+      </p>
+    </div>
+    <!-- <div *ngIf="pageLength">
+        <p class="color-red">Please add atleast one question in page to save</p>
+      </div> -->
+    <div class="field" *ngFor="let item of model.attributes;let i= index;" (dndStart)="onDragStart($event)"
+      (dndCanceled)="onDragCanceled($event)" (dndMoved)="onDragged(item, model.attributes, 'move')"
+      [dndEffectAllowed]="'all'"
+      [ngClass]="{'hide' : item?.type == 'backButton' || item?.type == 'nextButton' || item?.type == 'button'}"
+      [dndDraggable]="item" cdkDrag style="cursor: pointer;">
+
+
+      <div class="row form-group">
+        <div class="col-1"><i class="fa fa-ellipsis-v dndHandle" dndHandle></i></div>
+        <div class="col-9">
+
+          <div *ngIf="item.type=='text'">
+            <label [innerHTML]='item.question | safeHTML'></label> <label class="text-danger"
+              *ngIf="item.required">*</label>
+            <input class="form-control" id="{{item.name}}" type="text">
+          </div>
+          <!-- Thank You Text -->
+          <div *ngIf="item.type=='thankyouMessage'">
+            <label [innerHTML]='item.question | safeHTML'></label> <label class="text-danger"
+              *ngIf="item.required">*</label>
+            <textarea class="form-control" id="{{item.name}}"></textarea>
+          </div>
+          <!-- Large Text -->
+          <div *ngIf="item.type=='textarea'">
+            <label [innerHTML]='item.question | safeHTML'></label> <label class="text-danger"
+              *ngIf="item.required">*</label>
+            <textarea class="form-control" id="{{item.name}}"></textarea>
+          </div>
+          <div *ngIf="item.type=='email'">
+            <label [innerHTML]='item.question | safeHTML'></label> <label class="text-danger"
+              *ngIf="item.required">*</label>
+            <input class="form-control" id="{{item.name}}" type="email">
+          </div>
+          <div *ngIf="item.type=='phone'">
+            <label [innerHTML]='item.question | safeHTML'></label> <label class="text-danger"
+              *ngIf="item.required">*</label>
+            <input class="form-control" id="{{item.name}}" type="text">
+          </div>
+
+          <div *ngIf="item.type=='number'">
+            <label [innerHTML]='item.question | safeHTML'></label> <label class="text-danger"
+              *ngIf="item.required">*</label>
+            <input class="form-control" id="{{item.name}}" type="number" min="{{item.min}}" max="{{item.max}}">
+          </div>
+          <div *ngIf="item.type=='date'">
+            <label [innerHTML]='item.question | safeHTML'></label> <label class="text-danger"
+              *ngIf="item.required">*</label>
+            <input class="form-control" id="{{item.name}}" type="date">
+          </div>
+          <div *ngIf="item.type=='datetime-local'">
+            <label [innerHTML]='item.question | safeHTML'></label> <label class="text-danger"
+              *ngIf="item.required">*</label>
+            <input class="form-control" id="{{item.name}}" type="datetime-local">
+          </div>
+
+          <div *ngIf="item.type=='file'">
+            <label><span [innerHTML]='item.question | safeHTML'></span> (File can't be uploaded right now)</label>
+            <label class="text-danger" *ngIf="item.required">*</label>
+            <input class="form-control" id="{{item.name}}" type="file">
+            <small class="form-text text-danger">(File can't be uploaded right now)</small>
+          </div>
+          <div *ngIf="item.type=='paragraph'">
+            <p class="form-text">{{item.placeholder}}</p>
+          </div>
+
+          <!-- dropdown -->
+          <div *ngIf="item.type=='autocomplete'">
+            <label [innerHTML]='item.question | safeHTML'></label> <label class="text-danger"
+              *ngIf="item.required">*</label>
+            <select class="form-control" id="{{item.name}}">
+              <option *ngFor="let v of item.values" [value]="v.value" [innerHTML]='v.label | safeHTML'></option>
+            </select>
+            <!-- <small class="form-text text-muted">{{item.description}}</small> -->
+          </div>
+
+          <!-- checkbox -->
+          <div *ngIf="item.type=='checkbox'">
+            <label [innerHTML]='item.question | safeHTML'></label> <label class="text-danger"
+              *ngIf="item.required">*</label>
+            <div class="inline-form-group" *ngFor="let v of item.values">
+              <label class="cust-check-bx all_editor_label">
+                <input name="{{item.name}}" type="checkbox" [value]="v.value" (click)="toggleValue(v)">
+                <span [innerHTML]="v.label | safeHTML"></span>
+              </label>
+            </div>
+          </div>
+          <div *ngIf="item.type=='Nestedcheckbox'">
+            <label [innerHTML]='item.question | safeHTML'></label> <label class="text-danger"
+              *ngIf="item.required">*</label>
+            <div class="inline-form-group" *ngFor="let v of item.values">
+              <label class="cust-check-bx all_editor_label">
+                <input name="{{item.name}}" type="checkbox" [value]="v.value" (click)="toggleValue(v)">
+                <span [innerHTML]="v.label | safeHTML"></span>
+              </label>
+            </div>
+          </div>
+          <!--Nested Questions Singlechoice -->
+          <div *ngIf="item.type=='NestedSinglebox'">
+            <label [innerHTML]='item.question | safeHTML'></label> <label class="text-danger"
+              *ngIf="item.required">*</label>
+            <div class="inline-form-group" *ngFor="let v of item.values">
+              <label class="cust-check-bx all_editor_label">
+                <input name="{{item.name}}" type="radio" [value]="v.value" (click)="toggleValue(v)">
+                <span [innerHTML]="v.label | safeHTML"></span>
+              </label>
+            </div>
+          </div>
+          <!-- Nested Answers -->
+          <div *ngIf="item.type=='NestedAnswers'">
+            <label [innerHTML]='item.question | safeHTML'></label> <label class="text-danger"
+              *ngIf="item.required">*</label>
+            <div class="inline-form-group" *ngFor="let v of item.values">
+              <label class="cust-check-bx all_editor_label">
+                <input name="{{item.name}}" type="checkbox" [value]="v.value" (click)="toggleValue(v)">
+                <span [innerHTML]="v.label | safeHTML"></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- radio -->
+          <div *ngIf="item.type=='radio'">
+            <label [innerHTML]='item.question | safeHTML'></label> <label class="text-danger"
+              *ngIf="item.required">*</label>
+            <div class="inline-form-group" *ngFor="let v of item.values">
+              <label class="cust-check-bx all_editor_label">
+                <input name="{{item.name}}" type="radio" [value]="v.value">
+                <span [innerHTML]="v.label | safeHTML"></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- NPS -->
+          <div *ngIf="item.area=='Rating'">
+            <label [innerHTML]='item.question | safeHTML'></label> <label *ngIf="item.required"
+              class="text-danger">*</label>
+            <div style="display: flex;">
+              <div class="inline-form-group " *ngFor="let v of item.values; let i = index;">
+                <label class=" hover_input_rating position-relative">
+                  <input name="{{item.name}}" style="width: 50px;text-align: center;" type="text" [(ngModel)]="v.label"
+                    [value]="v.value">
+
+                  <span class="remove_rating_input position-absolute" (click)="item.values.splice(i, 1)">X</span>
+                </label>
+              </div>
+              <!-- <span class="rating_plus_icon" (click)="increaseRating()" >+</span> -->
+            </div>
+          </div>
+
+          <!-- NPS Slider -->
+          <div *ngIf="item.type=='sliderRating'">
+            <label [innerHTML]='item.question | safeHTML'></label> <label *ngIf="item.required"
+              class="text-danger">*</label>
+            <div style="margin-bottom: 4em;">
+              <ng5-slider [(value)]="value" [options]="options"></ng5-slider>
+            </div>
+          </div>
+
+          <!-- sentiments -->
+          <div *ngIf="item.type=='emoji'">
+            <label [innerHTML]='item.question | safeHTML'></label> <label *ngIf="item.required"
+              class="text-danger">*</label>
+            <div class="sentiment-block">
+              <div class="image-block" *ngFor="let x of item.values; let i = index;">
+                <img src="{{x.label}}" alt="Image not found" class="emoji-img">
+              </div>
+            </div>
+          </div>
+
+          <!-- Star rating -->
+          <div *ngIf="item.type=='starRating'">
+            <label [innerHTML]='item.question | safeHTML'></label> <label *ngIf="item.required"
+              class="text-danger">*</label>
+            <div class="sentiment-block">
+              <div class="image-block" *ngFor="let x of item.values; let i = index;">
+                <img src="{{x.label}}" alt="Image not found" class="emoji-img">
+              </div>
+            </div>
+          </div>
+
+           <!-- Product Rating -->
+           <div *ngIf="item.type=='productRating'">
+            <label [innerHTML]='item.question | safeHTML'></label> <label *ngIf="item.required"
+              class="text-danger">*</label>
+            <div class="sentiment-block">
+              <div class="image-block" *ngFor="let x of item.values; let i = index;">
+                <img src="{{x.label}}" alt="Image not found" class="emoji-img">
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="item.type=='link'">
+            <label [innerHTML]='item.question | safeHTML'></label> <label class="text-danger"
+              *ngIf="item.required">*</label>
+            <input class="form-control" id="{{item.name}}" type="text">
+          </div>
+          <div *ngIf="item.type=='tnc'" class="tnc_content">
+
+            <label class="checkbox-inline position-relative" style="width: 100%;display: flex;">
+              <label class="text-danger red_symbol" *ngIf="item.required">*</label>
+              <!-- <mat-slide-toggle [checked]="item.checked" (change)="toggleStatus(item,$event)" class="mat-slide-toggle">
+                {{item.checked == true ? 'Accept': 'Decline'}}</mat-slide-toggle> -->
+              <span class="tnc_des" [innerHTML]='item.question | safeHTML'></span>
+            </label>
+          </div>
+          <div *ngIf="item.type=='popup'">
+            <label [innerHTML]='item.question | safeHTML'></label> <label class="text-danger"
+              *ngIf="item.required">*</label>
+            <input class="form-control" id="{{item.name}}" type="text">
+          </div>
+          <div *ngIf="item.type=='imageupload'">
+            <label [innerHTML]='item.question | safeHTML'></label> <label class="text-danger"
+              *ngIf="item.required">*</label>
+            <input class="form-control" id="{{item.name}}" type="text">
+          </div>
+          <div *ngIf="item.type=='videoupload'">
+            <label [innerHTML]='item.question | safeHTML'></label> <label class="text-danger"
+              *ngIf="item.required">*</label>
+            <input class="form-control" id="{{item.name}}" type="text">
+          </div>
+
+          <!-- customer profile -->
+          <div *ngIf="item.type=='customerProfile'" cdkDropList
+            (cdkDropListDropped)="customerdrop($event, item.customerData)">
+            <div *ngFor="let test of item.customerData; let i = index" cdkDrag>
+
+              <div class="mb-15px customerData" *ngIf="test.subType == 'text'">
+                <label [innerHTML]='test.question | safeHTML'></label> <label class="text-danger"
+                  *ngIf="test.required">*</label>
+                <div class="flex">
+                  <input class="form-control" id="{{item.name}}" type="text">
+                  <div>
+                    <i class="fa fa-chevron-up pull-right" *ngIf="test.toggle" (click)="test.toggle=false"></i>
+                    <i class="fa fa-chevron-down pull-right" *ngIf="!test.toggle" (click)="test.toggle=true"></i>
+                    <!-- <div class="delete_customer_data_filed" (click)="item.customerData.splice(i, 1)">
+                    </div>-->
+                    <i class="fa fa-trash pull-right"></i>
+                  </div>
+                </div>
+
+                <div *ngIf="test.toggle" style="background: #cccccc21;padding: 10px;">
+                  <div class="form-group">
+                    <label>Required</label>
+                    <i class="fa fa-toggle-on red " style="padding-top: 6px;" *ngIf="test.required"
+                      (click)="test.required=false"></i>
+                    <i class="fa fa-toggle-off" style="padding-top: 6px;" *ngIf="!test.required"
+                      (click)="test.required=true"></i>
+
+                  </div>
+                  <div class="form-group">
+                    <label>Title</label>
+                    <!-- <input class="form-control" type="text" [(ngModel)]="test.question"> -->
+                    <div class="inlineEditor">
+                      <label [innerHTML]='test.question | safeHTML'></label>
+                      <!-- <editor [(ngModel)]="test.question" [init]="editorConfig"></editor> -->
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="mb-15px customerData" *ngIf="test.subType == 'singleChoice'">
+                <label [innerHTML]='test.question | safeHTML'></label> <label class="text-danger"
+                  *ngIf="test.required">*</label>
+                <div class="flex">
+                  <div class="inline-form-group" *ngFor="let v of test.values">
+                    <label class="cust-check-bx" style="margin-right: 15px;">
+                      <input name="{{item.name}}" type="radio" [value]="v.value"> {{v.label}}
+                      <span class="checkmark"></span>
+                    </label>
+                  </div>
+                  <div>
+                    <i class="fa fa-chevron-up pull-right" *ngIf="test.toggle" (click)="test.toggle=false"></i>
+                    <i class="fa fa-chevron-down pull-right" *ngIf="!test.toggle" (click)="test.toggle=true"></i>
+                    <!-- <div class="delete_customer_data_filed" style="position: absolute;right: 5px;top: 37px;"
+                      (click)="item.customerData.splice(i, 1)">
+                    </div> -->
+                    <i class="fa fa-trash pull-right"></i>
+                  </div>
+                </div>
+
+                <div *ngIf="test.toggle" style="background: #cccccc21;padding: 10px;">
+                  <div class="form-group">
+                    <label>Required</label>
+                    <i class="fa fa-toggle-on red " style="padding-top: 6px;" *ngIf="test.required"
+                      (click)="test.required=false"></i>
+                    <i class="fa fa-toggle-off" style="padding-top: 6px;" *ngIf="!test.required"
+                      (click)="test.required=true"></i>
+
+                  </div>
+                  <div class="form-group">
+                    <label>Title</label>
+                    <!-- <input class="form-control" type="text" [(ngModel)]="test.question"> -->
+                    <div class="inlineEditor">
+                      <label [innerHTML]='test.question | safeHTML'></label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-15px customerData" *ngIf="test.type == 'customer_email'">
+                <label [innerHTML]='test.question | safeHTML'></label> <label class="text-danger"
+                  *ngIf="test.required">*</label>
+                <div class="flex">
+                  <input class="form-control" id="{{item.name}}" type="email">
+                  <div>
+                    <i class="fa fa-chevron-up pull-right" *ngIf="test.toggle" (click)="test.toggle=false"></i>
+                    <i class="fa fa-chevron-down pull-right" *ngIf="!test.toggle" (click)="test.toggle=true"></i>
+                    <!-- <div class="delete_customer_data_filed" (click)="item.customerData.splice(i, 1)">
+                    </div> -->
+                    <i class="fa fa-trash pull-right"></i>
+                  </div>
+                </div>
+                <div *ngIf="test.toggle" style="background: #cccccc21;padding: 10px;">
+                  <div class="form-group">
+                    <label>Required</label>
+                    <i class="fa fa-toggle-on red " style="padding-top: 6px;" *ngIf="test.required"
+                      (click)="test.required=false"></i>
+                    <i class="fa fa-toggle-off" style="padding-top: 6px;" *ngIf="!test.required"
+                      (click)="test.required=true"></i>
+
+                  </div>
+                  <div class="form-group">
+                    <label>Title</label>
+                    <!-- <input class="form-control" type="text" [(ngModel)]="test.question"> -->
+                    <div class="inlineEditor">
+                      <p [innerHTML]='test.question | safeHTML'></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-15px customerData" *ngIf="test.type == 'customer_phone'">
+                <label [innerHTML]='test.question | safeHTML'></label> <label class="text-danger"
+                  *ngIf="test.required">*</label>
+                <div class="flex">
+                  <input class="form-control" id="{{item.name}}" type="text">
+                  <div>
+                    <i class="fa fa-chevron-up pull-right" *ngIf="test.toggle" (click)="test.toggle=false"></i>
+                    <i class="fa fa-chevron-down pull-right" *ngIf="!test.toggle" (click)="test.toggle=true"></i>
+                    <!-- <div class="delete_customer_data_filed" (click)="item.customerData.splice(i, 1)">
+                    </div> -->
+                    <i class="fa fa-trash pull-right"></i>
+                  </div>
+                </div>
+                <div *ngIf="test.toggle" style="background: #cccccc21;padding: 10px;">
+                  <div class="form-group">
+                    <label>Required</label>
+                    <i class="fa fa-toggle-on red " style="padding-top: 6px;" *ngIf="test.required"
+                      (click)="test.required=false"></i>
+                    <i class="fa fa-toggle-off" style="padding-top: 6px;" *ngIf="!test.required"
+                      (click)="test.required=true"></i>
+
+                  </div>
+                  <div class="form-group">
+                    <label>Title</label>
+                    <!-- <input class="form-control" type="text" [(ngModel)]="test.question"> -->
+                    <div class="inlineEditor">
+                      <label [innerHTML]='test.question | safeHTML'></label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-15px customerData" *ngIf="test.type == 'customer_date'">
+                <label [innerHTML]='test.question | safeHTML'></label> <label class="text-danger"
+                  *ngIf="test.required">*</label>
+                <div class="flex">
+                  <input class="form-control" id="{{item.name}}" type="date">
+                  <div>
+                    <i class="fa fa-chevron-up pull-right" *ngIf="test.toggle" (click)="test.toggle=false"></i>
+                    <i class="fa fa-chevron-down pull-right" *ngIf="!test.toggle" (click)="test.toggle=true"></i>
+                    <!-- <div class="delete_customer_data_filed" (click)="item.customerData.splice(i, 1)">
+                    </div> -->
+                    <i class="fa fa-trash pull-right"></i>
+                  </div>
+                </div>
+                <div *ngIf="test.toggle" style="background: #cccccc21;padding: 10px;">
+                  <div class="form-group">
+                    <label>Required</label>
+                    <i class="fa fa-toggle-on red " style="padding-top: 6px;" *ngIf="test.required"
+                      (click)="test.required=false"></i>
+                    <i class="fa fa-toggle-off" style="padding-top: 6px;" *ngIf="!test.required"
+                      (click)="test.required=true"></i>
+
+                  </div>
+                  <div class="form-group">
+                    <label>Title</label>
+                    <!-- <input class="form-control" type="text" [(ngModel)]="test.question"> -->
+                    <div class="inlineEditor">
+                      <label [innerHTML]='test.question | safeHTML'></label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-15px customerData" *ngIf="test.type == 'customer_age'">
+                <label [innerHTML]='test.question | safeHTML'></label> <label class="text-danger"
+                  *ngIf="test.required">*</label>
+                <div class="flex">
+                  <input class="form-control" id="{{item.name}}" type="number">
+                  <div>
+                    <i class="fa fa-chevron-up pull-right" *ngIf="test.toggle" (click)="test.toggle=false"></i>
+                    <i class="fa fa-chevron-down pull-right" *ngIf="!test.toggle" (click)="test.toggle=true"></i>
+                    <!-- <div class="delete_customer_data_filed" (click)="item.customerData.splice(i, 1)">
+                    </div> -->
+                    <i class="fa fa-trash pull-right"></i>
+                  </div>
+                </div>
+                <div *ngIf="test.toggle" style="background: #cccccc21;padding: 10px;">
+                  <div class="form-group">
+                    <label>Required</label>
+                    <i class="fa fa-toggle-on red " style="padding-top: 6px;" *ngIf="test.required"
+                      (click)="test.required=false"></i>
+                    <i class="fa fa-toggle-off" style="padding-top: 6px;" *ngIf="!test.required"
+                      (click)="test.required=true"></i>
+
+                  </div>
+                  <div class="form-group">
+                    <label>Title</label>
+                    <!-- <input class="form-control" type="text" [(ngModel)]="test.question"> -->
+                    <div class="inlineEditor">
+                      <label [innerHTML]='test.question | safeHTML'></label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-15px customerData" *ngIf="test.type == 'customer_city'">
+                <label [innerHTML]='test.question | safeHTML'></label> <label class="text-danger"
+                  *ngIf="test.required">*</label>
+                <div class="flex">
+                  <input class="form-control" id="{{item.name}}" type="text">
+                  <div>
+                    <i class="fa fa-chevron-up pull-right" *ngIf="test.toggle" (click)="test.toggle=false"></i>
+                    <i class="fa fa-chevron-down pull-right" *ngIf="!test.toggle" (click)="test.toggle=true"></i>
+                    <!-- <div class="delete_customer_data_filed" (click)="item.customerData.splice(i, 1)">
+                    </div> -->
+                    <i class="fa fa-trash pull-right"></i>
+                  </div>
+                </div>
+                <div *ngIf="test.toggle" style="background: #cccccc21;padding: 10px;">
+                  <div class="form-group">
+                    <label>Required</label>
+                    <i class="fa fa-toggle-on red " style="padding-top: 6px;" *ngIf="test.required"
+                      (click)="test.required=false"></i>
+                    <i class="fa fa-toggle-off" style="padding-top: 6px;" *ngIf="!test.required"
+                      (click)="test.required=true"></i>
+
+                  </div>
+                  <div class="form-group">
+                    <label>Title</label>
+                    <!-- <input class="form-control" type="text" [(ngModel)]="test.question"> -->
+                    <div class="inlineEditor">
+                      <label [innerHTML]='test.question | safeHTML'></label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="mb-15px customerData" *ngIf="test.type == 'customer_country'">
+                <label [innerHTML]='test.question | safeHTML'></label> <label class="text-danger"
+                  *ngIf="test.required">*</label>
+                <div class="flex">
+                  <input class="form-control" id="{{item.name}}" type="country">
+                  <div>
+                    <i class="fa fa-chevron-up pull-right" *ngIf="test.toggle" (click)="test.toggle=false"></i>
+                    <i class="fa fa-chevron-down pull-right" *ngIf="!test.toggle" (click)="test.toggle=true"></i>
+                    <!-- <div class="delete_customer_data_filed" (click)="item.customerData.splice(i, 1)">
+                    </div> -->
+                    <i class="fa fa-trash pull-right"></i>
+                  </div>
+                </div>
+                <div *ngIf="test.toggle" style="background: #cccccc21;padding: 10px;">
+                  <div class="form-group">
+                    <label>Required</label>
+                    <i class="fa fa-toggle-on red " style="padding-top: 6px;" *ngIf="test.required"
+                      (click)="test.required=false"></i>
+                    <i class="fa fa-toggle-off" style="padding-top: 6px;" *ngIf="!test.required"
+                      (click)="test.required=true"></i>
+
+                  </div>
+                  <div class="form-group">
+                    <label>Title</label>
+                    <!-- <input class="form-control" type="text" [(ngModel)]="test.question"> -->
+                    <div class="inlineEditor">
+                      <label [innerHTML]='test.question | safeHTML'></label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="mb-15px customerData" *ngIf="test.type == 'customer_address'">
+                <label [innerHTML]='test.question | safeHTML'></label> <label class="text-danger"
+                  *ngIf="test.required">*</label>
+                <div class="flex">
+                  <textarea class="form-control" id="{{item.name}}"></textarea>
+                  <div>
+                    <i class="fa fa-chevron-up pull-right" *ngIf="test.toggle" (click)="test.toggle=false"></i>
+                    <i class="fa fa-chevron-down pull-right" *ngIf="!test.toggle" (click)="test.toggle=true"></i>
+                    <!-- <div class="delete_customer_data_filed" (click)="item.customerData.splice(i, 1)">
+                    </div> -->
+                    <i class="fa fa-trash pull-right"></i>
+                  </div>
+                </div>
+                <div *ngIf="test.toggle" style="background: #cccccc21;padding: 10px;">
+                  <div class="form-group">
+                    <label>Required</label>
+                    <i class="fa fa-toggle-on red " style="padding-top: 6px;" *ngIf="test.required"
+                      (click)="test.required=false"></i>
+                    <i class="fa fa-toggle-off" style="padding-top: 6px;" *ngIf="!test.required"
+                      (click)="test.required=true"></i>
+
+                  </div>
+                  <div class="form-group">
+                    <label>Title</label>
+                    <!-- <input class="form-control" type="text" [(ngModel)]="test.question"> -->
+                    <div class="inlineEditor">
+                      <label [innerHTML]='test.question | safeHTML'></label>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- label -->
+          <div *ngIf="item.type=='label'">
+            <label [innerHTML]='item.question | safeHTML'></label> <label class="text-danger"
+              *ngIf="item.required">*</label>
+            <input class="form-control" id="{{item.name}}" type="text">
+          </div>
+
+
+
+        </div>
+
+        <div class="col-2">
+          <i class="fa fa-chevron-up pull-right" *ngIf="item.toggle" (click)="item.toggle=false"></i>
+          <i class="fa fa-chevron-down pull-right" *ngIf="!item.toggle" (click)="item.toggle=true"></i>
+          <i class="fa fa-trash pull-right" (click)="removeField(i)"></i>
+        </div>
+
+
+
+      </div>
+      <div class="toggle-Wrapper position-relative" *ngIf="item.toggle">
+
+        <div class="form-group" *ngIf="item.type != 'imageupload' && item.type != 'videoupload' && item.type != 'tnc'">
+          <label>Required</label>
+          <i class="fa fa-toggle-on red " style="padding-top: 6px;" *ngIf="item.required"
+            (click)="item.required=false"></i>
+          <i class="fa fa-toggle-off" style="padding-top: 6px;" *ngIf="!item.required" (click)="item.required=true"></i>
+          <span class="pull-right ucfirst">{{item.type}}</span>
+
+        </div>
+
+
+        <div class="form-group" *ngIf="item.type!='customerProfile'">
+          <label>Title</label>
+          <!-- <input class="form-control" type="text" [(ngModel)]="item.question"> -->
+          <div class="inlineEditor">
+            <label [innerHTML]='item.question | safeHTML'></label>
+            <!-- <editor [(ngModel)]="test.question" [init]="editorConfig"></editor> -->
+          </div>
+        </div>
+        <div class="form-group" *ngIf="item.type == 'emoji'">
+          <label>Emoji Size</label>
+          <select class="form-control" id="{{item.name}}" [(ngModel)]="item.emojiSize">
+            <option *ngFor="let i of item?.emojiSizes" [value]="i">{{i}}</option>
+          </select>
+        </div>
+        <div class="form-group" *ngIf="item.subType == 'displayText'">
+          <label>Styling</label>
+          <select class="form-control" id="{{item.name}}" [(ngModel)]="item.fontStyle">
+            <option *ngFor="let i of item?.displayStyle" [value]="i">{{i}}</option>
+          </select>
+        </div>
+
+        <div class="form-group"
+          *ngIf="item.type != 'radio' && item.type != 'NestedAnswers' && item.type != 'Nestedcheckbox' && item.type != 'NestedSinglebox' && item.type != 'autocomplete' && item.type != 'emoji' && item.area != 'Rating'  && item.subType != 'submit' && item.type != 'sliderRating' && item.type != 'backButton' && item.subType != 'displayText'">
+          <label>Link To</label>
+          <select class="form-control" id="{{item.name}}" [(ngModel)]="item.linkTo">
+            <option *ngFor="let i of tabs" [value]="i">{{i}}</option>
+          </select>
+        </div>
+
+        <!-- Descriptiion Button  -->
+        <button class="button primary-btn" type="button"
+          *ngIf="item.type == 'tnc' || item.type == 'popup' || item.type == 'label' || item.type == 'imageupload' || item.type == 'thankyouMessage'"
+          (click)="addDescription(item)">{{item.tempVariable != '' ? 'Edit Content' : 'Add Content'}}</button>
+
+        <!-- number -->
+        <div class="row" *ngIf="item.type=='number'">
+          <div class="col-6">
+            <div class="form-group">
+              <label>Min</label>
+              <input class="form-control" type="text" [(ngModel)]="item.min">
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <label>Max</label>
+              <input class="form-control" type="text" [(ngModel)]="item.max">
+            </div>
+          </div>
+        </div>
+
+        <!-- radio -->
+        <div *ngIf="item.type=='radio'">
+          <div class="row">
+            <div class="col-3">
+              <div class="form-group">
+                <label>Title</label>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <label>Value</label>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <label>Link To</label>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <label>Action</label>
+              </div>
+            </div>
+          </div>
+          <div class="row" *ngFor="let i of item.values; let valueIndex=index;">
+            <div class="col-3">
+              <div class="inlineEditor">
+                <!-- <input class="form-control" type="text" [(ngModel)]="i.label"> -->
+                <label [innerHTML]='i.label | safeHTML'></label>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <input class="form-control" type="text" [(ngModel)]="i.value">
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <select class="form-control" id="{{item.name}}" [(ngModel)]="i.linkTo">
+                  <option *ngFor="let i of tabs" [value]="i">{{i}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <label (click)="item.values.splice(valueIndex,1)">remove</label>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-3">
+              <div class="form-group">
+                <input class="form-control" type="text" [(ngModel)]="value.label">
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <input class="form-control" type="text" [(ngModel)]="value.value">
+              </div>
+            </div>
+            <div class="col-3">
+              <select class="form-control" id="{{item.name}}" [(ngModel)]="value.linkTo">
+                <option *ngFor="let i of tabs" [value]="i">{{i}}</option>
+              </select>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <label (click)="addValue(item.values)">Add</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- for sentiment edit -->
+        <div *ngIf="item.type=='emoji'">
+          <div class="row">
+            <div class="col-1">
+              <div class="form-group">
+                <label>Icons</label>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <label>Title</label>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="form-group">
+                <label>Value</label>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <label>Link To</label>
+              </div>
+            </div>
+            <!-- <div class="col-2">
+                <div class="form-group">
+                  <label>Order</label>
+                </div>
+              </div> -->
+            <div class="col-3">
+              <div class="form-group">
+                <label>Action</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="row" *ngFor="let i of item.values; let valueIndex=index;">
+            <div class="col-1">
+              <div class="form-group">
+                <img src="{{i.label}}" alt="emoji" style="width: 100%;height: 100%;margin-top: 5px;">
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <input class="form-control" [title]="i.label" type="text" [(ngModel)]="i.label">
+              </div>
+            </div>
+            <div class="col-2">
+              <div class="form-group">
+                <input class="form-control" type="text" [(ngModel)]="i.value">
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <select class="form-control" id="{{item.name}}" [(ngModel)]="i.linkTo">
+                  <option *ngFor="let i of tabs" [value]="i">{{i}}</option>
+                </select>
+              </div>
+            </div>
+            <!-- <div class="col-2">
+                <div class="form-group">
+                  <input class="form-control" type="number" [(ngModel)]="i.sequenceNumber">
+                  <p class="alert-danger">Mandatory</p>
+                </div>
+              </div> -->
+            <div class="col-3">
+              <div class="form-group">
+                <label style="cursor: pointer;" (click)="item.values.splice(valueIndex,1)">remove</label>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- for Star rating edit -->
+        <div *ngIf="item.type=='starRating'">
+          <div class="row">
+            <div class="col-1">
+              <div class="form-group">
+                <label>Icons</label>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <label>Title</label>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="form-group">
+                <label>Value</label>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <label>Link To</label>
+              </div>
+            </div>
+            <!-- <div class="col-2">
+                        <div class="form-group">
+                          <label>Order</label>
+                        </div>
+                      </div> -->
+            <div class="col-3">
+              <div class="form-group">
+                <label>Action</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="row" *ngFor="let i of item.values; let valueIndex=index;">
+            <div class="col-1">
+              <div class="form-group">
+                <img src="{{i.label}}" alt="emoji" style="width: 100%;height: 100%;margin-top: 5px;">
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <input class="form-control" [title]="i.label" type="text" [(ngModel)]="i.label">
+              </div>
+            </div>
+            <div class="col-2">
+              <div class="form-group">
+                <input class="form-control" type="text" [(ngModel)]="i.value">
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <select class="form-control" id="{{item.name}}" [(ngModel)]="i.linkTo">
+                  <option *ngFor="let i of tabs" [value]="i">{{i}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <label style="cursor: pointer;" (click)="item.values.splice(valueIndex,1)">remove</label>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- for Star rating edit -->
+        <div *ngIf="item.type=='productRating'">
+            <div class="row">
+              <div class="col-1">
+                <div class="form-group">
+                  <label>Icons</label>
+                </div>
+              </div>
+              <div class="col-5">
+                <div class="form-group">
+                  <label>Question Title</label>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="form-group">
+                  <label>Message</label>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="form-group">
+                  <label>Action</label>
+                </div>
+              </div>
+            </div>
+  
+            <div class="row" *ngFor="let i of item.values; let valueIndex=index;">
+              <div class="col-1">
+                <div class="form-group">
+                  <img src="{{i.label}}" alt="emoji" style="width: 100%;height: 100%;margin-top: 5px;">
+                </div>
+              </div>
+              <div class="col-5">
+                <div class="form-group">
+                  <input class="form-control" [title]="i.questionTitle" type="text" [(ngModel)]="i.questionTitle">
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="form-group">
+                  <input class="form-control" type="text" [(ngModel)]="i.productMessage">
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="form-group">
+                  <label style="cursor: pointer;" (click)="item.values.splice(valueIndex,1)">remove</label>
+                </div>
+              </div>
+            </div>
+        </div>
+
+        <!-- for NPS rating  -->
+        <div *ngIf="item.area=='Rating'">
+          <div class="row">
+            <div class="col-3">
+              <div class="form-group">
+                <label>Title</label>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <label>Value</label>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <label>Link To</label>
+              </div>
+            </div>
+            <!-- <div class="col-2">
+            <div class="form-group">
+              <label>Order</label>
+            </div>
+          </div> -->
+            <div class="col-3">
+              <div class="form-group">
+                <label>Action</label>
+              </div>
+            </div>
+          </div>
+          <div class="row" *ngFor="let i of item.values; let valueIndex=index;">
+            <div class="col-3">
+              <div class="form-group">
+                <input class="form-control" type="text" [(ngModel)]="i.label">
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <input class="form-control" type="text" [(ngModel)]="i.value">
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <select class="form-control" id="{{item.name}}" [(ngModel)]="i.linkTo">
+                  <option *ngFor="let i of tabs" [value]="i">{{i}}</option>
+                </select>
+              </div>
+            </div>
+            <!-- <div class="col-2">
+            <div class="form-group">
+              <input class="form-control" type="number" [(ngModel)]="i.sequenceNumber">
+              <p class="alert-danger">Mandatory</p>
+            </div>
+          </div> -->
+            <div class="col-3">
+              <div class="form-group">
+                <label (click)="item.values.splice(valueIndex,1)">remove</label>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-3">
+              <div class="form-group">
+                <input class="form-control" type="text" [(ngModel)]="value.label">
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <input class="form-control" type="text" [(ngModel)]="value.value">
+              </div>
+            </div>
+            <div class="col-3">
+              <select class="form-control" id="{{item.name}}" [(ngModel)]="value.linkTo">
+                <option *ngFor="let i of tabs" [value]="i">{{i}}</option>
+              </select>
+            </div>
+            <!-- <div class="col-2">
+            <div class="form-group">
+              <input class="form-control" type="number" [(ngModel)]="value.sequenceNumber">
+              <p class="alert-danger">Mandatory</p>
+            </div>
+          </div> -->
+            <div class="col-3">
+              <div class="form-group">
+                <label (click)="addValue(item.values)">Add</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- for NPS Slide rating  -->
+        <div *ngIf="item.type == 'sliderRating'">
+          <div class="row">
+            <div class="col-4">
+              <div class="form-group">
+                <label>Title</label>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="form-group">
+                <label>Value</label>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="form-group">
+                <label>Link To</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="row" *ngFor="let i of item.sliderArray[0]['stepsArray']; let valueIndex=index;">
+            <div class="col-4">
+              <div class="form-group">
+                <input class="form-control" type="text" [(ngModel)]="i.value">
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="form-group">
+                <input class="form-control" type="text" [(ngModel)]="i.legend">
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="form-group">
+                <select class="form-control" id="{{item.name}}" [(ngModel)]="i.linkTo">
+                  <option *ngFor="let i of tabs" [value]="i">{{i}}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- checkbox-->
+        <div *ngIf="item.type=='checkbox'">
+          <div class="row">
+            <div class="col-4">
+              <div class="form-group">
+                <label>Title</label>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="form-group">
+                <label>Value</label>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="form-group">
+                <label>Action</label>
+              </div>
+            </div>
+          </div>
+          <div class="row" *ngFor="let i of item.values; let valueIndex=index;">
+            <div class="col-4">
+              <div class="inlineEditor">
+                <!-- <input class="form-control" type="text" [(ngModel)]="i.label"> -->
+                <label [innerHTML]='i.label | safeHTML'></label>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="form-group">
+                <input class="form-control" type="text" [(ngModel)]="i.value">
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="form-group">
+                <label (click)="item.values.splice(valueIndex,1)">remove</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group" *ngIf="item.type=='checkbox'">
+            <label>Others Title</label>
+            <div class="inlineEditor">
+              <label [innerHTML]='item.othersTitle | safeHTML'></label>
+            </div>
+            <!-- <input class="form-control" type="text" [(ngModel)]="item.othersTitle"> -->
+          </div>
+        </div>
+        <!-- Nested Question checkbox  -->
+
+        <div *ngIf="item.type=='Nestedcheckbox'">
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group">
+                <label>Label</label>
+              </div>
+            </div>
+            <div class="col-6" *ngFor="let i of item.values; let valueIndex=index;">
+              <div class="form-group">
+                <div class="inlineEditor">
+                  <p [innerHTML]='i.label | safeHTML' class="inline-value-label"></p>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+          <div *ngFor="let parent of item.values;let valueIndex=index;" class="row mar-0 row-main-bg">
+            <div class="col-12 col-inner">
+              <div class="col-12 col-inner-level">
+                <label>Q{{valueIndex+1}}</label>
+                <div class="form-group">
+                  <div class="inlineEditor">
+                    <p [innerHTML]='parent.label | safeHTML' class="inline-value-label"></p>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="row mar-0 row-sublevel-bg">
+                <div *ngFor="let parent1 of parent.values;" class="col-6 col-inner">
+                  <div class="row row-inner-level">
+                    <div class="col-2 pad-val-0 col-row-inner-level">
+                      <label>{{parent1.sNo}}</label>
+                    </div>
+                    <div class="col-10 pad-val-0 col-row-inner-level">
+                      <div class="form-group">
+                        <div class="inlineEditor">
+                          <p [innerHTML]='parent1.label | safeHTML' class="inline-value-label"></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div *ngFor="let child of parent.values;let valueIndex1=index;" class="col-12 col-inner">
+                  <div class="row mar-0 row-innersublevel-bg">
+                    <label>Q{{valueIndex+1}}.{{valueIndex1+1}}</label>
+                    <div class="col-12">
+                      <div class="form-group">
+                        <div class="inlineEditor">
+                          <p [innerHTML]='child.label | safeHTML' class="inline-value-label"></p>
+
+                        </div>
+                      </div>
+
+                    </div>
+                    <div class="row row-innersublevel1-bg">
+                      <div *ngFor="let child1 of child.values;" class="col-6">
+                        <div class="row  row-inner-level">
+                          <div class="col-2 pad-val-0 col-row-inner-level">
+                            <label>{{child1.sNo}}</label>
+                          </div>
+                          <div class="col-10 pad-val-0 col-row-inner-level">
+                            <div class="form-group">
+                              <div class="inlineEditor">
+                                <p [innerHTML]='child1.label | safeHTML' class="inline-value-label"></p>
+                              </div>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+
+          </div>
+
+        </div>
+        <!-- Nested Answers -->
+        <div *ngIf="item.type=='NestedAnswers'">
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group">
+                <label>Label</label>
+              </div>
+            </div>
+            <div class="col-6" *ngFor="let i of item.values; let valueIndex=index;">
+              <div class="form-group">
+                <div class="inlineEditor">
+                  <p [innerHTML]='i.label | safeHTML' class="inline-value-label"> </p>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+          <div *ngFor="let parent of item.values;let valueIndex=index;" class="row mar-0 row-main-bg">
+            <div class="col-12 col-inner">
+              <div class="col-12 col-inner-level">
+                <label>Q{{valueIndex+1}}</label>
+                <div class="form-group">
+                  <div class="inlineEditor">
+                    <p [innerHTML]='parent.label | safeHTML' class="inline-value-label"></p>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="row mar-0 row-sublevel-bg">
+                <div *ngFor="let parent1 of parent.values;" class="col-6 col-inner">
+                  <div class="row row-inner-level">
+                    <div class="col-2 pad-val-0 col-row-inner-level">
+                      <label>{{parent1.sNo}}</label>
+                    </div>
+                    <div class="col-10 pad-val-0 col-row-inner-level">
+                      <div class="form-group">
+                        <div class="inlineEditor">
+                          <p [innerHTML]='parent1.label | safeHTML' class="inline-value-label"></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div *ngFor="let child of parent.values;let valueIndex1=index;" class="col-12 col-inner">
+                  <div class="row mar-0 row-innersublevel-bg">
+                    <label>Q{{valueIndex+1}}.{{valueIndex1+1}}</label>
+                    <div class="col-12">
+                      <div class="form-group">
+                        <div class="inlineEditor">
+                          <p [innerHTML]='child.label | safeHTML' class="inline-value-label"></p>
+
+                        </div>
+                      </div>
+
+                    </div>
+                    <div class="row row-innersublevel1-bg">
+                      <div *ngFor="let child1 of child.values;" class="col-6">
+                        <div class="row  row-inner-level">
+                          <div class="col-2 pad-val-0 col-row-inner-level">
+                            <label>{{child1.sNo}}</label>
+                          </div>
+                          <div class="col-10 pad-val-0 col-row-inner-level">
+                            <div class="form-group">
+                              <div class="inlineEditor">
+                                <p [innerHTML]='child1.label | safeHTML' class="inline-value-label"></p>
+                              </div>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+
+          </div>
+
+        </div>
+        <!-- Nested Question single choice -->
+        <div *ngIf="item.type=='NestedSinglebox'">
+
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group">
+                <label>Label</label>
+              </div>
+            </div>
+            <div class="col-6" *ngFor="let i of item.values; let valueIndex=index;">
+              <div class="form-group">
+                <div class="inlineEditor">
+                  <p [innerHTML]='i.label | safeHTML' class="inline-value-label"> </p>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+          <div *ngFor="let parent of item.values;let valueIndex=index;" class="row mar-0 row-main-bg">
+            <div class="col-12 col-inner">
+              <div class="col-12 col-inner-level">
+                <label>Q{{valueIndex+1}}</label>
+                <div class="form-group">
+                  <div class="inlineEditor">
+                    <p [innerHTML]='parent.label | safeHTML' class="inline-value-label"></p>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="row mar-0 row-sublevel-bg">
+                <div *ngFor="let parent1 of parent.values;" class="col-6 col-inner">
+                  <div class="row row-inner-level">
+                    <div class="col-2 pad-val-0 col-row-inner-level">
+                      <label>{{parent1.sNo}}</label>
+                    </div>
+                    <div class="col-10 pad-val-0 col-row-inner-level">
+                      <div class="form-group">
+                        <div class="inlineEditor">
+                          <p [innerHTML]='parent1.label | safeHTML' class="inline-value-label"></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div *ngFor="let child of parent.values;let valueIndex1=index;" class="col-12 col-inner">
+                  <div class="row mar-0 row-innersublevel-bg">
+                    <label>Q{{valueIndex+1}}.{{valueIndex1+1}}</label>
+                    <div class="col-12">
+                      <div class="form-group">
+                        <div class="inlineEditor">
+                          <p [innerHTML]='child.label | safeHTML' class="inline-value-label"></p>
+
+                        </div>
+                      </div>
+
+                    </div>
+                    <div class="row row-innersublevel1-bg">
+                      <div *ngFor="let child1 of child.values;" class="col-6">
+                        <div class="row  row-inner-level">
+                          <div class="col-2 pad-val-0 col-row-inner-level">
+                            <label>{{child1.sNo}}</label>
+                          </div>
+                          <div class="col-10 pad-val-0 col-row-inner-level">
+                            <div class="form-group">
+                              <div class="inlineEditor">
+                                <p [innerHTML]='child1.label | safeHTML' class="inline-value-label"></p>
+                              </div>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+
+          </div>
+
+        </div>
+        <!-- autocomplete -->
+        <div *ngIf="item.type=='autocomplete'">
+          <div class="row">
+            <div class="col-3">
+              <div class="form-group">
+                <label>Title</label>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <label>Value</label>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <label>Link To</label>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <label>Action</label>
+              </div>
+            </div>
+          </div>
+          <div class="row" *ngFor="let i of item.values; let valueIndex=index;">
+            <div class="col-3">
+              <div class="form-group">
+                <label [innerHTML]='i.label | safeHTML'></label>
+                <!-- <input class="form-control" type="text" [(ngModel)]="i.label"> -->
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <input class="form-control" type="text" [(ngModel)]="i.value">
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <select class="form-control" id="{{item.name}}" [(ngModel)]="i.linkTo">
+                  <option *ngFor="let i of tabs" [value]="i">{{i}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <label (click)="item.values.splice(valueIndex,1)">remove</label>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-3">
+              <div class="form-group">
+                <input class="form-control" type="text" [(ngModel)]="value.label">
+              </div>
+            </div>
+            <div class="col-3">
+              <div class="form-group">
+                <input class="form-control" type="text" [(ngModel)]="value.value">
+              </div>
+            </div>
+            <div class="col-3">
+              <select class="form-control" id="{{item.name}}" [(ngModel)]="value.linkTo">
+                <option *ngFor="let i of tabs" [value]="i">{{i}}</option>
+              </select>
+            </div>
+
+            <div class="col-3">
+              <div class="form-group">
+                <label (click)="addValue(item.values)">Add</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- External Link -->
+        <div *ngIf="item.type=='link'">
+          <div class="form-group">
+            <label>Enter URL</label>
+            <input class="form-control" placeholder="Enter External link" type="text" [(ngModel)]="item.externalLink">
+          </div>
+        </div>
+
+        <!-- T&C Popup -->
+        <div *ngIf="item.type=='tnc' && item.tempVariable != ''">
+          <div class="form-group mt-3" style="word-break: break-all;">
+            {{item.tempVariable}}
+            <!-- <textarea hidden  readonly class="form-control" placeholder="Enter Description" type="text" [(ngModel)]="item.tempVariable"></textarea> -->
+          </div>
+        </div>
+
+        <!-- label -->
+        <div *ngIf="item.type=='label'">
+          <div class="form-group mt-3" style="word-break: break-all;">
+            {{item.tempVariable}}
+            <!-- <textarea hidden  readonly class="form-control" placeholder="Enter Description" type="text" [(ngModel)]="item.tempVariable"></textarea> -->
+          </div>
+        </div>
+        <!-- Image Upload -->
+        <div *ngIf="item.type=='imageupload'">
+
+          <div *ngIf="item.tempVariable != ''" style="margin-top: 20px;">
+            <h5>Specifications</h5>
+            {{item.tempVariable}}
+          </div>
+
+          <div class="form-group mt-3" style="word-break: break-all;">
+            <div class="img-container  mt-3" *ngIf="item.filepathurl != ''">
+              <img [src]="item.filepathurl" class="upload-img" [class.uploaded-img]="imgUpload"
+                style="width:120px; height:60px">
+            </div>
+            <div class="uploaded-img">
+              <input style='display: none;' type='file' (change)="uploadImage($event.target.files, item)"
+                #selectFileTier>
+              <span class="upload-btn-text " (click)='selectFileTier.click()' *ngIf="item.filepathurl == ''">
+                <span class="">
+                  <img src="assets/images/svg-icons/uploadgray_ico.svg" width="15px" alt="..">
+                </span>
+                <span class="uploaded-link">Upload Image</span>
+              </span>
+              <span class="upload-btn-text " style="display: block;margin-top: 4px;" *ngIf="item.filepathurl != ''"
+                (click)="removeImage(item)">
+                <!-- <span class="uploaded-link">Remove Image</span> -->
+              </span>
+
+
+            </div>
+          </div>
+        </div>
+        <!-- Video Upload -->
+        <div *ngIf="item.type=='videoupload'">
+          <div class="form-group">
+            <label>Enter URL</label>
+            <input class="form-control" placeholder="Enter Video External link" type="text"
+              [(ngModel)]="item.videoLink">
+          </div>
+          <div class="form-group mt-3" style="word-break: break-all;">
+            <div class="img-container  mt-3" *ngIf="item.filepathurl != ''">
+              <video width="320" controls autoplay muted>
+                <source [src]="item?.filepathurl" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            <div class="uploaded-img">
+              <input style='display: none;' type='file' (change)="uploadVideo($event.target.files, item)"
+                #selectFileTier>
+              <span class="upload-btn-text " (click)='selectFileTier.click()' *ngIf="item.filepathurl == ''">
+                <span class="">
+                  <img src="assets/images/svg-icons/uploadgray_ico.svg" width="15px" alt="..">
+                </span>
+                <span class="upload-btn-text " style="display: block;margin-top: 4px;" *ngIf="item.filepathurl != ''"
+                  (click)="removeVideo(item)">
+                  <!-- <span class="uploaded-link">Remove Video</span> -->
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- popupDescription -->
+        <div *ngIf="item.type=='popup' && item.tempVariable != ''">
+          <div class="form-group mt-3" style="word-break: break-all;">
+            <p>{{item.tempVariable}}</p>
+            <!-- <textarea hidden readonly  class="form-control" placeholder="Enter Description" type="text" [(ngModel)]="item.tempVariable"></textarea> -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <!-- allTextSize -->
+
+    <div class="field" *ngFor="let item of model.buttons;let i= index;" (dndStart)="onDragStart($event)"
+      (dndCanceled)="onDragCanceled($event)" (dndMoved)="onDragged(item, model.buttons, 'move')"
+      [dndEffectAllowed]="'all'" [dndDraggable]="item" cdkDrag style="cursor: pointer;">
+      <div class="row form-group">
+        <div class="col-1"><i class="fa fa-ellipsis-v dndHandle" dndHandle></i></div>
+        <div class="col-9">
+          <div class="btn-cont" *ngIf="item.type=='backButton'">
+            <button class="button primary-btn" style="padding: 1px 39px;"
+              [innerHTML]='item.question | safeHTML'></button>
+            <!-- <input class="button primary-btn" id="{{item.name}}" type="{{item.subtype}}" value="{{item.question}}"> -->
+          </div>
+          <div class="btn-cont" *ngIf="item.type=='nextButton'">
+            <button class="button primary-btn" style="padding: 1px 39px;"
+              [innerHTML]='item.question | safeHTML'></button>
+            <!-- <input class="button primary-btn" id="{{item.name}}" type="{{item.subtype}}" value="{{item.question}}"> -->
+          </div>
+          <div class="btn-cont" *ngIf="item.type=='button'">
+            <button class="button primary-btn" style="padding: 1px 39px;"
+              [innerHTML]='item.question | safeHTML'></button>
+            <!-- <input class="button primary-btn" id="{{item.name}}" type="{{item.subtype}}" value="{{item.question}}"> -->
+          </div>
+        </div>
+        <div class="col-2">
+          <i class="fa fa-chevron-up pull-right" *ngIf="item.toggle" (click)="item.toggle=false"></i>
+          <i class="fa fa-chevron-down pull-right" *ngIf="!item.toggle" (click)="item.toggle=true"></i>
+          <i class="fa fa-trash pull-right" (click)="removeButtonField(i)"></i>
+        </div>
+      </div>
+      <div class="toggle-Wrapper position-relative" *ngIf="item.toggle">
+        <div class="form-group">
+          <label>Required</label>
+          <i class="fa fa-toggle-on red " style="padding-top: 6px;" *ngIf="item.required"
+            (click)="item.required=false"></i>
+          <i class="fa fa-toggle-off" style="padding-top: 6px;" *ngIf="!item.required" (click)="item.required=true"></i>
+          <span class="pull-right ucfirst">{{item.type}}</span>
+
+        </div>
+        <div class="form-group" *ngIf="item.type!='customerProfile'">
+          <label>Title</label>
+          <div class="inlineEditor">
+            <label [innerHTML]='item.question | safeHTML'></label>
+            <!-- <editor [(ngModel)]="test.question" [init]="editorConfig"></editor> -->
+          </div>
+          <!-- <input class="form-control" type="text" [(ngModel)]="item.question"> -->
+        </div>
+
+        <div class="form-group"
+          *ngIf="item.type != 'radio' && item.type != 'autocomplete' && item.type != 'emoji' && item.area != 'Rating'  && item.subType != 'submit' && item.type != 'sliderRating' && item.type != 'starRating'">
+          <label>Link To</label>
+          <select class="form-control" id="{{item.name}}" [(ngModel)]="item.linkTo">
+            <option *ngFor="let i of tabs" [value]="i">{{i}}</option>
+          </select>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="padding20 white-bg" *ngIf="report">
+    <div class="row">
+      <div class="col-12 btn-cont">
+        <button class="button primary-btn" (click)="report=false">Back</button>
+      </div>
+      <div class="col-12 spacer30"></div>
+      <!-- if records found -->
+      <div class="col-12" *ngIf="reports?.length > 0">
+        <div class="report-block" *ngFor="let records of reports">
+          <div *ngFor="let record of records.attributes">
+            <div class="row" *ngIf="record.type !='button' && record.type !='paragraph'">
+              <div class="col-4"> {{record.question}}</div>
+              <div class="col-8">{{record.value}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- if no records found -->
+      <div class="col-12 btn-cont" *ngIf="model.attributes?.length === 0">
+        No response found
+      </div>
+
+    </div>
+
+  </div>
+</div>
+<!-- {{pageNumberDyanamic  +1 }} -->
+<!-- <div class="text-right">
+    <button class="button primary-btn mx-auto mt-3 d-block" type="button" (click)="sendJsonData(model)">
+      Save page
+    </button>
+  </div> -->
+
+<!-- <p class="marginT60 pointer" (click)="show=1">Show data</p>
+  <pre *ngIf="show==1 && model">{{model|json}}</pre> -->

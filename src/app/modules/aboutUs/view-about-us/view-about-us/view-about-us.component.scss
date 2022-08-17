@@ -1,0 +1,110 @@
+.page-wrap {
+  padding: 1.3rem;
+
+  label {
+    color: #7C7B7B;
+    font-size: 13px;
+  }
+
+  p {
+    font-size: 14px;
+    color: #171717;
+  }
+
+  .btn-clone {
+    position: absolute;
+    right: 15px;
+  }
+}
+
+.img-block {
+  .avatar-zone {
+    width: 125px;
+    height: 125px;
+    background-color: #F2F2F2;
+    text-align: center;
+    border: 1px dashed #dbdbdb;
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .upload-img {
+    width: 100%;
+    min-height: -webkit-fill-available;
+  }
+
+  .upload-icon {
+    width: 12px;
+    height: 12px;
+    margin-right: 5px;
+  }
+}
+
+.grid {
+  display: grid;
+}
+
+.lang-bg {
+  background-color: grey;
+}
+
+.faq-card {
+  background-color: #F8F8F8;
+  position: relative;
+
+  .lang-field {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background-color: #c3c3c3;
+
+    p {
+      margin-bottom: 0px;
+      margin: 10px;
+    }
+  }
+
+  .text-fields {
+    left: 40px;
+    top: 33px;
+    padding-bottom: 33px;
+
+    .field-container {
+      .mat-form-field {
+        display: block;
+      }
+    }
+  }
+
+  .img-container {
+    margin-bottom: 50px;
+    left: 37px;
+    top: 33px;
+  }
+}
+
+.flex-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+.lang-name-right {
+  left: auto !important;
+  right: 0;
+}
+
+.fieldtop {
+  margin-top: 2.5rem;
+}
+.lang-field-right{
+    text-align: right;
+    padding: 0 1rem;
+}

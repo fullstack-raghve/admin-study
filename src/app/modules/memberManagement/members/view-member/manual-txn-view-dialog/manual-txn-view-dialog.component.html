@@ -1,0 +1,61 @@
+<div class="page-wrap">
+    <div class="header flex-container">
+        <h3>Manual Points Debit/Credit Details</h3>
+        <div class="close-icon">
+            <img src="assets/images/icons/filter_close_ico.png" alt="" (click)="onCloseClick()">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="view-label">
+                <label>Transaction Type</label>
+                <p>{{manualDebitCreditDetails?.transactionType}}</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="view-label">
+                <label>Program Name</label>
+                <p>{{manualDebitCreditDetails?.programName}}</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="view-label">
+                <label>Internal Comment</label>
+                <p>{{manualDebitCreditDetails?.internalComment}}</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="view-label">
+                <label>Reason</label>
+                <p>{{manualDebitCreditDetails?.reason}}</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="view-label">
+                <label>Transaction Id</label>
+                <p>{{manualDebitCreditDetails?.txnId ? manualDebitCreditDetails?.txnId : '-'}}</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="view-label">
+                <label>Points</label>
+                <p>{{manualDebitCreditDetails?.noOfPoints}}</p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <div class="master-fieldSet">
+                <fieldset class="language-fieldset">
+                    <legend class="fieldset-heading">Description</legend>
+                    <div *ngFor="let item of manualDebitCreditDetails?.debitCreditPointsLocales; let i=index">
+                        <div class="{{alignCss[i]}} view-label">
+                            <label>{{item.langName}}</label>
+                            <p>{{item.description}}</p>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,1130 @@
+<div class="bredcrumb-title-wrap">
+  <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+  <div class="title flex-container">
+    <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          [routerLink]="['/search-combo']"></span>View Combos</h1>
+          <div class="slider">
+              <mat-slide-toggle [(ngModel)]="toggleVal" class="example-margin" [checked]="checked" [disabled]="true">
+                  {{toggleVal==true ? "ONLINE" : "OFFLINE"}}
+              </mat-slide-toggle>
+          </div>
+  </div>
+</div>
+  <div *ngIf="loading" class="page-loader-block full-page-loader">
+        <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+      </div>
+<div class="page-wrap">
+  
+      <mat-tab-group animationDuration="0ms" class="tabs-align" [selectedIndex]="selectedIndex" (selectedTabChange)="tabChanged($event)">
+        <mat-tab label="Basic Details">
+            <ng-template matTabContent>         
+
+    <mat-card *ngIf="viewDataCheck == true" class="mb-20px">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="master-fieldSet">
+            <fieldset class="language-fieldset">
+              <legend class="fieldset-heading">Combo Name*</legend>
+              <div class="multi-fieldset">
+                <div *ngFor="let combo of viewData['comboLocales'];let i=index;">
+                  <div [class.direction-right]="combo.languageName == 'Arabic'">
+                    <label class="label1">{{combo?.languageName}}</label>
+                    <p>{{combo?.comboName}}</p>
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div>
+            <label class="label1">Brand</label>
+            <p>{{viewData?.brandName}}</p>
+          </div>
+        
+          <div>
+            <label class="label1">Category</label>
+            <div *ngFor="let combo of viewData['comboCategory']">
+              <p>{{combo?.categoryName}}</p>
+            </div>
+
+           
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <label class="label1"> Available From</label>
+              <p>{{ availableFrom | date:'hh:mm a' }}</p>
+        
+            </div>
+            <div class="col-md-6">
+              <label class="label1"> Available To</label>
+              <p>{{availableTo | date:'hh:mm a'}}</p>
+        
+            </div>
+          </div>
+          <!-- <div class="row">
+            <div>
+              <p>Number of Steps in Combo {{viewData['noOfStepInCombo']}}</p>
+              
+            </div>
+            
+
+          </div> -->
+        </div>
+        <div class="col-md-3">
+          <div>
+            <label class="label1"> Country</label>
+            <div *ngFor="let combo of viewData['comboCountry']">
+              <p>{{combo['countryName']}}</p>
+            </div>
+          
+          </div>
+          <div>
+            <label class="label1"> Sort Order</label>
+            <p>{{viewData['sortOrder']}}</p>
+       
+          </div>
+          <div *ngIf="viewData['comboType']!= 'SELECTABLE' " class="row">
+            <mat-radio-button disabled name="fixedCombo" checked class="setting-radio">Fixed Combo &nbsp;&nbsp;
+            </mat-radio-button>
+
+          </div>
+          <div *ngIf="viewData['comboType']== 'SELECTABLE' " class="row">
+            <mat-radio-button disabled name="SelectableCombo" checked class="setting-radio">Selectable Combo &nbsp;&nbsp;
+            </mat-radio-button>
+
+          </div>
+          <div class="row" *ngIf="viewData['displayPriceType'] !='FIXED_PRICE' && viewData['comboType']== 'SELECTABLE'">
+              <mat-radio-button disabled checked name="AutoCalculate">Auto Calculate &nbsp;&nbsp;
+                </mat-radio-button>
+          </div>
+          <div class="row" *ngIf="viewData['displayPriceType'] =='FIXED_PRICE' && viewData['comboType']== 'SELECTABLE'">
+              <mat-radio-button  disabled checked name="FixedPrice">Fixed Price &nbsp;&nbsp;
+                </mat-radio-button>
+          </div>
+         
+        </div>
+        <div class="col-md-3">
+          <div>
+            <p>Combo Image</p>
+          </div>
+     
+          <!-- <div class="grid img-block">
+            <div class="avatar-zone">
+                <label class="upload-text" *ngIf="viewData['comboImage'] === '' || viewData['comboImage'] == 'undefined'">Combo Image</label>
+              <img class="upload-img" *ngIf="viewData['comboImage']!=''" [src]="filePathUrl+viewData['comboImage']"
+                 width="300px">
+            </div>
+           
+          </div> -->
+          <div class="img-layout" >
+            <div class="grid img-block flex-wrap">
+                <div class="images-placeholder" *ngFor="let img of viewData['comboImages'];">
+                    <div class="img-container">
+                        <img class="uploaded-image" [src]="img.imgPath != '' ? filePathUrl+img.imgPath : 'assets/images/no-image.png'" [class.uploaded-img]="imgUpload">
+                    </div>
+                    <label *ngIf="img.isDefault" class="image-label">Default Image</label>
+                </div>
+            </div>
+            <div *ngIf="viewData['comboImages'].length == 0" style="color: orange;">Not available</div>
+        </div>
+
+        </div> 
+    
+
+      </div>
+    </mat-card>
+   
+    <mat-tab-group animationDuration="0ms" class="tabs-align">
+      <mat-tab label="Delivery">
+        <div class="isEnabled">
+          <mat-checkbox disabled [checked]="isDeliveryEnabled  === true" >
+            </mat-checkbox> <label>&nbsp;&nbsp; Delivery Enabled </label>
+      </div>
+      <div *ngIf="isDeliveryEnabled == true">
+        <mat-card class="mb-20px">
+          <div class="row skuDetail">
+            <h5>Combo SKU Details</h5>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="sku-table">
+                <div class="">
+                  <table class="GeneratedTable">
+                    <thead>
+                      <tr>
+                        <th>SKU CODE *</th>
+                        <th>Packaging Charges</th>
+                        <th>Delivery Charges</th>
+                        <th>TAX RATES</th>
+                      </tr>
+    
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <div class="table-input">
+                            {{skuCodeData1?.skuCode}}
+                           
+                          </div>
+                        </td>
+                        <td>
+                          <div class="table-input">
+                            {{skuCodeData1?.packagingCharge}}
+                           
+                          </div>
+                        </td>
+                        <td>
+                          <div class="table-input">
+                            {{skuCodeData1?.deliveryCharge}}
+                         
+                          </div>
+                        </td>
+                        <td>
+                          <div class="table-input">
+                            {{skuCodeData1?.taxRate}}
+                        
+                          </div>
+                        </td>
+    
+    
+                      </tr>
+    
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+            
+             
+            </div>
+    
+           
+          </div>
+        </mat-card>
+        <div class="card-title">
+            <div style="width: 100%;">
+              <mat-card class="add-card">
+                <div class="card-title text-right">
+                  <h6>Stores</h6>
+                </div>
+                <mat-divider></mat-divider>
+                <div *ngIf="deliveryStore?.length > 0">
+                  <table class="table">
+                    <tbody>
+                            <tr *ngFor="let ln of deliveryStore;let i = index;"
+                               class="skurow">
+                          <td class="skucol" >
+                              <!-- <u><a
+                                class="text-blue">  {{ln.storeOids.length}} Stores Selected </a></u> -->
+                                {{ln.storeOids.length}} Stores Selected 
+                          </td >
+                          <td class="skucol"> Display Price &nbsp;&nbsp;{{ln.currency}} &nbsp;&nbsp; {{viewData['displayPriceType'] =='FIXED_PRICE' ? ln.displayPrice : 'AUTO CALCULATE'}}</td>
+                          <!-- <td  class="skucol">{{viewData['displayPriceType'] =='FIXED_PRICE' ? ln.displayPrice : 'AUTO CALCULATE'}}</td> -->
+                          
+                            <td class="skucol">
+                          <mat-checkbox disabled [checked]="ln.isDiscount == true">
+                          </mat-checkbox> <label>&nbsp;&nbsp; Discount </label>
+                        </td>
+                        <td class="skucol">
+                          <div *ngIf="ln.isDiscount == true">
+                            {{ln.discountType}}
+                          </div>                         
+                        </td>
+                        <td class="skucol1" >
+                            <div *ngIf="ln.isDiscount == true && ln.discountType == 'Fixed Value'">
+                                {{ln.discountType == 'Fixed Value' ? ln.currency : ''}} &nbsp;&nbsp; {{ln?.discountPrice}}
+                            </div>
+                            <div *ngIf="ln.isDiscount == true && ln.discountType != 'Fixed Value'">
+                                 {{ln?.discountPrice}}
+                            </div>
+                          </td>
+                        <td>
+                            Final Price &nbsp;&nbsp;{{ln.currency}} &nbsp;&nbsp;{{ln.finalPrice}}
+                          </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </mat-card>
+            </div>
+          </div>
+          <div *ngIf="storeGroup?.length > 0" style="margin-top: 10px;">
+            <mat-card *ngFor="let combo of storeGroup;let i = index;" class="mb-20px">
+                <div *ngIf="combo['addCartType'] =='category'" class="row">
+                  <div class="master-fieldSet col-md-3">
+                    <fieldset class="language-fieldset">
+                      <legend class="fieldset-heading">Title*</legend>
+                      <div class="multi-fieldset">
+                        <div *ngFor="let title of combo['comboCartLocales'];let j = index;">
+                          <div [class.direction-right]="title.languageName == 'Arabic'">
+                            <label>{{title.languageName}}</label>
+                            <p>{{title.comboCartName}}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </fieldset>
+                  </div>
+                  <div class="col-md-9">
+                    <div class="flex-bet">
+                      <div class="row selected_row" [class.justifyData]="combo['addCartType'] =='category'">
+                        <div class="col-8 selectedsm_lg">
+                          <div class="row category_row">
+                            <div class="col-3 category_col" *ngFor="let item of combo['comboCartCategory']">
+                              <div class="category-col-list">
+                                <p> {{item.categoryName}} </p>
+                              
+                              </div>
+          
+                            </div>
+                          </div>
+                        </div>
+                        <div  class="col-4 text-right">
+                          <div class="row">
+                              <div class="col-4">
+                                  <label class="label1"> Label Name</label>
+                                  <p>{{combo['comboCartLocales'][0].comboCartName}}</p>
+                             
+                                </div>
+                                <div class="col-8">
+                                    <label class="label1"> No.of selections from list</label>
+                                    <p>{{combo?.noOfVariantSelectionFromList}}</p>
+                               
+                                  </div>
+                          </div>
+                            
+                          </div>
+          
+          
+                      </div>
+          
+                      <div class="add_on_block" *ngIf="combo.comboCartCategory?.length > 0">
+                        <div class="add-on-images mostly-customized-scrollbar" >
+                          <div class="row" *ngFor="let product of combo['comboCartCategory']">
+                            <div class="col-md-3 add-ons" *ngFor="let item of product['comboCartCategoryProduct'];let k = index;">
+          
+                              <div class="image-block">
+                                <div class="image-container">
+                               
+                                  <img *ngIf="item.productImage == '' " src="assets/images/no_image.png" alt="Addon Image"
+                                    class="Addon_Image">
+                                  <img *ngIf="item.productImage != '' " [src]="filePathUrl+item.productImage" alt="Addon Image"
+                                    class="Addon_Image">
+                                </div>
+                              </div>
+                              <div style="margin-left: 20px;">
+          
+                                <div class="info crossSell">
+                                  <p class="title">{{item.productName}}</p>
+                                  <p class="title">( {{item.variantType}} )</p>
+          
+                                  <p class="price-info skuCode"><span>Price:</span> {{item.productPrice}}  </p>
+                                  <p class="price-info skuCode"><span>SKU code:</span> {{item.productSkuCode}} </p>
+                                  <p class="price-info skuCode "><span>Available From:</span> {{item.availableFrom  }} </p>
+                                  <p class="price-info skuCode "><span>Available To:</span> {{item.availableTo }} </p>
+
+                                </div>
+          
+          
+          
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+          
+                    </div>
+          
+                  </div>
+          
+          
+                </div>
+                <div *ngIf="combo['addCartType'] =='product'" class="row">
+                  <div class="master-fieldSet col-md-3">
+                    <fieldset class="language-fieldset">
+                      <legend class="fieldset-heading">Title*</legend>
+                      <div class="multi-fieldset">
+                        <div *ngFor="let title of combo['comboCartLocales'];let j = index;">
+                          <div [class.direction-right]="title.languageName == 'Arabic'">
+                            <label>{{title.languageName}}</label>
+                            <p>{{title.comboCartName}}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </fieldset>
+                  </div>
+                  <div class="col-md-9">
+                      <div class="flex-bet">
+                          <div class="row selected_row" [class.justifyData]="combo['addCartType'] !='category'">
+                              <div class="col-8 selectedsm_lg">
+                               
+                              </div>
+                              <div *ngIf="viewData.comboType == 'SELECTABLE'" class="col-4 text-right">
+                                <div class="row">
+                                    <div class="col-4">
+                                        <label class="label1"> Label Name</label>
+                                        <p>{{combo['comboCartLocales'][0].comboCartName}}</p>
+                                   
+                                      </div>
+                                      <div class="col-8">
+                                          <label class="label1"> No.of selections from list</label>
+                                          <p>{{combo?.noOfVariantSelectionFromList}}</p>
+                                     
+                                        </div>
+                                </div>
+                                  
+                                </div>
+                
+                
+                            </div>
+                    <div class="add_on_block" *ngIf="combo.comboCartProduct?.length > 0">
+                      <div class="add-on-images mostly-customized-scrollbar" >
+                        <div class="row">
+                          <div class="col-md-3 add-ons" *ngFor="let item of combo['comboCartProduct'];let k = index;">
+          
+                            <div class="image-block">
+                              <div class="image-container">
+                               
+                                <img *ngIf="item.productImage == '' " src="assets/images/no_image.png" alt="Addon Image"
+                                  class="Addon_Image">
+                                <img *ngIf="item.productImage != '' " [src]="filePathUrl+item.productImage" alt="Addon Image"
+                                  class="Addon_Image">
+                              </div>
+                            </div>
+                            <div style="margin-left: 20px;">
+          
+                              <div class="info crossSell">
+                                <p class="title">{{item.productName}}</p>
+                                <p class="title">( {{item.variantType}} )</p>
+          
+                                
+                                <p class="price-info skuCode"><span>Price:</span> {{item.productPrice}}</p>
+                                <p class="price-info skuCode skuCode "><span>SKU code:</span> {{item.productSkuCode}} </p>
+                                <p class="price-info skuCode "><span>Available From:</span> {{item.availableFrom  }} </p>
+                                  <p class="price-info skuCode "><span>Available To:</span> {{item.availableTo }} </p>
+                              </div>
+                              <div *ngIf="viewData.comboType != 'SELECTABLE'">
+                                <p class="price-info skuCode"><span>Quantity:</span> {{item.productQuantity}} </p>
+                              </div>
+                            
+          
+          
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    </div>
+          
+                  </div>
+                </div>
+              </mat-card> 
+        </div> 
+      </div>
+              
+
+</mat-tab>
+
+<mat-tab label="Pick Up">
+  <div class="isEnabled">
+    <mat-checkbox disabled [checked]="isPickupEnabled  === true" >
+      </mat-checkbox> <label>&nbsp;&nbsp; Pickup Enabled </label>
+</div>
+<div *ngIf="isPickupEnabled == true">
+        <mat-card class="mb-20px">
+            <div class="row skuDetail">
+              <h5>Combo SKU Details</h5>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="sku-table">
+                  <div class="">
+                    <table class="GeneratedTable">
+                      <thead>
+                        <tr>
+                          <th>SKU CODE *</th>
+                          <th>Packaging Charges</th>
+                          <th>TAX RATES</th>
+                        </tr>
+      
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>
+                            <div class="table-input">
+                              {{skuCodeData2?.skuCode}}
+                             
+                            </div>
+                          </td>
+                          <td>
+                            <div class="table-input">
+                              {{skuCodeData2?.packagingCharge}}
+                             
+                            </div>
+                          </td>
+                     
+                          <td>
+                            <div class="table-input">
+                              {{skuCodeData2?.taxRate}}
+                          
+                            </div>
+                          </td>
+      
+      
+                        </tr>
+      
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+           
+              
+               
+              </div>
+      
+             
+            </div>
+          </mat-card>
+          <div class="card-title">
+              <div style="width: 100%;">
+                <mat-card class="add-card">
+                  <div class="card-title text-right">
+                    <h6>Stores</h6>
+                  </div>
+                  <mat-divider></mat-divider>
+                  <div *ngIf="pickupStore?.length > 0">
+                    <table class="table">
+                      <tbody>
+                              <tr *ngFor="let ln of pickupStore;let i = index;"
+                                 class="skurow">
+                            <td class="skucol" >
+                                <!-- <u><a
+                                  class="text-blue">  {{ln.storeOids.length}} Stores Selected </a></u> -->
+                                  {{ln.storeOids.length}} Stores Selected
+                            </td >
+                            <td class="skucol"> Display Price &nbsp;&nbsp;{{ln.currency}} &nbsp;&nbsp; {{viewData['displayPriceType'] =='FIXED_PRICE' ? ln.displayPrice : 'AUTO CALCULATE'}}</td>
+                            <!-- <td  class="skucol">{{viewData['displayPriceType'] =='FIXED_PRICE' ? ln.displayPrice : 'AUTO CALCULATE'}}</td> -->
+                            
+                              <td class="skucol">
+                            <mat-checkbox disabled [checked]="ln.isDiscount == true">
+                            </mat-checkbox> <label>&nbsp;&nbsp; Discount </label>
+                          </td>
+                          <td class="skucol">
+                            <div *ngIf="ln.isDiscount == true">
+                              {{ln.discountType}}
+                            </div>                         
+                          </td>
+                          <td class="skucol1" >
+                              <div *ngIf="ln.isDiscount == true && ln.discountType == 'Fixed Value'">
+                                  {{ln.discountType == 'Fixed Value' ? ln.currency : ''}} &nbsp;&nbsp; {{ln?.discountPrice}}
+                              </div>
+                              <div *ngIf="ln.isDiscount == true && ln.discountType != 'Fixed Value'">
+                                   {{ln?.discountPrice}}
+                              </div>
+                            </td>
+                          <td>
+                              Final Price &nbsp;&nbsp;{{ln.currency}} &nbsp;&nbsp;{{ln.finalPrice}}
+                            </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </mat-card>
+              </div>
+            </div>
+            <div *ngIf="storeGroupPickup?.length > 0" style="margin-top: 10px;">
+              <mat-card *ngFor="let combo of storeGroupPickup;let i = index;" class="mb-20px">
+                  <div *ngIf="combo['addCartType'] =='category'" class="row">
+                    <div class="master-fieldSet col-md-3">
+                      <fieldset class="language-fieldset">
+                        <legend class="fieldset-heading">Title*</legend>
+                        <div class="multi-fieldset">
+                          <div *ngFor="let title of combo['comboCartLocales'];let j = index;">
+                            <div [class.direction-right]="title.languageName == 'Arabic'">
+                              <label>{{title.languageName}}</label>
+                              <p>{{title.comboCartName}}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </fieldset>
+                    </div>
+                    <div class="col-md-9">
+                      <div class="flex-bet">
+                        <div class="row selected_row" [class.justifyData]="combo['addCartType'] =='category'">
+                          <div class="col-8 selectedsm_lg">
+                            <div class="row category_row">
+                              <div class="col-3 category_col" *ngFor="let item of combo['comboCartCategory']">
+                                <div class="category-col-list">
+                                  <p> {{item.categoryName}} </p>
+                                
+                                </div>
+            
+                              </div>
+                            </div>
+                          </div>
+                          <div  class="col-4 text-right">
+                            <div class="row">
+                                <div class="col-4">
+                                    <label class="label1"> Label Name</label>
+                                    <p>{{combo['comboCartLocales'][0].comboCartName}}</p>
+                               
+                                  </div>
+                                  <div class="col-8">
+                                      <label class="label1"> No.of selections from list</label>
+                                      <p>{{combo?.noOfVariantSelectionFromList}}</p>
+                                 
+                                    </div>
+                            </div>
+                              
+                            </div>
+            
+            
+                        </div>
+            
+                        <div class="add_on_block" *ngIf="combo.comboCartCategory?.length > 0">
+                          <div class="add-on-images mostly-customized-scrollbar" >
+                            <div class="row" *ngFor="let product of combo['comboCartCategory']">
+                              <div class="col-md-3 add-ons" *ngFor="let item of product['comboCartCategoryProduct'];let k = index;">
+            
+                                <div class="image-block">
+                                  <div class="image-container">
+                                 
+                                    <img *ngIf="item.productImage == '' " src="assets/images/no_image.png" alt="Addon Image"
+                                      class="Addon_Image">
+                                    <img *ngIf="item.productImage != '' " [src]="filePathUrl+item.productImage" alt="Addon Image"
+                                      class="Addon_Image">
+                                  </div>
+                                </div>
+                                <div style="margin-left: 20px;">
+            
+                                  <div class="info crossSell">
+                                    <p class="title">{{item.productName}}</p>
+                                    <p class="title">( {{item.variantType}} )</p>
+            
+                                    <p class="price-info skuCode"><span>Price:</span> {{item.productPrice}}  </p>
+                                    <p class="price-info skuCode"><span>SKU code:</span> {{item.productSkuCode}} </p>
+                                    <p class="price-info skuCode "><span>Available From:</span> {{item.availableFrom  }} </p>
+                                          <p class="price-info skuCode "><span>Available To:</span> {{item.availableTo }} </p>
+                                  </div>
+            
+            
+            
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+            
+                      </div>
+            
+                    </div>
+            
+            
+                  </div>
+                  <div *ngIf="combo['addCartType'] =='product'" class="row">
+                    <div class="master-fieldSet col-md-3">
+                      <fieldset class="language-fieldset">
+                        <legend class="fieldset-heading">Title*</legend>
+                        <div class="multi-fieldset">
+                          <div *ngFor="let title of combo['comboCartLocales'];let j = index;">
+                            <div [class.direction-right]="title.languageName == 'Arabic'">
+                              <label>{{title.languageName}}</label>
+                              <p>{{title.comboCartName}}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </fieldset>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="flex-bet">
+                            <div class="row selected_row" [class.justifyData]="combo['addCartType'] !='category'">
+                                <div class="col-8 selectedsm_lg">
+                                 
+                                </div>
+                                <div *ngIf="viewData.comboType == 'SELECTABLE'" class="col-4 text-right">
+                                  <div class="row">
+                                      <div class="col-4">
+                                          <label class="label1"> Label Name</label>
+                                          <p>{{combo['comboCartLocales'][0].comboCartName}}</p>
+                                     
+                                        </div>
+                                        <div class="col-8">
+                                            <label class="label1"> No.of selections from list</label>
+                                            <p>{{combo?.noOfVariantSelectionFromList}}</p>
+                                       
+                                          </div>
+                                  </div>
+                                    
+                                  </div>
+                  
+                  
+                              </div>
+                      <div class="add_on_block" *ngIf="combo.comboCartProduct?.length > 0">
+                        <div class="add-on-images mostly-customized-scrollbar" >
+                          <div class="row">
+                            <div class="col-md-3 add-ons" *ngFor="let item of combo['comboCartProduct'];let k = index;">
+            
+                              <div class="image-block">
+                                <div class="image-container">
+                                 
+                                  <img *ngIf="item.productImage == '' " src="assets/images/no_image.png" alt="Addon Image"
+                                    class="Addon_Image">
+                                  <img *ngIf="item.productImage != '' " [src]="filePathUrl+item.productImage" alt="Addon Image"
+                                    class="Addon_Image">
+                                </div>
+                              </div>
+                              <div style="margin-left: 20px;">
+            
+                                <div class="info crossSell">
+                                  <p class="title">{{item.productName}}</p>
+                                  <p class="title">( {{item.variantType}} )</p>
+            
+                                  
+                                  <p class="price-info skuCode"><span>Price:</span> {{item.productPrice}}</p>
+                                  <p class="price-info skuCode "><span>SKU code:</span> {{item.productSkuCode}} </p>
+                                  <p class="price-info skuCode "><span>Available From:</span> {{item.availableFrom  }} </p>
+                                          <p class="price-info skuCode "><span>Available To:</span> {{item.availableTo }} </p>
+                                </div>
+                                <div *ngIf="viewData.comboType != 'SELECTABLE'">
+                                  <p class="price-info skuCode"><span>Quantity:</span> {{item.productQuantity}} </p>
+                                </div>
+                              
+            
+            
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      </div>
+            
+                    </div>
+                  </div>
+                </mat-card> 
+          </div> 
+</div>
+</mat-tab>
+<mat-tab label="Dine IN">
+  <div class="isEnabled">
+    <mat-checkbox  disabled [checked]="isDineInEnabled  === true" >
+      </mat-checkbox> <label>&nbsp;&nbsp; Dine In Enabled </label>
+</div>
+<div *ngIf="isDineInEnabled == true">
+        <mat-card class="mb-20px">
+            <div class="row skuDetail">
+              <h5>Combo SKU Details</h5>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="sku-table">
+                  <div class="">
+                    <table class="GeneratedTable">
+                      <thead>
+                        <tr>
+                          <th>SKU CODE *</th>
+                          <th>Packaging Charges</th>
+                          <th>TAX RATES</th>
+                        </tr>
+      
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>
+                            <div class="table-input">
+                              {{skuCodeData3?.skuCode}}
+                             
+                            </div>
+                          </td>
+                          <td>
+                            <div class="table-input">
+                              {{skuCodeData3?.packagingCharge}}
+                             
+                            </div>
+                          </td>
+                          <td>
+                            <div class="table-input">
+                              {{skuCodeData3?.taxRate}}
+                          
+                            </div>
+                          </td>
+      
+      
+                        </tr>
+      
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+       
+              
+               
+              </div>
+      
+             
+            </div>
+          </mat-card>
+          <div class="card-title">
+              <div style="width: 100%;">
+                <mat-card class="add-card">
+                  <div class="card-title text-right">
+                    <h6>Stores</h6>
+                  </div>
+                  <mat-divider></mat-divider>
+                  <div *ngIf="dineInStore?.length > 0">
+                    <table class="table">
+                      <tbody>
+                              <tr *ngFor="let ln of dineInStore;let i = index;"
+                                 class="skurow">
+                            <td class="skucol" >
+                                <!-- <u><a
+                                  class="text-blue">  {{ln.storeOids.length}} Stores Selected </a></u> -->
+                                  {{ln.storeOids.length}} Stores Selected 
+                            </td >
+                            
+                          <td class="skucol"> Display Price &nbsp;&nbsp;{{ln.currency}} &nbsp;&nbsp; {{viewData['displayPriceType'] =='FIXED_PRICE' ? ln.displayPrice : 'AUTO CALCULATE'}}</td>
+                          <!-- <td  class="skucol">{{viewData['displayPriceType'] =='FIXED_PRICE' ? ln.displayPrice : 'AUTO CALCULATE'}}</td> -->
+                            
+                              <td class="skucol">
+                            <mat-checkbox disabled [checked]="ln.isDiscount == true">
+                            </mat-checkbox> <label>&nbsp;&nbsp; Discount </label>
+                          </td>
+                          <td class="skucol">
+                            <div *ngIf="ln.isDiscount == true">
+                              {{ln.discountType}}
+                            </div>                         
+                          </td>
+                          <td class="skucol1" >
+                            <div *ngIf="ln.isDiscount == true && ln.discountType == 'Fixed Value'">
+                                {{ln.discountType == 'Fixed Value' ? ln.currency : ''}} &nbsp;&nbsp; {{ln?.discountPrice}}
+                            </div>
+                            <div *ngIf="ln.isDiscount == true && ln.discountType != 'Fixed Value'">
+                                 {{ln?.discountPrice}}
+                            </div>
+                          </td>
+                          <td>
+                            Final Price &nbsp;&nbsp;{{ln.currency}} &nbsp;&nbsp;{{ln.finalPrice}}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </mat-card>
+              </div>
+            </div>
+            <div *ngIf="storeGroupDineIn?.length > 0" style="margin-top: 10px;">
+              <mat-card *ngFor="let combo of storeGroupDineIn;let i = index;" class="mb-20px">
+                  <div *ngIf="combo['addCartType'] =='category'" class="row">
+                    <div class="master-fieldSet col-md-3">
+                      <fieldset class="language-fieldset">
+                        <legend class="fieldset-heading">Title*</legend>
+                        <div class="multi-fieldset">
+                          <div *ngFor="let title of combo['comboCartLocales'];let j = index;">
+                            <div [class.direction-right]="title.languageName == 'Arabic'">
+                              <label>{{title.languageName}}</label>
+                              <p>{{title.comboCartName}}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </fieldset>
+                    </div>
+                    <div class="col-md-9">
+                      <div class="flex-bet">
+                        <div class="row selected_row" [class.justifyData]="combo['addCartType'] =='category'">
+                          <div class="col-8 selectedsm_lg">
+                            <div class="row category_row">
+                              <div class="col-3 category_col" *ngFor="let item of combo['comboCartCategory']">
+                                <div class="category-col-list">
+                                  <p> {{item.categoryName}} </p>
+                                
+                                </div>
+            
+                              </div>
+                            </div>
+                          </div>
+                          <div  class="col-4 text-right">
+                            <div class="row">
+                                <div class="col-4">
+                                    <label class="label1"> Label Name</label>
+                                    <p>{{combo['comboCartLocales'][0].comboCartName}}</p>
+                               
+                                  </div>
+                                  <div class="col-8">
+                                      <label class="label1"> No.of selections from list</label>
+                                      <p>{{combo?.noOfVariantSelectionFromList}}</p>
+                                 
+                                    </div>
+                            </div>
+                              
+                            </div>
+            
+            
+                        </div>
+            
+                        <div class="add_on_block" *ngIf="combo.comboCartCategory?.length > 0">
+                          <div class="add-on-images mostly-customized-scrollbar" >
+                            <div class="row" *ngFor="let product of combo['comboCartCategory']">
+                              <div class="col-md-3 add-ons" *ngFor="let item of product['comboCartCategoryProduct'];let k = index;">
+            
+                                <div class="image-block">
+                                  <div class="image-container">
+                                 
+                                    <img *ngIf="item.productImage == '' " src="assets/images/no_image.png" alt="Addon Image"
+                                      class="Addon_Image">
+                                    <img *ngIf="item.productImage != '' " [src]="filePathUrl+item.productImage" alt="Addon Image"
+                                      class="Addon_Image">
+                                  </div>
+                                </div>
+                                <div style="margin-left: 20px;">
+            
+                                  <div class="info crossSell">
+                                    <p class="title">{{item.productName}}</p>
+                                    <p class="title">( {{item.variantType}} )</p>
+            
+                                    <p class="price-info skuCode"><span>Price:</span> {{item.productPrice}}  </p>
+                                    <p class="price-info skuCode"><span>SKU code:</span> {{item.productSkuCode}} </p>
+                                    <p class="price-info skuCode "><span>Available From:</span> {{item.availableFrom  }} </p>
+                                          <p class="price-info skuCode "><span>Available To:</span> {{item.availableTo }} </p>
+                                  </div>
+            
+            
+            
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+            
+                      </div>
+            
+                    </div>
+            
+            
+                  </div>
+                  <div *ngIf="combo['addCartType'] =='product'" class="row">
+                    <div class="master-fieldSet col-md-3">
+                      <fieldset class="language-fieldset">
+                        <legend class="fieldset-heading">Title*</legend>
+                        <div class="multi-fieldset">
+                          <div *ngFor="let title of combo['comboCartLocales'];let j = index;">
+                            <div [class.direction-right]="title.languageName == 'Arabic'">
+                              <label>{{title.languageName}}</label>
+                              <p>{{title.comboCartName}}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </fieldset>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="flex-bet">
+                            <div class="row selected_row" [class.justifyData]="combo['addCartType'] !='category'">
+                                <div class="col-8 selectedsm_lg">
+                                 
+                                </div>
+                                <div *ngIf="viewData.comboType == 'SELECTABLE'" class="col-4 text-right">
+                                  <div class="row">
+                                      <div class="col-4">
+                                          <label class="label1"> Label Name</label>
+                                          <p>{{combo['comboCartLocales'][0].comboCartName}}</p>
+                                     
+                                        </div>
+                                        <div class="col-8">
+                                            <label class="label1"> No.of selections from list</label>
+                                            <p>{{combo?.noOfVariantSelectionFromList}}</p>
+                                       
+                                          </div>
+                                  </div>
+                                    
+                                  </div>
+                  
+                  
+                              </div>
+                      <div class="add_on_block" *ngIf="combo.comboCartProduct?.length > 0">
+                        <div class="add-on-images mostly-customized-scrollbar" >
+                          <div class="row">
+                            <div class="col-md-3 add-ons" *ngFor="let item of combo['comboCartProduct'];let k = index;">
+            
+                              <div class="image-block">
+                                <div class="image-container">
+                                 
+                                  <img *ngIf="item.productImage == '' " src="assets/images/no_image.png" alt="Addon Image"
+                                    class="Addon_Image">
+                                  <img *ngIf="item.productImage != '' " [src]="filePathUrl+item.productImage" alt="Addon Image"
+                                    class="Addon_Image">
+                                </div>
+                              </div>
+                              <div style="margin-left: 20px;">
+            
+                                <div class="info crossSell">
+                                  <p class="title">{{item.productName}}</p>
+                                  <p class="title">( {{item.variantType}} )</p>
+            
+                                  
+                                  <p class="price-info skuCode"><span>Price:</span> {{item.productPrice}}</p>
+                                  <p class="price-info skuCode "><span>SKU code:</span> {{item.productSkuCode}} </p>
+                                  <p class="price-info skuCode "><span>Available From:</span> {{item.availableFrom  }} </p>
+                                          <p class="price-info skuCode "><span>Available To:</span> {{item.availableTo }} </p>
+                                </div>
+                                <div *ngIf="viewData.comboType != 'SELECTABLE'">
+                                  <p class="price-info skuCode"><span>Quantity:</span> {{item.productQuantity}} </p>
+                                </div>
+                              
+            
+            
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      </div>
+            
+                    </div>
+                  </div>
+                </mat-card> 
+          </div> 
+</div>
+</mat-tab>
+</mat-tab-group>
+
+
+
+  
+  <div class="button-wrap text-right pt-20px">
+    <button class="button secondary-btn" type="button" [routerLink]="['/search-combo']">CANCEL</button>
+    <button class="button primary-btn" type="button" (click)="moveToEdit()">EDIT</button>
+    <button class="button primary-btn" type="button" (click)="nextStep()">NEXT</button>
+  </div>
+</ng-template>
+</mat-tab>
+<mat-tab label="Additional Details">
+    <ng-template matTabContent>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="left-col">
+                 
+                    <mat-card class="product-details add-card">
+                  
+             
+                        <div class="mb-10px">
+                            <div>
+                                <mat-checkbox [checked]="viewData['isExclusive']" disabled> Exclusive
+                                </mat-checkbox>
+                            </div>
+                            <div>
+                                <mat-checkbox [checked]="viewData['isLimitedTimeCategory']" disabled> Limited Time Category
+                                </mat-checkbox>
+                            </div>
+                            <div>
+                                <mat-checkbox [checked]="viewData['issHealthy']" disabled>Healthy
+                                </mat-checkbox>
+                            </div>
+                            <div>
+                                <mat-checkbox [checked]="viewData['isHotSeller']" disabled> Hotseller
+                                </mat-checkbox>
+                            </div>
+                        </div>
+
+                        <div class="row mb-10px">
+                            <div class="col-md-6" *ngIf="viewData['comboProductType'] == 'VEG'">
+                                <img src="assets/images/svg-icons/veg_ico.svg" width="12px" alt=""> Vegetarian
+                            </div>
+                            <div class="col-md-6" *ngIf="viewData['comboProductType'] == 'EGG'">
+                                <img src="assets/images/icons/Egg_1x.png" width="12px" alt=""> Egg
+                            </div>
+                            <div class="col-md-6" *ngIf="viewData['comboProductType'] == 'NONVEG'">
+                                <img src="assets/images/svg-icons/nonveg_ico.svg" width="12px" alt=""> Non-Vegetarian
+                            </div>
+
+                        </div>
+                    
+                    
+                    </mat-card>
+                    <mat-card class="add-card">
+                        <div class="diatry">
+                            <div class="card-title">
+                                <h6>Dietary</h6>
+                            </div>
+                            <mat-divider></mat-divider>
+                            <div class="dieatry-container">
+                                <div class="img-layout">
+                                    <div class="grid img-block flex">
+                                        <div class="images-placeholder" *ngFor="let item of viewData['comboDieatry'];">
+                                            <div class="img-container">
+                                                <img class="uploaded-image" [src]="filePathUrl+item.imgPath" [class.uploaded-img]="imgUploadDieatry">
+                                            </div>
+                                            <label *ngIf="item.name" class="image-label">{{item.name}}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="alergion" style="margin-top: 1em;">
+                            <div class="card-title">
+                                <h6>Allergen</h6>
+                            </div>
+                            <mat-divider></mat-divider>
+                            <div class="dieatry-container">
+                                <div class="img-layout">
+                                    <div class="grid img-block flex">
+                                        <div class="images-placeholder" *ngFor="let item of viewData['comboAlergion'];">
+                                            <div class="img-container">
+                                                <img class="uploaded-image" [src]="filePathUrl+item.imgPath" width="80px" [class.uploaded-img]="imgUploadAlergion">
+                                            </div>
+                                            <label *ngIf="item.name" class="image-label">{{item.name}}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-card>
+                </div>
+            </div>
+            <div class="col-md-8 mb-20px">
+                <mat-card class="terms-conditions-card">
+                    <div class="faq-card mb-20px">
+                        <div class="expansion-panel" *ngFor="let ln of viewData['comboDescription']">
+                            <mat-accordion>
+                                <mat-expansion-panel [class.right-panel]="ln.languageName == 'Arabic'">
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>
+                                            {{ln.languageName}}
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
+                                    <div class="row card-mb" [class.text-right]="ln.languageName == 'Arabic'">
+                                        <div class="col-md-11 text-fields {{languageDirection[ln]}}">
+                                            <div [class.direction]="ln.languageName == 'Arabic'">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <label>Additional Description</label>
+                                                        <p [innerHTML]="ln.additionalDescription"></p>
+                                                    </div>
+                                                 
+                                           
+                                                </div>
+                             
+                                                <div class="field-container">
+                                                    <label>Ingredients</label>
+                                                    <p [innerHTML]="ln.ingredients"></p>
+                                                </div>
+                                                <div class="field-container">
+                                                    <label>Description</label>
+                                                    <p [innerHTML]="ln.description"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-expansion-panel>
+                            </mat-accordion>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+        </div>
+        <div class="btm-button-wrap">
+            <button class="button secondary-btn" type="button" [routerLink]="['/search-combo']">CANCEL</button>
+            <button type="button" class="button secondary-btn" (click)="previousStep()">BACK</button>
+            <button class="button primary-btn" type="button" (click)="moveToEdit()">EDIT</button>
+        </div>
+      </ng-template>
+  </mat-tab>
+</mat-tab-group>
+</div>

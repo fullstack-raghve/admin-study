@@ -1,0 +1,95 @@
+<div class="bredcrumb-title-wrap">
+  <app-breadcrumb [breadCrumbData]= "breadCrumbData"></app-breadcrumb>
+  <div class="title flex-container">
+    <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          [routerLink]="['/search-locations']"></span>View Location</h1>
+
+  </div>
+</div>
+<div class="page-wrap" style="padding: 20px;" *ngIf="!loading">
+
+
+    <div class="row">
+    <div class="col-md-12">
+        <mat-card class="mb-20px">
+          <div class="row">
+            <div class="col-md-4">
+              <!-- <label>Location</label>
+  
+              <p>{{locationData.locationName}}</p> -->
+              <div class="create-fieldSet">
+                <fieldset class="language-fieldset">
+                    <legend class="fieldset-heading">Location Name</legend>
+                    <!-- <div *ngFor="let locale of variantLocale;let i = index;" >
+                        <div class="example-container">
+                            <div [class.direction-right]="locale.languageName == 'Arabic'">
+                                    <label>{{locale.languageName}}</label>
+                                    <p>{{locale.variantName}}</p>
+                            </div>
+                        </div>
+                    </div> -->
+                    <div *ngFor="let loc of locationData.location">
+                      <div [class.direction-right] = "loc.languageCode=='ar' || loc.languageCode=='AR'">
+                        <!-- <label>{{loc.languageName | titlecase}}</label> -->
+                        <p class="lng">{{loc.languageName | titlecase}}</p>
+                        <p>{{loc.locationName}}</p>
+                      </div>
+                    </div>
+                </fieldset>
+            </div>
+            </div>
+             <div class="col-md-8">
+              <div class="row">
+                <div class="col-md-6">
+                  <label>Country</label>
+  
+                  <p>{{locationData.countryName}}</p>
+                </div>
+                <div class="col-md-6">
+                  <label>City</label>
+  
+                  <p>{{locationData.cityName}}</p>
+                </div>
+              </div>
+              <div class="row">
+              <div class="col-md-12">
+                <label>Address</label>
+  
+                <p>{{locationData.address}}</p>
+              </div>
+              </div>
+              <div class="row">
+              <div class="col-md-6">
+                <label>Latitude</label>
+  
+                <p>{{locationData.latitude}}</p>
+              </div>
+              <div class="col-md-6">
+                <label>Longitude</label>
+  
+            <p>{{locationData.longitude}}</p>
+              </div>
+              </div>
+            </div>
+          </div>
+       
+          </mat-card>
+        </div>
+         
+
+          </div>
+        
+        
+          <div class="d-flex justify-content-end">
+            <div class="btm-button-wrap">
+              <!-- [routerLink]="['/edit-location/'+locationData?.locationOid]" -->
+              <!-- <button class="button secondary-btn" type="button" [routerLink]="['/']">CANCEL</button> -->
+              <button class="button primary-btn" type="submit" [routerLink]="['/edit-location/'+locationData?.locationOid]" >EDIT</button>
+          </div>
+           </div>
+        
+          </div>
+
+          <div *ngIf="loading" class="select-store-block">
+            <img src="assets/images/loader-icons/Blue-loading-200px.svg" class="loaderPostion" alt="Loader">
+          </div>

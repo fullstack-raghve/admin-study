@@ -1,0 +1,56 @@
+.assignRow{
+    .radioblock{
+        padding: 15px !important;
+    }
+    .giftcard{
+        /deep/ .mat-form-field-infix{
+            padding: 0 !important; 
+        }
+    }
+}
+.page-wrap{
+    margin: 20px 20px 20px 20px;
+}
+.mat-card{
+    box-shadow: none;
+}
+.primary-btn{
+    float: right;
+    margin: 10px;
+}
+
+.secondary-btn{
+    float: right;
+    margin: 10px;
+}
+.upload_sku{
+    position:absolute;
+    width: 100%;
+    // height:40px;
+    // margin-top:130px;
+    z-index:10;
+    opacity: 0;
+    cursor: pointer;
+}
+.nonEditable{
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  td, th {
+    border-right: 1px solid #dddddd;
+    text-align: center;
+    
+  }
+  
+th {
+     padding: 8px;
+     color: #727272;
+    background-color: #F2F2F2;
+  }

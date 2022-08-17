@@ -1,0 +1,172 @@
+<div class="page-wrap">
+    <div class="bredcrumb-title-wrap">
+        <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+        <div class="title flex-container">
+            <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow" [routerLink]="['/search-user']"></span>Add User</h1>
+            <mat-slide-toggle [(ngModel)]="toggleVal" class="example-margin" [checked]="checked" [disabled]="disabled">
+                {{toggleVal==true ? "ONLINE" : "OFFLINE"}}
+            </mat-slide-toggle>
+        </div>
+    </div>
+    <div class="form-wrap">
+        <form [formGroup]="addUserFormGroup" #addUserForm="ngForm" (submit)="createUser(addUserFormGroup.value)">
+            <div class="row">
+                <div class="col-md-5">
+                    <h3 class="card-title">Basic Details</h3>
+                    <div class="card">
+                        <div class="form-warpper">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <!-- <mat-form-field>
+                    <mat-select placeholder="Role" required formControlName="role">
+                      <mat-option value="{{i.roleId}}" *ngFor=" let i of roleId">{{i.roleName}}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="addUserFormGroup.get('role').hasError('required')">Please select value</mat-error>
+                  </mat-form-field> -->
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput placeholder="Role" aria-label="Role" [matAutocomplete]="roleAutoComplete" [formControl]="roleCtrl">
+                                        <mat-autocomplete #roleAutoComplete="matAutocomplete">
+                                            <mat-option *ngFor="let role of filteredRoles | async" [value]="role.roleName" #roleInput (click)="getAllRole(role)">
+                                                <span>{{role.roleName}}</span>
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <mat-error *ngIf="roleCtrl.hasError('required')">
+                                            Please select value</mat-error>
+                                    </mat-form-field>
+                                    <!-- <div class="error email_error" *ngIf="addUserFormGroup.controls.role.invalid">Please select a value</div> -->
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <mat-form-field>
+                                                <mat-select placeholder="Title" required formControlName="title">
+                                                    <mat-option value="MR">Mr</mat-option>
+                                                    <mat-option value="MRS">Mrs</mat-option>
+                                                    <mat-option value="MS">Miss</mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="addUserFormGroup.get('title').hasError('required')">Please select value</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <mat-form-field>
+                                                <input matInput type="text" maxlength="25" placeholder="First Name" required formControlName="firstName" />
+                                                <mat-error *ngIf="addUserFormGroup.get('firstName').hasError('required')">Please enter value</mat-error>
+                                                <mat-error *ngIf="addUserFormGroup.get('firstName').hasError('pattern')">Invalid charecters entered</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <mat-form-field>
+                                        <input matInput type="text" maxlength="20" placeholder="Employee Id" required formControlName="employeeId" />
+                                        <mat-error *ngIf="addUserFormGroup.get('employeeId').hasError('required')">Please enter value</mat-error>
+                                        <mat-error *ngIf="addUserFormGroup.get('employeeId').hasError('pattern')">Invalid charecters entered</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-6">
+                                    <mat-form-field>
+                                        <input matInput type="text" maxlength="25" placeholder="Middle Name" formControlName="middleName" />
+                                        <mat-error *ngIf="addUserFormGroup.get('middleName').hasError('pattern')">Invalid charecters entered</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-6">
+                                    <mat-form-field>
+                                        <input matInput type="text" maxlength="25" placeholder="User Name" required formControlName="userName" />
+                                        <mat-error *ngIf="addUserFormGroup.get('userName').hasError('required')">Please enter value</mat-error>
+                                        <mat-error *ngIf="addUserFormGroup.get('userName').hasError('pattern')">Invalid charecters entered</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-6">
+                                    <mat-form-field>
+                                        <input matInput type="text" maxlength="25" placeholder="Last Name" required formControlName="lastName" />
+                                        <mat-error *ngIf="addUserFormGroup.get('lastName').hasError('required')">Please enter value</mat-error>
+                                        <mat-error *ngIf="addUserFormGroup.get('lastName').hasError('pattern')">Invalid charecters entered</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-6">
+                                    <mat-form-field>
+                                        <input matInput type="email" min="7" maxlength="50" placeholder="Email ID" required formControlName="emailId" />
+                                        <mat-error *ngIf="addUserFormGroup.get('emailId').hasError('required')">Please enter value</mat-error>
+                                        <mat-error *ngIf="addUserFormGroup.get('emailId').hasError('pattern') || addUserFormGroup.get('emailId').hasError('minlength')">Invalid Email id entered</mat-error>
+                                    </mat-form-field>
+
+                                </div>
+                                <div class="col-md-6">
+                                    <mat-form-field>
+                                        <input matInput OnlyNumber=true type="text" maxlength="15" placeholder="Phone Number" required formControlName="phoneNumber" />
+                                        <mat-error *ngIf="addUserFormGroup.get('phoneNumber').hasError('required')">Please enter value</mat-error>
+                                        <mat-error *ngIf="addUserFormGroup.get('phoneNumber').hasError('minlength')">Invalid Phone Number </mat-error>
+                                        <mat-error *ngIf="addUserFormGroup.get('phoneNumber').hasError('pattern')">Invalid Phone Number </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-6">
+                                    <mat-form-field>
+                                        <mat-select placeholder="Access Type" formControlName="accessType" required (selectionChange)="validateAccessType(addUserFormGroup.value)">
+                                            <mat-option value="FULL_ACCESS">Full_Access</mat-option>
+                                            <mat-option value="RESTRICTED_ACCESS">Restricted_Access</mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="addUserFormGroup.get('accessType').hasError('required')">Please select value</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <h3 class="card-title">Store Access</h3>
+                    <div class="card no-pad">
+                        <div class="heading">
+                            <div class="flex-container">
+                                <div class="selected-stores">
+                                    <div *ngIf="storeCount == true">
+                                        <p *ngIf="totalCount">{{dataSource.data.length}} Stores selected of {{totalCount}}</p>
+                                    </div>
+                                </div>
+                                <div class="select-stores">
+                                    <button class='select-stores-btn' type="button" [disabled]="storePopUpDisable" (click)="openDialog()">SELECT STORES</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="table-wrap" *ngIf="dataSource.data.length>0">
+                            <div class="table-wrap-inner">
+                                <table mat-table [dataSource]="dataSource" matSort>
+                                    <ng-container matColumnDef="storeId">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> STORE ID </th>
+                                        <td mat-cell *matCellDef="let row"> {{ row.storeId }} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="storeName">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> STORE NAME </th>
+                                        <td mat-cell *matCellDef="let row"> {{row.storeName}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="address">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> ADDRESS </th>
+                                        <td mat-cell *matCellDef="let row"> {{row.address}} </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                                    </tr>
+                                </table>
+                            </div>
+                            <!-- <mat-paginator [pageSizeOptions]="[10,20,50 ,100]"></mat-paginator> -->
+                        </div>
+                        <div class="no-records" *ngIf="dataSource.data == undefined">
+                            No stores added !
+                        </div>
+                    </div>
+                    <p *ngIf="storeRequired" class="storeerror-mes">{{storeErrorMsg}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="button-wrap">
+                    <div class="mr-15px">
+                        <button class="button secondary-btn" type="button" [routerLink]="['/search-user']">CANCEL</button>
+                        <button class="button primary-btn" type="submit">ADD</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

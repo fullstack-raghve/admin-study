@@ -1,0 +1,18 @@
+.page-wrap {
+    padding: 1.5em;
+}
+/deep/.cdk-overlay-pane {
+    max-width: 42vw!important;
+}
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    h3 {
+        font-size: 24px;
+        color: #212529;
+    }
+}
+.close-icon {
+    cursor: pointer;
+}

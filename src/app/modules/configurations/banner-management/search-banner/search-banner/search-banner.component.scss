@@ -1,0 +1,79 @@
+
+  .mat-form-field {
+    width: 100%;
+  }
+  .table-input {
+    width: 85px;
+    .mat-form-field {
+      width: 75%;
+    }
+  }
+  .add-card {
+    margin-bottom: 10px;
+  }
+  .button{
+    color: #fff;
+  }
+  table.GenerateTable {
+    width: 100%;
+    background-color: #ffffff;
+    border-collapse: collapse;
+    border-width: 1px;
+    border-color: #dedede;
+    border-style: solid;
+    color: #000000;
+    border:0 !important;
+    tr{
+      border-bottom: 1px solid #ccc !important;
+      td.empty{
+        border-bottom: 1px solid #ccc !important;
+      }
+    }
+    th{
+      border-bottom: 1px solid #ccc;
+      color: rgba(0, 0, 0, 0.54);
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+  }
+  
+  table.GenerateTable td,
+  table.GenerateTable th {
+    border-width: 1px;
+    border-color: #dedede;
+    padding: 5px;
+    text-align: center;
+    padding: 20px;
+  }
+  
+  table.GeneratedTable thead {
+    background-color: #f8f8f8;
+  }
+
+ul{
+  width: 100%;
+  background-color: #ffffff;
+  border-color: #dedede;
+  color: #000000;
+  border:0 !important;
+  .table-header{
+    text-transform: uppercase;
+    font-weight: bold;
+    color: #6b6d6f;
+    font-size: 12px;
+  }
+  li{
+    display: flex;
+    border-width: 1px;
+    padding: 20px;
+    border-bottom: 1px solid #ccc !important;
+  }
+  ul:not(:first-child) {
+  color: rgba(0, 0, 0, 0.87);
+  font-weight: normal;
+  text-transform: none;
+  }
+}
+.bannerType{
+  margin: inherit;
+}

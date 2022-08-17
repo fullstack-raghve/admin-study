@@ -1,0 +1,301 @@
+<div class="bredcrumb-title-wrap">
+  <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+  <div class="title flex-container">
+    <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          [routerLink]="['/search-brand-management']"></span>Edit Brand</h1>
+    <div class="slider">
+      <div class="slider">
+        <mat-slide-toggle class="mat-slide-toggle" [checked]="checked" (change)="toggleStatus($event)">{{statusValue}}
+        </mat-slide-toggle>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="page-wrap" *ngIf="buildFlag">
+  <form id="updateBrandsForm" (submit)="validateForm();updateBrands(brandsFormGroup.value);"
+    [formGroup]="brandsFormGroup" #editBrandForm="ngForm" novalidate>
+    <div class="row">
+      <div class="col-md-4">
+        <label>Basic Details</label>
+        <mat-card class="mb-20px">
+          <div class="row">
+            <div class="col-md-12">
+              <mat-form-field class="field-style field-width" *ngIf="countries.length!=0">
+                <mat-select placeholder="Country Name" formControlName="country"
+                  (selectionChange)="getMallList(countryInput.value)" #countryInput required [disabled]="true">
+                  <mat-option *ngFor="let country of countries" [value]="country.countryId">
+                    {{ country.countryName }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="brandsFormGroup.get('country').hasError('required')">Please select value</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-12">
+              <!-- <mat-form-field class="field-style field-width">
+                <mat-select placeholder="Mall" formControlName="mallName" required multiple>
+                  <mat-option *ngFor="let mall of malls" [value]="mall.mallId">
+                    {{ mall.mallName }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="brandsFormGroup.get('mallName').hasError('required')">Please select value</mat-error>
+              </mat-form-field> -->
+              <mat-select-autocomplete [placeholder]="'Mall'" ngDefaultControl  [options]="malls1" [display]="'mallName'"
+                [value]="'value'" [multiple]='true' [labelCount]="1" (selectionChange)="getMallList(countryId)"
+                [formControl]="brandsFormGroup.controls['mallName']" required>
+              </mat-select-autocomplete>
+              <mat-error style="margin-top: -25px;font-size: 10px;"
+                *ngIf="editBrandForm.submitted && brandsFormGroup.get('mallName').hasError('required')">Please
+                select value</mat-error>
+
+            </div>
+            <div class="col-md-12">
+              <!-- <mat-form-field class="field-width">
+                <mat-select placeholder="Brand Category" formControlName="brandCategories" multiple required>
+                  <mat-option *ngFor="let brandCategory of brandCategories" [value]="brandCategory.categoryId">
+                    {{brandCategory?.categoryTitle}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="brandsFormGroup.get('brandCategories').hasError('required')">Please Select value
+                </mat-error>
+              </mat-form-field> -->
+              <mat-select-autocomplete [placeholder]="'Brand Category'" ngDefaultControl  [options]="categories1"
+                [display]="'categoryTitle'" [value]="'value'" [multiple]='true' [labelCount]="1"
+                (selectionChange)="getBrandCategories($event)"
+                [formControl]="brandsFormGroup.controls['brandCategories']" required>
+              </mat-select-autocomplete>
+              <mat-error style="margin-top: -25px;font-size: 10px;"
+                *ngIf="editBrandForm.submitted && brandsFormGroup.get('brandCategories').hasError('required')">
+                Please Select value
+              </mat-error>
+            </div>
+            <div class="col-md-12">
+              <mat-form-field>
+                <input type="text" matInput placeholder="Brand Code" formControlName="brandCode" required maxlength="10"
+                  [readonly]="true">
+                <mat-error *ngIf="brandsFormGroup.get('brandCode').hasError('required')">Please enter value</mat-error>
+              </mat-form-field>
+            </div>
+            <!-- <div class="col-md-12">
+                      <mat-form-field class="example-full-width">
+                        <input type="text" placeholder="Brand Code" aria-label="Number" matInput [formControl]="brandCode" [matAutocomplete]="auto">
+                        <mat-autocomplete #auto="matAutocomplete">
+                          <mat-option *ngFor="let option of options" [value]="option">
+                            {{option}}
+                          </mat-option>
+                        </mat-autocomplete>
+                      </mat-form-field>
+                  </div> -->
+            <div class="col-md-12 mt-30px">
+              <div class="master-fieldSet" formArrayName="brandsLocale">
+                <fieldset class="language-fieldset">
+                  <legend class="fieldset-heading">Brand Name</legend>
+                  <div *ngFor="let locale of brandsFormGroup['controls']['brandsLocale']['controls'];let i = index;"
+                    [formGroupName]="i">
+                    <div class="">
+                      <mat-form-field class="{{alignCss[i]}}">
+                        <input matInput placeholder="{{languageList[i].languageName}}" maxlength="20"
+                          formControlName="brandName" required>
+                        <mat-error *ngIf="locale.get('brandName').hasError('required')">Please enter value</mat-error>
+                        <mat-error *ngIf="locale.get('brandName').hasError('minlength')">Minimum 2 characters required
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                    <div class="logo-image" class="{{alignCss[i]}}">
+                      <div class="grid img-block">
+                        <div class="avatar-zone avatar-width">
+                          <label *ngIf="uploadLogoFlag[i]==false" class="upload-text"
+                            [class.placeholder-img]="imgUpload">Brand Logo</label>
+                          <img *ngIf="brandLogoImagePath[i]!=''" class="upload-img"
+                            [class.uploaded-img]="imgUpload" [src]="filePathUrl+brandLogoImagePath[i]" width="80px">
+                        </div>
+                        <div class="remove-img" *ngIf="uploadLogoFlag[i]==true" style="margin:0 2em 0 0">
+                          <span (click)="removeLogo(i)"> <img src="assets/images/icons/filter_close_ico.png"
+                              alt=""><label>Remove</label></span> 
+                        </div>
+                        <input style="display:none;" type="file" accept="image/*" formControlName="brandLogoImage" 
+                          class="upload_btn" (change)="uploadBrandLogo($event.target.files,i)" #uploadBrandLogoEl/>
+                        <div class="text-center" style="width: 100%;" *ngIf="uploadLogoFlag[i]==false">
+                          <span class="upload-btn-text" (click)='uploadBrandLogoEl.click()'>
+                            <span class="upload-icon">
+                              <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px" alt="Img">
+                            </span>Upload Image
+                          </span>
+                        </div>
+                      </div>
+                      <div *ngIf="uploadLogoError[i]==true" class="image-error" style="color:red">
+                        Please upload image
+                      </div>
+                    </div>
+                    <div *ngIf="languageList[i].languageName=='Arabic'" [class.text-right]="languageList[i].languageName=='Arabic'">
+                      <mat-form-field class="{{alignCssAr[i]}}">
+                        <input matInput placeholder="Group By" formControlName="groupBy" required  minlength="1" maxlength="1">
+                        <mat-error *ngIf="locale.get('groupBy').hasError('required')" class="text-left">
+                          Please enter value</mat-error>
+                        <mat-error *ngIf="locale.get('groupBy').hasError('pattern')" class="text-left">
+                          Invalid special Character(s). Please Enter Arabic Text</mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+            <div class="col-md-12 mt-30px mb-30px">
+              <div class="master-fieldSet" formArrayName="brandsRegionLocale">
+                <fieldset class="language-fieldset">
+                  <legend class="fieldset-heading" required>Keywords</legend>
+                  <div class=""
+                    *ngFor="let regionKeyword of brandsFormGroup['controls']['brandsRegionLocale']['controls'];let k = index;"
+                    [formGroupName]="k">
+                    <mat-form-field class="{{alignCss[k]}}">
+                      <input matInput placeholder="{{languageList[k].languageName}}" [matChipInputFor]="chipList"
+                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+                        (matChipInputTokenEnd)="addKeyword($event,k)" maxlength="25">
+                      <mat-chip-list #chipList>
+                      </mat-chip-list>
+                    </mat-form-field>
+                    <div *ngIf="keywordErrorMsg[k]" style="color:red;font-size:12px;margin-top: -1em;"
+                      class="{{alignCss[k]}}">Only alphabets are allowed</div>
+                    <mat-chip *ngFor="let key of keywordArray[k]['keyword']" [selectable]="selectable"
+                      [removable]="removable" (removed)="removeKeyword(key, k)">
+                      {{key}}
+                      <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                    </mat-chip>
+                    <div *ngIf="editBrandForm.submitted && keywordEmptyErrors[k]==true" class="image-error">
+                      Please enter value
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="store-type">
+                <mat-form-field>
+                  <mat-select placeholder="Store Type" #brandType formControlName="brandType"
+                    (selectionChange)="checkValidation(brandType.value)" required [disabled]="true">
+                    <mat-option value="FB">F&B</mat-option>
+                    <mat-option value="RETAIL">RETAIL</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="brandsFormGroup.get('brandType').hasError('required')">Please select value
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="store-type">
+                <mat-form-field>
+                  <mat-select placeholder="Price For Two" #priceForTwo formControlName="priceForTwo"
+                    [disabled]="isStoreType" (selectionChange)="validateForm()">
+                    <mat-option value="LOW">LOW</mat-option>
+                    <mat-option value="MEDIUM">MEDIUM</mat-option>
+                    <mat-option value="HIGH">HIGH</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <div *ngIf="editBrandForm.submitted && priceForTwoRequired==true" class="err-msg">
+                  Please select value
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <mat-form-field class="example-chip-list">
+                <input placeholder="Cuisine *" maxlength="25" [matChipInputFor]="chipList"
+                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+                  (matChipInputTokenEnd)="add($event);validateForm();" [readonly]="isStoreType">
+                <mat-chip-list #chipList>
+                </mat-chip-list>
+              </mat-form-field>
+              <div *ngIf="editBrandForm.submitted && cuisineRequired==true" class="err-msg">
+                Please enter value
+              </div>
+
+              <mat-chip *ngFor="let cuisine of cuisines" [selectable]="selectable" [removable]="removable"
+                (removed)="remove(cuisine)">
+                {{cuisine}}
+                <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+              </mat-chip>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+      <div class="col-md-8">
+        <label>Other Details</label>
+        <mat-card class="mb-20px">
+          <div class="row">
+            <div class="col-md-4">
+              <mat-form-field>
+                <input matInput placeholder="Wall Products Active For(No. of days)" maxlength="3" OnlyNumber="true"
+                  formControlName="activeDays">
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-md-12" formArrayName="brandsRegionLocale">
+            <mat-card class="faq-card mb-20px"
+              *ngFor="let regionLocale of brandsFormGroup['controls']['brandsRegionLocale']['controls'];let j = index;"
+              [formGroupName]="j">
+              <div class="lang-field">
+                <p>{{languageList[j].languageName}}</p>
+              </div>
+              <div class="row card-mb">
+                <div class="col-md-11 text-fields">
+                  <label class="mat-placeholder-required astrick">Content</label>
+                  <div class="row">
+                    <div class="col-md-9 pad-l-0">
+                      <!-- <editor formControlName="content" required></editor>
+                              <mat-error *ngIf="editBrandForm.submitted && regionLocale.get('content').hasError('required')">Please enter value</mat-error> -->
+                      <div class="field-container">
+                        <mat-form-field>
+                          <textarea matInput placeholder="Content" formControlName="content" required></textarea>
+                          <mat-error
+                            *ngIf="editBrandForm.submitted && regionLocale.get('content').hasError('required')">Please
+                            enter value</mat-error>
+                        </mat-form-field>
+                      </div>
+                      <div class="field-container">
+                        <mat-form-field>
+                          <input matInput placeholder="Video URL" formControlName="brandVideo" maxlength="500">
+                          <mat-error *ngIf="regionLocale.get('brandVideo').hasError('pattern')">
+                            Invalid url</mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="about-image">
+                        <div class="grid img-block">
+                          <div class="avatar-zone avatar-width">
+                            <label *ngIf="uploadFlag[j]==false" class="upload-text"
+                              [class.placeholder-img]="imgUpload">Brand Image</label>
+                            <img *ngIf="imagePath.length!=0 && imagePath[j]!=''" class="upload-img"
+                              [class.uploaded-img]="imgUpload" [src]="filePathUrl+imagePath[j]" width="80px">
+                          </div>
+                          <div class="remove-img" *ngIf="uploadFlag[j]==true" style="margin:0 2em 0 0">
+                            <span (click)="removeImage(j)"> <img src="assets/images/icons/filter_close_ico.png"
+                                alt=""><label>Remove</label></span>
+                          </div>
+                          <input style="display:none;" type="file" formControlName="brandImage" #uploadEl
+                            class="upload_btn" (change)="uploadImage($event.target.files,j)" />
+                          <div class="text-center" *ngIf="uploadFlag[j]==false">
+                            <span class="upload-btn-text" (click)='uploadEl.click()'>
+                              <span class="upload-icon">
+                                <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px" alt="Img">
+                              </span>Upload Image
+                            </span>
+                          </div>
+                        </div>
+                        <div *ngIf="uploadError[j]==true" class="image-error">
+                          Please upload image
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </mat-card>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+    <div class="btm-button-wrap">
+      <button type="button" class="button secondary-btn" [routerLink]="['/search-brand-management']">CANCEL</button>
+      <button class="button primary-btn" type="submit">UPDATE</button>
+    </div>
+  </form>
+</div>

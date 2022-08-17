@@ -1,0 +1,199 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container">
+        <h1>
+            <span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg"
+                    alt="leftArrow" (click)="GoToSearchBannerBack(sequenceNum,cityOid, countryId)">
+            </span> Add Banner
+        </h1>
+    </div>
+</div>
+<div class="page-wrap">
+    <form id="addBannerForm" (submit)="createBanners(createBannerFormGroup.value,sequenceNum,cityOid, countryId)" [formGroup]="createBannerFormGroup" #addBannerForm="ngForm">
+        <mat-card class="mb-20px">
+            <div class="row">
+                <div class="col-md-4">
+                    <mat-form-field>
+                        <input matInput placeholder="Banner Name" formControlName="bannerName" maxlength="50" required>
+                        <mat-error *ngIf="createBannerFormGroup.get('bannerName').hasError('required')">Please enter value
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div *ngIf="bannerType == 'type2'" class="col-md-3 bannerType">
+                    <p> Type 2 Banner</p>
+                </div>
+                <div *ngIf="bannerType != 'type2'" class="col-md-3 bannerType">
+                    <p> Type 1 Banner</p>
+                </div>
+                <div class="col-md-5">
+                    <div class="banner-image-video-blk">
+                        <div class="">
+                            <label class="btn-toggle-label">Upload Image or Video URL*</label>
+                        </div>
+                        <mat-radio-group [(ngModel)]="imageOrVideoUrl" formControlName="imageOrVideoUrl">
+                            <mat-radio-button value="IMAGE" class="mr-5px">Image
+                            </mat-radio-button>
+                            <mat-radio-button value="VIDEO_URL">Video URL
+                            </mat-radio-button>
+                        </mat-radio-group>
+                        <mat-error *ngIf="addBannerForm.submitted && createBannerFormGroup.get('imageOrVideoUrl').hasError('required')">
+                            Please select
+                        </mat-error>
+                    </div>
+                </div>
+            </div>
+
+            <div formArrayName="bannersLocaleBean">
+                <div class="banner-image" *ngIf="createBannerFormGroup.get('imageOrVideoUrl').value == 'IMAGE'">
+                    <div class="row">
+                        <div class="col-md-4" *ngFor="let regionLocale of createBannerFormGroup['controls']['bannersLocaleBean']['controls'];let j = index;" [formGroupName]="j">
+                            <div class="lang-field">
+                                <label>{{languageList[j].languageName}}</label>
+                            </div>
+                            <p class="note-text"><span>image size 1125*1350</span></p>
+                            <div class="img-block">
+                                <div class="avatar-zone">
+                                    <label *ngIf="uploadFlag[j]==false" class="upload-text" [class.placeholder-img]="imgUpload">Upload
+                                        Banner Image</label>
+                                    <img *ngIf="imagePath.length!=0 && imagePath[j]!=''" class="upload-img" [class.uploaded-img]="imgUpload" [src]="filePathUrl+imagePath[j]" width="80px">
+                                </div>
+                                <div class="remove-img" *ngIf="uploadFlag[j]==true" style="margin:0 2em 0 0">
+                                    <span (click)="removeImage(j,'imgBanner')"> <img
+                                            src="assets/images/icons/filter_close_ico.png"
+                                            alt=""><label>Remove</label></span>
+                                </div>
+                                <input style="display:none;" type="file" #uploadEl class="upload_btn" formControlName="imgBanner" (change)="uploadImage($event.target.files,j,'imgBanner')" />
+                                <div class="text-center" style="width: 75%;" *ngIf="uploadFlag[j]==false">
+                                    <span class="upload-btn-text" (click)='uploadEl.click()'>
+                                        <span class="upload-icon">
+                                            <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px"
+                                                alt="Img">
+                                        </span>Upload Image<span style="color: #7f7f8f;">*</span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div *ngIf="uploadError[j]==true" class="image-error" style="color:red">
+                                Please upload image
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" *ngIf="createBannerFormGroup.get('imageOrVideoUrl').value == 'VIDEO_URL'">
+                    <div class="col-md-4 master-fieldSet" *ngFor="let regionLocale of createBannerFormGroup['controls']['bannersLocaleBean']['controls'];let j = index;" [formGroupName]="j">
+                        <fieldset class="language-fieldset">
+                            <legend class="fieldset-heading">{{languageList[j].languageName}}</legend>
+                            <mat-form-field>
+                                <input matInput placeholder="Video URL" formControlName="videoUrl" maxlength="500">
+                                <mat-error *ngIf="regionLocale.get('videoUrl').hasError('pattern')">
+                                    Invalid url</mat-error>
+                            </mat-form-field>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </mat-card>
+        <div *ngIf="bannerType == 'type2'">
+            <h3 class="card-title">Detail Page Title</h3>
+            <mat-card>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="master-fieldSet">
+                            <fieldset class="language-fieldset">
+                                <legend class="fieldset-heading">Detail Page Title</legend>
+                                <div class="" formArrayName="titleArray">
+                                    <div class="example-container" *ngFor="let locale of createBannerFormGroup['controls']['titleArray']['controls']; let i=index" [formGroupName]="i">
+                                        <div class="{{alignCss[i]}}">
+                                            <mat-form-field [class.direction-right]="languageList[i].languageName == 'Arabic'">
+                                                <input matInput placeholder="{{languageList[i].languageName}}*" maxlength="30" formControlName="title">
+                                                <mat-error *ngIf="locale.get('title').hasError('required')">Please enter value
+                                                </mat-error>
+                                                <mat-error *ngIf="locale.get('title').hasError('pattern')">Only alphanumerics are allowed</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="col-md-4 p-10px">
+                        <div class="row" formArrayName="titleArray">
+                            <div class="col-md-6" *ngFor="let image of createBannerFormGroup['controls']['titleArray']['controls'];let j = index;" [formGroupName]="j">
+                                <div class="lang-field">
+                                    <label>{{languageList[j].languageName}}</label>
+                                </div>
+                                <div class="grid img-block">
+                                    <div class="avatar-zone1">
+                                        <label *ngIf="uploadFlag1[j]==false" class="upload-text" [class.placeholder-img]="imgUpload">Thumbnail Image</label>
+                                        <img *ngIf="imagePath1.length!=0 && imagePath1[j]!=''" class="upload-img" [class.uploaded-img]="imgUpload1" [src]="filePathUrl+imagePath1[j]" width="80px">
+                                    </div>
+                                    <div class="remove-img" *ngIf="uploadFlag1[j]==true" style="margin:0 2em 0 0">
+                                        <span (click)="removeImage(j,'imgBannerTitle')"> <img
+                                                src="assets/images/icons/filter_close_ico.png"
+                                                alt=""><label>Remove</label></span>
+                                    </div>
+                                    <input style="display:none;" type="file" #uploadEl class="upload_btn" formControlName="imgBannerTitle" (change)="uploadImage($event.target.files,j,'imgBannerTitle')" />
+                                    <div class="text-center" style="width: 75%;" *ngIf="uploadFlag1[j]==false">
+                                        <span class="upload-btn-text" (click)='uploadEl.click()'>
+                                            <span class="upload-icon">
+                                                <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px"
+                                                    alt="Img">
+                                            </span>Upload Image<span style="color: #7f7f8f;">*</span>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div *ngIf="uploadError[j]==true" class="image-error" style="color:red">
+                                    Please upload image
+                                </div>
+                            </div>
+                            <div class="note">
+                                <p>Note: Thumbnail image size 300 x 300 Image Format JPEG Or PNG</p>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+        <div *ngIf="bannerType == 'type2'">
+            <div class="content">
+                <h3 class="card-title">Detail Page Content</h3>
+            </div>
+            <mat-card class="terms-conditions-card">
+                <div class="col-md-12" formArrayName="pageContentArray">
+                    <div class="expansion-panel" *ngFor="let ln of createBannerFormGroup['controls']['pageContentArray']['controls'];let i = index;" [formGroupName]="i">
+                        <mat-accordion>
+                            <mat-expansion-panel [class.direction-right]="languageList[i].languageName == 'Arabic'" class="mat-expansion-panel {{alignCss[i]}}" (opened)="panelOpenState = true;expandDataEmail();" (closed)="panelOpenState = false">
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        {{languageList[i].languageName}}
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <div class="row card-mb">
+                                    <div class="col-md-12 text-fields">
+                                        <div [class.direction-right]="languageList[i].languageName == 'Arabic'" class="row">
+                                            <div class="col-md-12 mt-15px ">
+                                                <label>
+                                                    content </label>
+                                                <editor *ngIf="languageList[i].languageName!='Arabic'" apiKey="test" [init]="{plugins: 'link'}" formControlName="content">
+                                                </editor>
+                                                <editor id="arabicID" *ngIf="languageList[i].languageName=='Arabic'" apiKey="test" [init]="{plugins: 'link'}" formControlName="content">
+                                                </editor>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </div>
+                </div>
+            </mat-card>
+            <div *ngIf=" addBannerForm.submitted && createBannerFormGroup.get('pageContentArray').invalid" style="color:red">Please enter valid value</div>
+        </div>
+        <div class="btm-button-wrap">
+            <button type="button" class="button secondary-btn" (click)="GoToSearchBanner(sequenceNum,cityOid, countryId)">CANCEL</button>
+            <button class="button primary-btn" type="submit">UPLOAD</button>
+        </div>
+    </form>
+</div>

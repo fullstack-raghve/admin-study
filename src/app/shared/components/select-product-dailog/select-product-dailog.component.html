@@ -1,0 +1,59 @@
+<div *ngIf="contentLoader" class="page-loader-block full-page-loader">
+  <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+</div>
+<div class="flex">
+  <div class="left-column-cotent">
+    <div class="page-title">
+      <div class="header flex-container">
+        <h3>Select Products</h3>
+        <div class="close-icon">
+          <img src="assets/images/icons/filter_close_ico.png" alt="" (click)="onCloseClick()">
+        </div>
+      </div>
+    </div>
+    <div class="page-content">
+      <div class="products-list">
+        <dx-list #list [dataSource]="productList" [height]="400" [searchEnabled]="true" searchExpr="productName"
+          searchMode="contains">
+          <ul>
+            <li *dxTemplate="let data of 'item'">
+              <div class="flex-container pb-1em">
+                <div class="flex row pimg">
+                  <div *ngIf="data.imgPath != '' && data.imgPath != null" class="col-3 imageClass">
+                    <img [src]="filePathUrl+data.imgPath" alt="item_ico" style="width: 65px;
+                      height: 65px;
+                      object-fit: cover;">
+                  </div>
+                  <div *ngIf="data.imgPath == '' || data.imgPath == null" class="col-3 imageClass">
+                    <img src="assets/images/no_image.png" alt="item_ico">
+                  </div>
+                  <div class="col-8 imageClass1">
+                    <div class="flex-center mr-5px ckclass">
+                      <div class="productData">
+                        <p class="productName">{{data.productName }} </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-1">
+                    <div class="checkboxClass">
+                      <mat-radio-button (change)="toggleVisibility($event,data)" [checked]="data.checked">
+                      </mat-radio-button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </dx-list>
+      </div>
+      <div>
+        <p *ngIf="ShowError" style="color:red; font-size: 13px;
+        margin-left: 10px;">please select product</p>
+      </div>
+
+      <div *ngIf="productList.length >0" style="margin: 10px;" class=" footer text-center footer-addon">
+        <button type="button" class="button primary-btn" (click)="createList()">ADD</button>
+      </div>
+    </div>
+  </div>
+</div>

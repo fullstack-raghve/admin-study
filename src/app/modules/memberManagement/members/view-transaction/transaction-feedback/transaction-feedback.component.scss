@@ -1,0 +1,79 @@
+.page-wrap {
+    padding: 1.5em;
+}
+/deep/.cdk-overlay-pane {
+    max-width: 42vw!important;
+}
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    h3 {
+        font-size: 24px;
+        color: #FF8E48;
+    }
+}
+.close-icon {
+    cursor: pointer;
+}
+.edit-profile {
+    padding: 25px 0 0 0;
+    .member-details {
+      .page-title{
+        color: #f9943d;
+        font-size: 14px;
+      }
+    }
+}
+.feedback-options{
+    margin-bottom: 0.7rem;
+    p{
+        margin-bottom: 0.5rem; 
+    }
+}
+.comment-block{
+    display: flex;
+    align-items: center;
+    .question-block{
+        margin-bottom: 0;
+        display: flex;
+        align-items: center;
+        background-color: #efefef;
+        padding: 0.25rem;
+        margin-right: 0.5rem;
+        border-radius: 0.25rem;
+        img{
+            width: 0.75rem;
+            margin-left: 0.25rem;
+            cursor: pointer;
+        }
+    }
+}
+.emoj-block{
+    padding-right: 1rem;
+    img{
+        width: 30px;
+    }
+    p{
+        margin-bottom: 0;
+
+    }
+}
+.emoj-block-panel{
+    margin: 0 0 1rem 0;
+    display: flex;
+    align-items: center;
+}
+
+.nps-rating{
+    display: flex;
+    label{
+        margin-bottom: 0;
+        margin-right: 10px;
+        font-weight: bold;
+    }
+    p{
+        margin-bottom: 0;
+        font-weight: bold;
+    }
+}

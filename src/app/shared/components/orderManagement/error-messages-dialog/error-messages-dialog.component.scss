@@ -1,0 +1,63 @@
+
+/deep/ .error-messages-dialogue{
+    /deep/.mat-dialog-container {
+        min-width: 30vw !important;
+    }
+}
+.page-wrap {
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1em;
+        padding: 1em;
+        border-bottom: #DEDEDE 1px solid;
+        h3 {
+            font-size: 1.5em;
+            color: #5F5C5C;
+        }
+        .close-icon {
+            cursor: pointer;
+        }
+    }
+}
+.button{
+    font-size: 12px;
+    .primary-btn {
+        padding: 1px 5px;
+        line-height: 20px;
+    }
+}
+.error-messages {
+    max-height: 330px;
+    overflow-x: auto;
+    margin-bottom: 3em;
+    .error {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: #DEDEDE 1px solid;
+      padding: 0 1em;
+      .text {
+        color:#EB1717;
+        font-size: 15px;
+        margin-bottom: 0;
+        padding-right: 1em;
+        word-break: break-word;
+        line-height: 35px;
+      }
+      .delete-icon {
+        margin-right: 0.4em;
+        color: #000;
+        font-size: 15px;
+        height: 24px;
+      }
+    }
+  }
+  .text-alert{
+      color: #EB1717;
+      font-size: 14px;
+    //   margin-bottom: 0;
+      padding: 1em;
+      text-align: center;
+  }

@@ -1,0 +1,143 @@
+<div class="page-wrap">
+    <div class="search-panel-block">
+        <div class="bredcrumb-title-wrap">
+            <div class="search-container-block">
+                <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+                <div class="search-list">
+                    <form class="filter-wrap" [formGroup]="searchNotificationsFormGroup" (submit)="searchKey()" #searchNotificationsForm="ngForm">
+                        <div class="row title-search-row">
+                            <div class="col-md-4 title-search-col">
+                                <div class="title">
+                                    <h1>Search Notifications</h1>
+                                </div>
+                            </div>
+                            <div class="col-md-5 title-search-col">
+                                <div class="searchform-block">
+                                    <div class="common-search">
+                                        <input type="text" formControlName="searchVal" maxLength="40" placeholder="Search By Notification" />
+                                        <span class="search-btn" (click)="searchKey()"></span>
+                                        <div class="filter-btn-wrap">
+                                            <span class="filter-btn" (click)="openFilter();" [ngClass]="status ? 'open' : 'close'"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 title-search-col">
+                            </div>
+                        </div>
+                        <div class="feild-search" *ngIf="!status">
+                            <div class="row feild-search-inner">
+                                <div class="col-md-5">
+                                    <!-- <mat-form-field>
+                    <mat-select placeholder="Activity" formControlName="activity"
+                      (ngModelChange)="getNotificationData()">
+                      <mat-option *ngFor="let activity of activities" [value]="activity.id">
+                        {{activity.value}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field> -->
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput placeholder="Activity" aria-label="Activity" [matAutocomplete]="activityAutoComplete" [formControl]="activityCtrl">
+                                        <mat-autocomplete #activityAutoComplete="matAutocomplete">
+                                            <mat-option *ngFor="let activity of filteredactivities | async" [value]="activity.activityName" (click)="onItemChange(activity)" #activityInput>
+                                                <span>{{activity.activityName}}</span>
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput type="text" placeholder="Notification Id" formControlName="notificationId" OnlyNumber="true" />
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput type="text" placeholder="Notification Name" maxLength="40" formControlName="notificationName" />
+                                        <mat-error *ngIf="searchNotificationsFormGroup.get('notificationName').hasError('pattern')">Invalid characters entered</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-select placeholder="Communication Type" formControlName="communicationType">
+                                            <mat-option value="EMAIL">Email</mat-option>
+                                            <mat-option value="PUSH">Push Notification</mat-option>
+                                            <mat-option value="SMS">SMS</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-select placeholder="Status" formControlName="status">
+                                            <mat-option value="Online">ONLINE</mat-option>
+                                            <mat-option value="Offline">OFFLINE</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="button-wrap">
+                                    <div class="">
+                                        <button class='button quaternary-btn' type="button" (click)="resetForm()">RESET</button>
+                                        <button class='button tertiary-btn' type="submit">APPLY</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="form-wrap">
+            <div class="table-wrap">
+                <div class="table-wrap-inner">
+                    <table mat-table [dataSource]="dataSource" matSort>
+                        <ng-container matColumnDef="notificationId">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> NOTIFICATION ID </th>
+                            <td mat-cell *matCellDef="let row"> {{ row.notificationId }} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="notificationName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> NOTIFICATION NAME </th>
+                            <!-- <td mat-cell *matCellDef="let row"><u><a [routerLink]="['/view-notifications/'+row.notificationId]"
+                    class="text-blue">
+                    {{
+                    row.notificationName }}</a></u></td> -->
+                            <td mat-cell (click)="MoveToView(row.notificationId)" *matCellDef="let row"><u><a 
+                      class="text-blue">
+                      {{
+                      row.notificationName }}</a></u></td>
+                        </ng-container>
+                        <ng-container matColumnDef="activityName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> ACTIVITY NAME </th>
+                            <td mat-cell *matCellDef="let row"> {{ row.activityName!=null ? row.activityName : '-' }} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="communicationType">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> COMMUNICATION TYPE </th>
+                            <td mat-cell *matCellDef="let row">{{row.communicationType}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="createdBy">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> CREATED BY </th>
+                            <td mat-cell *matCellDef="let row">{{row.createdBy}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="modifiedOn">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> LAST MODIFIED ON </th>
+                            <td mat-cell *matCellDef="let row"> {{row.modifiedOn}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="status">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> STATUS </th>
+                            <td mat-cell *matCellDef="let row"> {{row.status}} </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                        </tr>
+                    </table>
+                    <div *ngIf="searchStoreVal" class="select-store-block">
+                        <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                    </div>
+                    <div class="no-records" *ngIf="noRecords">
+                        No Records Found!
+                    </div>
+                </div>
+                <mat-paginator [length]="resultsLength" (change)="searchVal()" #paginator (page)="getUpdate($event)" [pageSize]="paginationData.pageSize" [pageSizeOptions]="[10,20,50,100]">
+                </mat-paginator>
+            </div>
+        </div>
+    </div>
+</div>

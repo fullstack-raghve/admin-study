@@ -1,0 +1,267 @@
+<div class="page-wrap">
+    <div class="search-panel-block">
+        <div class="bredcrumb-title-wrap">
+            <div class="search-container-block">
+                <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+                <div class="search-list">
+                    <form class="filter-wrap" [formGroup]="searchStoreForm"
+                        (submit)="indexResetFormdataSearch();searchKey();">
+                        <div class="row title-search-row">
+                            <div class="col-md-4 title-search-col">
+                                <div class="title">
+                                    <h1>Store Management</h1>
+                                </div>
+                            </div>
+                            <div class="col-md-5 title-search-col">
+                                <div class="searchform-block">
+                                    <div class="common-search">
+                                        <input type="text" formControlName="searchVal" placeholder="Search Store" />
+                                        <span class="search-btn"
+                                            (click)="indexResetFormdataSearch();searchKey();"></span>
+                                        <div class="filter-btn-wrap">
+                                            <span class="filter-btn" (click)="openFilter();"
+                                                [ngClass]="status ? 'open' : 'close'"></span>
+                                            <!-- <div class="add-btn">
+                                                  <button type="button" class="button primary-btn mr-20px" [routerLink]="['/add-store']">
+                                                          <span class="add-plus">
+                                                              <img src="assets/images/svg-icons/add_ico.svg" alt="add" class="plus-icon">
+                                                          </span>ADD STORE
+                                                  </button>
+                                              </div> -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 title-search-col">
+
+                            </div>
+                        </div>
+                        <div class="feild-search" *ngIf="!status">
+                            <div class="row feild-search-inner">
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-select placeholder="Brand" formControlName="brands">
+                                            <mat-option *ngFor="let brand of brandList" [value]="brand.brandId">
+                                                {{ brand.brandName }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput type="text" formControlName="storeId" maxlength="15"
+                                            placeholder="Store Id" />
+                                        <mat-error *ngIf="searchStoreForm.get('storeId').hasError('pattern')">This
+                                            special character(s) is not allowed
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput type="text" formControlName="storeName" maxlength="100"
+                                            placeholder="Store Name" />
+                                        <mat-error *ngIf="searchStoreForm.get('storeName').hasError('pattern')">This
+                                            special character(s) is not allowed
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput type="text" formControlName="adminName" placeholder="Admin Name"
+                                            maxlength="200" />
+                                        <mat-error *ngIf="searchStoreForm.get('adminName').hasError('pattern')">Only
+                                            alphabets are allowed
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput type="text" formControlName="emailId" maxlength="150"
+                                            placeholder="Email ID" />
+                                        <mat-error *ngIf="searchStoreForm.get('emailId').hasError('pattern')">Invalid
+                                            email id</mat-error>
+                                        <mat-error *ngIf="searchStoreForm.get('emailId').hasError('minlength')">Minimum
+                                            7 characters required
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput type="text" OnlyNumber="true" formControlName="phoneNumber"
+                                            maxlength="15" placeholder="Phone Number" />
+                                        <mat-error *ngIf="searchStoreForm.get('phoneNumber').hasError('minlength')">
+                                            Minimum 8 characters required
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-select id="country" matInput placeholder="Country Name" #countryInput
+                                            formControlName="country"
+                                            (selectionChange)="getAllCities(countryInput.value)">
+                                            <mat-option *ngFor="let country of countries" value="{{country.countryId}}">
+                                                {{ country.countryName }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <div *ngIf="showCountryError" style="color:red;margin-top:-2em">
+                                        No city present for select country
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-select placeholder="City" formControlName="city" #cityInput
+                                            (selectionChange)="getAllMalls(cityInput.value)"
+                                            (click)="isCountrySelected(countryInput.value)">
+                                            <mat-option *ngFor="let city of cities" [value]="city.cityId">
+                                                {{ city.cityName }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <div *ngIf="showCityError" style="color:red;margin-top:-2em">
+                                        No mall present for selected city
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-select placeholder="Mall" formControlName="mall" (click)="checkCityId()">
+                                            <mat-option *ngFor="let mall of mallList" [value]="mall.mallId">
+                                                {{ mall.mallName }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput [matDatepicker]="picker1" [OnlyNumber]="true" readonly
+                                            placeholder="Launch Date" formControlName="launchDate">
+                                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker1></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-select placeholder="Status" formControlName="status">
+                                            <mat-option value="Online">ONLINE</mat-option>
+                                            <mat-option value="Offline">OFFLINE</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="button-wrap">
+                                    <div class="">
+                                        <button class='button reset-btn' type="button"
+                                            (click)="resetForm()">RESET</button>
+                                        <button class='button apply-btn' type="submit"
+                                            [class.disablebtn]="loadingResponse">APPLY
+                                            <span class="loading-img-hide" *ngIf="loadingResponse">
+                                                <img src="assets/images/loader-icons/Blue-loading-200px.svg"
+                                                    alt="loader">
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="form-wrap">
+            <div class="table-wrap">
+                <div class="table-wrap-inner">
+                    <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
+                        <ng-container matColumnDef="storeId">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="storeId"> STORE ID </th>
+                            <!-- <td mat-cell *matCellDef="let row"> <u><a [routerLink]="['/view-store/'+row.storeOid]"
+                      class="text-blue">{{ row.storeId }}</a></u>
+                </td> -->
+                            <td mat-cell (click)="viewStore(row.storeOid)" *matCellDef="let row"> <u><a
+                                        class="text-blue">{{ row.storeId }}</a></u>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="userId">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="createdBy"> USER ID </th>
+                            <td mat-cell *matCellDef="let row">{{row.userId}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="userName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="userName"> USER NAME </th>
+                            <td mat-cell *matCellDef="let row"> {{row.userName}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="storeName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="storeName"> STORE NAME </th>
+                            <td mat-cell *matCellDef="let row"> {{ row.storeName }} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="brandName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="brandName"> BRAND NAME </th>
+                            <td mat-cell *matCellDef="let row"> {{ row.brandName }} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="mallName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="mallName"> MALL NAME </th>
+                            <td mat-cell *matCellDef="let row"> {{ row.mallName }} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="cityName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="cityName"> CITY </th>
+                            <td mat-cell *matCellDef="let row"> {{row.cityName}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="countryName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="countryName"> COUNTRY </th>
+                            <td mat-cell *matCellDef="let row"> {{row.countryName}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="phoneNumber">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="storeAdmin.phoneNumber"> PHONE NUMBER
+                            </th>
+                            <td mat-cell *matCellDef="let row"> {{row.phoneNumber}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="email">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="email"> EMAIL </th>
+                            <td mat-cell *matCellDef="let row"> {{row.email}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="storeAdminName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="storeAdmin.adminName"> ADMIN NAME
+                            </th>
+                            <td mat-cell *matCellDef="let row"> {{row.storeAdminName}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="storeWallid">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="storeWallid"> STORE WALL </th>
+                            <td mat-cell *matCellDef="let row"> {{row.storeWallid}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="launchDate">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="launchDate"> LAUNCH DATE </th>
+                            <td mat-cell *matCellDef="let row">
+                                {{row.launchDate === null ? '-' : row.launchDate | date:'dd/MM/yyyy'}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="status">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="status"> STATUS </th>
+                            <td mat-cell *matCellDef="let row"> 
+                                <mat-slide-toggle [checked]="toggleVal" *ngIf="row.status=='ONLINE'"
+                                    (change)="toggleStatus($event,row.status,row.storeOid)" class="mat-slide-toggle">
+                                    {{row.status}}</mat-slide-toggle>
+                                <mat-slide-toggle [checked]="!toggleVal" *ngIf="row.status=='OFFLINE'"
+                                    (change)="toggleStatus($event,row.status,row.storeOid)" class="mat-slide-toggle">
+                                    {{row.status}}</mat-slide-toggle>
+                            </td>
+                        </ng-container>
+
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;let i = index">
+                        </tr>
+                    </table>
+                    <div *ngIf="searchStoreVal" class="select-store-block">
+                        <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                    </div>
+                    <div class="no-records" *ngIf="noRecords">
+                        No Records Found!
+                    </div>
+                </div>
+                <mat-paginator [length]="resultsLength" (change)="searchVal()" #paginator (page)="getUpdate($event)"
+                    [pageSize]="paginationData.pageSize" [pageSizeOptions]="[10,20,50,100]">
+                </mat-paginator>
+            </div>
+        </div>
+    </div>
+</div>

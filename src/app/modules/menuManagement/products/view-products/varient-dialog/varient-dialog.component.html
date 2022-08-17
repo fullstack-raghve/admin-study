@@ -1,0 +1,105 @@
+<!-- <div class="page-wrap">
+    <div class="bredcrumb-title-wrap">
+      <div class="search-wrap filter-wrap">
+        <div class="row common-search">
+            <div class="col-md-3 Combination-title" >
+              <h6>Select Combination</h6>
+              
+            </div>
+            <div class=" col-md-9 close-icon">
+              <img src="assets/images/icons/filter_close_ico.png" alt="close_icon" (click)="onCloseClick()">
+          </div>
+    
+        </div>
+      </div>
+    </div> -->
+    <div class="page-wrap">
+      <div class="header flex-container">
+          <h5>Select Combination</h5>
+          <div class="close-icon">
+              <img src="assets/images/icons/filter_close_ico.png" alt="close_icon" (click)="onCloseClick()">
+          </div>
+      </div>
+    <div class="form-wrap">
+        <div class="table-wrap">
+        <div class="table-wrap-inner" >
+            <form class="search-wrap filter-wrap" [formGroup]="variantsFormGroup" >
+
+            <table class="GeneratedTable">
+                <thead>
+                    <tr>
+                        <th class="first-col">
+                            <!-- <mat-checkbox (change)="$event ? selection.toggle(row) : null;selection= $event.target.checked" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()" disabled="{{isDisabled}}">
+                            </mat-checkbox> -->
+                        </th>
+                        <th>Variant Name</th>
+                        <th>Max selection of custom Add-ons</th>
+                        <th>Max qty per add-on</th>
+                        
+                    </tr>
+                </thead>
+                <tbody formArrayName="productVariants">
+                    <tr *ngFor="let regionLocale of variantsFormGroup['controls']['productVariants']['controls'];let j = index;" [formGroupName]="j">
+                        <td class="first-col">
+                            <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? masterToggle() : null" [checked]="selection.isSelected(row)" disabled="{{isDisabled}}" formControlName="isVariantTypeSelected">
+                            </mat-checkbox>
+                        </td>
+                        <td>
+                            <div class="table-cell">
+                                <mat-form-field>
+                                    <input readonly matInput formControlName="variantTypeName"  >
+                                </mat-form-field>
+                            </div>
+                          </td>
+                        <td>
+                            <div class="table-input">
+                                <mat-form-field>
+                                    <input matInput formControlName="maxSelectionCustAddons" OnlyNumber="true">
+                                </mat-form-field>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="table-input">
+                                <mat-form-field>
+                                    <input matInput formControlName="maxQuantityPerAddons" OnlyNumber="true">
+                                </mat-form-field>
+                            </div>
+                        </td>
+                      
+                    </tr>
+                </tbody>
+            </table>
+            </form>
+          
+          <!-- old code -->
+ 
+            <div class="no-records" *ngIf="resultsLength === 0">
+                No Records Found!
+              </div>
+            </div>
+           
+          </div>
+          <div class=" row  total-val-block">
+              <div class="col-md-5 total-value-block" *ngIf="totalFilterRecordVal">
+                <div class="total-value">
+                  <p>Total Product : </p>
+                  <span>{{total}}</span>
+                </div>
+              </div>      
+            </div>
+          <div class="button-wrap">
+            <div class="">
+           <!--    <button class="button secondary-btn" [mat-dialog-close]="{
+                'buttonName': 'CANCEL'
+              }">CANCEL</button> -->
+              <button class="button primary-btn" [mat-dialog-close]="{
+                'buttonName': 'SELECT',
+                'tableData': variantsFormGroup.value,
+                'totalCount':resultsLength
+              }">ADD</button>
+            </div>
+          </div>
+      </div>
+    </div>
+
+ 

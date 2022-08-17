@@ -1,0 +1,13 @@
+button{
+    float: right;
+    margin-bottom: 10px!important;
+}
+.mat-card{
+    box-shadow: none;;
+}
+/deep/.dialogEditReciStyleChange{
+    max-width: 20vw!important;
+    /deep/ .mat-dialog-container{
+        min-width: 20vw!important;
+    }
+}

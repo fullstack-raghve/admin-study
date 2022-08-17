@@ -1,0 +1,89 @@
+<div class="page-wrap">
+  <form [formGroup]="addRecipientForm" (submit)="createRecipientForm(addRecipientForm.value)">
+    <mat-card>
+      <h5>ADD RECIPIENT<span>
+          <div class="close-icon text-right">
+            <img src="assets/images/icons/filter_close_ico.png" (click)="onCloseClick()" alt="">
+          </div>
+        </span></h5>
+      <div class="row">
+        <div class="col">
+          <mat-form-field>
+            <input matInput formControlName="id" placeholder="ID*"  maxlength="8">
+            <mat-error *ngIf="addRecipientForm.get('id').hasError('required')">Please enter value
+            </mat-error>
+            <mat-error *ngIf="addRecipientForm.get('id').hasError('pattern')">Invalid character
+              </mat-error>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input matInput formControlName="name" type="text" placeholder="Name*"  maxlength="50">
+            <mat-error *ngIf="addRecipientForm.get('name').hasError('required')">Please enter value
+              </mat-error>
+              <mat-error *ngIf="addRecipientForm.get('name').hasError('pattern')">Invalid character</mat-error>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input matInput formControlName="emailId" placeholder="Email Id*"  maxlength="50" >
+            <mat-error *ngIf="addRecipientForm.get('emailId').hasError('required')">Please enter value</mat-error>
+            <mat-error *ngIf="addRecipientForm.get('emailId').hasError('pattern') || addRecipientForm.get('emailId').hasError('minlength')">Invalid Email id entered</mat-error>
+          </mat-form-field>
+
+          <!-- <mat-form-field>
+            <input matInput type="tel" formControlName="mobileNumber" maxlength="15" placeholder="Mobile Number" pattern="+[0-9]{2}-[0-9]{10}">
+            <mat-error *ngIf="addRecipientForm.get('mobileNumber').hasError('required')">Please enter value
+              </mat-error>
+              <mat-error *ngIf="addRecipientForm.get('mobileNumber').hasError('minlength')">Invalid Mobile Number
+                Number </mat-error>
+              <mat-error *ngIf="addRecipientForm.get('mobileNumber').hasError('pattern')">Please match pattern
+              </mat-error>
+          </mat-form-field> -->
+          <div class="row">
+            <div class="col-md-5 " style="padding-right:8px">
+              <mat-form-field>
+                <mat-select  placeholder="CountryCode*" #Input  (selectionChange)="codeData(Input.value)"
+                  formControlName="CountryCode">
+                  <mat-option value="">select</mat-option>
+                  <mat-option *ngFor="let country of CountryCodeList" value="{{country.dial_code}}">
+                    {{ country.name }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="addRecipientForm.get('CountryCode').hasError('required')">
+                    Please enter value</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-2 FontSize" style="padding-left:0px;padding-right:0px;">
+                <mat-form-field>
+                    <input matInput formControlName="CountryCodeNo"  placeholder="Mobile" readonly >
+                    <mat-error *ngIf="addRecipientForm.get('phoneNumber').hasError('required')">Please enter value</mat-error>
+                  </mat-form-field>
+            </div>
+            <div class="col-md-5" style="padding-left:0px">
+              <mat-form-field class="MobileNum" style="  bottom: 0px;">
+                <input matInput OnlyNumber=true type="text" formControlName="phoneNumber"  placeholder=" Number*"  maxlength="15" >
+                <mat-error *ngIf="addRecipientForm.get('phoneNumber').hasError('required')">Please enter value</mat-error>
+                <mat-error *ngIf="addRecipientForm.get('phoneNumber').hasError('pattern')">Invalid character
+                </mat-error>
+              </mat-form-field>
+              </div>
+            
+          </div>
+           <mat-form-field>
+            <mat-select formControlName="corporateName" placeholder="Corporate Name*">
+              <mat-option [value]="corporateIds.rpOID" *ngFor="let corporateIds of corporateDetails">{{corporateIds.corporateName}}</mat-option>
+            
+            </mat-select>
+  <mat-error *ngIf="addRecipientForm.get('corporateName').hasError('required')">Please select value
+                </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" class="button primary-btn" type="submit">ADD</button>
+        <button type="button" class="button secondary-btn" (click)="onCloseClick()" >CANCEL</button>
+      </div>
+    </mat-card>
+
+  </form>
+</div>

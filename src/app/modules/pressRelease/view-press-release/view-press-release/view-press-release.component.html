@@ -1,0 +1,74 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container">
+        <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg"
+                    alt="leftArrow" [routerLink]="['/search-press-release']"></span>View Press Release</h1>
+        <mat-slide-toggle class="mat-slide-toggle" [checked]="checked" [disabled]="true">{{statusValue}}
+        </mat-slide-toggle>
+    </div>
+</div>
+<div class="page-wrap" *ngIf="releaseData.length!=0">
+    <mat-card class="card">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="view-details">
+                    <label>
+                        Country
+                    </label>
+                    <div class="view-fields">
+                        <div class="countries" *ngFor="let c of releaseData.countries">
+                            <span class="text">
+                                {{c.countryName}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label>Brand</label>
+                <p>{{releaseData.brandName}}</p>
+            </div>
+            <div class="col-md-3">
+                <label>Publish From Date</label>
+                <p>{{releaseData.publishFromDate}}</p>
+            </div>
+            <div class="col-md-3">
+                <label>Publish To Date</label>
+                <p>{{releaseData.publishToDate }}</p>
+            </div>
+        </div>
+        <mat-card class="faq-card mb-20px" *ngFor="let r of releaseData.pressReleaseLocaleList;let i=index;">
+            <div class="lang-field {{languageDirection[i]}} {{langfield[i]}}">
+                <p>{{r.languageCode}}</p>
+            </div>
+            <div class="row card-mb fieldtop">
+                <div class="col-md-10 text-fields">
+                    <div class="{{languageDirection[i]}} {{alignCss[i]}}">
+                        <label>Release Title</label>
+                        <p>{{r.title}}</p>
+                    </div>
+                    <div class="{{languageDirection[i]}} {{alignCss[i]}}">
+                        <label>Content</label>
+                        <p [innerHTML]="r.content"></p>
+                    </div>
+                    <div class="{{alignCss[i]}}">
+                        <label>Video Url</label>
+                        <p>{{r.viedoUrl == '' || r.viedoUrl == null ? '-' : r.viedoUrl}}</p>
+                    </div>
+                </div>
+                <div class="col-md-2 img-container">
+                    <p class="note-text"><span>image size 1125*634</span></p>
+                    <div class="grid img-block">
+                        <div class="avatar-zone">
+                            <img class="upload-img" width="80px" [src]="filePathUrl+r.imgPath">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-card>
+    </mat-card>
+    <div class="btm-button-wrap">
+        <button class="button secondary-btn" [routerLink]="['/search-press-release']">CANCEL</button>
+        <button class="button primary-btn" type="button" (click)="MoveToEdit(prId)">EDIT</button>
+    </div>
+</div>

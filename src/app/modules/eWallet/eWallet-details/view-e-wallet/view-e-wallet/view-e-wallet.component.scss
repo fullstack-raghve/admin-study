@@ -1,0 +1,29 @@
+.page-wrap {
+    padding: 1.3rem;
+  
+    label {
+      color: #7C7B7B;
+      font-size: 13px;
+    }
+  
+    p {
+      font-size: 14px;
+      color: #171717;
+    }
+    
+  .stores-selected{
+    color:#2EBCE6
+  }
+  }
+
+  .terms-conditions{
+    /deep/ .expansion-panel .mat-expansion-panel-header {
+        background-color: #eaeaea !important;
+    }
+    /deep/.expansion-panel .mat-expansion-panel-header-title {
+        color: #000 !important;
+    }
+    /deep/.expansion-panel .mat-expansion-indicator::after {
+        color: #000 !important;
+    }
+}

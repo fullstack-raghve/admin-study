@@ -1,0 +1,28 @@
+<div class="page-wrap">
+  <div class="header">
+    <h3>Add Directory</h3>
+    <div class="close-icon">
+      <img src="assets/images/icons/filter_close_ico.png" alt="" (click)="onCloseClick()">
+    </div>
+  </div>
+  <div class="add-transaction">
+    <form (submit)="addDirectory()" [formGroup]="addDirectoryFormGroup">
+      <div class=container>
+        <div class="row">
+          <div class="col-md-10">
+            <mat-form-field>
+              <input matInput placeholder="Directory Name" formControlName="directoryName">
+              <mat-error *ngIf="addDirectoryFormGroup.get('directoryName').hasError('required')">Please enter directory name
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="button-wrap text-right">
+        <button type="reset" class="button secondary-btn">CANCEL</button>
+        <button type="submit" class="button primary-btn">ADD
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

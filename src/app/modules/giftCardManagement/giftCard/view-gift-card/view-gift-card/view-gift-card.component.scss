@@ -1,0 +1,181 @@
+.form-wrap {
+  margin-bottom: 5px;
+  padding: 1.8em 1.8em 4em;
+}
+mat-card {
+  margin-bottom: 1rem;
+}
+.image-view {
+  width: 310px;
+  height: 190px;
+  background-color: wheat;
+  border-radius: 10px;
+}
+.master-fieldSet {
+  .language-fieldset {
+    .gift-template {
+      position: relative;
+    }
+    padding: 0px 26px 10px;
+    border: 1px solid #dbdbdb;
+    border-radius: 5px;
+    .fieldset-heading {
+      font-size: 10px;
+      padding-inline-start: 7px;
+      max-width: 35% !important;
+    }
+    .card-message-heading {
+      font-size: 10px;
+      padding-inline-start: 7px;
+      max-width: 7% !important;
+    }
+  }
+}
+
+/deep/ label {
+  color: #7c7b7b;
+  font-size: 13px;
+  margin-bottom: 3px;
+}
+
+/deep/ .new-playicon {
+  background-color: #efefef;
+  padding: 2px 2px;
+  border-radius: 5px;
+  font-size: 10px;
+  // width: 180%;
+  text-align: center;
+}
+
+/deep/ .fixed-value {
+  padding: 0 1em;
+  display: flex;
+  flex-direction: row;
+  p {
+    margin-right: 1em;
+    background-color: #f2f2f2;
+    border-radius: 2px;
+    padding: 1px 5px;
+  }
+}
+
+.range-value-checkbox {
+  margin-right: 10px;
+}
+.range-value{
+  p{
+    img{
+    border: solid 1px #999999;
+    width: 12px;
+    height: 12px;
+    }
+  }
+}
+.add-charges {
+  padding-bottom: 9.5rem;
+}
+
+.description-block {
+  padding: 0;
+  .description-card {
+    padding: 1rem;
+  }
+}
+
+/deep/ .expansion-panel .mat-expansion-panel-header {
+  background-color: #eaeaea !important;
+}
+/deep/.expansion-panel .mat-expansion-panel-header-title {
+  color: #000 !important;
+}
+/deep/.expansion-panel .mat-expansion-indicator::after {
+  color: #000 !important;
+}
+// gift card image
+.messageOverwrite {
+  position: relative;
+  .messages {
+    color: white;
+    margin: 0.5rem 0.6rem;
+    width: 190px;
+    word-wrap: break-word;
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    h6 {
+      font-family: "Great Vibes";
+      font-size: 1rem;
+      line-height: 15px;
+    }
+    h3 {
+      font-family: "Great Vibes";
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      line-height: 20px;
+    }
+    p {
+      font-size: 11px;
+      line-height: 13px;
+    }
+  }
+}
+.backgroundColor {
+  width: 183px !important;
+  text-align: center;
+  label {
+    font-size: 10px;
+  }
+}
+.ImgHead {
+  position: absolute;
+  top: 0;
+  left:10%
+}
+.avatar-zone1 {
+  position: relative;
+  width: 100%;
+  height: 160px;
+  background-color: #f2f2f2;
+  text-align: center;
+  border: 1px dashed #dbdbdb;
+  margin: 0 auto;
+  .upload-img {
+    width: 250px;
+    object-fit: contain !important;
+  }
+  img {
+    width: 100% !important;
+  }
+}
+.avatar-zone_logo {
+  width: 120px;
+  height: 35px;
+  // position: absolute;
+  top: 0rem;
+  margin: 0.5rem 0.6rem;
+}
+.araText {
+  direction: rtl;
+  text-align: right;
+}
+.stores_product {
+  p {
+    padding-left: 3px;
+  }
+  span {
+    padding-left: 3px;
+  }
+}
+.messageOverwrite {
+  flex: none !important;
+  max-width: none !important;
+  top:8px;
+}
+.firstRow{
+    .col-md-8{
+        display: grid;
+    }
+}

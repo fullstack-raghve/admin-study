@@ -1,0 +1,128 @@
+.ckbox {
+  margin-left: 0px;
+}
+
+.page-wrap {
+  .form-wrap {
+    padding: 2em 2em 5em;
+
+    .card-title {
+      color: #5f5c5c;
+      font-size: 16px;
+    }
+
+    .store-card {
+      border-radius: 6px;
+      padding: 20px;
+      margin-bottom: 20px;
+
+      .overflow_scroll {
+        overflow-y: auto;
+        padding-bottom: 7px;
+        margin-top: 5px;
+      }
+
+      table {
+        width: 100%;
+      }
+
+      .card-subtitle {
+        color: #5f5c5c;
+        font-size: 15px;
+        padding-bottom: 10px;
+      }
+
+      .chip-list {
+        width: 100%;
+      }
+    }
+  }
+}
+
+
+.attach-coupon-bg {
+  background-color: #f1f0f0;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  margin: 1rem 0;
+}
+
+.attach-coupon-reg {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+
+  .attach-bttn {
+    margin-top: 0;
+  }
+
+  .attach-coupon-regtitle {
+    p {
+      font-size: 14px;
+      font-weight: bold;
+      color: #333;
+
+    }
+  }
+
+}
+
+.remove-coupon {
+  cursor: pointer;
+}
+
+.label-card {
+  .view-label {
+    .label-align {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      margin: -4px;
+
+      p {
+        margin: 5px;
+        padding: 5px 7px;
+        background-color: #F5F5F5;
+        color: #5F5C5C;
+        display: inline-flex;
+        font-size: 12px;
+      }
+    }
+  }
+}
+
+.label-card,
+.second-card {
+  /deep/ mat-checkbox {
+    margin-right: 5px;
+  }
+}
+
+.displaynone {
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.noImage {
+  width: 100%;
+  height: 80px;
+  background-color: #dbdbdb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  p {
+    margin: 0;
+  }
+}
+
+.avatar-zone{
+  img{
+    width: 100%;
+    max-height: 85px;
+    object-fit: cover;
+  }
+}

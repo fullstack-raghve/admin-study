@@ -1,0 +1,20 @@
+<div class="page-wrap">
+  <div class="space-between close-dialog">
+    <h5>Add Amenities</h5>
+    <div class="close-icon text-right">
+      <img src="assets/images/icons/filter_close_ico.png" (click)="addAminity(aminityFormGroup.value)" alt="">
+    </div>
+  </div>
+  <form [formGroup]="aminityFormGroup" #storeForm="ngForm">
+  <div class="amenities-listing" malihu-scrollbar [scrollbarOptions]="scrollbarOptions">
+      <mat-list role="list" formArrayName="orders">
+          <mat-list-item role="listitem" *ngFor="let order of aminityFormGroup['controls']['orders']['controls']; let i = index;" [formGroupName]="i">
+            <mat-checkbox formControlName="amintyChecked"> <img [src]="filePathUrl+aminityList[i].imagePath" alt="" width="30px">{{aminityList[i].amenityTitle}}</mat-checkbox>
+          </mat-list-item>
+      </mat-list>
+  </div>
+  <div class="text-center">
+    <button class="button primary-btn" type="button" (click)="addAminity(aminityFormGroup.value)">ADD</button>
+  </div>
+  </form>
+</div>

@@ -1,0 +1,148 @@
+<link href='https://fonts.googleapis.com/css?family=Great Vibes' rel='stylesheet'>
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container template-title">
+      <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+            [routerLink]="['/search-card-template']"></span>Cards Template</h1>
+      <mat-slide-toggle  disabled="true" class="example-margin text-right nonedit" [(ngModel)]="toggleVal" >
+        {{statusValue}}
+      </mat-slide-toggle>
+    </div>
+  </div>
+  <div *ngIf="loadingResponse" class="select-store-block">
+      <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+    </div>
+  <div class="form-wrap" *ngIf="!loadingResponse">
+    <div class="row">
+      <div class="col-md-4">
+        <mat-card>
+          <div class="master-fieldSet">
+            <fieldset class="language-fieldset gift-template">
+              <legend class="fieldset-heading">Template Name</legend>
+              <!-- <div  class="{{alignCss[i]}}" *ngFor="let item of TemplateData;let i = index;" class="view-label">
+                  <label>{{item.languageName}}</label> 
+                  <p>{{item.templateName}}</p>
+                </div> -->
+              <div *ngFor="let item of TemplateData;let i = index;" class="view-label">
+                <div class="{{alignCss[i]}}">
+                  <label>{{item.languageName}}</label>
+                  <p>{{item.templateName}}</p>
+                </div>
+              </div>
+            </fieldset>
+            <div class="view-label template_for">
+              <label>Template For</label>
+              <p>{{TemplateFor}}</p>
+            </div>
+            <div class="view-label">
+              <label>Keywords</label>
+              <div  class="row addCardKeywords">
+                <p *ngFor='let key of keyWords'> {{key}}<img src="assets/images/icons/close_img_ico.png"> </p>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+      <div  class="col-md-8">
+        <mat-card  class="master-fieldSet">
+        <div  *ngFor="let item of TemplateData;let i = index;" >
+          <fieldset class=" language-fieldset gift-template" >
+            <legend  class="{{alignCss[i]}} fieldset-language">{{item.languageName}}</legend>
+            <div class="row">
+              <div class="col-md-5 messageOverwrite">
+                  <div class="avatar-zone1"  [ngStyle]="{'background-color':item.backgroundColor}" >
+                      <img *ngIf="item.backgroundImage!=''"  [src]="item.backgroundImage" width="277px;" height="160px;"
+                        style="object-fit: fill">
+                    </div>
+                    <div class="ImgHead">
+                      <div class="avatar-zone_logo" *ngIf="item.logoImage!=''">
+                        <img   [src]="item.logoImage" width="auto"
+                          height="30px;" style="object-fit: fill;">
+                      </div>
+                      <div class="messages"  [ngStyle]="{'color':item.textColor}">
+                          <h6>{{item.headingMessage1}}</h6>
+                          <h3>{{item.headingMmessage2}}</h3>
+                          <p>{{item.textMessage}}</p>
+                        </div>
+                    </div>
+                    
+              </div>
+              <div  class=" {{alignCss[i]}} col-md-7">
+                <div class="view-label heading">
+                  <label>Heading Message1</label>
+                  <p>{{item.headingMessage1}}</p>
+                </div>
+                <div class="view-label heading">
+                  <label>Heading Message2</label>
+                  <p>{{item.headingMmessage2}}</p>
+                </div>
+                <div class="view-label heading">
+                  <label>Text Message</label>
+                  <p>{{item.textMessage}}</p>
+                </div>
+              </div>
+            </div>
+            <div class="row" style="margin:10px 0px">
+              <div class="col-md-3 blockCol">
+              <div class="textColor">
+                <div class="view-label color-code-block">
+                  <label>Text-Color</label>
+                  <div  class="VCblock">
+                      <input disabled="true" [value] = "item.textColor"  style="width: 25%;height: 20px;" type="color">
+                      <p>{{item.textColor}}</p>
+                  </div>
+                 
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 blockCol">
+              <div class="backgroundColor">
+                <div class="view-label color-code-block">
+                  <label>background-Color</label> 
+                  <div  class="VCblock">
+                      <input disabled="true" [value] = "item.backgroundColor"  style="width: 25%;height: 20px;" type="color" >
+                      <p >{{item.backgroundColor}}</p> 
+                  </div>
+                    
+                </div>
+              </div>
+            </div>
+              <div class="col-md-3 blockCol">
+                  <div class="gift-card-logo" *ngIf="item.logoImage==''">
+                    <img width="40px;" height="20px;" src="assets/images/imageUpload.svg" style="object-fit: fill">
+                    <img width="80px;" height="30px;" [ngStyle]="{'background-color':item.backgroundColor}"  style="object-fit: fill">
+                  </div>
+                  <div class="gift-card-logo" *ngIf="item.logoImage!=''">
+                    <img width="40px;" height="20px;" src="assets/images/imageUpload.svg" style="object-fit: fill">
+                    <img   width="80px;" height="30px;"  [src]="item.logoImage" style="object-fit: fill">
+                  </div>
+                </div>
+
+
+                <div class="col-md-3 blockCol">
+                    <div class="gift-card-logo" *ngIf="item.backgroundImage==''">
+                      <img width="40px;" height="20px;" src="assets/images/imageUpload.svg" style="object-fit: fill">
+                      <img width="80px;" height="30px;" [ngStyle]="{'background-color':item.backgroundColor}"  style="object-fit: fill">
+                    </div>
+
+                    <div class="gift-card-logo"  *ngIf="item.backgroundImage!=''" [ngStyle]="{'background-color':item.backgroundColor}">
+                      <img width="40px;" height="20px;" src="assets/images/imageUpload.svg" style="object-fit: fill">
+                      <img width="80px;" height="30px;" [src]="item.backgroundImage" style="object-fit: fill">
+                    </div>
+                  </div>
+
+            </div>
+          </fieldset>
+          <!-- <div  class="checkbox-block">
+              <mat-checkbox (click)="replicateImage($event,i)"  *ngIf=" i+1 != TemplateData.length">Card design same as English</mat-checkbox>           
+            </div> -->
+          </div>
+        </mat-card>
+        <div class="btm-button-wrap"> 
+            <button class="button primary-btn" [routerLink]="['/edit-card-template/'+storeId]">EDIT</button>
+
+          <!-- <button class="button primary-btn" [routerLink]="['/edit-card-template/'+storeId]">EDIT</button> -->
+        </div>
+      </div>
+    </div>
+  </div>

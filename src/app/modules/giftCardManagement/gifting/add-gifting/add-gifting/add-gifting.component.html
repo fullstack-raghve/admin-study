@@ -1,0 +1,563 @@
+<div class="bredcrumb-title-wrap">
+  <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+  <div class="title flex-container template-title">
+    <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          [routerLink]="['/search-gifting']"></span>Giftings</h1>
+  </div>
+</div>
+<div class="form-wrap">
+  <form [formGroup]="DigitalCardFormGroup" (submit)="createGiftting(DigitalCardFormGroup.value)" #createForm="ngForm">
+    <mat-card class="first-row">
+      <div class="row">
+        <div class="col-md-5">
+          <!-- <mat-card> -->
+          <div class=" messageOverwrite">
+            <div *ngIf="backgroundImage!=''" class="avatar-zone1" [ngStyle]="{'background-color':backgroundColor}">
+              <img [src]="backgroundImage" style="object-fit: fill">
+            </div>
+              <div *ngIf="backgroundImage==''" class="avatar-zone1" [ngStyle]="{'background-color':backgroundColor}">
+              <img style="object-fit: fill">
+            </div>
+            <div class="ImgHead">
+              <div *ngIf="logoImage!=''" class="avatar-zone_logo">
+                <img [src]="logoImage" height="30px;" style="object-fit: fill; ">
+              </div>
+              <!-- <div *ngIf="logoImage==''" class="avatar-zone_logo">
+                <img  height="30px;" [ngStyle]="{'background-color':backgroundColor}" style="object-fit: fill; ">
+              </div> -->
+
+              <div class="messages" [ngStyle]="{'color':textColor}">
+                <h6>{{headingMessage1}}</h6>
+                <h3>{{headingMessage2}}</h3>
+                <p>{{textMessage}}</p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="messages row newMessage" [class.nonEditable]="Editable">
+              <div class="col-md-8">
+                <p>{{DigitalCardFormGroup.get('message').value}}</p>
+              </div>
+              <div class="col-md-4">
+                <!-- <lable>value</lable> -->
+                <label>value</label>
+                <br>
+                <p>{{DigitalCardFormGroup.get('cardValue').value}} {{DigitalCardFormGroup.get('currencyCode').value}}
+                </p>
+              </div>
+
+            </div>
+          </div>
+          <p *ngIf="checkValidation" style="color:red">Please select all mendatory fields</p>
+        </div>
+        <div class="col-md-3">
+          <mat-slide-toggle formControlName="toggleVal" class="example-margin text-right" [(ngModel)]="toggleVal"
+            (change)="toggleStatus($event)">
+            {{statusValue}}
+          </mat-slide-toggle>
+          <mat-form-field>
+            <mat-select (selectionChange)="getGiftCards(contentInput.value)" #contentInput placeholder="Select *"
+              formControlName="corporate">
+              <mat-option value="">Select Corporate</mat-option>
+              <mat-option *ngFor="let store of CorporateList;let i=index" [value]="i">
+                {{ store.corporateName }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="DigitalCardFormGroup.get('corporate').hasError('required')">Please select Corporate name
+            </mat-error>
+          </mat-form-field>
+          <div class="wallet">
+            <p> Wallet Balance {{DigitalCardFormGroup.get('balance').value}}
+              {{DigitalCardFormGroup.get('currencyCode').value}}</p>
+
+          </div>
+          <!-- <mat-form-field>
+              <input readonly matInput placeholder="balance" formControlName="balance">
+            </mat-form-field> -->
+          <mat-form-field [class.nonEditable]="Editable">
+            <input matInput maxlength="100" placeholder="Occasion Name *" formControlName="occassionName">
+            <mat-error *ngIf="DigitalCardFormGroup.get('occassionName').hasError('required')">Please Enter Occassion Name
+            </mat-error>
+
+          </mat-form-field>
+          <mat-form-field [class.nonEditable]="Editable">
+            <input matInput placeholder="message" maxlength="300" formControlName="message">
+
+          </mat-form-field>
+          <div [class.nonEditable]="Editable"><u><a class="text-blue" (click)="termCondition()">View T&C</a></u></div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="row">
+            <div class="col-md-12 selectedgiftcard">
+              <mat-form-field>
+                <mat-select (selectionChange)="getCardDetails(content.value)" #content placeholder="Select"
+                  formControlName="giftcardId">
+                  <mat-option value="">Select GiftCard</mat-option>
+                  <mat-option *ngFor="let gift of GiftCardList;" value="{{gift.giftcardId}}">
+                    {{ gift.cardName }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="DigitalCardFormGroup.get('giftcardId').hasError('required')">Please Select Giftcard
+                </mat-error>
+
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="master-fieldSet col-md-12">
+              <fieldset class="language-fieldset">
+                <legend class="fieldset-heading-card">Card Value</legend>
+                <div class="row" style='display:flex'>
+                  <div (click)="checkAmountType()" class="col-md-6">
+                    <mat-form-field [class.nonEditable]="Editable2">
+                      <input matInput (keyup)="rangeInput(rangeValue)" #rangeValue [min]="minRange" [max]="maxRange"
+                        OnlyNumber="true" placeholder="Enter value" formControlName="rangeValue">
+                      <mat-error *ngIf="AmountType == 'RANGE' && DigitalCardFormGroup.get('cardValue').hasError('required') ">Please Enter Amount</mat-error>
+                      <!-- <mat-error *ngIf="DigitalCardFormGroup.get('cardValue').hasError('pattern') ">Please enter correct values</mat-error> -->
+                      <mat-error *ngIf="DigitalCardFormGroup.get('rangeValue').hasError('pattern') ">Please enter correct values</mat-error>
+
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-6">
+                    <mat-form-field [class.nonEditable]="Editable1">
+                      <mat-select (selectionChange)="setCardValue(content1.value);" #content1 placeholder="Preset Value"
+                        formControlName="fixedCardValue">
+                        <mat-option value="">
+                          select value
+                        </mat-option>
+                        <mat-option *ngFor="let value of FixedArray" value="{{value}}">
+                          {{ value }}
+                        </mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="AmountType == 'FIXED' && DigitalCardFormGroup.get('cardValue').hasError('required')">Please select Amount</mat-error>
+
+                    </mat-form-field>
+                  </div>
+
+                </div>
+                <p style="color: red;" *ngIf="checkRange">Please Enter Amount within the below range</p>
+
+                <mat-error *ngIf="DigitalCardFormGroup.get('cardValue').hasError('required') && AmountType != '' ">
+                  Please select/Enter Amount</mat-error>
+              </fieldset>
+             
+              <p *ngIf="AmountType != 'FIXED' && minRange != 0 ">Min- {{minRange}} to Max - {{maxRange}}</p>
+            </div>
+          </div>
+          <div *ngIf="DateType=='DATE'" class="row">
+            <mat-form-field [class.nonEditable]="Editable" style="left:14px">
+              <input [min]="minDate" [max]="maxDate" matInput [matDatepicker]="DeliveryDate" placeholder="Delivery date" readonly
+                formControlName="deliveryDate">
+              <mat-datepicker-toggle matSuffix [for]="DeliveryDate"></mat-datepicker-toggle>
+              <mat-datepicker #DeliveryDate></mat-datepicker>
+              <mat-error *ngIf="DigitalCardFormGroup.get('deliveryDate').hasError('required')">Please select Date
+              </mat-error>
+
+            </mat-form-field>
+          </div>
+          <div *ngIf="DateType!='DATE'" class="row">
+            <mat-form-field [class.nonEditable]="Editable" style="left:14px">
+              <input [min]="minDate" required matInput [matDatepicker]="DeliveryDate" placeholder="Delivery date"
+                formControlName="deliveryDate">
+              <mat-datepicker-toggle matSuffix [for]="DeliveryDate"></mat-datepicker-toggle>
+              <mat-datepicker #DeliveryDate></mat-datepicker>
+              <mat-error *ngIf="DigitalCardFormGroup.get('deliveryDate').hasError('required')">Please select Date
+              </mat-error>
+
+            </mat-form-field>
+          </div>
+          <div *ngIf="datashow" class="row">
+            <div class="col view-label">
+              <mat-form-field [class.nonEditable]="Editable">
+                <input matInput readonly placeholder="Number of Recipients" formControlName="noOfRecipients">
+                <mat-error *ngIf="DigitalCardFormGroup.get('noOfRecipients').hasError('required')">Please select
+                  Recipients</mat-error>
+              </mat-form-field>
+
+
+            </div>
+            <div [class.nonEditable]="Editable" class="col">
+              <label></label>
+              <button type="button" class="btn btn-outline-warning" (click)="selectRecipient()">Select</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+
+    <br>
+    <div *ngIf="datashow" class="form-wrap">
+      <mat-card class="first-row" *ngIf="DisplayReipient.length>0">
+        <div class="table-wrap">
+          <div class="table-wrap-inner">
+            <table mat-table [dataSource]="dataSource" matSort *ngIf="dataSource">
+              <ng-container matColumnDef="empId">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>ID </th>
+                <td mat-cell *matCellDef="let row"> {{row.empId}}</td>
+              </ng-container>
+              <ng-container matColumnDef="USER_NAME">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>NAME</th>
+                <td mat-cell *matCellDef="let row">
+                  {{row.USER_NAME}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="EMAIL">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> EMAIL ID </th>
+                <td mat-cell *matCellDef="let row"><u><a class="text-blue"> {{row.EMAIL}} </a></u></td>
+              </ng-container>
+              <ng-container matColumnDef="CORPORATE_NAME">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> CORPORATE </th>
+                <td mat-cell *matCellDef="let row">{{row.CORPORATE_NAME}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="MOBILE_NUMBER">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>MOBILE NUMBER</th>
+                <td mat-cell *matCellDef="let row">{{row.MOBILE_NUMBER}}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> STATUS </th>
+                <td mat-cell *matCellDef="let row">{{row.status}}</td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+              </tr>
+            </table>
+            <div class="no-records" *ngIf="NoRecord">
+              No Records Found!
+            </div>
+            <div *ngIf="searchStoreVal" class="select-store-block">
+              <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+            </div>
+          </div>
+          <mat-paginator [pageSizeOptions]="[5,10,20,50,100]"></mat-paginator>
+        </div>
+      </mat-card>
+    </div>
+    <button type="button" type="submit" name="add" *ngIf="datashow" class="button primary-btn">ADD</button>
+    <button type="button" name="cancel" *ngIf="datashow" [routerLink]="['/search-gifting']"
+      class="button secondary-btn">CANCEL</button>
+  </form>
+  <div class="page-wrap" *ngIf="datashow1">
+    <div class="campaign-block">
+      <mat-horizontal-stepper #stepper class="campaign-stepper" [selectedIndex]="selectedIndex" linear>
+        <mat-step [stepControl]="firstFormGroup">
+          <form [formGroup]="firstFormGroup" #createFirstForm="ngForm"
+            (submit)="getAssigncardDetails(firstFormGroup.value,firstFormGroup.get('rangeUpload').value)">
+            <ng-template matStepLabel>Search Range</ng-template>
+            <div class="row stepperRow">
+
+              <div class="col-md-2 offset-md-1">
+                <mat-form-field>
+                  <mat-select formControlName="CardID" placeholder="Card Type *">
+                    <mat-option *ngFor="let card of CardType" value="{{card.id}}">
+                      {{ card.cardName }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="firstFormGroup.get('CardID').hasError('required')">Please select cardName
+                  </mat-error>
+                  
+                </mat-form-field>
+                <p style="color:red" *ngIf="firstFormGroup.get('CardID').hasError('required') && CheckCardName ">
+                  Please select cardName</p>
+              </div>
+
+              <div class="col-md-2 offset-md-1 radio-button">
+                <mat-radio-group aria-label="Select an option" formControlName="rangeUpload">
+                  <mat-radio-button (click)="checkType('range')" value="range">Range</mat-radio-button>&nbsp;
+                  <mat-radio-button (click)="checkType('upload')" value="upload">Upload</mat-radio-button>
+                  <mat-error style="color:red" *ngIf="firstFormGroup.get('rangeUpload').hasError('required')">
+                    <p>Please select either value</p>
+                  </mat-error>
+                </mat-radio-group>
+
+                <!-- <mat-radio-group aria-label="Select an option" formControlName="rangeUpload">
+                  <mat-radio-button value="RANGE">Range</mat-radio-button>
+                  <mat-radio-button value="UPLOAD">Upload</mat-radio-button>
+                </mat-radio-group> -->
+              </div>
+              <div *ngIf="firstFormGroup.get('rangeUpload').value == 'upload'" class="col-md-3 " style="top:16px;">
+                <div class="col-4">
+                  <input class="upload_sku" type="file"
+                    (change)="uploadPhysicalCard($event.target.files,firstFormGroup.get('CardID').value);validationCheck();" />
+                  <p  style="color: rgb(8, 151, 247);"><small><u>Upload File</u></small></p>
+
+                </div>
+                <div *ngIf="UploadedData" class="col-md-8 ">
+                  <p style="color: green"><small><u>{{FileUploadName}}</u></small></p>
+                </div>
+
+              </div>
+              <div class="col-md-3">
+                <mat-form-field *ngIf="firstFormGroup.get('rangeUpload').value == 'range'">
+                  <input matInput placeholder="Start Range" #range formControlName="Range" maxlength="20">
+                </mat-form-field>
+
+              </div>
+              <div class="col-md-3">
+                <mat-form-field *ngIf="firstFormGroup.get('rangeUpload').value == 'range'">
+                  <input matInput type="number" formControlName="Quantity" placeholder="Quantity"  pattern="^[1-9]+[0-9]*$">
+                  <mat-error *ngIf="firstFormGroup.get('Quantity').hasError('required')">
+                    Please enter value</mat-error>
+                    <mat-error *ngIf="firstFormGroup.get('Quantity').hasError('pattern')">Invalid characters entered
+                    </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div [class.nonEditable]="Editable">
+              <button mat-button type="submit" name="add" *ngIf="firstFormGroup.get('rangeUpload').value == 'range'"
+                class="button primary-btn">SEARCH</button>
+              <!-- <button mat-button matStepperNext (click)="goBackToFirst(stepper)" type="button" name="add" *ngIf="datashow1"
+                class="button primary-btn">SEARCH</button> -->
+            </div>
+          </form>
+        </mat-step>
+
+        <mat-step [stepControl]="secondFormGroup">
+          <form [formGroup]="secondFormGroup" #createCampaignForm="ngForm">
+            <ng-template matStepLabel>Movements</ng-template>
+
+            <div class="row stepperRow">
+              <div class="col-md-2 offset-md-1 view-label">
+                <mat-form-field>
+                  <input readonly matInput placeholder="Starting Card ID" formControlName="StartingCardID">
+                </mat-form-field>
+                <!-- <label>Starting Card ID</label>
+                <p>AX23 3456 2345 1234</p>       -->
+              </div>
+              <div class="col-md-2 view-label">
+                <mat-form-field>
+                  <input readonly matInput placeholder="Ending Card ID" formControlName="EndingCardID">
+                </mat-form-field>
+                <!-- <label>Ending Card ID</label>
+                <p>AX23 3456 2345 12</p> -->
+              </div>
+              <div class="col-md-2 view-label">
+                <mat-form-field>
+                  <input readonly matInput placeholder="Quantity" formControlName="Quantity">
+                </mat-form-field>
+                <!-- <label>Quantity</label>
+                <p>6</p> -->
+              </div>
+            </div>
+            <div class="row stepperRow">
+              <div class="col-md-2 offset-md-1  view-label">
+                <mat-form-field>
+                  <input readonly matInput placeholder="Assigned" formControlName="Assigned">
+                </mat-form-field>
+                <!-- <label>Status</label>
+                <p>Assigned-6</p> -->
+              </div>
+              <div class="col-md-2 view-label" (click)="addGiftCard()">
+                <!-- <mat-form-field> -->
+                  <p style="color: rgb(8, 151, 247);text-decoration: underline;margin-top:15px;">
+                  <span>{{secondFormGroup.get('SelectedQuantity').value}}</span>  
+                  </p>
+                 <!-- <input style="color:#2EBCE6;text-decoration: underline"  matInput placeholder="Selected Quantity"
+                    formControlName="SelectedQuantity" readonly > -->
+                  <!-- <mat-error *ngIf="RangeForm.get('Phone_NUMBER').hasError('required')">
+                        Please enter value</mat-error> -->
+                <!-- </mat-form-field> -->
+                <!-- <label>Selected Quantity</label>
+                <p><a href="">3</a></p> -->
+              </div>
+              <div class="col-md-2 view-label">
+                <label>New Status</label>
+                <p>Gifted</p>
+              </div>
+              <div class="col-md-2 view-label">
+                <mat-form-field>
+                  <input matInput placeholder="Enter Comment" formControlName="enterComment">
+                  <mat-error *ngIf="secondFormGroup.get('enterComment').hasError('required')">
+                    Please enter value</mat-error>
+
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="Stepper-Btn">
+              <button mat-button matStepperNext class="button primary-btn">NEXT</button>
+              <button mat-button matStepperPrevious class="button secondary-btn">BACK</button>
+            </div>
+          </form>
+        </mat-step>
+
+        <mat-step [stepControl]="thirdFormGroup">
+          <!-- <p>thirdFormGroup </p> -->
+          <form [formGroup]="thirdFormGroup" #createCampaignForm="ngForm">
+            <ng-template matStepLabel>Confirmation</ng-template>
+
+            <div class="row stepperRow">
+              <div class="col-md-2 offset-md-1 view-label">
+                <label>Starting Card ID</label>
+                <p>{{secondFormGroup.get('StartingCardID').value}}</p>
+              </div>
+              <div class="col-md-2 view-label">
+                <label>Ending Card ID</label>
+                <p>{{secondFormGroup.get('EndingCardID').value}}</p>
+              </div>
+              <div class="col-md-2 view-label">
+                <label>Quantity</label>
+                <p>{{secondFormGroup.get('Quantity').value}}</p>
+              </div>
+            </div>
+            <div class="row stepperRow">
+              <div class="col-md-2 offset-md-1  view-label">
+                <label>Status Movement</label>
+                <p>{{secondFormGroup.get('SelectedQuantity').value}} Cards of Status:Assigned moved to gifted</p>
+              </div>
+              <div class="col-md-2 view-label">
+                <label>Comment</label>
+                <p>{{secondFormGroup.get('enterComment').value}}</p>
+              </div>
+            </div>
+            <div class="Stepper-Btn">
+              <button mat-button matStepperNext class="button primary-btn">CONFIRM</button>
+              <button mat-button matStepperPrevious class="button secondary-btn">Back</button>
+
+            </div>
+          </form>
+        </mat-step>
+        <mat-step [stepControl]="forthFormGroup">
+          <!-- <p>thirdFormGroup </p> -->
+          <form [formGroup]="forthFormGroup" (submit)="addPhysicalCards()" #createCampaignForm="ngForm">
+            <ng-template matStepLabel>Add Recipient</ng-template>
+            <mat-card>
+              <table class="table1">
+                <thead>
+                  <tr>
+                    <th>SL.NO.</th>
+                    <th>ID</th>
+                    <th>SECURITY CODE</th>
+                    <th>RECIPIENT NAME</th>
+                    <th>COUNTRY CODE</th>
+                    <th>MOBILE NUMBER</th>
+
+                  </tr>
+                </thead>
+                <tbody formArrayName="DisplayPhysicalReipient">
+                  <tr
+                    *ngFor="let regionLocale of forthFormGroup['controls']['DisplayPhysicalReipient']['controls'] ;let j = index"
+                    [formGroupName]="j">
+                    <td>
+                      <div class="table-cell">
+                        <mat-form-field>
+                          <input matInput formControlName="SL_NO" required readonly>
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="table-cell">
+                        <mat-form-field>
+                          <input matInput formControlName="BARCODE" required readonly>
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="table-cell">
+                        <mat-form-field>
+                          <input matInput formControlName="secretCode" required readonly>
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="table-cell">
+                        <mat-form-field>
+                          <input matInput formControlName="RECIPIENT_NAME" required placeholder="Recipient Name">
+                          <mat-error *ngIf="regionLocale.get('RECIPIENT_NAME').hasError('required')">
+                            Please enter value</mat-error>        
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="table-cell">
+                        <mat-form-field>
+                          <mat-select formControlName="CountryCode">
+                            <mat-option value="">select</mat-option>
+                            <mat-option *ngFor="let country of CountryCodeList" value="{{country.dial_code}}" placeholder="Country Code">
+                              {{ country.name }}
+                            </mat-option>
+                          </mat-select>
+                          <mat-error *ngIf="regionLocale.get('CountryCode').hasError('required')">
+                            Please select country code</mat-error> 
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="table-cell">
+                        <mat-form-field>
+                          <input matInput #phone formControlName="Phone_NUMBER" OnlyNumber="true" required placeholder="Mobile Number">
+                          <mat-error *ngIf="regionLocale.get('Phone_NUMBER').hasError('required')">
+                            Please enter value</mat-error> 
+                        </mat-form-field>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+            </mat-card>
+            <!-- <div class="form-wrap">  -->
+            <!-- <mat-card class="first-row" >
+              <div class="table-wrap">
+                <div class="table-wrap-inner"> 
+                  <table mat-table [dataSource]="dataSource1" matSort *ngIf="dataSource1">
+                    <ng-container matColumnDef="SLNO">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>SL.NO. </th>
+                      <td mat-cell *matCellDef="let row"> {{row.SLNO}}</td>
+                    </ng-container>          
+                    <ng-container matColumnDef="BARCODE">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>  ID </th>
+                      <td mat-cell *matCellDef="let row"> {{row.BARCODE}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="secretCode">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header> secretCode </th>
+                      <td mat-cell *matCellDef="let row">{{row.secretCode}}</td>
+                    </ng-container>
+                    
+                    <ng-container matColumnDef="RECIPIENT_NAME">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>RECIPIENT NAME</th>
+                      <td mat-cell *matCellDef="let row"> <input  matInput  formControlName="RECIPIENT_NAME"></td>
+                    </ng-container>
+                    
+                    <ng-container matColumnDef="Phone_NUMBER">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header> MOBILE NUMBER </th>
+                      <td mat-cell *matCellDef="let row"> <input  matInput  formControlName="Phone_NUMBER"></td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns1;">
+                    </tr>
+                  </table>
+                  <div class="no-records" *ngIf="NoRecord">
+                    No Records Found!
+                  </div>
+                  <div *ngIf="searchStoreVal" class="select-store-block">
+                    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                  </div>
+                </div>
+                <mat-paginator (change)="searchVal()"  [length]="resultsLength"
+                 [pageSize]="10" [pageSizeOptions]="[10,20,50,100]">
+              </mat-paginator>
+              </div>
+            </mat-card> -->
+            <!-- </div> -->
+            <div class="row stepperRow">
+              <div class="Stepper-Btn">
+                <button mat-button type="submit" class="button primary-btn" style="float:right">ADD</button>
+                <button mat-button matStepperPrevious class="button secondary-btn" style="float:right">Back</button>
+
+              </div>
+            </div>
+
+
+          </form>
+        </mat-step>
+
+
+
+      </mat-horizontal-stepper>
+    </div>
+
+  </div>
+
+</div>

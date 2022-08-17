@@ -1,0 +1,119 @@
+.page-wrap {
+    padding: 1.8em 1.8em 3em 1.8em;
+  }
+  .mat-form-field {
+    width: 100%;
+  }
+  .table-input {
+    width: 85px;
+    .mat-form-field {
+      width: 75%;
+    }
+  }
+  
+  .add-card {
+    margin-bottom: 10px;
+  }
+  
+  .card-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .transaction-details-section{
+    background: #5A5A5A;
+    .view-details{
+      label{
+        color: #bbb9b9;
+        margin-bottom: 0;
+      }
+      p{
+        margin-bottom: 0;
+        color: #ffffff;
+    }
+    .transaction-id{
+        font-size: 18px;
+     }
+    }
+  }
+  
+  .points-section{
+    .points{
+      .card-title-points{
+        color: #f9943d;
+        font-size: 16px;
+      }
+      .points-accrued{
+        .ca-points{
+          label{
+            color: #7C7B7B;
+          }
+          .ca-points-availed{
+            font-size: 16px;
+            margin-bottom: 0;
+          }
+        }
+        .brand-points{
+          border-left: 1px solid #ccc;
+          padding-left: 1em;
+          label{
+            color: #7C7B7B;
+          }
+          .brand-points-availed{
+            font-size: 18px;
+            margin-bottom: 0;
+          }
+        }
+  
+      }
+      .points-redeemed{
+        @extend .points-accrued;
+      }
+      .points-reversed{
+        @extend .points-accrued;
+      }
+    }
+  }
+  .item-details{
+    table{
+        width: 100%;
+        th{
+          color:#7C7B7B;
+        } 
+    }
+    table,th, td {
+      border: 1px solid #ccc;
+      border-collapse: collapse;
+    }
+    p {
+      margin-bottom: 16px;
+      color: #000;
+    }
+    label {
+      color: #7C7B7B;
+      margin-bottom: 0;
+    }
+  }
+  .section-heading{
+    font-weight: 500;
+    color: #000;
+    font-size: 16px;
+    padding-bottom:10px;
+  }
+  .view-mode{
+    p {
+      color: #000;
+    }
+    label {
+      color: #7C7B7B;
+    }
+  }
+  .bold{
+    font-weight: bold;
+  }
+  .loading-img-hide{
+    img{
+      width: 30px;
+    }
+  }

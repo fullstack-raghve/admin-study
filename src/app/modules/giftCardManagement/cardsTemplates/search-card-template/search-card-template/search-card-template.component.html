@@ -1,0 +1,113 @@
+<div class="page-wrap">
+  <div class="search-panel-block">
+    <div class="bredcrumb-title-wrap">
+      <div class="search-container-block">
+        <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+        <div class="search-list ">
+          <form class="filter-wrap" [formGroup]="searchNotificationForm" (submit)="searchVal()">
+            <div class="row title-search-row">
+              <div class="col-md-3 title-search-col">
+                <div class="title">
+                  <h1>Card Template</h1>
+                </div>
+              </div>
+
+              <div class="col-md-6 title-search-col">
+                <div class="searchform-block">
+                  <div class="common-search">
+                    <input type="text" (keyup)="applyFilter($event.target.value)"  formControlName="StringSearch" placeholder="Search Enquiries" />
+                    <span class="search-btn" (click)="searchVal()"></span>
+                    <div class="filter-btn-wrap">
+                      <span class="filter-btn" (click)="openFilter();" [ngClass]="status ? 'open' : 'close'"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3 title-search-col ">
+                <button type="button" class="button primary-btn float-right" [routerLink]="['/add-card-template']">ADD
+                </button>
+              </div>
+            </div>
+            <div class="feild-search ng-star-inserted" *ngIf="!status">
+                <div class="row feild-search-inner">
+                  <div class="col-md-3">
+                    <mat-form-field>
+                        <mat-select   placeholder="Template For" formControlName="templateFor">
+                            <mat-option value="CORPORATE"> CORPORATE </mat-option>
+                            <mat-option value="PUBLIC">PUBLIC</mat-option>
+                          </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-3">
+                    <mat-form-field>
+                      <mat-select  formControlName="status" placeholder="Status">
+                        <mat-option value="ONLINE">ONLINE</mat-option>
+                        <mat-option value="OFFLINE">OFFLINE</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class=" col-md-4 button-wrap">
+                    <!-- <div> -->
+                        <button class='button quaternary-btn' (click)="resetForm()">RESET</button>
+                        <button class='button tertiary-btn' type="submit">APPLY</button>
+                    <!-- </div> -->
+                     
+                  </div>
+                </div>
+              </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="form-wrap"> 
+      <div class="table-wrap">
+        <div class="table-wrap-inner" [class.nodatafound]="NoRecord">
+          <table mat-table [dataSource]="dataSource" matSort *ngIf="dataSource" >
+            <ng-container matColumnDef="rpOid">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>REFERENCE ID </th>
+              <td mat-cell *matCellDef="let row"> {{row.rpOid}}</td>
+            </ng-container>
+            <ng-container matColumnDef="templateName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>NAME</th> 
+              <td mat-cell *matCellDef="let row"><u><a [routerLink]="['/view-card-template/'+row.rpOid]"
+                class="text-blue">{{row.templateName}}</a></u></td> 
+              <!-- <td mat-cell *matCellDef="let row"><u><a [routerLink]="['/view-card-template'+row.rpOid]" [routerLink]="['/view-store/'+row.storeOid]" -->
+               
+            </ng-container>
+
+            <ng-container matColumnDef="templateFor">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> TEMPLATE FOR </th>
+              <td mat-cell *matCellDef="let row"> {{row.templateFor}} </td>
+            </ng-container>
+            <ng-container matColumnDef="userAlias">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> UPDATED BY </th>
+              <td mat-cell *matCellDef="let row">{{row.userAlias}}</td>
+            </ng-container>
+            
+            <ng-container matColumnDef="modifiedTime">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>UPDATED ON</th>
+              <td mat-cell *matCellDef="let row">{{row.modifiedTime | date:'dd/MM/yyyy'}} {{row.modifiedTime | date:'HH:mm:ss'}}</td>
+            </ng-container>
+            
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> STATUS </th>
+              <td mat-cell *matCellDef="let row">{{row.status}}</td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+            </tr>
+          </table>
+          <div class="no-records" *ngIf="NoRecord">
+            No Records Found!
+          </div>
+          <div *ngIf="searchStoreVal" class="select-store-block">
+            <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+          </div>
+        </div>
+        <mat-paginator (change)="searchVal()"  [length]="resultsLength"
+         [pageSize]="10" [pageSizeOptions]="[10,20,50,100]">
+      </mat-paginator>
+      </div>
+    </div>
+  </div>
+</div>

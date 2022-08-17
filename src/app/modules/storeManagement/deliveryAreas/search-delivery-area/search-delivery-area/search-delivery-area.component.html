@@ -1,0 +1,148 @@
+<div class="page-wrap">
+    <div class="search-panel-block">
+        <div class="bredcrumb-title-wrap">
+            <div class="search-container-block">
+                <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+                <div class="search-list">
+                    <form class="filter-wrap" [formGroup]="searchDeliveryAreaFormGroup" #searchDeliveryAreaForm="ngForm" (submit)="indexResetFormdataSearch();searchKey()">
+                        <div class="row title-search-row">
+                            <div class="col-md-4 title-search-col">
+                                <div class="title">
+                                    <h1>Search Delivery Areas</h1>
+                                </div>
+                            </div>
+                            <div class="col-md-5 title-search-col">
+                                <div class="searchform-block">
+                                    <div class="common-search">
+                                        <input type="text" formControlName="searchVal" maxlength="30" placeholder="Search Delivery Areas" />
+                                        <span class="search-btn" (click)="indexResetFormdataSearch();searchKey()"></span>
+                                        <div class="filter-btn-wrap">
+                                            <span class="filter-btn" (click)="openFilter();" [ngClass]="status ? 'open' : 'close'"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 title-search-col">
+                                <div class="add-btn text-right">
+                                    <button type="button" class="button primary-btn m-0px" [routerLink]="['/add-delivery-area']">
+                  <span class="add-plus">
+                    <img src="assets/images/svg-icons/add_ico.svg" alt="add" class="plus-icon">
+                  </span>ADD DELIVERY AREA
+                </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="feild-search" *ngIf="!status">
+                            <div class="row feild-search-inner">
+                                <div class="col-md-3">
+                                    <mat-select-autocomplete name="Country" ngDefaultControl [placeholder]="'COUNTRY'" [options]="countryList" [display]="'countryName'" [value]="'value'" [multiple]='true' [labelCount]="1" (selectionChange)="getAllCities($event) || getAllBrands($event)"
+                                        [selectedOptions]="selectedCountryOptions" [formControl]="searchDeliveryAreaFormGroup.controls['notificationCountry']" #countryInput>
+                                    </mat-select-autocomplete>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <mat-select-autocomplete name="CITY" ngDefaultControl [placeholder]="'CITY'" [options]="cityList" [display]="'cityName'" [value]="'value'" [multiple]='true' [labelCount]="1" (selectionChange)="getAllMallsCity($event,notificationcity)" [selectedOptions]="selectedCityOptions"
+                                        [formControl]="searchDeliveryAreaFormGroup.controls['notificationcity']" #cityInput>
+                                    </mat-select-autocomplete>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <mat-select-autocomplete name="BRAND" ngDefaultControl [placeholder]="'BRAND'" [options]="brandValueList" [display]="'brandName'" [value]="'value'" [multiple]='true' [labelCount]="1" (selectionChange)="getAllMalls($event,notificationcity,notificationBrand)"
+                                        [selectedOptions]="selectedBrandOptions" [formControl]="searchDeliveryAreaFormGroup.controls['notificationBrand']" #brandInput>
+                                    </mat-select-autocomplete>
+                                </div>
+
+
+                                <div class="col-md-3">
+                                    <mat-select-autocomplete name="MALL" ngDefaultControl [placeholder]="'MALL'" [options]="mallList" [display]="'mallName'" [value]="'value'" [multiple]='true' [labelCount]="1" (selectionChange)="getAllStores($event, countryId, brandId, cityId)" [selectedOptions]="selectedMallOptions"
+                                        [formControl]="searchDeliveryAreaFormGroup.controls['notificationmall']" #mallInput>
+                                    </mat-select-autocomplete>
+                                </div>
+                                <div class="col-md-3 storeType">
+                                    <mat-select-autocomplete name="store" ngDefaultControl [placeholder]="'Store Name'" [options]="storesArr" [display]="'storeName'" [value]="'value'" [multiple]='true' [labelCount]="1" [formControl]="searchDeliveryAreaFormGroup.controls['store']" [selectedOptions]="selectedStoreOptions"
+                                        (selectionChange)="getFlowTag($event)" #storeInput>
+                                    </mat-select-autocomplete>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput formControlName="areaName" maxlength="50" placeholder="Area Name">
+                                        <mat-error *ngIf="searchDeliveryAreaFormGroup.get('areaName').hasError('pattern')">Only alphanumerics are allowed</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-select placeholder="Status" formControlName="status">
+                                            <mat-option value="">Select</mat-option>
+                                            <mat-option *ngFor="let status of statusList" [value]="status">
+                                                {{ status }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="button-wrap">
+                                    <button class='button quaternary-btn' (click)="resetForm()">RESET</button>
+                                    <button class='button tertiary-btn' type="submit" [class.disablebtn]="loadingResponse">APPLY
+                                      <span class="loading-img-hide" *ngIf="loadingResponse">
+                                          <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="loader">
+                                        </span>
+                                  </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="form-wrap">
+            <div class="table-wrap">
+                <div class="table-wrap-inner">
+                    <table mat-table [dataSource]="dataSource" matSort>
+
+                        <ng-container matColumnDef="deliveryAreaOid">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> AREA ID </th>
+                            <td mat-cell *matCellDef="let row">{{ row.deliveryAreaOid }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="areaName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> AREA NAME </th>
+                            <td mat-cell (click)="MoveToView(row.deliveryAreaOid)" *matCellDef="let row"><u><a 
+                  class="text-blue"> {{
+                  row.areaName }} </a></u></td>
+                        </ng-container>
+                        <ng-container matColumnDef="countryName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> COUNTRY </th>
+                            <td mat-cell *matCellDef="let row">{{ row.countryName }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="cityName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> CITY </th>
+                            <td mat-cell *matCellDef="let row">{{ row.cityName }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="modifiedTime">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> LAST MODIFIED ON </th>
+                            <td mat-cell *matCellDef="let row"> {{row.modifiedTime === null ? '-' : row.modifiedTime | ddmmyyyy}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="status">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> STATUS </th>
+                            <td mat-cell *matCellDef="let row"> {{row.status}} </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                        </tr>
+                    </table>
+                    <div *ngIf="searchStoreVal" class="select-store-block">
+                        <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                    </div>
+                    <div class="no-records" *ngIf="noRecords">
+                        No Records Found!
+                    </div>
+                </div>
+                <div>
+                    <mat-paginator [length]="resultsLength" (change)="searchVal()" #paginator (page)="getUpdate($event)" [pageSize]="paginationData.pageSize" [pageSizeOptions]="[10,20,50,100]">
+                    </mat-paginator>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

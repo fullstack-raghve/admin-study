@@ -1,0 +1,244 @@
+<div class="bredcrumb-title-wrap">
+  <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+  <div class="title flex-container">
+    <h1>Confirm Transaction Details</h1>
+  </div>
+</div>
+
+<div class="page-wrap">
+  <mat-card class="mb-20px transaction-details-section">
+    <div class="row">
+      <div class="col-md-2">
+        <div class="view-details">
+          <label class="item-title">Transaction ID</label>
+          <p class="transaction-id">{{txnDetails?.transactionId}}</p>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="view-details">
+          <label>Order Status</label>
+          <p>{{txnDetails?.txnStatus}}</p>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="view-details">
+          <label>Order Date/Time</label>
+          <p>{{txnDetails?.transactionDate}}</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="view-details">
+          <label>Source Of Transaction</label>
+          <p>{{txnDetails?.ominiChannel}}</p>
+        </div>
+      </div>
+      <!-- <div class="col-md-3">
+        <div class="view-details">
+          <label>Coupon</label>
+          <p>{{txnDetails?.claimStatus}}</p>
+        </div>
+      </div> -->
+    </div>
+  </mat-card>
+  <div class="view-transaction-details">
+    <div class="row">
+      <div class="col-md-4">
+        <mat-card>
+          <label class="section-heading">Location</label>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="view-mode">
+                <label class="item-title">Store ID</label>
+                <p> {{txnDetails?.storeId}}</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="view-mode">
+                <label class="item-title">Mall Name</label>
+                <p>{{txnDetails?.mallName}}</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="view-mode">
+                <label class="item-title">Store Name</label>
+                <p>{{txnDetails?.storeName}}</p>
+              </div>
+            </div>
+            <!-- <div class="col-md-6">
+              <div class="view-mode">
+                <label class="item-title">Coupon ID</label>
+                <p>{{txnDetails?.claimStatus}}</p>
+              </div>
+            </div> -->
+            <div class="col-md-6">
+              <div class="view-mode">
+                <label class="item-title">Contact No. Of Store</label>
+                <p></p>
+              </div>
+            </div>
+            <!-- <div class="col-md-6">
+              <div class="view-mode">
+                <label class="item-title">Coupon Type</label>
+                <p>{{txnDetails?.claimStatus}}</p>
+              </div>
+            </div> -->
+            <div class="col-md-6">
+              <div class="view-mode">
+                <label class="item-title">Brand Name</label>
+                <p>{{txnDetails?.brandName}}</p>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+      <div class="col-md-4">
+        <mat-card>
+          <label class="section-heading">Summary</label>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="view-mode">
+                <label class="item-title">Slip Number</label>
+                <p>{{txnDetails?.transactionId}}</p>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="view-mode">
+                <label class="item-title">Transaction Type</label>
+                <p>{{txnDetails?.transactionType}}</p>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="view-mode">
+                <label class="item-title">Discount Amount</label>
+                <p>{{txnDetails?.discountAmount}} {{txnDetails?.currency}} </p>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="view-mode">
+                <label class="item-title">Total Amount</label>
+                <p>{{txnDetails?.transactionAmount}} {{txnDetails?.currency}}</p>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+      <!-- <div class="col-md-4">
+            <div class="points-section">
+              <div class="points">
+                <div class="row">
+                  <div class="col-md-12">
+                    <mat-card class="add-card">
+                      <div class="points-accrued">
+                        <h3 class="card-title-points">Points Accrued</h3>
+                        <div class="width-100 flex">
+                          <div class="ca-points width-50">
+                            <label>Points</label>
+                            <p class="ca-points-availed">80
+                            </p>
+                          </div>
+                          <div class="brand-points width-50">
+                            <label>Brand Points</label>
+                            <p class="brand-points-availed">
+                              50
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </mat-card>
+                  </div>
+                  <div class="col-md-12">
+                    <mat-card class="add-card">
+                      <div class="points-redeemed">
+                        <h3 class="card-title-points">Points Redeemed</h3>
+                        <div class="width-100 flex">
+                          <div class="ca-points width-50">
+                            <label>Points</label>
+                            <p class="ca-points-availed">10
+                            </p>
+                          </div>
+                          <div class="brand-points width-50">
+                            <label>Brand Points</label>
+                            <p class="brand-points-availed">
+                              20
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </mat-card>
+                  </div>
+                  <div class="col-md-12">
+                    <mat-card>
+                      <div class="points-reversed">
+                        <h3 class="card-title-points">Points Reversed</h3>
+                        <div class="width-100 flex">
+                          <div class="ca-points width-50">
+                            <label>Points</label>
+                            <p class="ca-points-availed">
+                              0
+                            </p>
+                          </div>
+                          <div class="brand-points width-50">
+                            <label>Brand Points</label>
+                            <p class="brand-points-availed">
+                              0
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </mat-card>
+                  </div> 
+                </div>
+              </div>
+            </div>
+          </div> -->
+    </div>
+  </div>
+  <div class="item-details pt-30px">
+    <mat-card>
+      <label class="section-heading">Item Details</label>
+      <table cellspacing="10" cellpadding="10">
+        <tr>
+          <th>Product Description (Barcode Info)</th>
+          <th>Qty</th>
+          <th>Amount</th>
+          <th>Discount / Coupon Code</th>
+          <th>Total Amount</th>
+        </tr>
+        <tr *ngFor="let lineItem of lineItems; let itemIndex=index">
+          <td>
+            <p>
+              Product Name
+            </p>
+            <p class="bold">
+              {{lineItem?.productName}}
+            </p>
+            <p>
+              Product Specification
+            </p>
+            <p class="bold">
+              {{lineItem?.productSpecification}}
+            </p>
+            <p>
+              Unit Price
+            </p>
+            <p class="bold">
+              {{lineItem?.netPrice}} {{txnDetails?.currencyCode}}
+            </p>
+          </td>
+          <td class="bold">{{lineItem?.quanitity}}</td>
+          <td class="bold">{{lineItem?.quanitity * lineItem?.netPrice + lineItem?.vat }} {{txnDetails?.currency}}</td>
+          <td class="bold">{{lineItem?.discount}} {{txnDetails?.currency}}</td>
+          <td class="bold">{{lineItem?.grossPrice}} {{txnDetails?.currency}}</td>
+        </tr>
+      </table>
+    </mat-card>
+    <div class="btm-button-wrap">
+      <button type="button" class="button secondary-btn" (click)="previousPage(customerOid)">CANCEL</button>
+      <button type="submit" class="button primary-btn" (click)="confirmTxn()" [class.disabled]="loadingResponse">CONFIRM
+        <span class="loading-img-hide" *ngIf="loadingResponse">
+          <img src="assets/images/loader-icons/White-loading-200px.svg" alt="loader">
+        </span>
+      </button>
+    </div>
+  </div>
+</div>

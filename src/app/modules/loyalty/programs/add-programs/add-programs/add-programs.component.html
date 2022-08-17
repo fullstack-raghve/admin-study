@@ -1,0 +1,452 @@
+<div class="bredcrumb-title-wrap">
+  <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+  <div class="title flex-center">
+    <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          [routerLink]="['/search-programs']"></span>Add Program</h1>
+    <div class="slider">
+      <mat-slide-toggle [(ngModel)]="toggleVal" (change)="toggleStatus($event)" class="mat-slide-toggle">
+        {{statusValue}}</mat-slide-toggle>
+    </div>
+  </div>
+</div>
+<div class="page-wrap">
+  <form (submit)="createProgram(programFormGroup.value)" [formGroup]="programFormGroup" #createProgramForm="ngForm">
+    <div class="add-program">
+      <div class="row">
+        <div class="col-md-12">
+          <mat-card class="program-details">
+            <div class="row program-img-block">
+              <!-- <div class="col-md-2">
+                                <div class="grid img-block">
+                                    <div class="avatar-zone">
+                                        <label *ngIf="imagePath==''" class="upload-text"
+                                            [class.placeholder-img]="imgUpload">Program Image</label>
+                                        <img *ngIf="imagePath!=''" class="upload-img" [src]="imgPathUrl+imagePath"
+                                            [class.uploaded-img]="imgUpload" style="width:100px; height:90px">
+                                    </div>
+                                    <div class="remove-img" *ngIf="imagePath!=''">
+                                        <span> <img src="assets/images/icons/filter_close_ico.png" alt=""
+                                                (click)="removeImage()"><label>Remove</label></span>
+                                    </div>
+                                    <input style="display:none;" #uploadImgEl type="file" class="upload_btn"
+                                        (change)="uploadImage($event.target.files)" />
+                                    <div class="overlay-layer" *ngIf="imagePath==''">
+                                    <img class="upload-icon" src="assets/images/svg-icons/uploadgray_ico.svg" alt="">Upload Image
+                                </div>
+                                    <input style="display:none;" type="file" #uploadEl class="upload_btn" (change)="uploadImage($event.target.files,i)"/>
+                                    <div class="text-center" style="width: 75%;" *ngIf="imagePath==''">
+                                        <span class="upload-btn-text" (click)='uploadImgEl.click()'>
+                                            <span class="upload-icon">
+                                                <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px"
+                                                    alt="Img">
+                                            </span>Upload Image
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="image-error" style="color:red" *ngIf="showImageError">Please upload image
+                                </div>
+                            </div> -->
+              <div class="col-md-3 pad-l-0">
+                <mat-form-field>
+                  <mat-select placeholder="Program Type" #program formControlName="programType" required
+                    (selectionChange)="getRewardType(program.value);">
+                    <mat-option value="BASE" *ngIf="baseRewardType==''">Base</mat-option>
+                    <mat-option value="BRAND">Brand</mat-option>
+                    <mat-option value="PRODUCT">Product</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-md-9" *ngIf="programFormGroup.get('programType').value != 'BASE'">
+                <div class="row flex align-center">
+                  <div class="col-md-4">
+                    <mat-form-field>
+                      <mat-select placeholder="Select Brand" formControlName="brand">
+                        <mat-option *ngIf="programFormGroup.get('programType').value=='PRODUCT'" value="BASE">Base
+                        </mat-option>
+                        <mat-option *ngFor="let brand of brandList" value="{{brand.brandId}}" (click)="getBrandValue(brand.brandId)">
+                          {{ brand.brandName }}
+                        </mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="programFormGroup.get('brand').hasError('required')">Please
+                        select value</mat-error>
+                    </mat-form-field>
+                    <!-- <mat-form-field class="example-full-width">
+                      <input matInput placeholder="Select Brand" aria-label="Brand"
+                          [matAutocomplete]="brandAutoComplete" [formControl]="programFormGroup.controls['brand']" >
+                      <mat-autocomplete #brandAutoComplete="matAutocomplete">
+                          <mat-option *ngFor="let brand of filteredbrands | async"
+                              [value]="brand.brandName" (click)="getBrandValue(brand.brandId)"
+                              #brandInput>
+                              <span>{{brand.brandName}}</span>
+                          </mat-option>
+                      </mat-autocomplete> 
+                  </mat-form-field> -->
+                  </div>
+                  <div class="col-md-4" *ngIf="programFormGroup.get('programType').value == 'PRODUCT'">
+                    <mat-form-field>
+                      <mat-select placeholder="Select Free Product" formControlName="freeProductValue">
+                        <mat-option *ngFor="let freeproductvalue of freeproductvalues" value="{{freeproductvalue.freeProductCode}}" (click)="getfreeproductvalue(freeproductvalue.freeProductCode)">
+                          {{ freeproductvalue.freeProductCode }}
+                        </mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="programFormGroup.get('freeProductValue').hasError('required')">Please
+                        select value</mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="">
+                      <span class="upload-icon" (click)="productsDialog()" *ngIf="skuFile == ''">
+                        <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px" alt="Img">
+                        <label class="text">Upload SKU</label>
+                      </span>
+                      <label for="skuFile" class="word-wrap">{{skuFile}}</label>
+                      <input style="display:none;" type="file" class="upload_btn"
+                        (change)="uploadSkuFile($event.target.files)" #uploadSku />
+                      <div class="remove-img" *ngIf="skuFile!=''">
+                        <span> <img src=" assets/images/icons/filter_close_ico.png" alt="" (click)="removeSku()">
+                          <label style="font-size:12px;">Remove</label></span>
+                      </div>
+                    </div>
+                    <div class="">
+                      <u class="text-blue" *ngIf="selectedCount!=0">{{selectedCount}} sku's are
+                        listed</u>
+                      <div *ngIf="uploadSkuFlag">Please Upload SKU File</div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div>
+              <div class="row program-row">
+                <div class="col-md-3 program-col-sm">
+                  <mat-form-field>
+                    <input matInput type="text" formControlName="programName" placeholder="Program Name" required />
+                    <mat-error *ngIf="programFormGroup.get('programName').hasError('required')">
+                      Please enter value</mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-9 program-col-lg">
+                  <mat-form-field>
+                    <textarea matInput placeholder="Description" formControlName="descriptionCtrl" required></textarea>
+                    <mat-error *ngIf="programFormGroup.get('descriptionCtrl').hasError('required')">
+                      Please enter value</mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row program-img-row">
+                <!-- <div class="col-md-5">
+                                    <div class="master-fieldSet">
+                                        <fieldset class="language-fieldset">
+                                            <legend class="fieldset-heading">Program Name</legend>
+                                            <div class="" formArrayName="programLocales">
+                                                <div class=""
+                                                    *ngFor="let program of programFormGroup['controls']['programLocales']['controls'];let i = index;"
+                                                    [formGroupName]="i">
+                                                    <mat-form-field class="{{alignCss[i]}}">
+                                                        <input matInput placeholder="{{languageList[i].languageName}}"
+                                                            maxlength="100" required formControlName="programName"
+                                                            class="word-wrap">
+                                                        <mat-error
+                                                            *ngIf="program.get('programName').hasError('required')">
+                                                            Please enter value</mat-error>
+                                                        <mat-error *ngIf="program.get('programName').hasError('pattern')">Invalid characters entered</mat-error>
+                                                    </mat-form-field>
+                                                </div>
+
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </div> -->
+                <div class="col-md-3">
+                  <div class="program-img-block">
+                    <div class="grid img-block">
+                      <div class="avatar-zone">
+                        <span *ngIf="imagePath==''" class="upload-text" [class.placeholder-img]="imgUpload">
+                          <span class="pgm-img-title">Program Image</span>
+                          <span class="pgm-img-size">
+                            Image Size W-375 * H-290
+                          </span>
+                        </span>
+                        <img *ngIf="imagePath!=''" class="upload-img" [src]="imgPathUrl+imagePath"
+                          [class.uploaded-img]="imgUpload" style="width:100px; height:90px">
+                      </div>
+                      <div class="remove-img" *ngIf="imagePath!=''">
+                        <span> <img src="assets/images/icons/filter_close_ico.png" alt=""
+                            (click)="removeImage()"><label>Remove</label></span>
+                      </div>
+                      <input style="display:none;" #uploadImgEl type="file" class="upload_btn"
+                        (change)="uploadImage($event.target.files)" />
+                      <!-- <div class="overlay-layer" *ngIf="imagePath==''">
+                                    <img class="upload-icon" src="assets/images/svg-icons/uploadgray_ico.svg" alt="">Upload Image
+                                </div>
+                                    <input style="display:none;" type="file" #uploadEl class="upload_btn" (change)="uploadImage($event.target.files,i)"/> -->
+                      <div class="text-center" style="width: 100%;" *ngIf="imagePath==''">
+                        <span class="upload-btn-text" (click)='uploadImgEl.click()'>
+                          <span class="upload-icon">
+                            <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px" alt="Img">
+                          </span>Upload Image
+                        </span>
+                      </div>
+                    </div>
+                    <div class="image-error" style="color:red" *ngIf="showImageError">Please upload image
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-9">
+                  <div class="row">
+                    <div class="col-md-3 mar-10">
+                      <mat-form-field>
+                        <!-- <mat-select placeholder="Reward Type" #rewardValue
+                          (selectionChange)="getRewardTypeValue(rewardValue.value)" formControlName="rewardType"
+                          required> -->
+                        <mat-select placeholder="Reward Type" #rewardValue formControlName="rewardType" required>
+                          <mat-option *ngFor="let reward of rewardTypeArr" [value]="reward.value">{{reward.name}}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="programFormGroup.get('rewardType').hasError('required')">
+                          Please select value</mat-error>
+                      </mat-form-field>
+                    </div>
+                    <!-- <div class="col-md-3 mar-10" *ngIf="freeProductTypeValue">
+                      <mat-form-field>
+                        <mat-select placeholder="Stamping For" formControlName="freeProductType">
+                          <mat-option *ngFor="let freeProduct of freeproductArry" [value]="freeProduct.value">
+                            {{freeProduct.name}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="programFormGroup.get('freeProductType').hasError('required')">Please
+                          select
+                          value</mat-error>
+                      </mat-form-field>
+                    </div> -->
+                    <div class="col-md-9">
+                      <div class="row">
+                        <div class="col-md-3 mar-10">
+                          <mat-form-field>
+                            <input matInput [matDatepicker]="picker" [min]="minDate" readonly placeholder="Start Date"
+                              #startDate formControlName="startDate" required>
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                            <mat-error *ngIf="programFormGroup.get('startDate').hasError('required')">
+                              Please select value</mat-error>
+                          </mat-form-field>
+                        </div>
+                        <div class="col-md-3 mar-10">
+                          <div class="relative end-date">
+                            <mat-form-field>
+                              <input matInput [matDatepicker]="endDate"
+                                [min]="startDate.value=='' ? minDate : programFormGroup.get('startDate').value" #endDate
+                                (dateChange)="setExpiryDate($event.value)" readonly placeholder="End Date"
+                                formControlName="endDate">
+                              <mat-datepicker-toggle matSuffix [for]="endDate" [disabled]="disabled">
+                              </mat-datepicker-toggle>
+                              <mat-datepicker #endDate></mat-datepicker>
+                              <mat-error
+                                *ngIf="programFormGroup.get('perceptual').value==false && programFormGroup.get('endDate').hasError('required')">
+                                Please select value</mat-error>
+                            </mat-form-field>
+                            <div class="absolute btm-4px">
+                              <mat-checkbox formControlName="perceptual"
+                                (change)="endDateAction(programFormGroup.get('perceptual').value)">
+                                <small>Perpetual</small></mat-checkbox>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <label class="example-input-wrapper label-color">
+                            Start Time <img src="assets/images/icons/time_ico.svg" width="20px" alt="">
+                            <input [owlDateTimeTrigger]="dt2" readonly [owlDateTime]="dt2" class="time-picker"
+                              formControlName="startTime">
+                            <owl-date-time [pickerType]="'timer'" #dt2>
+                            </owl-date-time>
+                          </label>
+                        </div>
+                        <div class="col-md-3">
+                          <label class="example-input-wrapper label-color">
+                            End Time <img src="assets/images/icons/time_ico.svg" width="20px" alt="">
+                            <input [owlDateTimeTrigger]="dt" readonly
+                              [min]="programFormGroup.get('startTime').value==''?'':programFormGroup.get('startTime').value"
+                              [owlDateTime]="dt" class="time-picker" formControlName="endTime">
+                            <owl-date-time [pickerType]="'timer'" #dt>
+                            </owl-date-time>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-4">
+                      <!-- <div class="communication-types">
+                        <mat-checkbox name="Post As" formControlName="exTensionDate"
+                          *ngFor="let option of exTensionDateVals" [checked]="option.value" value="{{option.value}}"
+                          (change)="postVal(option)">{{option.label}}</mat-checkbox>
+                      </div> -->
+                      <mat-form-field>
+                        <mat-select placeholder="Point Expiry in" formControlName="pointExpiryIn" #pointExpiry
+                          (selectionChange)="checkPointExpiryValidation(pointExpiry.value)" required>
+                          <mat-option value="FIXEDDATE" *ngIf="programFormGroup.get('perceptual').value==false">Fixed
+                            Date</mat-option>
+                          <mat-option value="NOOFDAYS">Number of Days</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="programFormGroup.get('pointExpiryIn').hasError('required')">
+                          Please select value</mat-error>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-6" *ngIf="pointExpiry.value == 'FIXEDDATE'">
+                      <div class="relative">
+                        <mat-form-field>
+                          <input matInput [matDatepicker]="expiryDate" placeholder="Expiry Date"
+                            formControlName="expiryDate" [min]="minExpiryDate">
+                          <mat-datepicker-toggle matSuffix [for]="expiryDate">
+                          </mat-datepicker-toggle>
+                          <mat-datepicker #expiryDate></mat-datepicker>
+                          <mat-error *ngIf="programFormGroup.get('expiryDate').hasError('required')">
+                            Please select date</mat-error>
+                        </mat-form-field>
+                        <div class="absolute btm-40px">
+                          <mat-checkbox formControlName="isAllowExtension"><small>Allow
+                              Extension</small></mat-checkbox>
+                          <mat-checkbox formControlName="isEndOfMonth" class="ml-10px"><small>Allow End of
+                              Month Expiry</small></mat-checkbox>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6" *ngIf="pointExpiry.value == 'NOOFDAYS'">
+                      <mat-form-field>
+                        <input matInput type="text" maxlength="3" formControlName="numberOfDays" OnlyNumber="true"
+                          placeholder="Number of Days" required />
+                        <mat-error *ngIf="programFormGroup.get('numberOfDays').hasError('required')">
+                          Please enter value</mat-error>
+                      </mat-form-field>
+                      <div class="absolute btm-40px">
+                        <mat-checkbox formControlName="isAllowExtension"><small>Allow
+                            Extension</small></mat-checkbox>
+                        <mat-checkbox formControlName="isEndOfMonth" class="ml-10px"><small>Allow End of
+                            Month Expiry</small></mat-checkbox>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-card>
+        </div>
+      </div>
+      <div class="row mb-20px" *ngIf="programFormGroup.get('rewardType').value !='STAMPS'" style="display: none;">
+        <div class="col-md-3 pad-r-0">
+          <h3 class="card-title">Limits for Accruals</h3>
+          <!-- <mat-card>
+            <div class="">
+              <mat-form-field>
+                <input matInput type="text" formControlName="overallAccurals" OnlyNumber="true" maxlength="8"
+                  placeholder="Maximum Overall Accruals" #overAllAccurals
+                  (blur)="checkLimitPerCustomer(overAllAccurals.value,limitPerCust.value, '')" required />
+                <mat-error *ngIf="programFormGroup.get('overallAccurals').hasError('required')">Please
+                  enter value</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="">
+              <mat-form-field>
+                <input matInput type="text" formControlName="overAllLimit" OnlyNumber="true" maxlength="8"
+                  placeholder="Overall Limit per Customer" #limitPerCust
+                  (blur)="checkLimitPerCustomer(overAllAccurals.value, $event.target.value, dailyLimit.value)"
+                  required />
+                <mat-error *ngIf="programFormGroup.get('overAllLimit').hasError('required')">Please
+                  enter value</mat-error>
+              </mat-form-field>
+              <div style="color:red" *ngIf="limitPerCustFlag">Invalid Value</div>
+            </div>
+            <div class="">
+              <mat-form-field>
+                <input matInput type="text" formControlName="dailyLimit" OnlyNumber="true" maxlength="8"
+                  placeholder="Daily Limit Per Customer" #dailyLimit
+                  (blur)="checkLimitPerCustomer(overAllAccurals.value, limitPerCust.value, $event.target.value)"
+                  required />
+                <mat-error *ngIf="programFormGroup.get('dailyLimit').hasError('required')">Please enter
+                  value</mat-error>
+              </mat-form-field>
+              <div style="color:red" *ngIf="dailyLimitFlag">Invalid Value</div>
+            </div>
+          </mat-card> -->
+        </div>
+        <!-- <div class="col-md-9">
+                <h3 class="card-title">Value/ Worth of 1 Point</h3>
+                <mat-card class="p-0px">
+                    <div class="program-table">
+                        <div class="header">
+                            <div class="table-cell">
+                                <label class="common-text">Region</label>
+                            </div>
+                            <div class="table-cell" *ngFor="let r of regionCurrencies">
+                                <label class="head-text">{{r.currencyCode}}</label>
+                            </div>
+
+                        </div>
+                        <div class="content" formArrayName="tierArray" *ngIf="tierFlag">
+
+                            <div class="content-column" *ngFor="let tier of programFormGroup['controls']['tierArray']['controls'];let i = index;" [formGroupName]="i" >
+                                <div class="table-cell">
+                                    <label class="tier-list" >{{tierList[i].tierName}}</label>
+                                    <input type="hidden" class="input-box" formControlName="tierId">
+                                </div>
+                                <div >
+                                <div formArrayName="currencyArr">
+                                    <div class="table-cell" *ngFor="let currencyControl of tier['controls']['currencyArr']['controls'];let j = index;" [formGroupName]="j">
+                                        <input type="text" class="input-box" #inputCurrency maxlength="5" [formControlName]="regionCurrencies[j].regionId" OnlyNumber="true" required (blur)="autoPopulateCurrencyValue(tier, j, inputCurrency.value)">
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </mat-card>
+                <div *ngIf="regionError" style="color: red; padding:.5em 0 0 9em">Please enter value</div>
+                <div *ngIf="rewardErrMsg" style="color: red; padding:.5em 0 0 9em">Decimals are not allowed</div>
+            </div> -->
+      </div>
+      <div class="description-block" style="display: none;">
+        <h3 class="card-title">Description *</h3>
+        <!-- <mat-card class="description-card">
+          <div class="expansion-panel" formArrayName="descriptionArray">
+            <mat-accordion>
+              <mat-expansion-panel
+                *ngFor="let program of programFormGroup['controls']['descriptionArray']['controls'];let i = index;"
+                [formGroupName]="i">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    {{languageList[i].languageName}}
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="pt-20px">
+                  <label>Content</label>
+                  <editor apiKey="test" [init]="{plugins: 'link'}" formControlName="description" required
+                    (onSelectionChange)="removeErrorMsg(i)"></editor>
+                </div>
+              </mat-expansion-panel> -->
+        <!-- <mat-expansion-panel (opened)="panelOpenState = true"
+                                           (closed)="panelOpenState = false">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title>
+                            Arabic
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <div class="pt-20px">
+                            <label>Content</label>
+                            <editor apiKey="test" [init]="{plugins: 'link'}"></editor>
+                        </div>
+                      </mat-expansion-panel> -->
+        <!-- </mat-accordion>
+            <div *ngIf="descriptionError" style="color:red">Please enter value</div>
+
+          </div>
+        </mat-card> -->
+      </div>
+    </div>
+    <div class="btm-button-wrap">
+      <button class="button secondary-btn" type="button" [routerLink]="['/search-programs']">CANCEL</button>
+      <button class="button primary-btn" [disabled]="loading == true" type="submit">ADD</button>
+    </div>
+
+  </form>
+</div>

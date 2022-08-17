@@ -1,0 +1,176 @@
+<div class="page-wrap">
+    <div class="search-panel-block">
+        <div class="bredcrumb-title-wrap">
+            <div class="search-container-block">
+                <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+                <div class="search-list ">
+                    <form class="filter-wrap" [formGroup]="searchTransactionReqForm" (submit)="searchVal()">
+                        <div class="row title-search-row">
+                            <div class="col-md-4 title-search-col">
+                                <div class="title">
+                                    <h1>Search Transaction Request</h1>
+                                </div>
+                            </div>
+                            <div class="col-md-6 title-search-col">
+                                <div class="searchform-block">
+                                    <div class="common-search">
+                                        <input type="text" formControlName="searchVal" placeholder="Search By Transaction Request" (keydown.enter)="searchVal()" />
+                                        <span class="search-btn" (click)="searchVal()"></span>
+                                        <div class="filter-btn-wrap">
+                                            <span class="filter-btn" (click)="openFilter();" [ngClass]="status ? 'open' : 'close'"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2 title-search-col ">
+                            </div>
+                        </div>
+                        <div class="feild-search ng-star-inserted" *ngIf="!status">
+                            <div class="row feild-search-inner">
+                                <div class="col-md-3">
+                                    <!-- <mat-form-field>
+                    <mat-select placeholder="Select country" formControlName="countryCtrl">
+                      <mat-option *ngFor="let country of countries" [value]="country.countryId">
+                        {{ country.countryName }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field> -->
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput placeholder="Country" aria-label="Country" [matAutocomplete]="countryAutoComplete" [formControl]="countryCtrl">
+                                        <mat-autocomplete #countryAutoComplete="matAutocomplete">
+                                            <mat-option *ngFor="let country of filteredCountries | async" [value]="country.countryName" (click)="getAllcountry(country.countryId)" #countryInput>
+                                                <span>{{country.countryName}}</span>
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput placeholder="Member Phone Number" OnlyNumber="true" maxlength="25" 
+                                        minlength="8" formControlName="mobileNoCtrl">
+                                        <mat-error *ngIf="searchTransactionReqForm.get('mobileNoCtrl').hasError('minlength')">
+                                            Minimum 8 Digits required
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput placeholder="Reference Id" maxlength="25" formControlName="refIdCtrl">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput [matDatepicker]="picker" placeholder="Request Start Date" formControlName="reqStartDateCtrl">
+                                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput [matDatepicker]="picker1" placeholder="Request End Date" formControlName="reqEndDateCtrl">
+                                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker1></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput placeholder="Transaction Barcode" maxlength="25" formControlName="transactionBarCodeCtrl">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-select formControlName="status" placeholder="Status">
+                                            <mat-option value="Open">Open</mat-option>
+                                            <mat-option value="Invalid">Invalid</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="button-wrap">
+                                    <button class='button quaternary-btn' (click)="resetForm()" type="reset">RESET</button>
+                                    <button class='button tertiary-btn' type="submit">APPLY</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="form-wrap">
+            <div class="table-wrap">
+                <div class="table-wrap-inner">
+                    <table mat-table [dataSource]="dataSource" matSort *ngIf="dataSource">
+                        <ng-container matColumnDef="transactionRequestOid">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>REFERENCE ID </th>
+                            <td mat-cell *matCellDef="let row"> {{row.transactionRequestOid}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="userName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>MEMBER NAME</th>
+                            <td mat-cell *matCellDef="let row">{{row.userName}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="phoneNumber">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> PHONE NUMBER </th>
+                            <!-- <td mat-cell *matCellDef="let row"> {{row.phoneNumber}} </td> -->
+                            <!-- <td mat-cell *matCellDef="let row"><u><a [routerLink]="['/view-member/' + row.userOid]"
+                    class="text-blue word-wrap">
+                    {{row.phoneNumber}} </a></u></td> -->
+                            <td mat-cell (click)="viewTxnMember(row.userOid)" *matCellDef="let row"> <u><a 
+                      class="text-blue">{{ row.phoneNumber }}</a></u>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="transactionId">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> TRANSACTION BARCODE </th>
+                            <td mat-cell *matCellDef="let row">{{row.transactionId}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="createdTime">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>REQUEST DATE</th>
+                            <td mat-cell *matCellDef="let row">{{row.createdTime}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="transactionRequestStatus">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> STATUS </th>
+                            <td mat-cell *matCellDef="let row">{{row.transactionRequestStatus}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="transactionRequestVal">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> ACTION </th>
+                            <td mat-cell *matCellDef="let row"><u><a class="text-blue">
+                    <!-- {{row.transactionRequestStatus}} -->
+                    <span *ngIf="row.transactionRequestStatus =='OPEN'"
+                      (click)="openCommentsDialog(row.transactionRequestOid,row.transactionRequestStatus)">Mark
+                      Invalid</span>
+                    <span *ngIf="row.transactionRequestStatus =='CLOSED'"
+                      (click)="openManualTxnDialog(row.transactionRequestOid)">View</span>
+                    <span *ngIf="row.transactionRequestStatus =='INVALID'"
+                      (click)="openManualTxnDialog(row.transactionRequestOid)">View</span>
+                  </a></u></td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                        </tr>
+                    </table>
+                    <div *ngIf="searchtransReqVal" class="select-store-block">
+                        <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                    </div>
+                    <div class="no-records" *ngIf="noRecordData">
+                        No Records Found!
+                    </div>
+                </div>
+                <div>
+                    <!-- <div class="flex-center"> -->
+                    <!-- <div class="p-l-20px">
+            <span class="export"><img class="export-icon"
+                src="assets/images/svg-icons/download_xl.svg" alt="">
+              Export Sheet</span>
+          </div> -->
+                    <!-- <mat-paginator [pageSizeOptions]="[10,20,50,100]">
+          </mat-paginator> -->
+                    <mat-paginator [length]="resultsLength" #paginator (page)="getUpdate($event)" [pageSize]="10" [pageSizeOptions]="[10,20,50,100]">
+                    </mat-paginator>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

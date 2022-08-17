@@ -1,0 +1,88 @@
+.page-wrap {
+    h6 {
+        color: #FC7E30;
+    }
+    padding-bottom: 10px;
+}
+.query-builder {
+    padding: 20px;
+}
+
+.segment-popup{
+    overflow-y: auto;
+    max-height: 80vh;
+}
+
+.close-icon {
+    cursor: pointer;
+}
+.button-wrap {
+    padding-right: 13px;
+}
+.rules-group-container{
+    width: 100%;
+}
+
+:host ::ng-deep{
+  .rules-group-container{
+    width: 100%;
+  }
+  .selectize-dropdown{
+      top:34px !important;
+  }
+  .rule-filter-container {
+    &:invalid {
+      color: #CCC !important;
+    }
+    &:disabled {
+      color: #CCC !important;
+    }
+    [disabled] {
+      color: #CCC !important;
+    }
+  }
+}
+
+
+/deep/ .query-builder{
+  /deep/ .btn-primary{
+    background-color: #dbdbdb;
+    color: #000;
+    border: 1px solid #dbdbdb;
+  }
+
+  /deep/ .btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active, .show > .btn-primary.dropdown-toggle{
+    color: #fff;
+    background-color: #ee8b47;
+    border-color: #ee8b47;
+  }
+
+  .rule-filter-container [disabled] {
+    color: #000!important;
+  }
+
+}
+
+/deep/ .custom-segment-dialogbox{
+
+  /deep/ .mat-dialog-container{
+    min-width: 70vw;
+  }
+
+  /deep/ .glyphicon-random{
+    display: none;
+  }
+}
+
+/deep/ .glyphicon-random{
+  display: none;
+}
+
+.preDefinedsegments-row{
+    margin: 15px 0 0 0;
+    text-align: center;
+    justify-content: center;
+    max-width: 70%;
+    width: 100%;
+    margin: 0 auto;
+}

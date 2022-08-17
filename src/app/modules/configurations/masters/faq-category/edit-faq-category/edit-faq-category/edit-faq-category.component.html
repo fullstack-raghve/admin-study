@@ -1,0 +1,103 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title">
+        <h1>Masters</h1>
+    </div>
+</div>
+<div class="page-wrap-masters">
+    <div class="row master-cards">
+        <div class="col-md-3 master-list master-left">
+            <mat-card>
+                <ul class="master_listing">
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-customer-type']">Customer Type</a></li>
+                <li><a href="javascript:void(0)" [routerLink]="['/search-merchant']">Merchant</a></li> -->
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-brand']">Brand</a></li> -->
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-country']">Countries</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-cities']">Cities</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-malls']">Malls</a></li>
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-course']">Course</a></li>
+                <li><a href="javascript:void(0)" [routerLink]="['/search-cuisine']">Cuisine</a></li> -->
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-currency']">Currency</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-currency-conversion']">Currency Conversion</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-brand-category']">Brand Category</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-language']">Language</a></li>
+                    <li class="master-list-selected"><a href="javascript:void(0)" [routerLink]="['/search-faq-category']">FAQ
+                    Category</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-about-us-category']">About Us Category</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-feedback']">Feedback</a></li>
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-partner']">Partner</a></li> -->
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-enquiry-type']">Enquiry Type</a></li>
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/add-taxation']">Taxation</a></li> -->
+                    <li><a href="javascript:void(0)" [routerLink]="['/add-product-tag']">Product Tag</a></li>
+
+
+                </ul>
+            </mat-card>
+        </div>
+        <div class="col-md-9 master-right">
+            <mat-card class="master-content">
+                <div class="country-card">
+                    <div class="subtitle flex-center">
+                        <h3><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/left_arrow.png"
+                        alt="leftArrow" [routerLink]="['/search-faq-category']"></span>Edit FAQ Category</h3>
+                        <div class="slider">
+                            <mat-slide-toggle [(ngModel)]="toggleVal" class="example-margin" [checked]="checked" [disabled]="disabled">
+                                {{toggleVal==true ? "ONLINE" : "OFFLINE"}}
+                            </mat-slide-toggle>
+                        </div>
+                    </div>
+                    <form *ngIf="buildFlag" [formGroup]="editFaqGroup" #createProductForm="ngForm">
+                        <div class="row" formArrayName="faqFormArray">
+                            <div class="col-md-6 bottom-margin" *ngFor="let ln of editFaqGroup['controls']['faqFormArray']['controls'];let i = index;" [formGroupName]="i">
+                                <mat-card class="faq-card">
+                                    <div class="row card-mb">
+                                        <div class="col-md-2 lang-field">
+                                            <div class="faq-lang">
+                                                <p>{{viewFAQ[i].languageName}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 title">
+                                            <div class="">
+                                                <mat-form-field class="{{alignCss[i]}}">
+                                                    <input matInput placeholder="FAQ Title" maxlength="100" formControlName="faqTitle" required>
+                                                    <mat-error *ngIf="ln.get('faqTitle').hasError('pattern')">Invalid characters entered</mat-error>
+                                                    <mat-error *ngIf="ln.get('faqTitle').hasError('required')">Please enter value</mat-error>
+                                                    <mat-error *ngIf="ln.get('faqTitle').hasError('minlength')">Minimum 2 characters required</mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 browse-block">
+                                            <div class="grid img-block">
+                                                <div class="avatar-zone">
+                                                    <label *ngIf="uploadFlag[i]==false" class="image-uploadText" [class.placeholder-img]="imgUpload">Upload Image</label>
+                                                    <img class="upload-img" *ngIf="imagePath[i]!=''" [src]="filePathUrl+imagePath[i]" [class.uploaded-img]="imgUpload" width="80px">
+                                                </div>
+                                                <div class="remove-img" *ngIf="uploadFlag[i]==true">
+                                                    <span (click)="removeImage(i)"> <img src="assets/images/icons/filter_close_ico.png" alt="" ><label>Remove</label></span>
+                                                </div>
+                                                <input style="display:none;" type="file" formControlName="faqCategoryImage" class="upload_btn" (change)="uploadImage($event.target.files , i)" #selectImgFile/>
+                                                <div *ngIf="uploadFlag[i]==false">
+                                                    <span class="upload-text" (click)='selectImgFile.click()'>
+                                          <span class="upload-icon">
+                                              <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px" alt="Img">
+                                          </span>Upload Image
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="imageErr[i]" class="error-mes">{{imageErrMsg[i]}}</div>
+                                    </div>
+                                </mat-card>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="btm-button-wrap">
+                        <button type="button" class="site_btn gray_btn" type="button" [routerLink]="['/search-faq-category']">CANCEL</button>
+                        <button type="button" class="button primary-btn" type="submit" (click)="updateFaq(editFaqGroup.value)">UPDATE</button>
+                    </div>
+
+                </div>
+            </mat-card>
+        </div>
+    </div>
+</div>

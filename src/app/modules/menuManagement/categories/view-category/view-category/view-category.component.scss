@@ -1,0 +1,102 @@
+.form-wrap {
+    padding: 1.8em;
+    .category {
+        padding: 20px;
+        .img-block {
+            padding-top: 10px;
+            padding-bottom: 30px;
+            .avatar-zone {
+                width: 100%;
+                height: 154px;
+                background-color: #F2F2F2;
+                text-align: center;
+                border: 1px dashed #dbdbdb;
+                .image-uploadText {
+                    color: #a7a7a7;
+                    font-size: 18px;
+                    padding: 44px;
+                }
+                .upload-text {
+                    color: #a7a7a7;
+                    font-size: 20px;
+                    padding: 60px;
+                }
+                img {
+                    width: 100%;
+                    height: 150px;
+                }
+            }
+            .upload-icon {
+                width: 12px;
+                height: 12px;
+                margin-right: 5px;
+            }
+        }
+        .placeholder-img {
+            display: none;
+        }
+    }
+    .multi-lang {
+        padding: 20px;
+        .faq-card {
+            background-color: #F8F8F8;
+            position: relative;
+            .lang-field {
+                position: absolute;
+                top: 0px;
+                left: 0px;
+                background-color: #c3c3c3;
+                p {
+                    margin-bottom: 0px;
+                    margin: 8px;
+                }
+            }
+            .text-fields {
+                left: 22px;
+                top: 26px;
+                right: 15px;
+                padding-bottom: 30px;
+                .field-container {
+                    .mat-form-field {
+                        display: block;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.mat-form-field {
+    display: block;
+}
+
+.button-wrap {
+    margin-bottom: 50px;
+    text-align: right;
+    margin-top: 15px;
+}
+
+label {
+    color: #7C7B7B;
+    font-size: 13px;
+}
+
+p {
+    font-size: 14px;
+    color: #171717;
+}
+
+.right-text {
+    left: auto !important;
+    right: 0;
+}
+
+.upload-text {
+    color: #a7a7a7;
+    font-size: 12px;
+    padding: 16px;
+}
+
+.direction {
+    direction: rtl !important;
+}

@@ -1,0 +1,229 @@
+<div class="page-wrap">
+  <div class="search-panel-block">
+    <div class="bredcrumb-title-wrap">
+      <div class="search-container-block">
+        <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+        <div class="search-list">
+          <form class="filter-wrap" [formGroup]="searchFeedbackSurveyForm" (submit)="searchVal()">
+            <div class="row title-search-row">
+              <div class="col-md-4 title-search-col">
+                <div class="title">
+                  <h1>Feedback Survey</h1>
+                </div>
+              </div>
+              <div class="col-md-5 title-search-col">
+                <div class="searchform-block">
+                  <div class="common-search">
+                    <input type="text" formControlName="searchVal" placeholder="Feedback Survey" />
+                    <span class="search-btn" (click)="searchVal()"></span>
+                    <div class="filter-btn-wrap">
+                      <span class="filter-btn" (click)="openFilter();" [ngClass]="status ? 'open' : 'close'"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3 title-search-col">
+                <button type="button" class="button primary-btn float-right" [routerLink]="['/add-feedbacksurvey']">ADD
+                </button>
+              </div>
+              <div class="feild-search" *ngIf="!status">
+                <div class="row feild-search-inner">
+                  <div class="col-md-3">
+
+                    <mat-select-autocomplete name="Country" ngDefaultControl [placeholder]="'COUNTRY'"
+                      [options]="countryList" [display]="'countryName'" [value]="'value'" [multiple]='true'
+                      [labelCount]="1" (selectionChange)="getAllCities($event) || getAllBrands($event)" [selectedOptions]="selectedCountryOptions"
+                      [formControl]="searchFeedbackSurveyForm.controls['kioskCountry']" #countryInput>
+                    </mat-select-autocomplete>
+                  </div>
+                  <div class="col-md-3">
+                    <mat-select-autocomplete name="CITY" ngDefaultControl [placeholder]="'CITY'" [options]="cityList"
+                      [display]="'cityName'" [value]="'value'" [multiple]='true' [labelCount]="1"
+                      (selectionChange)="getAllMallsCity($event,cityName)" [selectedOptions]="selectedCityOptions"
+                      [formControl]="searchFeedbackSurveyForm.controls['cityName']" #cityInput>
+                    </mat-select-autocomplete>
+                  </div>
+                  <div class="col-md-3">
+                    <mat-select-autocomplete name="BRAND" ngDefaultControl [placeholder]="'BRAND'"
+                      [options]="brandValueList" [display]="'brandName'" [value]="'value'" [multiple]='true'
+                      [labelCount]="1" (selectionChange)="getAllMalls($event,cityName,kioskBrand)"
+                      [selectedOptions]="selectedBrandOptions"
+                      [formControl]="searchFeedbackSurveyForm.controls['kioskBrand']" #brandInput>
+                    </mat-select-autocomplete>
+                  </div>
+                  <div class="col-md-3">
+                    <mat-select-autocomplete name="MALL" ngDefaultControl [placeholder]="'MALL'" [options]="mallList"
+                      [display]="'mallName'" [value]="'value'" [multiple]='true' [labelCount]="1"
+                      [selectedOptions]="selectedMallOptions"
+                      [formControl]="searchFeedbackSurveyForm.controls['mallOid']" #mallInput>
+                    </mat-select-autocomplete>
+                  </div>
+                  <div class="col-md-3">
+                    <mat-form-field>
+                      <mat-select placeholder="Select Flow" formControlName="assignedflow">
+                        <mat-option [value]="flow.flowId" *ngFor="let flow of flows" [value]="flow.flowId">
+                          {{flow?.flowName}} </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+                  <div class="button-wrap">
+                    <div class="">
+                      <button class='button reset-btn' type="button" (click)="resetForm()">RESET</button>
+                      <button class='button apply-btn' type="submit">APPLY</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="form-wrap">
+      <div class="table-wrap">
+        <div class="table-wrap-inner">
+
+          <table mat-table [dataSource]="dataSource" matSort *ngIf="dataSource">
+
+            <ng-container matColumnDef="surveyName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>FEEDBACK SURVEY NAME</th>
+              <td mat-cell *matCellDef="let row">
+                <u><a [routerLink]="['/view-feedbacksurvey/',row.feedbackSurveyId]"
+                    class="text-blue">{{row.surveyName}}</a></u>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="brand">
+              <th mat-header-cell *matHeaderCellDef> BRAND NAME </th>
+              <td mat-cell *matCellDef="let row"> {{row.brand}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="country">
+              <th mat-header-cell *matHeaderCellDef> COUNTRY NAME </th>
+              <td mat-cell *matCellDef="let row"> {{row.country}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="assignedFlowId">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> ASSIGNED FLOW [ID] </th>
+              <td mat-cell *matCellDef="let row"> {{row.assignedFlowId | slice:0:10}}</td>
+            </ng-container>
+            <ng-container matColumnDef="startDate">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> START DATE </th>
+              <td mat-cell *matCellDef="let row"> {{row.startDate }} </td>
+            </ng-container>
+            <!-- <ng-container matColumnDef="endDate">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> END DATE </th>
+              <td mat-cell *matCellDef="let row"> {{row.endDate }} </td>
+            </ng-container> -->
+            <ng-container matColumnDef="otherChannel">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> COPY URL </th>
+              <td mat-cell *matCellDef="let row">
+                <p *ngIf="row.otherChannel['OtherChannel'] == 'NO' && row.programApprovalStatus != 'APPROVED'"> - </p>
+
+                <!-- SIT url -->
+                <span
+                  *ngIf="API_EndPoint == 'http://14.142.204.100:8080/' || API_EndPoint == 'http://14.142.204.101:7070/'">
+                  <p class="copyurl"
+                    *ngIf="row.otherChannel['OtherChannel'] != 'NO' && row.programApprovalStatus == 'APPROVED'">
+                    <img *ngIf="row.otherChannel['Email'] == 'YES'" src="assets/images/svg-icons/Email_icon.svg"
+                      class="pointer" alt="email_icon" width="15px;"
+                      (click)="emailCopy('http://14.142.204.101/flow/?flowId=0'+'&surveyId='+row.feedbackSurveyId+'&channelType=EMAIL')">&nbsp;
+                    <img *ngIf="row.otherChannel['SMS'] == 'YES'" src="assets/images/svg-icons/sms_icon.svg"
+                      alt="sms_icon" width="15px;" class="pointer"
+                      (click)="messageCopy('http://14.142.204.101/flow/?flowId=0'+'&surveyId='+row.feedbackSurveyId+'&channelType=SMS')">&nbsp;
+                    <img *ngIf="row.otherChannel['Push'] == 'YES'"
+                      src="assets/images/svg-icons/Push_notification_icon.svg" alt="notification_icon" class="pointer"
+                      width="15px;"
+                      (click)="notificationCopy('http://14.142.204.101/flow/?flowId=0'+'&surveyId='+row.feedbackSurveyId+'&channelType=PUSH')">
+                  </p>
+                </span>
+                <!-- SIT url -->
+
+
+                <!-- UAT url -->
+                <span *ngIf="API_EndPoint == 'http://13.235.235.214:8080/' || API_EndPoint == 'https://ca-admin-service-uat.reciproci.com/'">
+                  <p class="copyurl"
+                    *ngIf="row.otherChannel['OtherChannel'] != 'NO' && row.programApprovalStatus == 'APPROVED'">
+                    <img *ngIf="row.otherChannel['Email'] == 'YES'" src="assets/images/svg-icons/Email_icon.svg"
+                      class="pointer" alt="email_icon" width="15px;"
+                      (click)="emailCopy('https://ca-admin-uat.reciproci.com/flow/?flowId=0'+'&surveyId='+row.feedbackSurveyId+'&channelType=EMAIL')">&nbsp;
+                    <img *ngIf="row.otherChannel['SMS'] == 'YES'" src="assets/images/svg-icons/sms_icon.svg"
+                      alt="sms_icon" width="15px;" class="pointer"
+                      (click)="messageCopy('https://ca-admin-uat.reciproci.com/flow/?flowId=0'+'&surveyId='+row.feedbackSurveyId+'&channelType=SMS')">&nbsp;
+                    <img *ngIf="row.otherChannel['Push'] == 'YES'"
+                      src="assets/images/svg-icons/Push_notification_icon.svg" alt="notification_icon" class="pointer"
+                      width="15px;"
+                      (click)="notificationCopy('https://ca-admin-uat.reciproci.com/flow/?flowId=0'+'&surveyId='+row.feedbackSurveyId+'&channelType=PUSH')">
+                  </p>
+                </span>
+
+                <!-- UAT url -->
+
+                <!-- Pre Prod Url -->
+                <span *ngIf="API_EndPoint == 'https://ca-preprod-feedback-admin.reciproci.com/'">
+                  <p class="copyurl" *ngIf="row.otherChannel['OtherChannel'] != 'NO'">
+                    <img *ngIf="row.otherChannel['Email'] == 'YES'" src="assets/images/svg-icons/Email_icon.svg" class="pointer" alt="email_icon" width="15px;"
+                      (click)="emailCopy('https://ca-preprod-feedback-flow.reciproci.com/flow/?flowId=0'+'&surveyId='+row.feedbackSurveyId+'&channelType=EMAIL')">&nbsp;
+                    <img *ngIf="row.otherChannel['SMS'] == 'YES'" src="assets/images/svg-icons/sms_icon.svg" alt="sms_icon" width="15px;" class="pointer"
+                      (click)="messageCopy('https://ca-preprod-feedback-flow.reciproci.com/flow/?flowId=0'+'&surveyId='+row.feedbackSurveyId+'&channelType=SMS')">&nbsp;
+                    <img *ngIf="row.otherChannel['Push'] == 'YES'" src="assets/images/svg-icons/Push_notification_icon.svg" alt="notification_icon" class="pointer"
+                      width="15px;"
+                      (click)="notificationCopy('https://ca-preprod-feedback-flow.reciproci.com/flow/?flowId=0'+'&surveyId='+row.feedbackSurveyId+'&channelType=PUSH')">
+                  </p>
+                </span>
+                <!-- Pre Prod Url -->
+
+                <!-- Prod url -->
+                <span *ngIf="API_EndPoint == 'https://ca-prod-feedback-admin.reciproci.com/'">
+                  <p class="copyurl" *ngIf="row.otherChannel['OtherChannel'] != 'NO'">
+                    <img *ngIf="row.otherChannel['Email'] == 'YES'" src="assets/images/svg-icons/Email_icon.svg" class="pointer" alt="email_icon" width="15px;"
+                      (click)="emailCopy('https://ca-prod-feedback-flow.reciproci.com/flow/?flowId=0'+'&surveyId='+row.feedbackSurveyId+'&channelType=EMAIL')">&nbsp;
+                    <img *ngIf="row.otherChannel['SMS'] == 'YES'" src="assets/images/svg-icons/sms_icon.svg" alt="sms_icon" width="15px;" class="pointer"
+                      (click)="messageCopy('https://ca-prod-feedback-flow.reciproci.com/flow/?flowId=0'+'&surveyId='+row.feedbackSurveyId+'&channelType=SMS')">&nbsp;
+                    <img *ngIf="row.otherChannel['Push'] == 'YES'" src="assets/images/svg-icons/Push_notification_icon.svg" alt="notification_icon" class="pointer"
+                      width="15px;"
+                      (click)="notificationCopy('https://ca-prod-feedback-flow.reciproci.com/flow/?flowId=0'+'&surveyId='+row.feedbackSurveyId+'&channelType=PUSH')">
+                  </p>
+                </span>
+                <!-- Prod url -->
+
+
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> STATUS </th>
+              <td mat-cell *matCellDef="let row"> {{row.status}} </td>
+            </ng-container>
+
+            <!-- <ng-container matColumnDef="preview">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> PREVIEW </th>
+              <td mat-cell *matCellDef="let row">
+                <p class="pointer">
+                  <a href="{{flowURL}}/flow/?flowId={{row.assingedFlow}}&kioskId={{row.deviceId}}&ispreview=true&kiosk=true"
+                    target="_blank"> <img src="assets/images/svg-icons/preview_icon.svg" alt="preview_icon"
+                      width="20px;"></a>
+                </p>
+              </td>
+            </ng-container> -->
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+            </tr>
+          </table>
+          <div *ngIf="searchResults" class="select-store-block">
+            <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+          </div>
+          <div class="no-records" *ngIf="noRecords">
+            No Records Found!
+          </div>
+        </div>
+        <mat-paginator [length]="resultsLength" (change)="searchVal()" #paginator (page)="getUpdate($event)"
+          [pageSize]="10" [pageSizeOptions]="[10,20,50,100]"></mat-paginator>
+      </div>
+    </div>
+  </div>
+</div>

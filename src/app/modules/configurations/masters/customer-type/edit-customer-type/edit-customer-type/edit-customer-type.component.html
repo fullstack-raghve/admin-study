@@ -1,0 +1,95 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title">
+        <h1>Masters</h1>
+    </div>
+</div>
+<div class="page-wrap-masters">
+    <div class="row master-cards">
+        <div class="col-md-3 master-list master-left">
+            <mat-card>
+                <ul class="master_listing">
+                    <!-- <li class="master-list-selected"><a href="javascript:void(0)" [routerLink]="['/search-customer-type']">Customer Type</a></li>
+                      <li><a href="javascript:void(0)" [routerLink]="['/search-merchant']">Merchant</a></li> -->
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-brand']">Brand</a></li> -->
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-country']">Countries</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-cities']">Cities</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-malls']">Malls</a></li>
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-course']">Course</a></li>
+                      <li><a href="javascript:void(0)" [routerLink]="['/search-cuisine']">Cuisine</a></li> -->
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-currency']">Currency</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-currency-conversion']">Currency Conversion</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-brand-category']">Brand Category</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-language']">Language</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-faq-category']">FAQ Category</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-about-us-category']">About Us Category</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-feedback']">Feedback</a></li>
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-partner']">Partner</a></li> -->
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-enquiry-type']">Enquiry Type</a></li>
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/add-taxation']">Taxation</a></li> -->
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/add-product-tag']">Product Tag</a></li> -->
+
+
+                </ul>
+            </mat-card>
+        </div>
+        <div class="col-md-9 master-right">
+            <mat-card class="master-content">
+                <div class="country-card">
+                    <div class="subtitle flex-center">
+                        <h3><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/left_arrow.png" alt="leftArrow" [routerLink]="['/search-customer-type']"></span>Edit Customer</h3>
+                        <div class="slider">
+                            <mat-slide-toggle [(ngModel)]="toggleVal" (change)="toggleStatus($event)" class="mat-slide-toggle">{{statusValue}}</mat-slide-toggle>
+                        </div>
+                    </div>
+                    <form id="EditCustomerType" [formGroup]="customerFormGroup" (submit)="addCustomer(customerFormGroup.value)">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="example-container">
+                                            <mat-form-field class="field-style">
+                                                <input matInput placeholder="Customer Type Code" formControlName="customerCode" OnlyNumber="true" required>
+                                                <mat-error *ngIf="customerFormGroup.get('customerCode').hasError('required')">Please enter value</mat-error>
+                                                <!-- <mat-error *ngIf="customerFormGroup.get('customerCode').hasError('value')">Only 8 digits and 4 decimal values are allowed</mat-error> -->
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="example-container">
+                                            <mat-form-field class="field-style">
+                                                <input matInput placeholder="Customer Type Title" formControlName="customerTypeTitle" OnlyNumber="true" required>
+                                                <mat-error *ngIf="customerFormGroup.get('customerTypeTitle').hasError('required')">Please enter value</mat-error>
+                                                <!-- <mat-error *ngIf="customerFormGroup.get('customerTypeTitle').hasError('value')">Only 8 digits and 4 decimal values are allowed</mat-error> -->
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="example-container">
+                                            <mat-form-field>
+                                                <mat-select placeholder="Type" formControlName="type" required>
+                                                    <!-- <mat-option *ngFor="let currency of currencies" [value]="currency.currencyId" >
+                                                  {{ currency.currencyCode }}
+                                                </mat-option> -->
+                                                    <mat-option value="type1">Customer Type</mat-option>
+                                                    <mat-option value="type2">Sub Type</mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="customerFormGroup.get('type').hasError('required')">Please select value</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="btm-button-wrap">
+                            <button type="button" class="site_btn gray_btn mr-12px" [routerLink]="['/search-customer-type/']">CANCEL</button>
+                            <button type="submit" class="button primary-btn" [disabled]="loading">UPDATE</button>
+                        </div>
+                    </form>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+</div>

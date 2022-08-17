@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #04d51c;
+      }
+
+      .cls-2, .cls-4 {
+        fill: none;
+      }
+
+      .cls-2 {
+        stroke: #04d51c;
+      }
+
+      .cls-3 {
+        stroke: none;
+      }
+    </style>
+  </defs>
+  <g id="live_ico" transform="translate(-1239 -234)">
+    <g id="Group_46425" data-name="Group 46425" transform="translate(1238 233)">
+      <path id="Path_18252" data-name="Path 18252" class="cls-1" d="M20.694,14l-9.2-5.521C10.452,7.855,9.6,8.336,9.6,9.546V20.715c0,1.21.848,1.691,1.887,1.068l9.2-5.521A1.213,1.213,0,0,0,20.694,14Z" transform="translate(-0.09 -0.607)"/>
+      <g id="Rectangle_4596" data-name="Rectangle 4596" class="cls-2" transform="translate(1 1)">
+        <rect class="cls-3" width="28" height="28" rx="3"/>
+        <rect class="cls-4" x="0.5" y="0.5" width="27" height="27" rx="2.5"/>
+      </g>
+    </g>
+  </g>
+</svg>

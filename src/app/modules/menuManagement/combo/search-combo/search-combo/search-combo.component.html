@@ -1,0 +1,183 @@
+<div class="page-wrap">
+    <div class="search-panel-block">
+        <div class="bredcrumb-title-wrap">
+            <div class="search-container-block">
+                <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+                <div class="search-list">
+                    <form class="filter-wrap" [formGroup]="searchComboFormGroup" #searchDeliveryAreaForm="ngForm" (submit)="indexResetFormdataSearch();searchKey()">
+                        <div class="row title-search-row">
+                            <div class="col-md-4 title-search-col">
+                                <div class="title">
+                                    <h1>Search Combos</h1>
+                                </div>
+                            </div>
+                            <div class="col-md-5 title-search-col">
+                                <div class="searchform-block">
+                                    <div class="common-search">
+                                        <input type="text" formControlName="searchVal" maxlength="30" placeholder="Search By Combo Name, BrandName & Status" />
+                                        <span class="search-btn" (click)="indexResetFormdataSearch();searchKey()"></span>
+                                        <div class="filter-btn-wrap">
+                                            <span class="filter-btn" (click)="openFilter();" [ngClass]="status ? 'open' : 'close'"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 title-search-col">
+                                <div class="add-btn text-right">
+                                    <button type="button" class="button primary-btn m-0px" [routerLink]="['/add-combo']">
+                                        <span class="add-plus">
+                                            <img src="assets/images/svg-icons/add_ico.svg" alt="add" class="plus-icon">
+                                        </span>ADD
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="feild-search" *ngIf="!status">
+                            <div class="row feild-search-inner">
+                                <!-- <div class="col-md-3">
+                                        <mat-select-autocomplete name="Country" ngDefaultControl [placeholder]="'COUNTRY'" [options]="countryList" [display]="'countryName'" [value]="'value'" [multiple]='true' [labelCount]="1" (selectionChange)="getAllBrands($event)"
+                                            [selectedOptions]="selectedCountryOptions" [formControl]="searchComboFormGroup.controls['notificationCountry']" #countryInput>
+                                        </mat-select-autocomplete>
+                                    </div> -->
+                                <div class="col-md-3 priceClass">
+                                    <mat-form-field>
+                                        <mat-select placeholder="Select Brand" formControlName="notificationBrand" #brandInput (selectionChange)="getParentList(brandInput.value);getAllCountries(brandInput.value)">
+                                            <!-- <mat-option value="">Select Brand</mat-option> -->
+                                            <mat-option *ngFor="let p of brandList" [value]="p.brandId">
+                                                {{ p.brandName }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-select-autocomplete name="Country" ngDefaultControl [placeholder]="'COUNTRY'" [options]="countryList" [display]="'countryName'" [value]="'value'" [multiple]='true' [labelCount]="1" (selectionChange)="getAllBrands($event)" [selectedOptions]="selectedCountryOptions"
+                                        [formControl]="searchComboFormGroup.controls['notificationCountry']" #countryInput>
+                                    </mat-select-autocomplete>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <mat-select-autocomplete ngDefaultControl [placeholder]="'Category'" [options]="categories1" [display]="'categoryName'" [value]="'value'" [multiple]='true' [labelCount]="1" [selectedOptions]="selectedCategoryOptions" [formControl]="searchComboFormGroup.controls['categoryIds']"
+                                        #categoryInput>
+                                    </mat-select-autocomplete>
+                                </div>
+
+
+                                <div class="col-md-3 priceClass">
+                                    <mat-form-field>
+                                        <mat-select placeholder="Price Type" formControlName="displayPriceType">
+                                            <mat-option value="FIXED_PRICE"> Fixed Price</mat-option>
+                                            <mat-option value="AUTO_CALCULATE">Auto Calculate</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <!-- <div class="col-md-3 " >
+                                    <mat-form-field>
+                                      <mat-select placeholder="Discount Type" formControlName="discountType">
+                                        <mat-option value="FIXED_VALUE"> Fixed Value</mat-option>
+                                        <mat-option value="PERCENTAGE">Percentage</mat-option>
+                                      </mat-select>
+                                    </mat-form-field>
+                                  </div> -->
+
+
+
+
+
+
+                                <div class="button-wrap">
+                                    <button class='button quaternary-btn' (click)="resetForm()">RESET</button>
+                                    <button class='button tertiary-btn' type="submit">APPLY</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="form-wrap">
+            <div class="table-wrap">
+                <div class="table-wrap-inner">
+                    <table mat-table [dataSource]="dataSource" matSort>
+
+                        <ng-container matColumnDef="sortOrder">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border padlr-8"> SORT ORDER </th>
+                            <td mat-cell *matCellDef="let row" class="padlr-8">{{ row.sortOrder }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="comboImage">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border padlr-8"> IMAGE </th>
+                            <td mat-cell *matCellDef="let row" class="padlr-8">
+                                <!-- <img class="upload-img"
+                                [src]="row.imgPath=='' || row.imgPath == null ? 'assets/images/no-image.png' : imgPathUrl+row.imgPath"
+                                alt="" width="50px" [class.uploaded-img]="imgUpload"> -->
+                                <img class="upload-img" [src]="row.comboImage=='' || row.comboImage == null ? 'assets/images/no-image.png' : row.comboImage" alt="" width="50px" [class.uploaded-img]="imgUpload">
+                            </td>
+                        </ng-container>
+                        <!-- <ng-container matColumnDef="areaName"> comboId
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border">IMAGE </th>
+                          <td mat-cell (click)="MoveToView(row.comboId)" *matCellDef="let row"><u><a 
+                  class="text-blue"> {{
+                  row.areaName }} </a></u></td>
+                        
+                      </ng-container> -->
+                        <ng-container matColumnDef="comboName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border padlr-8"> COMBO NAME </th>
+                            <td mat-cell (click)="MoveToView(row.comboId)" *matCellDef="let row" class="padlr-8"> <u><a
+                                        class="text-blue"> {{ row.comboName }} </a></u>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="comboCategoryName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border padlr-8"> CATEGORY </th>
+                            <td mat-cell *matCellDef="let row" class="padlr-8">{{ row.comboCategoryName }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="displayPriceType">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border padlr-8"> TYPE OF DISPLAY PRICE </th>
+                            <td mat-cell *matCellDef="let row" class="padlr-8"> {{row.displayPriceType}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="brandName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border padlr-8"> BRAND </th>
+                            <td mat-cell *matCellDef="let row" class="padlr-8"> {{ row.brandName}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="comboCountryName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border padlr-8"> COUNTRY </th>
+                            <td mat-cell *matCellDef="let row"> {{row.comboCountryName}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="modifiedTime">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border padlr-8"> LAST MODIFIED ON </th>
+                            <td mat-cell *matCellDef="let row" class="padlr-8"> {{row.modifiedTime === null ? '-' : row.modifiedTime }} </td>
+                        </ng-container>
+
+
+                        <ng-container matColumnDef="modifiedBy">
+                            <th mat-header-cell *matHeaderCellDef class="top-border padlr-8"> LAST MODIFIED BY </th>
+                            <td mat-cell *matCellDef="let row" class="padlr-8"> {{row.modifiedBy}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="status">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border padlr-8"> Status </th>
+                            <td mat-cell *matCellDef="let row" class="padlr-8"> {{row.status}} </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                        </tr>
+                    </table>
+                    <div *ngIf="searchStoreVal" class="select-store-block">
+                        <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                    </div>
+                    <div class="no-records" *ngIf="noRecords">
+                        No Records Found!
+                    </div>
+                </div>
+                <div>
+                    <!-- <mat-paginator (click)="searchVal()" [length]="resultsLength" (change)="searchVal()" #paginator
+                        (page)="getUpdate($event)" [pageSize]="10" [pageSizeOptions]="[10,20,50,100]">
+                      </mat-paginator> -->
+                    <mat-paginator [length]="resultsLength" (change)="searchVal()" #paginator (page)="getUpdate($event)" [pageSize]="paginationData.pageSize" [pageSizeOptions]="[10,20,50,100]">
+                    </mat-paginator>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

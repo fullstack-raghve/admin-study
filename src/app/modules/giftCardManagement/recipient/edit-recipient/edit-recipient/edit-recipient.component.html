@@ -1,0 +1,43 @@
+<div class="page-wrap">
+  <form [formGroup]="editRecipientForm" (submit)="createeditRecipientForm(editRecipientForm.value)">
+    <mat-card>
+      <h5>EDIT RECIPIENT<span>
+          <div class="close-icon text-right">
+            <img src="assets/images/icons/filter_close_ico.png" (click)="onCloseClick()" alt="">
+          </div>
+        </span></h5>
+      <div class="row">
+        <div class="col">
+          <mat-form-field>
+            <input matInput formControlName="Id" placeholder="ID*">
+            <mat-error *ngIf="editRecipientForm.get('Id').hasError('required')">Please enter value
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input matInput formControlName="name" placeholder="Name*">
+            <mat-error *ngIf="editRecipientForm.get('name').hasError('required')">Please enter value
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input matInput formControlName="EMAIL" placeholder="Email Id* ">
+            <mat-error *ngIf="editRecipientForm.get('EMAIL').hasError('required')">Please enter value</mat-error>
+            <mat-error
+              *ngIf="editRecipientForm.get('EMAIL').hasError('pattern') || editRecipientForm.get('EMAIL').hasError('minlength')">
+              Invalid Email id entered</mat-error>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input matInput formControlName="mobileNumber" placeholder="Mobile Number*" readonly>
+          </mat-form-field>
+
+        </div>
+      </div>
+      <div>
+        <button type="button" class="button primary-btn" type="submit">UPDATE</button>
+
+      </div>
+    </mat-card>
+  </form>
+</div>

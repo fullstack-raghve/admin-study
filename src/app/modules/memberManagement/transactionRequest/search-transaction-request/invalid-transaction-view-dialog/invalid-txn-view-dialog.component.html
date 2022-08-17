@@ -1,0 +1,88 @@
+<div class="header flex-container">
+    <h3>Invalid Transaction</h3>
+    <div class="close-icon">
+        <img src="assets/images/icons/filter_close_ico.png" alt="" (click)="onCloseClick()">
+    </div>
+</div>
+<mat-divider></mat-divider>
+<div class="page-wrap">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="view-label">
+                <label>Member ID</label>
+                <p>{{viewTxnDetails?.userOid}}</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="view-label">
+                <label>Member Name</label>
+                <p>{{viewTxnDetails?.userName}}</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="view-label">
+                <label>Reference ID</label>
+                <p>{{viewTxnDetails?.transactionRequestOid}}</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="view-label">
+                <label>Phone Number</label>
+                <p>{{viewTxnDetails?.phoneNumber}}</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="view-label">
+                <label>Requested Date & Time</label>
+                <p>{{viewTxnDetails?.createdTime}}</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="view-label">
+                <label>Transaction ID</label>
+                <p>{{viewTxnDetails?.transactionId}}</p>
+            </div>
+        </div>
+        <!-- <div class="col-md-4">
+            <div class="view-label">
+                <label>Reasons of Invalid</label>
+                <p>{{viewTxnDetails?.transactionRequestStatus}}</p>
+            </div>
+        </div> -->
+    </div>
+    <div class="row">
+        <div class="col-md-4" *ngFor="let c of viewTxnDetails.transactionRequestLocales; let i=index">
+            <label>Reasons of Invalid</label>
+            <div class="view-label">
+                <!-- <label>{{c.languageName}}</label> -->
+                <p>{{c.comments}}</p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="view-label">
+                <label>Internal Comments</label>
+                <p>{{viewTxnDetails?.internalComment}}</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="view-label">
+                <label>Admin UserId making Invalid</label>
+                <p>{{viewTxnDetails?.userOid}}</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="view-label">
+                <label>Transaction Added From</label>
+                <p>{{viewTxnDetails?.transactionSource}}</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="view-label">
+                <label>Invalid Conversion Date & Time</label>
+                <p>{{viewTxnDetails?.createdTime}}</p>
+            </div>
+        </div>
+    </div>
+</div>

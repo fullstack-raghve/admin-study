@@ -1,0 +1,592 @@
+<div class="page-wrap">
+    <div class="bredcrumb-title-wrap">
+        <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+        <div class="title flex-container">
+            <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg"
+                        alt="leftArrow" [routerLink]="['/search-store']"></span>Edit Store</h1>
+            <mat-slide-toggle [(ngModel)]="toggleVal" (change)="toggleStatus($event)" class="mat-slide-toggle">
+                {{statusValue}}</mat-slide-toggle>
+        </div>
+    </div>
+    <div class="form-wrap" *ngIf="buildFlag">
+        <form (submit)="updateStore(storeFormGroup.value)" [formGroup]="storeFormGroup" #storeForm="ngForm">
+            <mat-card class="summary-card-details">
+                <div class="row">
+                    <div class="col-md-3">
+                        <mat-form-field class="example-full-width">
+                            <input matInput placeholder="BRAND" aria-label="Brand" [matAutocomplete]="brandAutoComplete" [formControl]="brandCtrl" required>
+                            <mat-autocomplete #brandAutoComplete="matAutocomplete">
+                                <mat-option *ngFor="let brand of filteredbrands | async" [value]="brand.brandName" (click)="setBrandType(brand.brandId);getAllCountries(brand.brandId);getAllBrand(brand.brandId)" #brandInput>
+                                    <span>{{brand.brandName}}</span>
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                        <mat-error *ngIf="brandCtrl.hasError('required')">
+                            Please select value</mat-error>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="view-label">
+                            <label>Brand Type</label>
+                            <p>{{brandType == '' ? '':brandType=='FB'?'F&B':'RETAIL'}}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 storeType">
+                        <mat-select-autocomplete [placeholder]="'Store Type'" [options]="StoreTypeList1" [display]="'storeTypeValue'" [value]="'value'" [multiple]='true' [labelCount]="1" [formControl]="storeFormGroup.controls['storeTypes']">
+                        </mat-select-autocomplete>
+                    </div>
+                </div>
+            </mat-card>
+            <div class="row">
+                <div class="col-md-5">
+                    <h3 class="card-title">Basic Details</h3>
+                    <mat-card class="store-card">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <mat-form-field class="field-width">
+                                    <input matInput placeholder="Store ID" readonly maxlength="15" formControlName="storeId" required>
+                                    <mat-error *ngIf="storeFormGroup.get('storeId').hasError('required')">Please enter value
+                                    </mat-error>
+                                    <mat-error *ngIf="storeFormGroup.get('storeId').hasError('pattern')">This special character(s) is not allowed</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6">
+                                <mat-form-field class="field-style field-width">
+                                    <mat-select id="country" matInput placeholder="Country Name" #countryInput formControlName="country" (selectionChange)="getAllCities(countryInput.value,'')" required>
+                                        <mat-option *ngFor="let country of countries" value="{{country.countryId}}">
+                                            {{ country.countryName }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="storeFormGroup.get('country').hasError('required')">Please select value
+                                    </mat-error>
+                                </mat-form-field>
+                                <div *ngIf="showCountryError" style="color:red;margin-top:-2em">
+                                    Please select country
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput placeholder="City" aria-label="City" [matAutocomplete]="cityAutoComplete" name="somethingAutofillDoesntKnow" autocomplete="doNotAutoComplete" [formControl]="cityCtrl" required>
+                                    <mat-autocomplete #cityAutoComplete="matAutocomplete">
+                                        <mat-option *ngFor="let city of filteredCities | async" [value]="city.cityName" (click)="getAllcity(city.cityId);getAllMalls(city.cityId,'')" #cityInput>
+                                            <span>{{city.cityName}}</span>
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                    <mat-error *ngIf="cityCtrl.hasError('required')">
+                                        Please select value</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput placeholder="Mall" aria-label="Mall" [matAutocomplete]="mallAutoComplete" name="somethingAutofillDoesntKnow" autocomplete="doNotAutoComplete" [formControl]="mallCtrl" required>
+                                    <mat-autocomplete #mallAutoComplete="matAutocomplete">
+                                        <mat-option *ngFor="let mall of filteredMalls | async" [value]="mall.mallName" #mallInput (click)="getAllMall(mall.mallId);getLatLongValue(mall.mallId);">
+                                            <span>{{mall.mallName}}</span>
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                    <mat-error *ngIf="mallCtrl.hasError('required')">
+                                        Please select value</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6">
+                                <mat-form-field class="field-width">
+                                    <input matInput placeholder="Currency" formControlName="currencyCode" readonly required>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-12">
+                                <mat-form-field class="field-width">
+                                    <input matInput placeholder="Google Map URL" maxlength="500" formControlName="googleMapUrl">
+                                    <mat-error *ngIf="storeFormGroup.get('googleMapUrl').hasError('pattern')">Please enter valid URL</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6">
+                                <mat-form-field class="field-width">
+                                    <input matInput placeholder="Longitude" maxlength="50" formControlName="longitude" required>
+                                    <mat-error *ngIf="storeFormGroup.get('longitude').hasError('required')">Please enter value
+                                    </mat-error>
+                                    <mat-error *ngIf="storeFormGroup.get('longitude').hasError('pattern')">Invalid characters entered</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6">
+                                <mat-form-field class="field-width">
+                                    <input matInput placeholder="Latitude" maxlength="50" formControlName="latitude" required>
+                                    <mat-error *ngIf="storeFormGroup.get('latitude').hasError('required')">Please enter value
+                                    </mat-error>
+                                    <mat-error *ngIf="storeFormGroup.get('latitude').hasError('pattern')">Invalid characters entered</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6">
+                                <mat-form-field>
+                                    <input matInput [matDatepicker]="Date" readonly placeholder="Launch Date" readonly formControlName="launchDate">
+                                    <mat-datepicker-toggle matSuffix [for]="Date"></mat-datepicker-toggle>
+                                    <mat-datepicker #Date></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                            <div *ngIf="storeFormGroup.get('launchDate').value != ''" class="col-md-6">
+                                <label class="example-input-wrapper">
+                                    <span class="time">Launch Time</span><img src="assets/images/icons/time_ico.svg"
+                                        width="15px" alt="">
+                                    <input matInput [owlDateTimeTrigger]="dt" [owlDateTime]="dt" class="timer"
+                                        formControlName="launchTime" style="border-bottom: 1px solid #ececec;">
+                                    <owl-date-time [pickerType]="'timer'" #dt>
+                                    </owl-date-time>
+                                </label>
+                                <mat-error *ngIf="storeFormGroup.get('launchTime').hasError('required')">Please Select Launch Time</mat-error>
+                            </div>
+                            <div class="col-md-6">
+                                <mat-form-field class="field-width">
+                                    <input matInput placeholder="Menu URL" maxlength="50" formControlName="menuUrl">
+                                    <mat-error *ngIf="storeFormGroup.get('menuUrl').hasError('pattern')">Invalid characters entered</mat-error>
+                                    <mat-error *ngIf="storeFormGroup.get('menuUrl').hasError('maxlength')">Max length is 50</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="store-image">
+                                    <div class="grid img-block">
+                                        <div class="avatar-zone">
+                                            <label class="upload-text" *ngIf="imagePathLogo ==''" [class.placeholder-img]="imgUpload">Store Logo
+                                          </label>
+                                            <img class="upload-img" *ngIf="imagePathLogo!=''" [src]="filePathUrl+imagePathLogo" [class.uploaded-img]="imgUpload" width="300px">
+                                        </div>
+                                        <div class="remove-img-logo" *ngIf="imagePathLogo!=''">
+                                            <span> <img src="assets/images/icons/filter_close_ico.png" alt=""
+                                              (click)="removeImageLogo()"><label>Remove</label></span>
+                                        </div>
+                                        <input style="display:none;" type="file" class="upload_btn" (change)="uploadImageLogo($event.target.files)" #uploadEl2 />
+                                        <span class="upload-btn-text" (click)='uploadEl2.click()'>
+                                          <div *ngIf="imagePathLogo==''">
+                                            <span class="upload-icon">
+                                              <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px" alt="Img">
+                                            </span>Upload Image
+                                    </div>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                </mat-card>
+                <div class="amenities-section" *ngIf="brandType=='FB'">
+                    <h3 class="card-title">Amenities</h3>
+                    <mat-card class="store-amenities-card">
+                        <div class="add-btn-block flex-between">
+                            <div class="text-center color-grey" *ngIf="selectedAminity.length==0">Add Amenities
+                            </div>
+                            <div>
+                                <button class="button tertiary-btn" type="button" (click)="storeAmenitiesDialog()">Add</button>
+                            </div>
+                        </div>
+                        <div class="amenities-listing amenities-flex">
+
+                            <div class="items" *ngFor="let aminity of selectedAminity;">
+                                <img [src]="filePathUrl+aminity.imagePath" alt="" width="50px">
+                                <p>{{aminity.amenityTitle}}</p>
+                            </div>
+                        </div>
+                    </mat-card>
+                </div>
+                <div class="service-setting-section" *ngIf="brandType=='FB'">
+                    <h3 class="card-title">Service Settings</h3>
+                    <mat-card class="service-settings-card">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <mat-checkbox formControlName="pickUp">Pickup</mat-checkbox>
+                            </div>
+                            <div class="col-md-4">
+                                <mat-checkbox formControlName="delivery" (change)=checkValidationOnDelivery($event.checked)>Delivery</mat-checkbox>
+                            </div>
+                            <div class="col-md-4">
+                                <mat-checkbox formControlName="dropInCar">Drop In Car</mat-checkbox>
+                            </div>
+                            <!-- <div class="col-md-4">
+                                <mat-checkbox formControlName="shipping">Shipping</mat-checkbox>
+                            </div> -->
+                            <div class="col-md-4">
+                                <mat-checkbox formControlName="signingStore">Signing Store</mat-checkbox>
+                            </div>
+                            <div class="col-md-4">
+                                <mat-checkbox formControlName="sameBuildingDelivery">Same Building
+                                    <br> Delivery
+                                </mat-checkbox>
+                            </div>
+                            <div class="col-md-4">
+                                <mat-checkbox formControlName="driveThru">Drive Thru</mat-checkbox>
+                            </div>
+                        </div>
+                        <div *ngIf="orderService">
+                            <mat-form-field class="field-width">
+                                <input matInput placeholder="Pickup No" formControlName="deliveryId">
+                                <!-- <mat-error *ngIf="storeFormGroup.get('deliveryId').hasError('required')">Please enter value
+                                </mat-error> -->
+                                <mat-error *ngIf="storeFormGroup.get('deliveryId').hasError('pattern')">Invalid characters entered</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="order-service" *ngIf="orderService">
+                            <div>
+                                <div>
+                                    <label class="btn-toggle-label">Store Order Service *</label>
+                                </div>
+                                <mat-radio-group name="orderServiceType" [(ngModel)]="orderServiceType" [ngModelOptions]="{standalone: true}">
+                                    <mat-radio-button value="Radius" name="radius" class="setting-radio" (click)="updateValidatiopn('Radius')">Radius
+                                    </mat-radio-button>
+                                    <mat-radio-button value="Area Mapping" name="areaMapping" class="setting-radio" (click)="updateValidatiopn('Area Mapping')">Area Mapping
+                                    </mat-radio-button>
+                                </mat-radio-group>
+                            </div>
+                            <div *ngIf="orderServiceType == 'Area Mapping'">
+                                <button class="button tertiary-btn" type="button" (click)="areaMappingDialog()">Add</button>
+                            </div>
+                        </div>
+                        <div class="chip-list">
+                            <mat-chip-list>
+                                <mat-chip *ngFor="let area of selectedDeliveryArea"> {{area.areaName}}
+                                    <mat-icon matChipRemove (click)="removeArea(area)">cancel</mat-icon>
+                                </mat-chip>
+                            </mat-chip-list>
+                        </div>
+                        <div class="deliver-range flex" *ngIf="orderServiceType == 'Radius'">
+                            Can deliver upto in <input type="text" class="input-field" maxlength="3" OnlyNumber="true" formControlName="kms">Kms
+                        </div>
+                        <div *ngIf="areaMappingError" class="image-error" style="color:red">
+                            Please select Country and City
+                        </div>
+                    </mat-card>
+                </div>
+                <div *ngIf="buildStoreLocale==true" formArrayName="storeLocales">
+                    <mat-card class="store-card" *ngFor="let locale of storeFormGroup['controls']['storeLocales']['controls'];let i = index;" [formGroupName]="i">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="store-img">
+                                            <h6 class="card-subtitle" [class.title-right-heading]="storeDetails.storeLocales[i].languageCode == 'AR'">
+                                                {{storeDetails.storeLocales[i].languageCode}}
+                                            </h6>
+
+                                            <div class="grid img-block">
+                                                <div class="avatar-zone">
+                                                    <label class="upload-text" *ngIf="!uploadFlag[i]" [class.placeholder-img]="imgUpload">Upload Image</label>
+                                                    <img class="upload-img" *ngIf="imagePath.length!=0 && imagePath[i]!=''" [class.uploaded-img]="imgUpload" [src]="filePathUrl+imagePath[i]" width="80px">
+                                                </div>
+                                                <div class="remove-img" *ngIf="uploadFlag[i]==true">
+                                                    <span> <img src="assets/images/icons/filter_close_ico.png"
+                                                                alt="" (click)="removeImage(i)"><label
+                                                                style="cursor:pointer;">Remove</label></span>
+                                                </div>
+                                                <input style="display:none;" #uploadEl type="file" class="upload_btn" (change)="uploadImage($event.target.files,i)" formControlName="storeImage" />
+                                                <div class=" text-center upload-image-text" *ngIf="!uploadFlag[i]">
+                                                    <span class="upload-btn-text" (click)='uploadEl.click()'>
+                                                            <span class="upload-icon">
+                                                                <img src="assets/images/svg-icons/uploadgray_ico.svg"
+                                                                    width="12px" alt="Img">
+                                                            </span><span style="cursor:pointer;">Upload Image<span style="color: #7f7f8f;">*</span></span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="uploadError[i]==true" class="image-error" style="color:red">
+                                                Please upload image
+                                            </div>
+                                        </div>
+
+                                        <div class="store-image">
+                                            <div class="grid img-block">
+                                                <div class="avatar-zone">
+                                                    <label class="upload-text" *ngIf="!storeImgFlag[i]" [class.placeholder-img]="imgUpload360">Upload 360 degree
+                                                            Images</label>
+                                                    <img class="upload-img" *ngIf="fullImagePath.length!=0 && fullImagePath[i]!=''" [class.uploaded-img]="imgUpload360" [src]="filePathUrl+fullImagePath[i]" width="80px">
+                                                </div>
+                                                <div class="remove-img" *ngIf="storeImgFlag[i]==true">
+                                                    <span> <img src="assets/images/icons/filter_close_ico.png"
+                                                                alt="" (click)="removeStoreImage(i)"><label
+                                                                style="cursor:pointer;">Remove</label></span>
+                                                </div>
+                                                <input style="display:none;" #uploadImgEl type="file" class="upload_btn" (change)="uploadFullImage($event.target.files,i)" formControlName="store360Image" />
+                                                <div class=" text-center upload-image-text" *ngIf="!storeImgFlag[i]">
+                                                    <span class="upload-btn-text" (click)='uploadImgEl.click()'>
+                                                            <span class="upload-icon">
+                                                                <img src="assets/images/svg-icons/uploadgray_ico.svg"
+                                                                    width="12px" alt="Img">
+                                                            </span><span style="cursor:pointer;">Upload Image</span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="{{languageDirection[i]}}">
+                                            <mat-form-field class="field-width {{alignCss[i]}}">
+                                                <input matInput placeholder="Store Name" maxlength="100" formControlName="storeName" required>
+                                                <mat-error *ngIf="locale.get('storeName').hasError('required')">
+                                                    Please enter value</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div>
+                                            <mat-form-field class="field-width {{alignCss[i]}}">
+                                                <input matInput placeholder="Video URL" maxlength="500" formControlName="videoUrl">
+                                                <mat-error *ngIf="locale.get('videoUrl').hasError('pattern')">
+                                                    Invalid url</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="{{languageDirection[i]}}">
+                                            <mat-form-field class="field-width {{alignCss[i]}} {{languageDirection[i]}}">
+                                                <input matInput placeholder="Address" maxlength="200" formControlName="address" required>
+                                                <mat-error *ngIf="locale.get('address').hasError('required')">Please enter value</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="chip-list {{languageDirection[i]}}">
+                                            <mat-form-field class="{{alignCss[i]}}">
+                                                <input placeholder="Keywords*" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="addKeyword($event,i)" maxlength="50">
+                                                <mat-chip-list #chipList>
+                                                </mat-chip-list>
+                                            </mat-form-field>
+
+                                            <mat-chip *ngFor="let key of keywordArray[i]['keyword']" [selectable]="selectable" [removable]="removable" (removed)="removeKeyword(key, i)">
+                                                {{key}}
+                                                <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                                            </mat-chip>
+                                            <div *ngIf="storeForm.submitted &&  keywordEmptyErrors[i]==true" class="error-msg" style="font-size: 10px;margin-top: -1em;">
+                                                Please enter value
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="flex-class">
+                                    <p class="first-flex-child">Upload format: GIF , JPEG, PNG, MP4</p>
+                                    <p class="second-flex-child">Image size: 1125 x 750</p>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-card>
+                </div>
+
+            </div>
+            <div class="col-md-7">
+                <h3 class="card-title">Store Admin Details</h3>
+                <mat-card class="store-card">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <mat-form-field class="field-width">
+                                <input matInput placeholder="Name" formControlName="adminName" maxlength="30" required>
+                                <mat-error *ngIf="storeFormGroup.get('adminName').hasError('required')">Please enter value
+                                </mat-error>
+                                <mat-error *ngIf="storeFormGroup.get('adminName').hasError('pattern')">Invalid characters entered</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-6">
+                            <mat-form-field class="field-width">
+                                <input matInput OnlyNumber="true" placeholder="Phone Number" formControlName="phoneNumber" maxlength="15" required>
+                                <mat-error *ngIf="storeFormGroup.get('phoneNumber').hasError('required')">Please enter value</mat-error>
+                                <mat-error *ngIf="storeFormGroup.get('phoneNumber').hasError('minlength')">Minimum 8 digits required</mat-error>
+                                <mat-error *ngIf="storeFormGroup.get('phoneNumber').hasError('pattern')">Invalid Number
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-6">
+                            <mat-form-field class="field-width">
+                                <input matInput placeholder="Email Id" formControlName="emailId" maxlength="50" required>
+                                <mat-error *ngIf="storeFormGroup.get('emailId').hasError('required')">Please enter value
+                                </mat-error>
+                                <mat-error *ngIf="storeFormGroup.get('emailId').hasError('minlength')">Minimum 7 charcters allowed</mat-error>
+                                <mat-error *ngIf="storeFormGroup.get('emailId').hasError('pattern')">Invalid emailId
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-6">
+                            <mat-form-field class="field-width">
+                                <input matInput placeholder="Employee Id" formControlName="employeId" maxlength="20" required>
+                                <mat-error *ngIf="storeFormGroup.get('employeId').hasError('required')">Please enter value
+                                </mat-error>
+                                <mat-error *ngIf="storeFormGroup.get('employeId').hasError('pattern')">This special character(s) is not allowed</mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </mat-card>
+                <h3 class="card-title">Contact Person for Store</h3>
+                <mat-card class="store-card">
+                    <div class="add-contact">
+                        <div>
+                            <p *ngIf="personContactDetails.length===0 && contactsErrorMsg==false">Please Add Contact
+                            </p>
+                            <p *ngIf="contactsErrorMsg" style="color:red">Please Add Contact</p>
+
+                        </div>
+                        <div class="btn-contact" *ngIf="personContactDetails.length<5">
+                            <button class='button tertiary-btn' type="button" (click)="storeContactDialog()">ADD
+                                    CONTACT</button>
+                        </div>
+                    </div>
+                    <div class="flex overflow_scroll" *ngIf="personContactDetails.length!=0;let i=index">
+                        <div class="contact-panel" *ngFor="let contact of personContactDetails;let j = index">
+                            <div class="flex-end">
+                                <div class="text-right mr5" (click)="editContactDialog(contact,j,i)"><img class="edit-icon" style="width: 14px;" src='assets/images/flow_icons/edit.png'></div>
+                                <div class="text-right" (click)="removeContact(i)"><img class="delete-icon" src='assets/images/icons/delete_ico.png'></div>
+                            </div>
+                            <div>
+                                <p>{{contact['personalDetails'].phoneNumber}}</p>
+                                <label>{{contact['personalDetails'].emailId}}</label><br>
+                                <label>{{contact['personalDetails'].employeeId}}</label>
+                            </div>
+                            <div class="contact-hl">
+                            </div>
+                            <div *ngFor="let name of contact['personalDetails'].contactDetailLocales;let ind = index">
+                                <div *ngIf="contact.dataType=='EDIT'">
+                                    <div class="view-label {{contactCss[ind]}} {{languageDirection[ind]}}">
+                                        <label>{{name.languageName}}</label>
+                                        <p> {{name.contactPersonName}} </p>
+                                    </div>
+                                </div>
+
+                                <div *ngIf="contact.dataType=='NEW'">
+                                    <div class="view-label {{newContactCss[ind]}}">
+                                        <label>{{languageList[ind].languageName}}</label>
+                                        <p> {{name.contactPersonName}} </p>
+                                    </div>
+                                </div>
+                                <div class="contact-hl">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card>
+                <mat-card class="store-timings-card">
+                    <div class="row business-delivery-block">
+                        <div class="col-md-6">
+                            <div class="text-right" *ngIf="brandType!='FB'">
+                                <button class="button tertiary-btn" type="button" (click)="cloneTime(storeFormGroup.value)">Apply Same Everyday</button>
+                            </div>
+                            <div class="head-section-title mt-34px flex-center">
+                                <p class="group-heading">Business Hours</p>
+                                <mat-checkbox #businessAvailable247 formControlName="businessAvailableDaily">
+                                    Available for 24/7</mat-checkbox>
+                            </div>
+                            <div *ngIf="storeFormGroup.get('businessAvailableDaily').value != true" class="timings-block" formArrayName="businessTimings">
+                                <div class="daily" *ngFor="let time of storeFormGroup['controls']['businessTimings']['controls'];let i = index;" [formGroupName]="i">
+                                    <div class="flex-center">
+                                        <mat-checkbox #holiday formControlName="isHoliday">
+                                            {{festivalWeekDays[i] == 'SUNDAY'?'SUN':festivalWeekDays[i] == 'MONDAY'?'MON':festivalWeekDays[i] == 'TUESDAY'?'TUE':festivalWeekDays[i] == 'WEDNESDAY'?'WED':festivalWeekDays[i] == 'THURSDAY'?'THU':festivalWeekDays[i] == 'FRIDAY'?'FRI':'SAT'}}
+                                        </mat-checkbox>
+                                        <p class="holiday-text" *ngIf="!holiday.checked">Holiday</p>
+                                    </div>
+                                    <div class="timings-row flex">
+                                        <label class="timer-label">
+                                                Open Time <img src="assets/images/icons/time_ico.svg" width="20px"
+                                                    alt="">
+                                                <input class="time-picker" readonly [owlDateTimeTrigger]="bhsuno"
+                                                    [owlDateTime]="bhsuno" formControlName="openTime">
+                                                <owl-date-time [pickerType]="'timer'"
+                                                    [disabled]="!holiday.checked || businessAvailable247.checked"
+                                                    #bhsuno></owl-date-time>
+                                            </label>
+                                        <div class="vl">&nbsp;</div>
+                                        <label class="timer-label">
+                                                Close Time <img src="assets/images/icons/time_ico.svg" width="20px"
+                                                    alt="">
+                                                    <input class="time-picker" readonly [owlDateTimeTrigger]="bhsunc"
+                                                    [owlDateTime]="bhsunc" formControlName="closeTime">
+                                                <owl-date-time [pickerType]="'timer'"
+                                                    [disabled]="!holiday.checked || businessAvailable247.checked"
+                                                    #bhsunc></owl-date-time>
+                                            </label>
+                                        <button class="button primary-btn" type="button" (click)="addBusinessHours(time['controls'])" [disabled]="!holiday.checked || businessAvailable247.checked"><img
+                                                    src="assets/images/svg-icons/add_ico.svg" alt=""></button>
+                                    </div>
+                                    <div class="clone-time-row" formArrayName="addBusinessTimings" *ngIf="holiday.checked && !businessAvailable247.checked">
+                                        <div class="timings-row flex" *ngFor="let addTime of time['controls']['addBusinessTimings']['controls']; let j = index;" [formGroupName]="j">
+                                            <label class="timer-label">
+                                                    Open Time <img src="assets/images/icons/time_ico.svg" width="20px"
+                                                        alt="">
+                                                    <input class="time-picker" readonly formControlName="openTime"
+                                                        [owlDateTimeTrigger]="dtsuno" [owlDateTime]="dtsuno">
+                                                    <owl-date-time [pickerType]="'timer'" #dtsuno></owl-date-time>
+                                                </label>
+                                            <div class="vl">&nbsp;</div>
+                                            <label class="timer-label">
+                                                    Close Time <img src="assets/images/icons/time_ico.svg" width="20px"
+                                                        alt="">
+                                                    <input class="time-picker" [owlDateTimeTrigger]="dtsunc"
+                                                        [owlDateTime]="dtsunc" readonly formControlName="closeTime">
+                                                    <owl-date-time [pickerType]="'timer'" #dtsunc></owl-date-time>
+                                                </label>
+                                            <button class="button secondary-btn" type="button" (click)="removeHours(time['controls']['addBusinessTimings']['controls'],i,j,'BUSINESS')"><img
+                                                    src="assets/images/svg-icons/minus_ico.svg" alt=""></button>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6" *ngIf="brandType=='FB'">
+                            <div class="text-right">
+                                <button class="button tertiary-btn" type="button" (click)="cloneTime(storeFormGroup.value)">Apply Same Everyday</button>
+                            </div>
+                            <div class="head-section-title flex-center">
+                                <p class="group-heading">Delivery Hours</p>
+                                <mat-checkbox #deliveryAvailable247 formControlName="deliverAvailableDaily">
+                                    Available for 24/7</mat-checkbox>
+                            </div>
+                            <div *ngIf="storeFormGroup.get('deliverAvailableDaily').value != true" class="timings-block" formArrayName="deliveryTimings">
+                                <div class="daily" *ngFor="let time of storeFormGroup['controls']['deliveryTimings']['controls'];let i = index;" [formGroupName]="i">
+                                    <div class="flex-center">
+                                        <mat-checkbox #deliveryHoliday formControlName="isHoliday">
+                                            {{festivalWeekDays[i] == 'SUNDAY'?'SUN':festivalWeekDays[i] == 'MONDAY'?'MON':festivalWeekDays[i] == 'TUESDAY'?'TUE':festivalWeekDays[i] == 'WEDNESDAY'?'WED':festivalWeekDays[i] == 'THURSDAY'?'THU':festivalWeekDays[i] == 'FRIDAY'?'FRI':'SAT'}}
+                                        </mat-checkbox>
+                                        <p class="holiday-text" *ngIf="!deliveryHoliday.checked">Holiday</p>
+                                    </div>
+                                    <div class="timings-row flex">
+                                        <label class="timer-label">
+                                                Open Time <img src="assets/images/icons/time_ico.svg" width="20px"
+                                                    alt="">
+                                                <input class="time-picker" [owlDateTimeTrigger]="dhsuno"
+                                                    [owlDateTime]="dhsuno" readonly formControlName="openTime"
+                                                    [disabled]="!deliveryHoliday.checked || deliveryAvailable247.checked">
+                                                <owl-date-time [pickerType]="'timer'"
+                                                    [disabled]="!deliveryHoliday.checked" #dhsuno></owl-date-time>
+                                            </label>
+                                        <div class="vl">&nbsp;</div>
+                                        <label class="timer-label">
+                                                Close Time <img src="assets/images/icons/time_ico.svg" width="20px"
+                                                    alt="">
+                                                <input class="time-picker" [owlDateTimeTrigger]="dhsunc"
+                                                    [owlDateTime]="dhsunc" formControlName="closeTime" readonly
+                                                    [disabled]="!deliveryHoliday.checked || deliveryAvailable247.checked">
+                                                <owl-date-time [pickerType]="'timer'"
+                                                    [disabled]="!deliveryHoliday.checked" #dhsunc></owl-date-time>
+                                            </label>
+                                        <button class="button primary-btn" type="button" [disabled]="!deliveryHoliday.checked || deliveryAvailable247.checked" (click)="addDeliveryHours(time['controls'])"><img
+                                                    src="assets/images/svg-icons/add_ico.svg" alt=""></button>
+                                    </div>
+                                    <div class="clone-time-row" formArrayName="addDeliveryTimings" *ngIf="deliveryHoliday.checked && !deliveryAvailable247.checked">
+                                        <div class="timings-row flex" *ngFor="let addTime of time['controls']['addDeliveryTimings']['controls']; let j = index;" [formGroupName]="j">
+                                            <label class="timer-label">
+                                                    Open Time <img src="assets/images/icons/time_ico.svg" width="20px"
+                                                        alt="">
+                                                    <input class="time-picker" readonly [owlDateTimeTrigger]="dhsuno"
+                                                        [owlDateTime]="dhsuno" formControlName="openTime">
+                                                    <owl-date-time [pickerType]="'timer'" #dhsuno></owl-date-time>
+                                                </label>
+                                            <div class="vl">&nbsp;</div>
+                                            <label class="timer-label">
+                                                    Close Time <img src="assets/images/icons/time_ico.svg" width="20px"
+                                                        alt="">
+                                                    <input class="time-picker" readonly [owlDateTimeTrigger]="dhsunc"
+                                                        [owlDateTime]="dhsunc" formControlName="closeTime">
+                                                    <owl-date-time [pickerType]="'timer'" #dhsunc></owl-date-time>
+                                                </label>
+                                            <button class="button secondary-btn" type="button" (click)="removeHours(time['controls']['addDeliveryTimings']['controls'],i,j,'DELIVERY')"><img
+                                                        src="assets/images/svg-icons/minus_ico.svg" alt=""></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <mat-error *ngIf="!DeliveryHours"> Please select Delivery Hours</mat-error>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+    </div>
+    <div class="button-wrap text-right pt-20px">
+        <button class="button secondary-btn" type="button" [routerLink]="['/search-store']">CANCEL</button>
+        <button class="button primary-btn" type="submit" [disabled]="loading">UPDATE</button>
+    </div>
+    </form>
+</div>
+</div>

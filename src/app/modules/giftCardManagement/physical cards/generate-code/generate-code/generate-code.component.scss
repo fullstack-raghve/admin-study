@@ -1,0 +1,53 @@
+.btn-light {
+  border: 1px solid orange;
+  background: orange !important;
+  color: white !important;
+}
+.mat-card {
+  box-shadow: none;
+  button {
+    float: right;
+    margin-bottom: 8px;
+  }
+}
+.table-wrap {
+  margin-top: 20px;
+}
+.page-wrap {
+  margin: 20px 20px 20px 20px;
+}
+table {
+  width: 100%;
+  .mat-cell {
+    border-bottom-style: none !important;
+  }
+  .mat-header-cell {
+    border-bottom-color: rgb(227, 236, 248);
+  }
+}
+.value-selection{
+  position: relative;
+  margin: 1rem 0rem 0rem 0rem;
+  .value-input{ 
+      margin-bottom: 0px !important; 
+  }
+  .add-button{
+      position: absolute;
+      right:0rem;
+      width: 2rem;
+  }
+}
+.addCardKeywords{
+  padding: 0 1em;
+  div{
+      margin-right: 1em;
+      border-radius: 2px;
+      background: #eaeaea;
+      padding: 5px 5px 5px 5px;
+      margin-bottom: 10px;
+      img{
+          padding: 0 5px;
+      }
+  }
+
+}

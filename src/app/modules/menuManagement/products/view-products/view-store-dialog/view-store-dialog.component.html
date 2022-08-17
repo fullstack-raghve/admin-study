@@ -1,0 +1,80 @@
+<div class="page-wrap">
+    <div class="bredcrumb-title-wrap">
+        <div class="search-wrap filter-wrap">
+            <div class="row common-search">
+                <div class="col-md-10 store-title">
+                    <h6>Selected Stores</h6>
+                </div>
+                <div class="close-icon text-right col-md-2">
+                    <img src="assets/images/icons/filter_close_ico.png" (click)="onCloseClick()" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-wrap">
+        <div class="table-wrap selectall-table">
+            <div class="table-wrap-inner">
+                <table mat-table [dataSource]="dataSourceAll" matSort>
+                    <ng-container matColumnDef="storeId">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>STORE ID</th>
+                        <td mat-cell *matCellDef="let row">{{ row.storeId }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="storeName">
+                        <th mat-header-cell *matHeaderCellDef>STORE NAME</th>
+                        <td mat-cell *matCellDef="let row">{{ row.storeName }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="country">
+                        <th mat-header-cell *matHeaderCellDef>COUNTRY</th>
+                        <td mat-cell *matCellDef="let row">{{ row.country }}{{ row.countryName }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="currency">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> CURRENCY </th>
+                        <td mat-cell *matCellDef="let row"> {{ row.currency }} {{ row.currencyCode }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="extraColumns">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border">
+                            <div>
+                                <div *ngFor="let store of selectedStoreData;let i = index;" style="width: 300px;display:flex;">
+                                    <div *ngFor="let vari of selectedStoreData[i].variants;let j = index2;" style="width: 300px;display: block;word-wrap: break-word;text-align: center;">
+                                        <div *ngIf="i < 1">
+                                            <span class="input-border">
+                        {{vari.variantTypeName}}
+                      </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div *ngIf="variantsStorePopupDataEdit <= 0" style="display: flex;">
+                                <div *ngFor="let variants of variantsName" class="variants" style="width: 300px;display: block;word-wrap: break-word;text-align: center;">
+                                    <div>
+                                        {{variants.variantTypeName}}
+                                    </div>
+                                </div>
+                            </div> -->
+                        </th>
+                        <td mat-cell *matCellDef="let row">
+                            <div style="display: flex;">
+                                <div *ngFor="let store of selectedStoreData;let i = index;" style="width: 300px;display:flex;">
+                                    <div *ngFor="let vari of selectedStoreData[i].variants;let j = index1;" style="width: 300px;display: block;word-wrap: break-word;text-align: center;">
+                                        <div *ngIf="i < 1">
+                                            <span>
+                        {{vari.displayPrice}}
+                      </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div *ngIf="variantsStorePopupDataEdit <= 0" style="display: flex;">
+                                <div *ngFor="let variants of variantRegionArray" style="width: 300px;display: block;word-wrap: break-word;text-align: center;">
+                                    {{variants.displayPrice}}
+                                </div>
+                            </div> -->
+                        </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

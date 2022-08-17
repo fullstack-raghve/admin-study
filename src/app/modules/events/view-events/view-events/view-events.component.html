@@ -1,0 +1,1181 @@
+<div class="bredcrumb-title-wrap" style="padding-bottom: 75px;">
+  <app-breadcrumb [breadCrumbData]= "breadCrumbData"></app-breadcrumb>
+  <div class="title flex-container">
+    <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+           [routerLink]="['/search-events']"></span>View Event</h1>
+
+  </div>
+</div>
+
+
+
+<!-- <div class="page-wrap-view" *ngIf="!loadingview"> -->
+  <div class="page-wrap-view">
+
+  <div *ngIf="eventstatus" class="page-loader-block full-page-loader">
+    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+  </div>
+
+  <div *ngIf="loder" class="page-loader-block full-page-loader">
+    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+  </div>
+    <mat-tab-group animationDuration="0ms"  class="tabs-align">
+      <!--event details start-->
+      <mat-tab label="Events Details">
+  
+        <ng-template matTabContent>
+
+          <div class="row">
+     
+            <div class="col-md-12">
+              <mat-card class="mb-20px">
+                <div class="row">
+                  
+                  <div class="col-md-4">
+                    <!-- <h3 class="card-title">Event Details</h3> -->
+                    <div class="create-fieldSet">
+                      <fieldset class="language-fieldset">
+                        <legend class="fieldset-heading">Event Name*</legend>
+                        <!-- <label>English</label>
+                         <p>
+                           Birthday Celebration
+                         </p> -->
+      
+                         <div *ngFor="let eventName of eventDetails">
+                          <div [class.direction-right] ="eventName.languageCode=='AR' || eventName.languageCode=='ar'">
+                            <label>{{eventName.languageName | titlecase}}</label>
+                            <p>{{eventName.eventName | titlecase}}</p>
+                          </div>
+                        </div>
+      
+                      </fieldset>
+                    </div>
+                    </div>
+      
+                    <div class="col-md-8 mt-20">
+                      <div class="row">
+                        <div class="col-md-4 mb-10">
+                          <label>Start Date</label>
+      
+                          <p>{{eventData.startDate | date:"dd-MM-yyyy"}}</p>
+                          </div>
+      
+                          <div class="col-md-4 mb-10">
+                            <label> Start Time</label>
+                          
+                            <p>{{eventData.startTime}}</p>
+      
+                            </div>
+      
+                            <div class="col-md-4 mt-20" *ngIf="isPreptual">
+                              <mat-checkbox  [(ngModel)]="isPreptual" name="isPreptual" disabled>Perpetual
+                              </mat-checkbox>
+                             
+                              <!-- <mat-checkbox formControlName="isPreptual">Preptual
+                              </mat-checkbox> -->
+                              </div>
+      
+                      </div>
+                      <div class="row">
+                        <div class="col-md-4">
+                        
+                          <label>   End Date</label>
+                          <p>{{eventData?.endDate | date:"dd-MM-yyyy"}}</p>
+      
+                         
+                          </div>
+      
+                          <div class="col-md-4">
+                            <label>   End Time</label>
+                            <p>{{eventData?.endTime}}</p>
+      
+                          
+                            </div>
+      
+                            <!-- <div class="col-md-4">
+                              <p>checkbox</p>
+                              </div> -->
+      
+                      </div>
+                      <div class="row" *ngIf="eventData?.eventDescription">
+                        <div class="col-md-8 pad-0 mb-10">
+                          <div class="col-md-12">
+                            <label> Event Description</label>
+                            <p>{{eventData?.eventDescription | titlecase}}</p>
+                           
+                        </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-4">
+                         
+                            <mat-checkbox  [(ngModel)]="isDafultEvent" name="isDafultEvent"  disabled>
+                              <span>Default Event</span>
+                          </mat-checkbox>
+                        </div>
+                        <div class="col-md-4">
+                          <label>Brand</label>
+                          <p>{{eventData?.brandName}}</p>
+      
+                          <!-- <mat-checkbox  [(ngModel)]="isDafultEvent" name="isDafultEvent"  disabled>Default event
+                        </mat-checkbox> -->
+                      </div>
+                      </div>
+                    </div>
+      
+                    </div>
+              </mat-card>
+            </div>
+      
+      
+                <!--section 2 Store app content start -->
+                <div class="col-md-8">
+                  <mat-card class="mb-20px">
+                 
+                    <h3 class="card-title dark">Store app content</h3>
+                    <div>
+                      <label>Title</label>
+                      <p class="b-b"  style="border-bottom: 1px solid #e0e0e0">{{storeAppContent?.title | titlecase}}</p>
+                   </div>
+                   <div>
+                    <label>Description</label>
+                    <p class="b-b" style="border-bottom: 1px solid #e0e0e0">{{storeAppContent?.description | titlecase}}</p>
+                 </div>
+                  </mat-card>
+                </div>
+                <div class="col-md-4">
+                  <div class="row">
+                    <!-- <div class="col-md-12">
+                      <mat-card class="mb-20px" style="padding: 25px;">
+                       
+                        <h3 class="card-title dark">
+                         
+                          <mat-checkbox  [(ngModel)]="isDOCAPP" name="isDOCAPP" disabled>Display event on customer app
+                          </mat-checkbox>
+                         
+                          </h3>
+                      </mat-card>
+                    </div> -->
+                    <div class="col-md-12">
+                      <mat-card class="mb-20px padding-one" style="height: 162px;">
+                      
+                          <div class="flexy flex-coly">
+                           
+                              <div class="select-store-blockxx">
+                                <h3 class="card-title dark">Stores</h3>
+                            
+                                <p>
+                                  <span  (click)="openStoresDialog()">
+                                  {{eventData?.isStore}} Store Selected of
+                                  </span>
+                                  <!-- <span>{{eventData.storeCount}} Stores</span> -->
+                                  <span style="color: #7d7d7d;
+                     font-size: 12px;"> of {{eventData?.storeCount}} Stores </span>
+                                    </p>
+                                      <p>
+                                                   
+                                   </p>
+                                                
+                              </div>
+                          
+                        
+                      </div>
+                      </mat-card>
+                    </div>
+                  </div>
+      
+                </div>
+      
+      
+                    <!--section 3 location start-->
+                  
+      <div class="col-md-12 mb-20">
+        <mat-card class="mb-20px">
+        <div class="row">
+          <div class="col-12">
+            <div class="d-flex justify-content-start">
+        
+              <h3  class="card-title dark">Location</h3>
+             
+                  </div>
+          </div>
+      
+          
+        </div>
+       
+          
+          <mat-card-content>
+            <table class="table custom-table ">
+              <thead class="thead">
+                <tr>
+                  <th >LOCATION</th>
+                  <th >COUNTRY</th>
+                  <th>CITY</th>
+                  <!-- <th >BRANDS</th> -->
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let location of alllocationDetails">
+                  <td>{{location.locationName}}</td>
+                  <td>{{location.countryName}}</td>
+                  <td>{{location.cityName}}</td>
+                  <!-- <td>{{location.BrandName}}</td> -->
+                </tr>
+              
+                
+              </tbody>
+            </table>
+         
+           
+           
+          </mat-card-content>
+        </mat-card>
+      </div>
+      
+      
+      
+                   <!--section 3 location end-->
+      
+      
+      
+                    <!--section 4 Gifting start-->
+                  
+                    <div class="col-md-12 mb-20">
+      
+                      <mat-card class="mb-20px">
+                        <div class="row" style = "border-bottom: 2px solid #efefef;">
+                          <div class="col-12" style="margin: 10px 0px;">
+                          
+                              <h3  class="card-title dark">Gifting</h3>
+                             
+                                  
+                          </div>
+                      
+                          
+                        </div>
+                      
+      
+      
+      
+          <!--tabs start-->
+          <div>
+            <div class="tab-demo mb-20px">
+            
+              <!-- <button mat-raised-button (click)="demo1BtnClick()">Tab Demo 1!</button> -->
+              <mat-tab-group [(selectedIndex)]="demo1TabIndex"  (selectedTabChange)="giftingType($event)">
+              
+                <mat-tab label="Coupons" *ngIf = "event_coupon_gifting_view?.length>0">
+                    <div>
+                      <mat-checkbox  [(ngModel)]="isCouponEnabled" name="isCouponEnabled" disabled>
+                        <span style="color:#000000;">
+                          Enable Coupon
+                        </span>
+                      </mat-checkbox>
+      
+                    </div>
+                  <div class="pannel-outer"> 
+                       
+                  
+              
+                    <div class="row">
+                    
+                     <div class="col-12 mg-10">
+                       <div class="d-flex justify-content-end">
+                          <h3  class="card-title dark">Eligibility &nbsp;&nbsp;&nbsp;</h3>
+           
+                         <mat-checkbox [(ngModel)]="multiple_coupon_allowed" name="multiple_coupon_allowed" disabled>
+                           More than one gift allowed&nbsp;&nbsp;&nbsp;</mat-checkbox>
+           
+                    
+                         </div>
+                       </div>
+                     </div>
+               
+                  
+                     <div class="pannel-inner"> 
+                     <mat-card-content *ngIf="event_coupon_gifting_view">
+                       <table class="table custom-table">
+                          <thead class="thead">
+                           <tr>
+                             <th>COUPON ID</th>
+                             <th>COUPON NAME</th>
+                             <th>DISCOUNT TYPE</th>
+                             <th>VALUE</th>
+                             <th>START DATE</th>
+                             <th>END DATE</th>
+                           </tr>
+                         </thead>
+                         <tbody>
+                           <tr *ngFor="let gift of event_coupon_gifting_view">
+                             <td>{{gift.couponID}}</td>
+                             <td style="color: #00ade0;">{{gift.couponName}}</td>
+                             <td>{{gift.discountType}}</td>
+                             <td>{{gift.value | number}}</td>
+                             <td>{{gift.startDate | date: 'yyyy-MM-dd'}}</td>
+                             <td>{{gift.endDate | date: 'yyyy-MM-dd'}}</td>
+                           </tr>
+                         
+                           
+                         </tbody>
+                       </table>
+                    
+                      
+                      
+                     </mat-card-content>
+                     </div>
+                 </div>
+                    
+                    
+      
+                    <!-- <pre>{{myForm.value | json}}</pre> -->
+                </mat-tab>
+
+
+                <mat-tab label="Program" *ngIf = "event_program_gifting_view?.length>0">
+
+                  <div>
+                    <mat-checkbox  [(ngModel)]="isCouponEnabled" name="isCouponEnabled" disabled>
+                      <span style="color:#000000;">
+                        Enable Coupon
+                      </span>
+                    </mat-checkbox>
+    
+                  </div>
+             
+                  <!--       
+                  <div>
+                    <mat-checkbox  [(ngModel)]="multiple_product_allowed" name="multiple_product_allowed" disabled>Enable Program</mat-checkbox>
+      
+                  </div> -->
+                <div class="pannel-outer"> 
+                     
+                
+  
+                
+                   <div class="pannel-inner"> 
+                   <mat-card-content *ngIf="event_program_gifting_view">
+                     <table class="table custom-table scroll-table">
+                        <thead class="thead">
+                         <tr>
+                           <th>PROGRAM</th>
+                           <th>REWARD TYPE</th>
+                           <th>POINTS/STAMPS</th>
+                           <th>DENOMINATIOS</th>
+                           <th>START RANGE</th>
+                           <th>END RANGE</th>
+                           <th>MAX ALLOWED FOR EVENT</th>
+                           <th>BALANCE FOR EVENT</th>
+                           <th>MAX PER STORE PER DAY</th>
+                           <th>MAX PER LOCATION PER DAY</th>
+      
+                         </tr>
+                       </thead>
+                       <tbody>
+                         <tr *ngFor="let pgm of event_program_gifting_view">
+                           <td>{{pgm.programName}}</td>
+                           <td>{{pgm.rewardType}}</td>
+                           <td>{{pgm.pointorstamp}}</td>
+                           <td>{{pgm.denominations}}</td>
+                           <td>{{pgm.startRange}}</td>
+                           <td>{{pgm.startRange}}</td>
+                           <td>{{pgm.maxForEvent}}</td>
+                           <td>{{pgm.BalanceForEvent}}</td>
+                           <td>{{pgm.maxperStoreperDay}}</td>
+                           <td>{{pgm.maxperLocationperDay}}</td>
+                         </tr>
+                       
+                         
+                       </tbody>
+                     </table>
+                  
+                    
+                    
+                   </mat-card-content>
+                   </div>
+               </div>
+                   
+                            
+                      </mat-tab>
+                <mat-tab label="Product" *ngIf = "event_product_gifting_view?.length>0">
+
+
+                  <mat-card class="currency-card">
+                    <div class="row">
+                      <div class="col-4">
+                          <label>SKU List</label>
+                          <!-- <p>XYZ.XSLS</p> -->
+                          <p class="blue">{{productGridData.uploadFileName}}</p>
+
+
+                          <!-- <a [href]= "productGridData.uploadFileName" [download]= "productGridData.uploadFileName" class="sku-text">
+
+                            <u>{{productGridData.uploadFileName}} 
+                           
+                           </u>
+                         </a> -->
+
+
+                      </div>
+
+                      <div class="col-4">
+                        <label>Currency</label>
+                        <p class="currency-txt">{{productGridData.currency}}</p>
+
+                      </div>
+                      <div class="col-4">
+                        <p class="currency-txt">Eligibility</p>
+                        <div>
+                      
+
+                          <mat-checkbox  [(ngModel)]="multiple_program_allowed" name="multiple_program_allowed" disabled>
+                            <span style="color:#000000;">
+                              More than one gift allowed
+                            </span>
+                          </mat-checkbox>
+          
+                        </div>
+                      </div>
+                    </div>
+                    <!-- <p>Gifting Currencies</p>
+                    <h6>INR,USD,AED</h6> -->
+                  </mat-card>
+                   
+                  <div class="pannel-inner"> 
+                    <mat-card-content *ngIf="event_product_gifting_view">
+                      <table class="table custom-table scroll-table">
+                         <thead class="thead">
+                          <tr>
+                             <th>SI NO.</th> 
+                            <th>SKU</th>
+                            <th>PRODUCT</th>
+                            <th>VARIANT</th>
+                            <th>DENOMINATION</th>
+                            <th>START RANGE</th>
+                            <th>END RANGE</th>
+                            <th>MAX FOR EVENT</th>
+                            <th>BALANCE FOR EVENT</th>
+                            <th>MAX PER STORE/DAY</th>
+                            <th>MAX PER LOCATION/DAY</th>
+       
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let pgm of event_product_gifting_view;let index = index;">
+                             <td>{{index+1}}</td> 
+                            <td>{{pgm.skuCode}}</td>
+                            <td>{{pgm.productName}}</td>
+                            <td>{{pgm.variantName}}</td>
+                            <td>{{pgm.denominations}}</td>
+                            <td>{{pgm.minValue}}</td>
+                            <td>{{pgm.maxValue}}</td>
+                            <td>{{pgm.maxForEvent}}</td>                    
+                            <td>{{pgm.BalanceForEvent}}</td>
+                            <td>{{pgm.maxperStoreperDay}}</td>
+                            <td>{{pgm.maxperLocationperDay}}</td>
+                          </tr>
+                        
+                          
+                        </tbody>
+                      </table>
+                   
+                     
+                     
+                    </mat-card-content>
+                    </div>
+      
+                           </mat-tab>
+              </mat-tab-group>
+          </div>
+          <!--tabs end-->
+      </div>
+      
+                      </mat-card>
+                    </div>
+                    
+                    
+                    
+                                 <!--section 3 Gifting end-->
+                    
+      <!------user section-->
+      <div class="col-md-12 mb-20">
+      
+        <mat-card class="mb-20px">
+          <div class="row">
+            <div class="col-12">  
+                <h3  class="card-title dark">Users</h3>
+            </div>
+          </div>
+          <div class="pannel-outer">        
+          <div class="pannel-inner"> 
+          <mat-card-content>
+            <table class="table custom-table">
+               <thead class="thead">
+                <tr>
+                  <th>USER ID</th>
+                  <th>USER NAME</th>
+                  <th>ACTION</th>
+                
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let user of allUser">
+                  <td>{{user.userId}}</td>
+                  <td>{{user.userName | titlecase}}</td>
+                  <td  class="viewGiftTxt" (click)="viewGift(user.userId)">Gifting Limits</td>
+                
+                </tr>
+              
+                
+              </tbody>
+            </table>
+         
+           
+           
+          </mat-card-content>
+          </div>
+      </div>
+        </mat-card>
+      </div>
+      
+      <!----user section end-->
+      
+                   <!---t n c start-->
+      
+      <div class="col-md-12 mb-20">
+        <h3 class="card-title dark">Terms & Conditions*</h3>
+        <mat-card class="mt-20">
+          <div class="description-block">
+            <!-- <h3 class="card-title">Terms & Conditions </h3> -->
+          
+              <div class="expansion-panel">
+                <mat-accordion>
+                  <mat-expansion-panel *ngFor="let tnc of eventDetails;let i =index"
+                    class="mat-expansion-panel">
+                    <mat-expansion-panel-header>
+                      <mat-panel-title>
+                        {{tnc.languageName | titlecase}}
+                      </mat-panel-title>
+      
+                    </mat-expansion-panel-header>
+                    <div class="view-content" [class.araText]="tnc.languageCode=='AR'">
+                      <label>Content</label>
+                      <p [innerHTML]='tnc.termAndCondition' readonly></p>
+                    </div>
+                  </mat-expansion-panel>
+                </mat-accordion>
+              </div>
+         
+          </div>
+        </mat-card>
+      </div>
+                   <!---t n c end-->
+
+
+                   <!-- <div class="col-md-12  mb-20">
+                    <h3 class="card-title dark">Content</h3>
+
+                    <mat-card class="mb-20px">
+                      <h3 class="card-title">Select Communication Type </h3>
+                  
+                      <div class="d-flex flex-row bd-highlight mb-3">
+                        <div class="p-2 bd-highlight">
+                                
+                          <mat-checkbox [(ngModel)] = "app_notification" name="app_notification">App Push Notification
+                          </mat-checkbox>
+                        </div>
+                        <div class="p-2 bd-highlight"> <mat-checkbox [(ngModel)] = "sms_notification" name="sms_notification">SMS
+                        </mat-checkbox>
+                      </div>
+                   
+                      </div>
+
+
+                      <div class="third-template">
+                        <div class="expansion-panel">
+                            <mat-accordion>
+                                <mat-expansion-panel >
+                                    <mat-expansion-panel-header [collapsedHeight]="'38px'" [expandedHeight]="'38px'">
+                                        <mat-panel-title>
+                                            App-Push Notification
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
+                                    <div class="panel-wrap">
+                                      <div class="row mt-20">
+
+                                            <div class="col-md-3">
+                                                <label>Template</label>
+                                               
+                                                <p>{{pushData?.templateName}}</p>
+                                            </div>
+                                            
+                                            <div class="col-md-3">
+                                                <div class="field-container">
+                                                    <label>Link To</label>
+                                                    <p>{{pushData?.linkTo}}</p>
+
+ 
+                                                </div>
+                                            </div>
+                                           
+                                           
+                                        </div>
+                                        <div class="row mt-20 mb-20">
+
+                                            <div class="col-md-12">
+                                                <label>Hyper Link</label>
+                                            
+                                                <p>{{pushData?.hyperLink}}</p>
+
+ 
+                                            </div>
+                                        </div>
+
+                                        <div *ngFor="let push of pushData?.notification_view_languagewise;let i = index">
+                                                          <mat-card class="pushNotification-card mb-20px">
+                                                              <div class="lang-field">
+                                                                  <p>{{ push?.languageCode }}</p>
+                                                              </div>
+                                                              <div class="row card-mb fieldtop {{langfield[i]}}">
+                                                                  <div class="col-md-8 text-fields">
+                                                                      <div class="row tempview-block">
+                                                                    
+                                                                          <div class="col-md-9 temp-view-contnet">
+                                                                              <div class="field-container {{ languageDirection[i] }}">
+                                                                                  <label>Subject</label>
+                                                                                  <p>{{ push.subject }}</p>
+                                                                              </div>
+                                                                              <div class="field-container {{ languageDirection[i] }}">
+                                                                                  <label>Content</label>
+                                                                                  <p>{{ push.content }}</p>
+                                                                              </div>
+                                                                          </div>
+                                                                      </div>
+                                                                  </div>
+                                                                  <div class="col-md-4 img-container">
+                                                                      <div class="preview-container">
+                                                                          <div class="img-preview">
+                                                                              <p class="text-preview">Notification Preview</p>
+                                                                              <img src="assets/images/svg-icons/mobile_frame.svg" alt="" />
+                                                                              <div class="notification-content">
+                                                                                  <div class="notification-description {{languageDirection[i]}}">
+                                                                                      <h6>
+                                                                                          {{ push?.subject }}
+                                                                                      </h6>
+                                                                                      <p>
+                                                                                          {{ push?.content }}
+                                                                                      </p>
+                                                                                  </div>
+                                                                              </div>
+                                                                          </div>
+                                                                      </div>
+                                                                  </div>
+                                                              </div>
+                                                          </mat-card>
+                                                      </div>
+                                       
+                                    </div>
+                                </mat-expansion-panel>
+                                <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" >
+                                  <mat-expansion-panel-header [collapsedHeight]="'38px'" [expandedHeight]="'38px'">
+                                      <mat-panel-title>
+                                          SMS
+                                      </mat-panel-title>
+                                  </mat-expansion-panel-header>
+                                  <div class="panel-wrap">
+                                      <div class="row mt-20">
+                                          <div class="col-md-3">
+                                              <label>Template</label>
+                                              <p>{{smsData?.templateName}}</p>
+
+                                          </div>
+                                          <div class="col-md-3">
+                                              <div class="field-container">
+                                                  <label>Sender ID</label>
+                                                  <p>{{smsData?.senderId}}</p>
+
+                                              </div>
+                                          </div>
+                                          <div class="col-md-3">
+                                            <div class="field-container">
+                                                <label>Link To</label>
+                                                <p>{{smsData?.linkTo}}</p>
+
+                                            </div>
+                                        </div>
+                             
+                                      </div>
+                                      <div class="row mt-20 mb-20">
+                                        <div class="col-md-12">
+                                            <label>Hyper Link</label>
+                                        
+                                            <p>{{smsData?.hyperLink}}</p>
+
+
+                                        </div>
+                                    </div>
+
+                              <div *ngFor="let push of smsData?.notification_view_languagewise;let i = index">
+                                <mat-card class="pushNotification-card mb-20px">
+                                    <div class="lang-field">
+                                        <p>{{ push?.languageCode }}</p>
+                                    </div>
+                                    <div class="row card-mb fieldtop {{langfield[i]}}">
+                                        <div class="col-md-8 text-fields">
+                                            <div class="row tempview-block">
+                                           
+                                                <div class="col-md-9 temp-view-contnet">
+                                                    <div class="field-container {{ languageDirection[i] }}">
+                                                        <label>Subject</label>
+                                                        <p>{{ push?.subject }}</p>
+                                                    </div>
+                                                    <div class="field-container {{ languageDirection[i] }}">
+                                                        <label>Content</label>
+                                                        <p>{{ push?.content }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 img-container">
+                                            <div class="preview-container">
+                                                <div class="img-preview">
+                                                    <p class="text-preview">Notification Preview</p>
+                                                    <img src="assets/images/svg-icons/mobile_frame.svg" alt="" />
+                                                    <div class="notification-content">
+                                                        <div class="notification-description {{languageDirection[i]}}">
+                                                            <h6>
+                                                                {{ push?.subject }}
+                                                            </h6>
+                                                            <p>
+                                                                {{ push?.content }}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-card>
+                            </div>
+
+
+                                  </div>
+                              </mat-expansion-panel>
+                             
+                            </mat-accordion>
+                        </div>
+                    </div>
+
+                      </mat-card>
+                      </div> -->
+
+
+
+                 
+
+
+
+      
+                
+                  </div>
+                  <div class="d-flex justify-content-end">
+                    <div class="btm-button-wrap">
+                      <button matRipple *ngIf="approvalStatus == 'NEW' || approvalStatus == 'NEW'"  class="button primary-btn" type="button" (click) = "sendForapproveEvent()">SEND FOR APPROVAL</button>
+                      <button matRipple *ngIf="approvalStatus == 'AWAITS APPROVAL' || approvalStatus == 'AWAITS APPROVAL'"  class="button primary-btn" type="button" (click) = "approveEvent()">APPROVE</button>
+
+                      <button matRipple class="button secondary-btn" type="button" [routerLink]="['/search-events']">CANCEL</button>
+
+                      <!-- <button matRipple class="button primary-btn" type="submit" [routerLink]="['./edit-events']">EDIT</button> -->
+                      <button matRipple class="button primary-btn" type="submit" [routerLink]="['/edit-events/'+eventOid]" >EDIT</button>
+
+                  </div>
+                   </div>
+
+
+        </ng-template>
+        </mat-tab>
+      <!--event details end-->
+  
+      <!--app content start-->
+
+       <!-- <ng-template  *ngIf = "displayEventOnCustomerApp != 'NO'"> -->
+
+        <mat-tab label="App Content" *ngIf = "displayEventOnCustomerApp != 'NO'">
+        
+          <ng-template matTabContent>
+             <mat-card *ngIf = "!isAppcontentAvailable">
+
+
+            <form  (submit)= "createAppContent(appContentForm.value)"
+            [formGroup]= "appContentForm">
+              <div class="row">
+               
+            
+                  <div class="col-md-4">
+                    <div class="create-fieldSet">
+                      <fieldset class="language-fieldset">
+                        <legend class="fieldset-heading">Content*</legend>
+                        <div formArrayName= "giftLanguageList">
+                          <div
+                            *ngFor= "let eventLanguage of appContentForm['controls']['giftLanguageList']['controls'];let i = index;"
+                            [formGroupName]="i">
+                            <mat-form-field class="{{alignCss[i]}}">
+                              <input matInput placeholder="{{languageList[i].languageName}}" required
+                                formControlName="eventName" maxlength="300">
+                              <mat-error *ngIf= "eventLanguage.get('eventName').hasError('required')">
+                                Please enter value</mat-error>
+                              <mat-error *ngIf= "eventLanguage.get('eventName').hasError('pattern')">
+                                Invalid characters entered</mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </fieldset>
+                    </div>
+                    <!-- <p>valid form >> {{appContentForm.valid}}</p> -->
+
+                    </div>
+                  
+
+                    <div class="col-md-8">
+                     <div class="align-div">
+                        <div class="banner-image-video-blk">
+                          <!-- <p>{{selectedStatus}}</p> -->
+
+                            <mat-radio-group  [(ngModel)]="selectedStatus"  formControlName="imageOrVideoUrl">
+                                <mat-radio-button  class="mr-5px" [value]="1">Image
+                                </mat-radio-button>
+                                <mat-radio-button [value]="2">Video 
+                                </mat-radio-button>
+                                <mat-radio-button [value]="3">URL
+                                </mat-radio-button>
+                            </mat-radio-group>
+                           
+                            <!-- <mat-radio-group name="mediaList" [(ngModel)]="chosenItem">
+                              <mat-radio-button *ngFor="let mediaItem of medialist" [value]="mediaItem.name" name="mediaList" >
+                        {{ mediaItem.name}}
+                        </mat-radio-button>
+                          </mat-radio-group> -->
+
+                            <!-- <mat-error
+                                *ngIf="appContentForm.get('imageOrVideoUrl').hasError('required')">
+                                Please select
+                            </mat-error> -->
+                        </div>
+                        <div class="ht-150" formArrayName="imgVidoUrl">
+                          <div class="banner-image" *ngIf="selectedStatus == 1">
+                              <div class="row ht-150">
+                                  <div class="col-md-4"
+                                      *ngFor="let regionLocale of appContentForm['controls']['imgVidoUrl']['controls'];let j = index;"
+                                      [formGroupName]="j">
+                                      <!-- <div class="lang-field">
+                                          <label>{{languageList[j].languageName}}</label>
+                                      </div> -->
+                                      <div class="img-block">
+                                          <div class="avatar-zone">
+                                              <label *ngIf="uploadFlag[j]==false" class="upload-text"
+                                                  [class.placeholder-img]="imgUpload">
+                                                  {{languageList[j].languageName}}
+                                                   Image
+                                                   <p class="note-text"><span class="txt">Image size W-1125xH-1350</span></p>
+
+                                                </label>
+                                                <span  *ngIf="imagePath[j]">
+                                                  <img class="upload-img"
+                                                  [class.uploaded-img]="imgUpload" [src]="imagePath[j]" width="80px">
+                                                </span>
+                                             
+                                          </div>
+                                          <div class="remove-img" *ngIf="uploadFlag[j]==true" style="margin:0 2em 0 0">
+                                              <span (click)="removeImage1(j)">
+                                                 <img
+                                                      src="assets/images/icons/filter_close_ico.png"
+                                                      alt=""><label>Remove</label></span>
+                                          </div>
+                                          <input style="display:none;" type="file" #uploadEl class="upload_btn"
+                                              formControlName="uploadImage"
+                                              (change)="uploadImage($event.target.files,j,'uploadImage')" />
+                                          <div class="text-center" style="width: 75%;" *ngIf="uploadFlag[j]==false">
+                                              <span class="upload-btn-text" (click)='uploadEl.click()'>
+                                                  <span class="upload-icon">
+                                                      <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px"
+                                                          alt="Img">
+                                                  </span>Upload Image<span style="color: #7f7f8f;">*</span>
+                                              </span>
+                                          </div>
+                                      </div>
+                                      <div *ngIf="uploadError[j]==true" class="mat-error f10">
+                                          Please upload image
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                        </div>
+
+                         <div formArrayName="videoUpload">
+                          <div class="banner-image" *ngIf="selectedStatus == 2">
+                             <div class="row ht-150">
+
+                                <div class="col-md-4"
+                                    *ngFor="let regionLocale of appContentForm['controls']['videoUpload']['controls'];let j = index;"
+                                    [formGroupName]="j">
+                                  
+<!-- <video [src]="url" *ngIf="format==='video' && url"  height="200" controls></video> <br/>
+<input type='file' (change)="onSelectFile($event)" /> -->
+                                 
+                              
+
+                            <div class="img-block">
+                              <div class="avatar-zone">
+                                  <label *ngIf="uploadFlagVid[j]==false" class="upload-text"
+                                      [class.placeholder-img]="imgUpload">
+                                      {{languageList[j].languageName}}
+                                       Video
+                                       <p class="note-text"><span class="txt"> Video size W-1125xH-1350</span></p>
+
+                                    </label>
+                                  <!-- <img *ngIf="imagePath.length!=0 && imagePath[j]!=''" class="upload-img"
+                                      [class.uploaded-img]="imgUpload" [src]="imagePath[j]" width="80px"> -->
+
+                                      <video *ngIf="videoSRCUrl[j]" class="upload-img"
+                                      [class.uploaded-img]="imgUpload"
+                                       [src]="videoSRCUrl[j]" height="200" controls></video> 
+
+                              </div>
+                              <div class="remove-img" *ngIf="uploadFlagVid[j]==true" style="margin:0 2em 0 0">
+                                  <span (click)="removeVideo(j)">
+                                     <img
+                                          src="assets/images/icons/filter_close_ico.png"
+                                          alt=""><label>Remove</label></span>
+                              </div>
+                              <input style="display:none;" type="file" #uploadEl1 class="upload_btn"
+                                  formControlName="uploadVideo"
+                                  (change)="uploadvideo($event.target.files,j,'uploadVideo')" />
+                              <div class="text-center" style="width: 75%;" *ngIf="uploadFlagVid[j]==false">
+                                  <span class="upload-btn-text" (click)='uploadEl1.click()'>
+                                      <span class="upload-icon">
+                                          <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px"
+                                              alt="Img">
+                                      </span>Upload  Video<span style="color: #7f7f8f;">*</span>
+                                  </span>
+                              </div>
+                          </div>
+                             
+                          <div *ngIf="uploadErrorVid[j]==true" class="mat-error f10">
+                            Please upload video
+                        </div>
+
+                        </div>
+                      </div> 
+
+
+
+                        </div>
+                      </div>
+
+                      <div formArrayName="videoURL">
+                          <div  *ngIf="selectedStatus == 3">
+                              <div class="row master-fieldSet"
+                                  *ngFor="let regionLocale of appContentForm['controls']['videoURL']['controls'];let j = index;"
+                                  [formGroupName]="j">
+                                    <div class="col-6">
+
+                                 
+                                      <mat-form-field>
+                                          <input matInput placeholder="{{languageList[j].languageName}} Video link" formControlName="videolink" maxlength="500">
+                                          <mat-error *ngIf="regionLocale.get('videolink').hasError('required')">
+                                            Please enter {{languageList[j].languageName}} video link</mat-error>
+
+                                          <mat-error *ngIf="regionLocale.get('videolink').hasError('pattern')">
+                                            Please enter a valid video link</mat-error>
+                                      </mat-form-field>
+
+                                    </div>
+                              </div>
+                          </div>
+                          </div>
+
+
+                      </div>
+
+                      <div class="row" style="padding-left: 35px;">
+                        <div class="col-12 mt-20">
+                          <h3 class="card-title dark">
+                            Contacts to display
+                          </h3>
+                        </div>
+                      
+                        <div class="col-md-4">
+                          <mat-form-field class="field-style">
+                            <input matInput placeholder="Email" formControlName="email"
+                             required>
+                            <mat-error *ngIf="appContentForm.get('email').hasError('required')">
+                                Please enter email address</mat-error>
+                                <mat-error *ngIf="appContentForm.get('email').hasError('email')">
+                                  Email must be a valid email address</mat-error>
+                           
+                          
+                        </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                          <mat-form-field class="field-style">
+                            <input matInput placeholder="Phone" formControlName="phone"
+                             required maxlength="15"  (keypress)="numberOnly($event)">
+                            <mat-error *ngIf="appContentForm.get('phone').hasError('required')">
+                                Please enter phone</mat-error>
+                            
+                        </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-12">
+                        <div class="d-flex justify-content-end">
+                          <div class="btm-button-wrap">
+                            <button type="submit"  class="button primary-btn" >CREATE</button>
+          
+                        </div>
+                         </div>
+                      </div>
+                   
+                    </div>
+            </form>
+
+          </mat-card>
+
+
+          <mat-card *ngIf = "isAppcontentAvailable">
+                          <div class="row">
+                  
+              <div class="col-md-4">
+                <div class="create-fieldSet">
+                  <fieldset class="language-fieldset">
+                    <legend class="fieldset-heading">Content</legend>
+                   
+  
+                     <div *ngFor="let appContent of appContent">
+                      <div [class.direction-right] = "appContent.languageCode=='AR' || appContent.languageCode=='ar'">
+                        <label>{{appContent.languageName | titlecase}}</label>
+                        <p>{{appContent.content | titlecase}}</p>
+                      </div>
+                    </div>
+  
+                  </fieldset>
+                </div>
+                </div>
+
+                <div class="col-md-8">
+                
+
+
+
+                  <div class="align-div">
+
+                    <div class="row" style="margin-bottom: 30px;" *ngIf = "mediaType == 'image'">
+                      <div class="col-md-4 text-center" *ngFor="let media of appContent">
+                        <div>
+                          <img class="viewupload-img"
+                           [src]="media?.image" width="80px">
+                          <span class="imgee">Image</span>
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <div class="row" style="margin-bottom: 30px;" *ngIf = "mediaType == 'videoLink'">
+                      <div class="col-md-4" *ngFor="let media of appContent">
+                        <div style="background: #f7f7f7;">
+                          <iframe  [src]="safeSrc" width="198" height="100" frameborder="0" webkitallowfullscreen mozallowfullscreen
+                          allowfullscreen></iframe>
+                          <!-- <iframe [src]='safeSrc' frameborder="0" allowfullscreen></iframe> -->
+
+
+                          <!-- <video width="198" height="100" autoplay>
+                            <source [src] = "safeSrc"  width="198" height="100" />
+                        </video> -->
+                        
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row" style="margin-bottom: 30px;" *ngIf = "mediaType == 'videoUpload'">
+                      <div class="col-md-4" *ngFor="let media of appContent;let i=  index">
+                        <div style="background: #f7f7f7;">
+                          <!-- <iframe  [src]="safeSrcVideoUpload" width="198" height="100"
+                           frameborder="0"
+                            webkitallowfullscreen
+                             mozallowfullscreen
+                          allowfullscreen
+                          type='video/mp4; codecs="amp4v.20.8, mp4a.40.2"'
+                          type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'
+                          ></iframe> -->
+
+                          <video width="198" height="100" autoplay>
+                            <source [src] = "safeSrcVideoUpload" type="video/mp4" width="198" height="100" />
+                        </video>
+                        
+                        </div>
+                      </div>
+                    </div>
+                
+                    <div class="row">
+                      <div class="col-md-4 mb-10">
+                        <label>Email</label>
+    
+                        <p>{{email}}</p>
+                        </div>
+  
+                        <div class="col-md-4 mb-10">
+                          <label>Phone</label>
+                        
+                          <p>{{phone}}</p>
+    
+                          </div>
+                    </div>
+                     
+                  </div>
+                </div>
+
+                
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <div class="d-flex justify-content-end">
+                      <div class="btm-button-wrap">
+      
+                        <!-- <button class="button primary-btn" type="button" (click) = "editEvent()">EDIT</button> -->
+                        <button matRipple class="button primary-btn" type="submit" [routerLink]="['/edit-events/'+eventOid]" >EDIT</button>
+
+                    </div>
+                     </div>
+                  </div>
+               
+                </div>
+          </mat-card>
+       
+         
+
+      
+
+          </ng-template>
+
+
+
+          </mat-tab>
+              <!--app content end-->
+  
+        </mat-tab-group>
+
+     
+</div>
+
+<!-- <div *ngIf="loadingview" class="select-store-block">
+  <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+</div> -->
+
+<!-- <div class="row" *ngIf="loading">
+  <div class="col-md-12">
+    <div  class="select-store-block">
+      <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+    </div>
+  </div>
+</div> -->

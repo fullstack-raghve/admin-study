@@ -1,0 +1,25 @@
+.landing-page {
+  // position: relative;
+  // display: flex;
+  // align-items: center;
+  // justify-content: center;
+  .welcome-page {
+    text-align: center;
+    width: 400px;
+    margin: 0 auto;
+    margin-top: 88px;
+    .logo {
+      padding-bottom: 2rem;
+      width: 250px;
+      margin: 0 auto;
+      .logo-img{
+        width: 100%;
+        height: auto;
+      }
+    }
+    h1 {
+      font-size: 3em;
+      font-weight: 400;
+    }
+  }
+}

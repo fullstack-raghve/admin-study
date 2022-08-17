@@ -1,0 +1,66 @@
+img {
+  width: 0;
+  margin-right: 0;
+}
+// .snakbody {
+//     padding: 12px 20px;
+//     border-radius: 6px 6px 0 0;
+//     font-family: 'rhlight';
+//     font-size: 16px;
+// }
+// .success {
+//     background-color: #2BAC49;
+// }
+// .failure {
+//     background-color: #f00;
+// }
+.snakbody {
+    padding: 12px 40px;
+    border-radius: 6px 6px 0 0;
+    font-size: 16px;
+    text-align: center;
+  }
+  
+  .failure {
+    background-color: #ce3a3a;
+    font-family: 'muliregular' !important;
+    color: #fff;
+    font-size: 0.8rem;
+    position: absolute;
+    bottom: 35px;
+  }
+  .login-failure {
+    background-color: #ce3a3a;
+    font-family: 'muliregular' !important;
+    color: #fff;
+    font-size: 0.8rem;
+    position: absolute;
+    bottom: 0;
+  }
+  .logout {
+    background-color: #ce3a3a;
+    font-family: 'muliregular' !important;
+    color: #fff;
+    font-size: 0.8rem;
+    position: absolute;
+    bottom: 0;
+  }
+  
+  .success {
+    background-color: #2BAC49 !important;
+    font-family: 'muliregular' !important;
+    color: #fff;
+    font-size: 0.8rem;
+    position: absolute;
+    bottom: 35px;
+  }
+  /deep/.mat-snack-bar-container {
+    background: transparent;
+    box-shadow: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /deep/.mat-snack-bar-container {
+    background: transparent;
+  }

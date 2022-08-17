@@ -1,0 +1,176 @@
+<div class="page-wrap">
+  <div class="search-panel-block">
+    <div class="bredcrumb-title-wrap">
+      <div class="search-container-block">
+        <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+        <div class="search-list ">
+          <form class="filter-wrap filter-custm" [formGroup]="searcheventLocationForm">
+            <div class="row title-search-row">
+              <div class="col-md-3 title-search-col">
+                <div class="title">
+                  <h1>Search Locations</h1>
+                </div>
+              </div>
+              <div class="col-md-6 title-search-col">
+                
+              </div>
+              <div class="col-md-3 title-search-col">
+               
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-3 title-search-col">
+                
+              </div>
+              <div class="col-md-6 title-search-col">
+                <div class="searchform-block " [ngClass]="[ status? 'srch-box-new' : '']">
+                  <div class="common-search">
+                    <!-- <input type="text" (keyup)= "applyFilter($event.target.value)" formControlName="searchcardOid"
+                      placeholder="Search by Location Name" /> -->
+                      <input type="text"  formControlName="searchcardOid" #input
+                      placeholder="Search by Location Name" maxlength="150" />
+                    <span class="search-btn" (click)="fetchAllLOcation()"></span>
+                    <div class="filter-btn-wrap">
+                      <span class="filter-btn" (click)="openFilter();" [ngClass]="status ? 'open' : 'close'"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3 title-search-col">
+                <button type="button" class="button primary-btn float-right"
+                [routerLink]="['/add-location']">
+                <span  class="add-plus">
+                  <img  alt="add" class="plus-icon" src="assets/images/svg-icons/add_ico.svg">
+                  </span>
+                ADD
+            </button>
+              </div>
+            </div>
+            <!--form-->
+
+            <div class="feild-search " [ngClass]="[ !status? 'srch-box' : '']"  *ngIf="!status" style="width:100%">
+              <div class="row feild-search-inner" >
+                <div class="row" style="width:100%!important">
+                  <div class="col-md-3">
+                 
+                  </div>
+                  <div class="col-md-3">
+                    <!-- <mat-select-autocomplete name="Country" ngDefaultControl [placeholder]="'Country'"
+                      [options]="countryList" [display]="'countryName'" [value]="'value'" [multiple]='false'
+                      [labelCount]="1" (selectionChange)="getAllCities($event)"
+                      [formControl]="searcheventLocationForm.controls['Country']">
+                    </mat-select-autocomplete> -->
+
+                    <mat-form-field class="field-style field-width">
+                      <mat-select id="country" matInput placeholder="Country Name" #countryInput formControlName="country" (selectionChange)="filterCity(countryInput.value)">
+                          <mat-option value="" style="color: #7d7d7d;">Select</mat-option>
+                          <mat-option *ngFor="let country of countries" value="{{country.countryId}}">
+                              {{ country.countryName }}
+                          </mat-option>
+                      </mat-select>
+                      <!-- <mat-error *ngIf="searcheventLocationForm.get('country').hasError('required')">Please select country</mat-error> -->
+                  </mat-form-field>
+
+                  </div>
+                  <div class="col-md-3">
+                    <mat-form-field>
+                      <mat-select placeholder="City Name" [formControl]="cityy" [(value)]="selectedmulticity" multiple>
+                        <mat-option *ngFor="let city of cities" [value]="city.cityId">{{city.cityName}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  
+                  </div>
+             
+               </div>
+           
+              
+              </div>
+              <div class="row" style="width:90%!important">
+                <div class="col button-wrap">
+                  <button class='button quaternary-btn' (click)="resetForm()">RESET</button>
+                  <button class='button tertiary-btn' (click) = "fetchAllLOcation()" type="submit">APPLY</button>
+                </div>
+              </div>
+            </div>
+
+            </form>
+            </div>
+            </div>
+         </div>
+  </div>
+  <div class="col-md-12">
+
+  
+
+    <div class="form-wrap-custom">
+      <div *ngIf="searchGiftVal" class="page-loader-block full-page-loader">
+        <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+      </div>
+      <div class="table-wrap" >
+        <div class="table-wrap-inner">
+
+          <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)"  style="width: 100%;">
+            <ng-container matColumnDef="locationName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>LOCATION NAME</th>
+
+              
+              <td mat-cell *matCellDef="let row">
+                 <u><a [routerLink]="['/view-location/'+row.locationOid]"
+                  class="text-blue"> {{row.locationName}}</a>
+                </u>
+                
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="address">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>ADDRESS</th>
+
+              <td mat-cell *matCellDef="let row">
+                    {{row.address | titlecase}}
+                  </td>
+            </ng-container>
+
+            <ng-container matColumnDef="countryName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>COUNTRY</th>
+
+              <td mat-cell *matCellDef="let row">
+                    {{row.countryName}}
+                  </td>
+            </ng-container>
+
+            <ng-container matColumnDef="cityName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>CITY </th>
+              <td mat-cell *matCellDef="let row"> {{row.cityName}}</td>
+            </ng-container>
+
+           
+           
+     
+
+           
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+            </tr>
+          </table>
+       
+          <div class="no-records" *ngIf="noRecords">
+            No Records Found!
+        </div>
+        </div>
+        <mat-paginator [length]="resultsLength" (change)="fetchAllLOcation()" #paginator (page)="getUpdate($event)" [pageSize]="paginationData.pageSize" 
+        [pageSizeOptions]="[10,20,50,100]">
+        </mat-paginator>
+        <!-- <mat-paginator [pageSizeOptions]="[10,20,50,100]"></mat-paginator> -->
+        
+      </div>
+     
+    </div>
+
+ 
+    <!-- <div *ngIf="loading" class="select-store-block">
+      <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+    </div> -->
+</div>
+</div>

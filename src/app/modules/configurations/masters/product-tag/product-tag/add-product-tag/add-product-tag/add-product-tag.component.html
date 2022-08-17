@@ -1,0 +1,56 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title">
+        <h1>Masters</h1>
+    </div>
+</div>
+<div class="page-wrap-masters">
+    <div class="row master-cards">
+        <div class="col-md-3 master-list master-left">
+            <mat-card>
+                <ul class="master_listing">
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-country']">Countries</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-cities']">Cities</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-malls']">Malls</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-currency']">Currency</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-currency-conversion']">Currency
+                            Conversion</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-brand-category']">Brand Category</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-language']">Language</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-faq-category']">FAQ Category</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-about-us-category']">About Us Category</a>
+                    </li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-feedback']">Feedback</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-enquiry-type']">Enquiry Type</a></li>
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/add-taxation']">Taxation</a></li> -->
+                    <li class="master-list-selected"><a href="javascript:void(0)" [routerLink]="['/add-product-tag']">Product Tag</a></li>
+                </ul>
+            </mat-card>
+        </div>
+        <div class="col-md-9 master-right">
+            <mat-card class="master-content">
+                <div class="country-card">
+                    <div class="subtitle flex-center">
+                        <h3>Product Tag</h3>
+                    </div>
+
+                    <form (submit)="createProductTag(createProductTagFormGroup.value)" [formGroup]="createProductTagFormGroup" #createProductTagForm="ngForm">
+                        <div class="row" formArrayName="productTags">
+                            <div class="col-md-4" *ngFor="let regionLocale of createProductTagFormGroup['controls']['productTags']['controls'];let k = index;" [formGroupName]="k">
+                                <label>
+                                    {{productList[k].productName}}
+                                </label>
+                                <mat-form-field>
+                                    <input matInput formControlName="displayName" placeholder="Display Name">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="btm-button-wrap">
+                            <button type="submit" class="button primary-btn">SAVE</button>
+                        </div>
+                    </form>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+</div>

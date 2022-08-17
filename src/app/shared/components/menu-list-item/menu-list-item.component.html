@@ -1,0 +1,26 @@
+<div>
+  <mat-list>
+    <a mat-list-item class="sideNav-list" (click)="onItemSelected(item)" [ngClass]="{
+    activeColor: parentRoute === item.route && item.route != '',
+    active: item.route ? router.isActive(item.route, true) : false,
+    expanded: item.checked,
+    color : item.checked == router.isActive(item.route, true) ? item.checked : router.isActive(item.route, true)
+  }">
+      <img src="{{item.iconName}}" class="routeIcon" />
+      <span class="menu-heading"> {{ item.displayName }}</span>
+      <span fxFlex *ngIf="item.children && item.children.length && item.isChildDisplayYes">
+        <span fxFlex></span>
+        <mat-icon class="list-dropdown-icon"> expand_more </mat-icon>
+      </span>
+    </a>
+  </mat-list>
+  <div *ngIf="item.checked" class="submenu-container selected" [class.submenu-content-expand]="submenu">
+    <div *ngFor="let child of item.children">
+      <app-menu-list-item *ngIf="child.isMenuYes && navigationArray.indexOf(child.menuId) != -1" [item]="child"
+        [depth]="depth+1" [class.submenu]="submenu" [navigationArray]="navigationArray">
+      </app-menu-list-item>
+    </div>
+    <!-- <app-menu-list-item *ngFor="let child of item.children" [item]="child" [depth]="depth+1" [class.submenu]="submenu">
+  </app-menu-list-item> -->
+  </div>
+  <!---->

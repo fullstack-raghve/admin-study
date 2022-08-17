@@ -1,0 +1,207 @@
+.page-wrap {
+  padding: 1.8em 1.8em 3em 1.8em;
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+.table-input {
+  width: 85px;
+
+  .mat-form-field {
+    width: 75%;
+  }
+}
+
+.add-plus {
+  padding: 0 0;
+  width: 100%;
+
+  .plus-icon {
+    width: 9px;
+    color: #fff !important;
+    margin-right: 5px;
+    margin-bottom: 2px;
+  }
+}
+
+.error-msg {
+  color: red;
+  // padding-top: 1em;
+  // padding-left: 1em;
+}
+
+.err-msg{
+  margin-top: -25px;
+  font-size: 10px;
+  color: red;
+}
+
+
+/deep/ .mat-autocomplete-panel {
+  /deep/ .mat-option {
+      /deep/ .mat-option-text {
+              font-size: 12px !important;
+      }
+  }
+}
+
+
+.addOns-content {
+  background-color: #f7f7f7;
+  width: 100%;
+  display: inline-block;
+  margin-right: 10px;
+  padding: 5px 8px;
+  margin-top: 10px;
+  border-radius: 5px;
+
+  .text {
+    color: #4b4b4b;
+  }
+
+  img {
+    float: right;
+  }
+}
+
+.add-card {
+  margin-bottom: 10px;
+}
+
+.card-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.master-fieldSet {
+  .language-fieldset {
+    padding: 0px 26px 10px;
+    border: 1px solid #dbdbdb;
+    border-radius: 5px;
+
+    .fieldset-heading {
+      font-size: 14px;
+      padding-inline-start: 7px;
+      max-width: 50% !important;
+    }
+  }
+}
+
+.img-block {
+  .avatar-width {
+    width: 100%;
+    height: 150px;
+    background-color: #f2f2f2;
+    text-align: center;
+    margin-bottom: 10px;
+    border: 1px dashed #dbdbdb;
+  }
+
+  .upload-img {
+    width: 100%;
+    height: 147px;
+  }
+
+  .upload-icon {
+    width: 12px;
+    height: 12px;
+    margin-right: 5px;
+    cursor: pointer;
+  }
+
+  .upload-text {
+    color: #a7a7a7;
+    font-size: 16px;
+  }
+}
+
+.placeholder-img {
+  display: none;
+}
+
+.upload-btn-text {
+  cursor: pointer;
+  font-size: 12px;
+  color: #145cbf;
+}
+
+.remove-img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  img {
+    width: 15px;
+  }
+
+  label {
+    font-size: 13px;
+    color: grey;
+    padding-left: 5px;
+    margin-bottom: 0;
+  }
+}
+
+.faq-card {
+  background-color: #F8F8F8;
+  position: relative;
+
+  .lang-field {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background-color: #c3c3c3;
+
+    p {
+      margin-bottom: 0px;
+      margin: 8px;
+    }
+  }
+
+  .text-fields {
+    left: 22px;
+    top: 26px;
+    right: 15px;
+    padding-bottom: 30px;
+
+    .field-container {
+      .mat-form-field {
+        display: block;
+      }
+    }
+  }
+}
+
+.mat-standard-chip {
+  transition: box-shadow 280ms cubic-bezier(.4, 0, .2, 1);
+  display: inline-flex;
+  padding: 7px 12px;
+  border-radius: 8px;
+  align-items: center;
+  cursor: default;
+  min-height: 32px;
+  height: auto;
+}
+
+.mat-standard-chip.mat-chip-with-trailing-icon {
+  padding-top: 7px;
+  padding-bottom: 7px;
+  padding-right: 8px;
+  padding-left: 12px;
+  word-wrap: break-word;
+  // display: inline-block;
+  margin: 5px;
+}
+
+label.astrick::after {
+  content: "*";
+}
+
+.right-field-right {
+  left: auto !important;
+  right: 0;
+}

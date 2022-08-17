@@ -1,0 +1,10 @@
+.text-blue{
+    cursor: pointer;
+}
+
+.failureRecordDisable,
+.totalRecordDisable,
+.successRecordDisable{
+    pointer-events: none;
+    // color: #333;
+}

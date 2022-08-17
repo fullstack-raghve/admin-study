@@ -1,0 +1,211 @@
+<div class="page-wrap">
+    <div class="search-panel-block">
+        <div class="bredcrumb-title-wrap">
+            <div class="search-container-block">
+                <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+                <div class="search-list">
+                    <form class="filter-wrap" (submit)="searchKey()" [formGroup]="searchProgramsFormGroup" #searchProductsForm="ngForm">
+                        <div class="row title-search-row">
+                            <div class="col-md-4 title-search-col">
+                                <div class="title">
+                                    <h1>Search Coupons</h1>
+                                </div>
+                            </div>
+                            <div class="col-md-5 title-search-col">
+                                <div class="searchform-block">
+                                    <div class="common-search">
+                                        <input type="text" formControlName="searchVal" placeholder="Search Coupons" />
+                                        <span class="search-btn" (click)="searchKey();"></span>
+                                        <div class="filter-btn-wrap">
+                                            <span class="filter-btn" (click)="openFilter();" [ngClass]="status ? 'open' : 'close'"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 title-search-col"></div>
+                        </div>
+                        <div class="feild-search" *ngIf="!status">
+                            <div class="row feild-search-inner">
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput type="text" placeholder="Coupon Id" formControlName="couponId" />
+                                        <mat-error *ngIf="searchProgramsFormGroup.get('couponId').hasError('pattern')">Only numeric value allowed
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput type="text" placeholder="Coupon Title" formControlName="couponTitle" />
+                                        <mat-error *ngIf="searchProgramsFormGroup.get('couponTitle').hasError('pattern')">This special character(s) is not allowed</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-select placeholder="Discount Type" formControlName="discountType">
+                                            <mat-option value="TRANSACTION_DISCOUNT_AMOUNT">Transaction Discount Amount</mat-option>
+                                            <mat-option value="ITEM_DISCOUNT_AMOUNT">Item Discount Amount</mat-option>
+                                            <mat-option value="ITEM_DISCOUNT">Item Discount %</mat-option>
+                                            <mat-option value="TRANSACTION_DISCOUNT">Transaction Discount %</mat-option>
+                                            <mat-option value="DEAL_TYPE">Deal Type</mat-option>
+                                            <mat-option value="BUY_X_GET_Y">BUY_X_GET_Y_FREE</mat-option>
+                                            <mat-option value="BUY_X_GET_Z_DISCOUNT_ON_Y_PRODUCT">BUY_X_GET_Y_PERCENTAGE</mat-option>
+                                            <mat-option value="BUY_X_GET_Z_DISCOUNT_AMOUNT_ON_Y_PRODUCT">BUY_X_GET_Y_AMOUNT</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-select placeholder="Notification Type" formControlName="notificationType">
+                                            <mat-option value="ONLINE">Online</mat-option>
+                                            <mat-option value="INSTORE">Instore</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <!-- <div class="col-md-3">
+                  <mat-form-field>
+                    <input matInput [matDatepicker]="startDate" readonly placeholder="Start Date" formControlName="startDate">
+                    <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
+                    <mat-datepicker #startDate></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-3">
+                  <mat-form-field>
+                    <input matInput [matDatepicker]="endDate" readonly placeholder="End Date" formControlName="endDate">
+                    <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
+                    <mat-datepicker #endDate></mat-datepicker>
+                  </mat-form-field>
+                </div> -->
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput [matDatepicker]="picker2" #startDate formControlName="startDate" placeholder="Start Date">
+                                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker2></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput [matDatepicker]="picker3" placeholder="End Date" formControlName="endDate" #endDate>
+                                        <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker3></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-select placeholder="Coupon Type" formControlName="couponType">
+                                            <mat-option value="TYPE1">Type 1</mat-option>
+                                            <mat-option value="TYPE2">Type 2</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-select placeholder="Status" formControlName="status">
+                                            <mat-option value="OFFLINE">OFFLINE</mat-option>
+                                            <mat-option value="ONLINE">ONLINE</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="button-wrap">
+                                    <div class="">
+                                        <button class='button quaternary-btn' type="button" (click)="resetForm()">RESET</button>
+                                        <button class='button tertiary-btn' type="submit">APPLY</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="form-wrap">
+            <!-- <div class="no-records">
+                        No Records Found!
+                    </div> -->
+            <div class="table-wrap">
+                <div class="table-wrap-inner">
+                    <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
+                        <ng-container matColumnDef="couponId">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="oid" class="top-border"> COUPON ID </th>
+                            <td mat-cell *matCellDef="let row"> {{ row.couponId }} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="couponTitle">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="couponTitle" class="top-border"> COUPON NAME </th>
+                            <!-- <td mat-cell *matCellDef="let row"><u><a [routerLink]="['/view-coupons/'+ row.couponId]"
+                    class="text-blue">
+                    {{ row.couponTitle }}</a></u></td> -->
+                            <td mat-cell (click)="MoveToViewCoupons( row.couponId)" *matCellDef="let row"><u><a 
+                      class="text-blue">
+                      {{ row.couponTitle }}</a></u></td>
+                        </ng-container>
+                        <ng-container matColumnDef="discountType">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> DISCOUNT TYPE </th>
+                            <td mat-cell *matCellDef="let row">
+
+                                {{row.discountType == 'TRANSACTION_DISCOUNT_AMOUNT' ? 'Transaction Discount Amount':(row.discountType == 'ITEM_DISCOUNT_AMOUNT' ? 'Item Discount Amount':(row.discountType == 'ITEM_DISCOUNT' ? 'Item Discount %' : (row.discountType == 'TRANSACTION_DISCOUNT'
+                                ? 'Transaction Discount %':'')))}}
+
+                                <span *ngIf="row.discountType == 'DEAL_TYPE'">{{row.discountType == 'DEAL_TYPE'? 'Deal Type':''}}</span>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="discountValue">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> VALUE </th>
+                            <td mat-cell *matCellDef="let row"> {{row.discountValue}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="startDate">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> START DATE </th>
+                            <td mat-cell *matCellDef="let row"> {{row.startDate | date:'d/M/yyyy'}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="endDate">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> END DATE </th>
+                            <td mat-cell *matCellDef="let row"> {{row.endDate | date:'d/M/yyyy'}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="modifiedUserId">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="modifiedBy" class="top-border"> UPDATED BY
+                            </th>
+                            <!-- <td mat-cell *matCellDef="let row">
+                <u>
+                  <a matTooltip="{{row.modifiedUserName}}"
+                    aria-label="Button that displays a tooltip when focused or hovered over"
+                    [routerLink]="['/view-user/'+ row.modifiedUserId]" class="text-blue user-name">
+                    {{ row.modifiedUserId }}
+                  </a>
+                </u>
+              </td> -->
+                            <td mat-cell (click)="MoveToView(row.modifiedUserId)" *matCellDef="let row">
+                                <u>
+                  <a matTooltip="{{row.modifiedUserName}}"
+                    aria-label="Button that displays a tooltip when focused or hovered over"
+                    class="text-blue user-name">
+                    {{ row.modifiedUserId }}
+                  </a>
+                </u>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="createdOn">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> CREATED ON </th>
+                            <td mat-cell *matCellDef="let row"> {{row.createdOn}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="modifiedTime">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> LAST MODIFIED ON </th>
+                            <td mat-cell *matCellDef="let row"> {{row.modifiedTime}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="status">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> STATUS </th>
+                            <td mat-cell *matCellDef="let row"> {{row.status}} </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                        </tr>
+                    </table>
+                    <div *ngIf="searchStoreVal" class="select-store-block">
+                        <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                    </div>
+                    <div class="no-records" *ngIf="noRecords">
+                        No Records Found!
+                    </div>
+                </div>
+                <mat-paginator [length]="resultsLength" (change)="searchVal()" #paginator (page)="getUpdate($event)" [pageSize]="paginationData.pageSize" [pageSizeOptions]="[10,20,50,100]">
+                </mat-paginator>
+            </div>
+        </div>
+    </div>

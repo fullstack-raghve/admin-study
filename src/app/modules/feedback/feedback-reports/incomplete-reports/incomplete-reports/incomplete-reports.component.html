@@ -1,0 +1,160 @@
+<div class="page-wrap">
+  <div class="search-panel-block">
+    <div class="bredcrumb-title-wrap">
+      <div class="search-container-block">
+        <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+        <div class="search-list mt-1">
+          <form class="filter-wrap" [formGroup]="searchFeedBackForm" (submit)="searchVal()">
+            <div class="row title-search-row">
+              <div class="col-md-4 title-search-col">
+                <div class="title">
+                  <h1>Dropoff Summary</h1>
+                </div>
+              </div>
+              <div class="col-md-5 title-search-col">
+              </div>
+              <div class="col-md-3">
+                <div class="flow-btn-block">
+                  <div class="text-right">
+                    <button type="button" class="button primary-btn float-right" (click)="excelValue()">EXPORT
+                    </button>
+                  </div>
+                  <div class="searchform-block">
+                    <div class="filter-btn-wrap">
+                      <span class="filter-btn" (click)="openFilter();" [ngClass]="status ? 'open' : 'close'"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="feild-search" *ngIf="!status">
+              <div class="row feild-search-inner">
+                <div class="col-md-3">
+                  <mat-form-field>
+                    <input matInput [matDatepicker]="picker2"
+                      [max]="endDate.value=='' ? minDate : searchFeedBackForm.get('endDate').value" #startDate
+                      formControlName="startDate" placeholder="Start Date">
+                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-3">
+                  <mat-form-field>
+                    <input matInput [matDatepicker]="picker3" placeholder="End Date" formControlName="endDate" #endDate
+                      [min]="startDate.value=='' ? '' : searchFeedBackForm.get('startDate').value" [max]="minDate">
+                    <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                    <mat-datepicker #picker3></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-3">
+                  <div class="button-wrap">
+                    <div class="text-right mar-auto">
+                      <button class='button reset-btn' type="button" (click)="reset()">RESET</button>
+                      <button class='button apply-btn' type="submit">APPLY</button>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-around top_feedback_count_div" *ngFor="let itemValue of totalValue">
+      <div class="d-flex flex-column justify-content-center align-items-center">
+        <p>Number of Feedback</p>
+        <h1>{{itemValue.other.feedbackCount}}</h1>
+      </div>
+      <div class="d-flex flex-column justify-content-center align-items-center">
+        <p>Positivity</p>
+        <h1>
+          {{itemValue.satisfaction != '' && itemValue.satisfaction != null ? itemValue.satisfaction : 'NA'}}
+        </h1>
+        <!-- <div>
+            <p>{{itemValue.satisfaction != '' && itemValue.satisfaction != null ? itemValue.satisfaction : 'NA'}}</p>
+          </div>  -->
+        <!-- <div class="d-flex">
+          <div class="d-flex flex-md-column all_emoji_icon">
+            <p style="font-weight: bold;">
+              {{itemValue.satisfaction != '' && itemValue.satisfaction != null ? itemValue.satisfaction : 'NA'}}</p>
+          </div>
+        </div> -->
+        <!-- <div class="d-flex">
+          <div *ngFor="let emoji of itemValue.satisfaction">
+            <div class="d-flex flex-md-column all_emoji_icon"
+              *ngIf="emoji.satisfactionImage !='' && emoji.satisfactionImage != null">
+              <img [src]="emoji.satisfactionImage" alt="">
+              <p>{{emoji.satisfactionValue}}</p>
+            </div>
+          </div>
+        </div> -->
+      </div>
+      <div class="d-flex flex-column justify-content-center align-items-center">
+        <p>NPS</p>
+        <h1>{{itemValue.other.nps | number:'1.2-2'}}</h1>
+        <h1 *ngIf="itemValue.other.nps == 'NA'">NA</h1>
+      </div>
+    </div>
+    <div class="form-wrap">
+
+
+      <div class="table-wrap">
+        <div class="table-wrap-inner">
+          <table mat-table [dataSource]="dataSource" matSort>
+
+            <ng-container matColumnDef="brandId">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> BRAND ID </th>
+              <td mat-cell *matCellDef="let row">{{row.brandId}} </td>
+            </ng-container>
+            <ng-container matColumnDef="brandName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> BRAND NAME </th>
+              <td mat-cell *matCellDef="let row">{{row.brandName}}</td>
+            </ng-container>
+            <ng-container matColumnDef="feedbackCount">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>NUMBER OF FEEDBACK</th>
+              <td mat-cell *matCellDef="let row">
+                {{row.feedbackCount}}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="satisfaction">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> POSITIVITY </th>
+              <td mat-cell *matCellDef="let row">
+                {{row.feedbackSatisfaction != '' && row.feedbackSatisfaction != null ? row.feedbackSatisfaction + '%' : 'NA'}}
+                <!-- <div class="d-flex">
+                  <div *ngFor="let emoji of row.feedbackSatisfactionBean">
+                    <div class="d-flex flex-md-column all_emoji_icon"
+                      *ngIf="emoji.satisfactionImage !='' && emoji.satisfactionImage != null">
+                      <img [src]="emoji.satisfactionImage" alt="">
+                      <p>{{emoji.satisfactionValue}}</p>
+                    </div>
+                  </div>
+                </div> -->
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="npsScore">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> NPS SCORE </th>
+              <td mat-cell *matCellDef="let row">
+                <span *ngIf="row.npsScore != 'NA'">{{row.npsScore | number:'1.2-2'}} </span>
+                <span *ngIf="row.npsScore == 'NA'">{{row.npsScore }} </span>
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+            </tr>
+          </table>
+          <div *ngIf="searchResults" class="select-store-block">
+            <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+          </div>
+          <div class="no-records" *ngIf="resultsLength === 0">
+            No Records Found!
+          </div>
+        </div>
+        <mat-paginator [length]="resultsLength" (change)="searchVal()" #paginator (page)="getUpdate($event)"
+          [pageSize]="10" [pageSizeOptions]="[10,20,50,100]"></mat-paginator>
+      </div>
+    </div>
+  </div>
+</div>

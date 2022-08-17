@@ -1,0 +1,486 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container">
+        <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+            [routerLink]="['/search-notifications']"></span>View Notification</h1>
+        <mat-slide-toggle class="example-margin text-right" [checked]="checked" [disabled]="disabled">
+            {{statusValue}}
+        </mat-slide-toggle>
+    </div>
+</div>
+<div class="page-wrap">
+    <form>
+        <div class="notification-block">
+            <mat-horizontal-stepper #stepper class="campaign-stepper">
+                <mat-step [stepControl]="firstFormGroup">
+                    <form [formGroup]="firstFormGroup">
+                        <ng-template matStepLabel>Basic Details</ng-template>
+                        <div class="basic-details">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label>Select Activity</label>
+                                    <p>{{ notificationData?.notificationDetails?.activityName }}</p>
+                                </div>
+                                <div class="col-md-3" *ngIf="notificationData?.notificationDetails?.activityName == 'XX No of Transactions'">
+                                    <label>X Number of Transactions</label>
+                                    <p>{{ notificationData?.notificationDetails?.noOfAction }}</p>
+                                </div>
+                                <div class="col-md-3" *ngIf="notificationData?.notificationDetails?.activityName == 'XX No of Plays'">
+                                    <label>Select Activity</label>
+                                    <p>{{ notificationData?.notificationDetails?.activityName }}</p>
+                                </div>
+                                <div class="col-md-3">
+                                    <label>Notification Name</label>
+                                    <p>
+                                        {{ notificationData?.notificationDetails?.notificationName }}
+                                    </p>
+                                </div>
+                                <div class="col-md-3" *ngIf="notificationData?.notificationDetails?.brandName!= null">
+                                    <label>Brand Name</label>
+                                    <p>
+                                        {{ notificationData?.notificationDetails?.brandName }}
+                                    </p>
+                                </div>
+                                <div class="col-md-3" *ngIf="notificationData?.notificationDetails?.mallName!= null">
+                                    <label>Mall Name</label>
+                                    <p>
+                                        {{ notificationData?.notificationDetails?.mallName }}
+                                    </p>
+                                </div>
+                                <div class="col-md-3" *ngIf="notificationData?.notificationDetails?.mallName!= null">
+                                    <label>Store</label>
+                                    <div class="store-select">
+                                        <p class="text-blue store-styling" (click)="openStoresDialog()">
+                                            {{ selectedStoreLength }}
+                                        </p>
+                                        Selected
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-20px">
+                                <div class="col-md-6">
+                                    <label>Description</label>
+                                    <p>
+                                        {{ notificationData?.notificationDetails ?.notificationDescription }}
+                                    </p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="card-title">Select Communication Type</p>
+                                    <div class="communication-types">
+                                        <mat-checkbox [checked]="pushChecked" [disabled]="disabled">
+                                            App-Push Notification
+                                        </mat-checkbox>
+                                        <mat-checkbox [checked]="emailChecked" [disabled]="disabled">
+                                            Email
+                                        </mat-checkbox>
+                                        <mat-checkbox [checked]="smsChecked" [disabled]="disabled">
+                                            SMS
+                                        </mat-checkbox>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="attach-coupon-bg" *ngIf="attachCoupon">
+                                <div class="attach-coupon-reg">
+                                    <div class="attach-coupon-regtitle">
+                                        <p>
+                                            Coupons
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="selected-coupon">
+                                    <div class="search-panel-block">
+                                        <div class="add-table-wrap">
+                                            <div class="table-wrap">
+                                                <div class="table-wrap-inner">
+                                                    <div class="rule-coupon">
+                                                        <table mat-table [dataSource]="dataSource" matSort>
+                                                            <ng-container matColumnDef="couponId">
+                                                                <th mat-header-cell *matHeaderCellDef mat-sort-headerclass="top-border"> COUPON ID </th>
+                                                                <td mat-cell *matCellDef="let row">
+                                                                    {{ row.couponId }}
+                                                                </td>
+                                                            </ng-container>
+                                                            <ng-container matColumnDef="couponTitle">
+                                                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> COUPON TITLE
+                                                                </th>
+                                                                <td mat-cell *matCellDef="let row">{{ row.couponTitle }}</td>
+                                                            </ng-container>
+                                                            <ng-container matColumnDef="discountType">
+                                                                <th mat-header-cell *matHeaderCellDef class="top-border"> DISCOUNT TYPE </th>
+                                                                <td mat-cell *matCellDef="let row">{{ row.discountType }}</td>
+                                                            </ng-container>
+                                                            <ng-container matColumnDef="discountValue">
+                                                                <th mat-header-cell *matHeaderCellDef class="top-border"> DISCOUNT VALUE </th>
+                                                                <td mat-cell *matCellDef="let row">{{row.discountValue}} </td>
+                                                            </ng-container>
+                                                            <ng-container matColumnDef="startDate">
+                                                                <th mat-header-cell *matHeaderCellDef class="top-border"> START DATE </th>
+                                                                <td mat-cell *matCellDef="let row">{{row.startDate}} </td>
+                                                            </ng-container>
+                                                            <ng-container matColumnDef="endDate">
+                                                                <th mat-header-cell *matHeaderCellDef class="top-border"> END DATE </th>
+                                                                <td mat-cell *matCellDef="let row">{{row.endDate}}</td>
+                                                            </ng-container>
+                                                            <ng-container matColumnDef="delete">
+                                                                <th mat-header-cell *matHeaderCellDef class="top-border"> </th>
+                                                                <td mat-cell *matCellDef="let row">
+                                                                    <span class="remove-coupon" (click)="removeCoupon(row.couponId)">
+                                                                        <img src="assets/images/icons/filter_close_ico.png" alt="Close_Bttn">
+                                                                    </span>
+                                                                </td>
+                                                            </ng-container>
+                                                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                                            <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="attach-coupon-bg" *ngIf="noofTransactionSelect && notificationData?.notificationDetails?.mallName == null">
+                                <div class="attach-coupon-reg">
+                                    <div class="attach-coupon-regtitle">
+                                        <p>
+                                            Stores
+                                        </p>
+                                    </div>
+                                    <div class="attach-bttn">
+                                        <div class="nooftxnsselect">
+                                            <div class="exclude-store-card">
+                                                <div class="toggle-panel ptr-none">
+                                                    <p *ngIf="storeInclude">
+                                                        Include Stores
+                                                    </p>
+                                                    <p>
+                                                        <span>
+                                                            <mat-slide-toggle class="example-margin" [checked]="checked"></mat-slide-toggle>
+                                                        </span>
+                                                    </p>
+                                                    <p *ngIf="storeExclude">
+                                                        Exclude Stores
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="attach-bttn select-store-bttn">
+                                                <div class="select-store-block">
+                                                    <p>{{selectedStoreLength}}</p><span>Stores Selected</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="attach-coupon-bg" *ngIf="coursesSelect">
+                                <div class="attach-coupon-reg">
+                                    <div class="attach-coupon-regtitle">
+                                        <p>
+                                            Course
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-right mr-20px">
+                            <button class="button secondary-btn text-right" [routerLink]="['/search-notifications']">
+                  CANCEL
+                </button>
+                            <!-- <button class="button primary-btn text-right" [routerLink]="['/edit-notifications/' + notificationId]">
+                  EDIT
+                </button> -->
+                            <button class="button primary-btn text-right" type="button" (click)="MoveToEdit(notificationId)">
+                  EDIT
+                </button>
+                            <button matStepperNext class="button tertiary-btn text-right">
+                  NEXT
+                </button>
+                        </div>
+                    </form>
+                </mat-step>
+                <mat-step>
+                    <ng-template matStepLabel>Content</ng-template>
+                    <div class="third-template">
+                        <div class="expansion-panel">
+                            <mat-accordion>
+                                <mat-expansion-panel *ngIf="pushChecked">
+                                    <mat-expansion-panel-header [collapsedHeight]="'38px'" [expandedHeight]="'38px'">
+                                        <mat-panel-title>
+                                            App-Push Notification
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
+                                    <div class="panel-wrap">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label>Template</label>
+                                                <p>
+                                                    {{ notificationData.notificationDetails.pushContent .templateName }}
+                                                </p>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="field-container">
+                                                    <label>Sender ID</label>
+                                                    <p>
+                                                        {{ notificationData.notificationDetails.pushContent .senderId }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="field-container">
+                                                    <label>Link To</label>
+                                                    <p>
+                                                        {{ notificationData.notificationDetails.pushContent?.linkTo }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3" *ngIf="notificationData.notificationDetails.pushContent?.linkTo === 'Our Brands'">
+                                                <div class="field-container">
+                                                    <label>Link To</label>
+                                                    <p>
+                                                        {{ notificationData.notificationDetails.pushContent.brandName }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3" *ngIf="notificationData.notificationDetails.pushContent?.linkTo === 'Category' || 
+                                                                         notificationData.notificationDetails.pushContent?.linkTo === 'Product'">
+                                                <div class="field-container">
+                                                    <label>{{ notificationData.notificationDetails.pushContent?.linkTo }} selected</label>
+                                                    <p>{{ notificationData.notificationDetails.pushContent?.linkToItemName }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Hyper Link</label>
+                                                <p>
+                                                    {{ notificationData.notificationDetails.pushContent .hyperLink }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div *ngFor="
+                          let push of notificationData.notificationDetails
+                            .pushContent.pushContentLocale;
+                          let i = index
+                        ">
+                                            <mat-card class="pushNotification-card mb-20px">
+                                                <div class="lang-field">
+                                                    <p>{{ push.languageName }}</p>
+                                                </div>
+                                                <div class="row card-mb fieldtop {{langfield[i]}}">
+                                                    <div class="col-md-8 text-fields">
+                                                        <div class="row tempview-block">
+                                                            <div class="col-md-3 temp-view-img">
+                                                                <div>
+                                                                    <p class="note-text"><span>image size 200x200</span></p>
+                                                                    <div class="no-img" *ngIf="push.imagePath==''">
+                                                                        No Image
+                                                                    </div>
+                                                                    <img [src]="fileImgPathUrl + push.imagePath" [class.uploaded-img]="imgUpload" width="150px" *ngIf="push.imagePath!=''" />
+                                                                </div>
+                                                                <div>
+                                                                    <p class="note-text"><span>image size 1024x512</span></p>
+                                                                    <div class="no-img" *ngIf="push.imagePathTwo==''">
+                                                                        No Image
+                                                                    </div>
+                                                                    <img [src]="fileImgPathUrl + push.imagePathTwo" [class.uploaded-img]="imgUpload1" width="150px" *ngIf="push.imagePathTwo!=''" />
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="col-md-9 temp-view-contnet">
+                                                                <div class="field-container {{ languageDirection[i] }}">
+                                                                    <label>Subject</label>
+                                                                    <p>{{ push.subject }}</p>
+                                                                </div>
+                                                                <div class="field-container {{ languageDirection[i] }}">
+                                                                    <label>Content</label>
+                                                                    <p>{{ push.content }}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 img-container">
+                                                        <div class="preview-container">
+                                                            <div class="img-preview">
+                                                                <p class="text-preview">Notification Preview</p>
+                                                                <img src="assets/images/svg-icons/mobile_frame.svg" alt="" />
+                                                                <div class="notification-content">
+                                                                    <div class="notification-description {{languageDirection[i]}}">
+                                                                        <h6>
+                                                                            {{ push.subject }}
+                                                                        </h6>
+                                                                        <p>
+                                                                            {{ push.content }}
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </mat-card>
+                                        </div>
+                                    </div>
+                                </mat-expansion-panel>
+                                <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" *ngIf="smsChecked">
+                                    <mat-expansion-panel-header [collapsedHeight]="'38px'" [expandedHeight]="'38px'">
+                                        <mat-panel-title>
+                                            SMS
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
+                                    <div class="panel-wrap">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label>Template</label>
+                                                <p>
+                                                    {{ notificationData.notificationDetails.smsContent .templateName }}
+                                                </p>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="field-container">
+                                                    <label>Sender ID</label>
+                                                    <p>
+                                                        {{ notificationData.notificationDetails.smsContent .senderId }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <!-- <div class="col-md-6">
+                          <div class="field-container">
+                            <label>Hyper Link</label>
+                            <p>
+                              {{
+                                notificationData.notificationDetails.smsContent
+                                  .hyperLink
+                              }}
+                            </p>
+                          </div>
+                        </div> -->
+                                        </div>
+                                        <div *ngFor="
+                          let sms of notificationData.notificationDetails
+                            .smsContent.smsContentLocale;
+                          let i = index
+                        ">
+                                            <mat-card class="pushNotification-card mb-20px">
+                                                <div class="lang-field">
+                                                    <p>{{ sms.languageName }}</p>
+                                                </div>
+                                                <div class="row card-mb">
+                                                    <div class="col-md-8 text-fields {{langfieldname[i]}}">
+                                                        <!-- <div class="field-container {{ languageDirection[i] }}">
+                                <label>Subject</label>
+                                <p>{{ sms.subject }}</p>
+                              </div> -->
+                                                        <div class="field-container {{languageDirection[i]}} {{langfield[i]}}">
+                                                            <label>Content</label>
+                                                            <p>{{sms.content}}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 img-container">
+                                                        <div class="preview-container">
+                                                            <div class="img-preview">
+                                                                <p class="text-preview">Notification Preview</p>
+                                                                <img src="assets/images/svg-icons/mobile_frame.svg" alt="" />
+                                                                <div class="notification-content">
+                                                                    <div class="notification-description {{languageDirection[i]}}">
+                                                                        <!-- <h6>
+                                        {{ sms.subject }}
+                                      </h6> -->
+                                                                        <p>
+                                                                            {{ sms.content }}
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </mat-card>
+                                        </div>
+                                    </div>
+                                </mat-expansion-panel>
+                                <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" *ngIf="emailChecked">
+                                    <mat-expansion-panel-header [collapsedHeight]="'38px'" [expandedHeight]="'38px'">
+                                        <mat-panel-title>
+                                            Email
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
+                                    <div class="email-panel">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="view-camp-block">
+                                                    <div class="view-camp">
+                                                        <label>Template Name</label>
+                                                        <p>
+                                                            {{ notificationData.notificationDetails.emailContent .templateName }}
+                                                        </p>
+                                                    </div>
+                                                    <div class="view-camp">
+                                                        <label>Email Sender Id</label>
+                                                        <p>
+                                                            {{ notificationData.notificationDetails.emailContent .senderId }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <!-- <div class="">
+                            <label>Hyper Link</label>
+                            <p>
+                              {{
+                                notificationData.notificationDetails.emailContent
+                                  .hyperLink
+                              }}
+                            </p>
+                          </div> -->
+                                            </div>
+                                            <div class="col-md-12 view-camp-preview">
+                                                <div *ngFor="
+                              let email of notificationData.notificationDetails
+                                .emailContent.emailContentLocale;
+                              let i = index
+                            ">
+                                                    <mat-accordion (selectedTabChange)="call($event)">
+                                                        <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                                                            <mat-expansion-panel-header [collapsedHeight]="'38px'" [expandedHeight]="'38px'">
+                                                                <mat-panel-title>
+                                                                    {{ email.languageName }}
+                                                                </mat-panel-title>
+                                                            </mat-expansion-panel-header>
+                                                            <div class="">
+                                                                <div class="{{ languageDirection[i] }}">
+                                                                    <label>Subject</label>
+                                                                    <p>{{ email.subject }}</p>
+                                                                </div>
+                                                                <div class="{{ languageDirection[i] }}">
+                                                                    <label>Content</label>
+                                                                    <p [innerHTML]="email.content"></p>
+                                                                </div>
+                                                            </div>
+                                                        </mat-expansion-panel>
+                                                    </mat-accordion>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-expansion-panel>
+                            </mat-accordion>
+                        </div>
+                    </div>
+                    <div class="text-right mr-15px">
+                        <button matStepperPrevious class="button tertiary-btn text-right">
+                PREVIOUS
+              </button>
+                        <button class="button secondary-btn text-right" [routerLink]="['/search-notifications']">
+                CANCEL
+              </button>
+                        <!-- <button class="button primary-btn text-right" [routerLink]="['/edit-notifications/' + notificationId]">
+                EDIT
+              </button> -->
+                        <button class="button primary-btn text-right" type="button" (click)="MoveToEdit(notificationId)">
+                EDIT
+              </button>
+                    </div>
+                </mat-step>
+            </mat-horizontal-stepper>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,30 @@
+.page-wrap {
+    padding: 15px;
+    .title {
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            h5 {
+                font-size: 20px;
+                color: #FC7E30;
+            }
+        }
+    }
+    .attribute-list {
+        background-color: #F4F4F4;
+        margin-bottom: 15px;
+    }
+}
+.listing {
+    display: inline-block;
+    width: 10%;
+}
+.close-icon{
+  cursor: pointer;
+}
+
+.attribute-container{
+  overflow-y: auto;
+  height: 250px;
+}

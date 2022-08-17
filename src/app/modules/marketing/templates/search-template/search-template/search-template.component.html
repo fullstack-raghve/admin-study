@@ -1,0 +1,192 @@
+<div class="page-wrap">
+    <div class="search-panel-block">
+        <div class="bredcrumb-title-wrap">
+            <div class="search-container-block">
+                <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+                <div class="search-list">
+                    <form class="filter-wrap" [formGroup]="searchTemplateFormGroup" (submit)="searchKey()" #searchPressReleaseForm="ngForm">
+                        <div class="row title-search-row">
+                            <div class="col-md-4 title-search-col">
+                                <div class="title">
+                                    <h1>Search Template</h1>
+                                </div>
+                            </div>
+                            <div class="col-md-5 title-search-col">
+                                <div class="searchform-block">
+                                    <div class="common-search">
+                                        <input type="text" formControlName="searchVal" maxlength="50" placeholder="Search Template" />
+                                        <span class="search-btn" (click)="searchKey()"></span>
+                                        <div class="filter-btn-wrap">
+                                            <span class="filter-btn" (click)="openFilter();" [ngClass]="status ? 'open' : 'close'"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 title-search-col">
+
+                            </div>
+                        </div>
+                        <div class="feild-search" *ngIf="!status">
+                            <div class="row feild-search-inner">
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input type="number" matInput formControlName="templateId" placeholder="Template Id">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-select placeholder="Template Type" formControlName="templateType">
+                                            <mat-option name="appPushNotification" value="PUSH">App Push Notification</mat-option>
+                                            <mat-option name="sms" value="SMS">SMS</mat-option>
+                                            <mat-option name="email" value="EMAIL">Email</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput formControlName="templateName" placeholder="Template Name" maxlength="50">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-select placeholder="Status" formControlName="status">
+                                            <mat-option value="ONLINE">ONLINE</mat-option>
+                                            <mat-option value="OFFLINE">OFFLINE</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="button-wrap">
+                                    <div class="">
+                                        <button class='button quaternary-btn' type="reset" (click)="reset()">RESET</button>
+                                        <button class='button tertiary-btn' type="submit">APPLY</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="form-wrap">
+            <div class="table-wrap">
+                <div class="table-wrap-inner">
+                    <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
+                        <ng-container matColumnDef="templateId">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="oid" class="top-border"> TEMPLATE ID </th>
+                            <td mat-cell *matCellDef="let row"> {{ row.templateId }} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="templateName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="templateName" class="top-border"> TEMPLATE NAME
+                            </th>
+                            <!-- <td mat-cell *matCellDef="let row">
+                <u>
+                  <a [routerLink]="['/view-template/'+ row.templateId]"
+                    class="text-blue user-name">{{row.templateName}}</a>
+                </u>
+                </td> -->
+                            <td mat-cell (click)="MoveToTemplateView(row.templateId)" *matCellDef="let row">
+                                <u>
+                    <a 
+                      class="text-blue user-name">{{row.templateName}}</a>
+                  </u>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="templateType">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="templateType" class="top-border"> TEMPLATE TYPE
+                            </th>
+                            <td mat-cell *matCellDef="let row">
+                                {{ row.templateType }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="modifiedUserId">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="modifiedUserId" class="top-border"> UPDATED BY
+                            </th>
+                            <!-- <td mat-cell *matCellDef="let row">
+                <u>
+                  <a matTooltip="{{row.modifiedUserName}}"
+                    aria-label="Button that displays a tooltip when focused or hovered over"
+                    [routerLink]="['/view-user/'+ row.modifiedUserId]" class="text-blue user-name">
+                    {{ row.modifiedUserId }}
+                  </a>
+                </u>
+              </td> -->
+                            <td mat-cell (click)="MoveToView(row.modifiedUserId)" *matCellDef="let row">
+                                <u>
+                  <a matTooltip="{{row.modifiedUserName}}"
+                    aria-label="Button that displays a tooltip when focused or hovered over"
+                     class="text-blue user-name">
+                    {{ row.modifiedUserId }}
+                  </a>
+                </u>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="lastModifiedOn">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="modifiedTime" class="top-border"> LAST MODIFIED ON
+                            </th>
+                            <td mat-cell *matCellDef="let row"> {{row.modifiedTime}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="status">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="status" class="top-border"> STATUS </th>
+                            <td mat-cell *matCellDef="let row"> {{row.status}} </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                        </tr>
+                    </table>
+                    <div *ngIf="searchStoreVal" class="select-store-block">
+                        <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                    </div>
+                    <div class="no-records" *ngIf="noRecords">
+                        No Records Found!
+                    </div>
+                </div>
+                <mat-paginator [length]="resultsLength" (change)="getSearchData()" #paginator (page)="getUpdate($event)" [pageSize]="paginationData.pageSize" [pageSizeOptions]="[10,20,50,100]">
+                </mat-paginator>
+            </div>
+        </div>
+        <!-- <div class="form-wrap">
+      <div class="no-records" *ngIf=" resData && resData.length == 0">
+        No Records Found!
+      </div>
+      <div class="table-wrap">
+        <div class="table-wrap-inner" *ngIf="resData && resData.length > 0">
+          <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
+            <ng-container matColumnDef="templateId">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> TEMPLATE ID </th>
+              <td mat-cell *matCellDef="let row"> {{ row.templateId }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="templateName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> TEMPLATE NAME </th>
+              <td mat-cell *matCellDef="let row"><u><a [routerLink]="['/view-template/'+ row.templateId]" class="text-blue">
+                    {{row.templateName}} </a></u></td>
+            </ng-container>
+            <ng-container matColumnDef="templateType">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> TEMPLATE TYPE </th>
+              <td mat-cell *matCellDef="let row"> {{ row.templateType }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="lastModifiedOn">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> LAST MODIFIED ON </th>
+              <td mat-cell *matCellDef="let row"> {{row.modifiedTime}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> STATUS </th>
+              <td mat-cell *matCellDef="let row"> {{row.status}} </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+            </tr>
+          </table>
+          <mat-paginator (click)="getSearchData()" [length]="resultsLength" (change)="getSearchData()" #paginator
+            (page)="getUpdate($event)" [pageSize]="10" [pageSizeOptions]="[10,20,50,100]">
+          </mat-paginator>
+        </div>
+      </div>
+    </div> -->
+    </div>
+</div>

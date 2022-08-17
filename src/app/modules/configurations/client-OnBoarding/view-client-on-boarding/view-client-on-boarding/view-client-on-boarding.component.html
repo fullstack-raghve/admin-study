@@ -1,0 +1,103 @@
+<div class="bredcrumb-title-wrap">
+  <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+  <div class="title">
+    <h1>Client On Boarding</h1>
+  </div>
+</div>
+<div class="form-wrap" *ngIf="viewData!=undefined">
+  <div class="row">
+    <div class="col-md-4">
+      <mat-card class="add-color">
+        <div class="grid img-block">
+          <div class="avatar-zone">
+            <img class="upload-img" [src]="filePathUrl+viewData.clientImage" width="200px;" height="160px;"
+              style="object-fit: fill">
+          </div>
+        </div>
+        <div class="color-container">
+          <div class="select-color">
+            <div class="view-label">
+              <label>Primary Color</label>
+              <p>{{viewData.primaryColor}}</p>
+            </div>
+          </div>
+          <div class="select-color">
+            <div class="view-label">
+              <label>Secondary Color</label>
+              <p>{{viewData.secondaryColor}}</p>
+            </div>
+          </div>
+          <div class="select-category-block">
+            <div class="select-category">
+              <mat-checkbox [checked]="viewData.includeMalls" disabled> Include Malls</mat-checkbox>
+            </div>
+            <div class="select-category">
+              <mat-checkbox [checked]="viewData.includeBrands" disabled> Include Brands</mat-checkbox>
+            </div>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+    <div class="col-md-8">
+      <mat-card class="add-country scroll" malihu-scrollbar [scrollbarOptions]="scrollbarOptions">
+        <div class="row">
+          <div class="col-md-4 name-field">
+            <div class="view-label">
+              <label>Name</label>
+              <p>{{viewData.clientName}}</p>
+            </div>
+          </div>
+        </div>
+        <div class="country-card">
+          <mat-card class="country-details" style="margin-bottom: 15px"
+            *ngFor="let r of viewData.regionList;let i =index;">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="view-label">
+                  <label *ngIf="i==0">Base Country</label>
+                  <label *ngIf="i!=0">Country</label>
+                  <p>{{r.countryName}}</p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="view-label">
+                  <label>Currency</label>
+                  <p>{{r.currencyCode}}</p>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="view-label">
+                  <label>Language</label>
+                  <p>{{r.language}}</p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="view-label">
+                  <label>Tier Engagements Days</label>
+                  <p>{{r.tierEngegementDays}}</p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="view-label">
+                  <label>Delivery Charge</label>
+                  <p>50</p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="view-label">
+                  <label>Delivery Time</label>
+                  <p>06:45 AM</p>
+                </div>
+              </div>
+            </div>
+          </mat-card>
+        </div>
+      </mat-card>
+      <div class="btm-button-wrap">
+        <button class="button primary-btn" type="button" (click)="goToEdit('Client_OnBoard_Edit')">EDIT</button>
+      </div>
+    </div>
+  </div>
+</div>

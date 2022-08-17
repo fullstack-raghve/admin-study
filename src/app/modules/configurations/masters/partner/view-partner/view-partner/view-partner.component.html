@@ -1,0 +1,82 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title">
+        <h1>Masters</h1>
+    </div>
+</div>
+
+<div class="row master-cards">
+    <div class="col-md-3 master-list master-left">
+        <mat-card>
+            <ul class="master_listing">
+                <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-customer-type']">Customer Type</a></li>
+                <li><a href="javascript:void(0)" [routerLink]="['/search-merchant']">Merchant</a></li> -->
+                <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-brand']">Brand</a></li> -->
+                <li><a href="javascript:void(0)" [routerLink]="['/search-country']">Countries</a></li>
+                <li><a href="javascript:void(0)" [routerLink]="['/search-cities']">Cities</a></li>
+                <li><a href="javascript:void(0)" [routerLink]="['/search-malls']">Malls</a></li>
+                <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-course']">Course</a></li>
+                <li><a href="javascript:void(0)" [routerLink]="['/search-cuisine']">Cuisine</a></li> -->
+                <li><a href="javascript:void(0)" [routerLink]="['/search-currency']">Currency</a></li>
+                <li><a href="javascript:void(0)" [routerLink]="['/search-currency-conversion']">Currency Conversion</a></li>
+                <li><a href="javascript:void(0)" [routerLink]="['/search-brand-category']">Brand Category</a></li>
+                <li><a href="javascript:void(0)" [routerLink]="['/search-language']">Language</a></li>
+                <li><a href="javascript:void(0)" [routerLink]="['/search-faq-category']">FAQ Category</a></li>
+                <li><a href="javascript:void(0)" [routerLink]="['/search-about-us-category']">About Us Category</a></li>
+                <li><a href="javascript:void(0)" [routerLink]="['/search-feedback']">Feedback</a></li>
+                <!-- <li class="master-list-selected"><a href="javascript:void(0)" [routerLink]="['/search-partner']">Partner</a></li> -->
+                <li><a href="javascript:void(0)" [routerLink]="['/search-enquiry-type']">Enquiry Type</a></li>
+                <li><a href="javascript:void(0)" [routerLink]="['/add-taxation']">Taxation</a></li>
+
+            </ul>
+        </mat-card>
+    </div>
+    <div class="col-md-9 master-right" *ngIf="partnerData!=undefined">
+        <mat-card class="master-content">
+            <div class="country-card">
+                <form>
+                    <div class="subtitle flex-center mb-25px">
+                        <h3 class="card-title"><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/left_arrow.png" alt="leftArrow" [routerLink]="['/search-partner']"></span>View Parter</h3>
+                        <div class="slider">
+                            <mat-slide-toggle class="mat-slide-toggle" [checked]="checked" [disabled]='true'>{{partnerData?.status}}</mat-slide-toggle>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="master-fieldSet">
+                                <fieldset class="language-fieldset">
+                                    <legend class="fieldset-heading">Partner Title*</legend>
+                                    <div class="multi-fieldset">
+                                        <div>
+                                            <div *ngFor="let partner of partnerData.partnerLocales; let i=index">
+                                                <div class="{{alignCss[i]}} view-label">
+                                                    <label>{{partner?.languageName}}</label>
+                                                    <p>{{partner?.partnerTitle}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row mt-30px">
+                                <div class="col-md-6">
+                                    <div class="view-label">
+                                        <label>Partner Code</label>
+                                        <p>{{partnerData?.partnerCode}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn-wrap text-right">
+                        <button type="button" class="site_btn gray_btn" [routerLink]="['/search-partner']">CANCEL</button>
+                        <button type="button" class="button primary-btn" (click)="MoveToEdit(partnerId)">EDIT</button>
+                        <!-- <button type="button" class="button primary-btn" [routerLink]="['/edit-partner/'+partnerId]">EDIT</button> -->
+                    </div>
+                </form>
+            </div>
+        </mat-card>
+    </div>
+</div>

@@ -1,0 +1,102 @@
+<!-- <div class="page-wrap">
+    <div class="bredcrumb-title-wrap">
+      <div class="search-wrap filter-wrap">
+        <div class="row common-search">
+            <div class="col-md-3 Combination-title" >
+              <h6>Select Combination</h6>
+              
+            </div>
+            <div class=" col-md-9 close-icon">
+              <img src="assets/images/icons/filter_close_ico.png" alt="close_icon" (click)="onCloseClick()">
+          </div>
+    
+        </div>
+      </div>
+    </div> -->
+    <div class="page-wrap">
+      <div class="header flex-container">
+          <h5>Select Quantity</h5>
+          <div class="close-icon">
+              <img src="assets/images/icons/filter_close_ico.png" alt="close_icon" (click)="onCloseClick()">
+          </div>
+      </div>
+    <div class="form-wrap">
+        <div class="table-wrap">
+        <div class="table-wrap-inner" >
+            <form  class="search-wrap filter-wrap" [formGroup]="variantsFormGroup" >
+
+            <table class="GeneratedTable">
+                <thead>
+                    <tr>
+                        <!-- <th class="first-col">
+                            <mat-checkbox (change)="$event ? selection.toggle(row) : null;selection= $event.target.checked" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()" disabled="{{isDisabled}}">
+                            </mat-checkbox>
+                        </th> -->
+                        <th>Label Name</th>
+                        <th>No.of selections from list</th>
+                       
+                        
+                    </tr>
+                </thead>
+                <tbody formArrayName="productVariants">
+                    <tr *ngFor="let regionLocale of variantsFormGroup['controls']['productVariants']['controls'];let j = index;" [formGroupName]="j">
+                    
+                        <td>
+                            <div class="table-cell">
+                                <mat-form-field>
+                                    <input readonly matInput formControlName="variantTypeName"  >
+                                </mat-form-field>
+                            </div>
+                          </td>
+                        <td>
+                            <div class="table-input">
+                                <mat-form-field>
+                                    <input matInput formControlName="maxSelectionCustAddons" OnlyNumber="true" required>
+                                    <mat-error *ngIf="regionLocale.get('maxSelectionCustAddons').hasError('required')">please enter
+                                      Quantity
+                                    </mat-error>
+                                    <mat-error *ngIf="regionLocale.get('maxSelectionCustAddons').hasError('min')"> Minimun Quantity should be 1
+                                    </mat-error>
+                                </mat-form-field>
+                               
+                            </div>
+                        </td>
+                
+                      
+                    </tr>
+                </tbody>
+            </table>
+            </form>
+          
+          <!-- old code -->
+ 
+            <div class="no-records" *ngIf="resultsLength === 0">
+                No Records Found!
+              </div>
+            </div>
+           
+          </div>
+          <div class=" row  total-val-block">
+              <div class="col-md-5 total-value-block" *ngIf="totalFilterRecordVal">
+                <div class="total-value">
+                  <p>Total Product : </p>
+                  <span>{{total}}</span>
+                </div>
+              </div>      
+            </div>
+          <div class="button-wrap">
+            <div class="">
+           <button class="button primary-btn" type="button" (click)="createQuantity()">
+            ADD
+           </button>
+              <!-- <button class="button primary-btn" [mat-dialog-close]="{
+                'buttonName': 'SELECT',
+                'tableData': variantsFormGroup.value,
+                'totalCount':resultsLength
+              }">ADD</button> -->
+            </div>
+          </div>
+      </div>
+    </div>
+
+ 

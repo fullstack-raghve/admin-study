@@ -1,0 +1,46 @@
+.add-taxation {
+    margin-bottom: 15px;
+    .add-tax {
+        font-size: 16px;
+        font-weight: bold;
+    }
+}
+
+table.GeneratedTable {
+    width: 100%;
+    background-color: #ffffff;
+    border-collapse: collapse;
+    border-width: 1px;
+    border-color: #dedede;
+    border-style: solid;
+    color: #000000;
+    .headers {
+        border-width: 1px;
+        border-color: #dedede;
+        border-style: solid;
+        padding: 5px;
+        color: #FF8E48;
+        font-size: 14px;
+        text-align: center;
+    }
+    td {
+        border-width: 1px;
+        border-color: #dedede;
+        border-style: solid;
+        font-size: 14px;
+        text-align: center;
+        color: #4e4e4e;
+        div {
+            margin: 0 10px;
+            .text-right {
+                text-align: right;
+            }
+        }
+        input {
+            font-weight: 500;
+            font-size: 14px;
+            padding-bottom: 0;
+            text-align: center;
+        }
+    }
+}

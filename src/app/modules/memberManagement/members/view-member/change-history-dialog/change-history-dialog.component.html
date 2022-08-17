@@ -1,0 +1,163 @@
+<div class="page-wrap">
+  <div class="bredcrumb-title-wrap">
+    <div class="space-between close-dialog">
+      <div class="title">
+        <h4>Change History</h4>
+      </div>
+      <div class="close-icon text-right">
+        <img src="assets/images/icons/filter_close_ico.png" (click)="onCloseClick()" alt="">
+      </div>
+    </div>
+    <form class="filter-wrap" [formGroup]="searchForm" (submit)="viewCustomerHistory()">
+      <div class="common-search">
+        <input type="text"  placeholder="Search Change History" formControlName="searchKey"/>
+        <span class="search-btn" (click)="viewCustomerHistory()"></span>
+        <!-- <div class="filter-btn-wrap">
+          <span class="filter-btn" (click)="openFilter();" [ngClass]="status ? 'open' : 'close'"></span>
+        </div> -->
+      </div>
+      <!-- <div class="feild-search" *ngIf="!status">
+        <div class="row feild-search-inner">
+ 
+          <div class="col-md-3">
+            <mat-form-field>
+              <input matInput [matDatepicker]="picker" placeholder="Date" formControlName="modifiedDate">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="col-md-3">
+            <mat-form-field>
+              <mat-select placeholder="Change Type" formControlName="changeType">
+                <mat-option value="firstName">firstName</mat-option>
+                <mat-option value="dateOfBirth">dateOfBirth</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-md-3">
+            <mat-form-field>
+              <mat-select placeholder="Status">
+                <mat-option value="ONLINE">ONLINE</mat-option>
+                <mat-option value="OFFLINE">OFFLINE</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-md-3">
+            <mat-form-field>
+              <input matInput placeholder="Changed By" required>
+            </mat-form-field>
+          </div>
+          <div class="button-wrap">
+            <div class="">
+              <button class='button quaternary-btn' type="button" (click)="buildStoreForm()">Reset</button>
+              <button class='button tertiary-btn' type="submit">Apply</button>
+            </div>
+          </div>
+        </div>
+      </div> -->
+    </form>
+  </div>
+  <div class="form-wrap">
+    <div class="no-records" *ngIf="dataSource === undefined">
+      No Records Found!
+    </div>
+    <div class="table-wrap">
+      <div class="table-wrap-inner" malihu-scrollbar [scrollbarOptions]="scrollbarOptions">
+        <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
+          <ng-container matColumnDef="modifiedDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="modifiedTime" class="top-border"> DATE </th>
+            <td mat-cell *matCellDef="let row"> {{ row.modifiedDate }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="changeType">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="changeType" class="top-border"> CHANGE TYPE </th>
+            <td mat-cell *matCellDef="let row"> {{ row.changeType }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="fromValue" >
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="fromValue" class="top-border"> FROM VALUE </th>
+            <td mat-cell *matCellDef="let row"> {{row.fromValue}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="toValue">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="toValue" class="top-border"> TO VALUE </th>
+            <td mat-cell *matCellDef="let row"> {{row.toValue}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="changedBy">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header="modifiedBy" class="top-border"> CHANGED BY </th>
+            <td mat-cell *matCellDef="let row"> {{ row.changedBy }} </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+          </tr>
+        </table>
+        <div class="no-records" *ngIf="resultsLength === 0">
+          No Records Found!
+        </div>
+      </div>
+      <mat-paginator [length]="resultsLength" (change)="viewCustomerHistory()" #paginator (page)="getUpdate($event)"
+          [pageSize]="10" [pageSizeOptions]="[10,20,50,100]">
+        </mat-paginator>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

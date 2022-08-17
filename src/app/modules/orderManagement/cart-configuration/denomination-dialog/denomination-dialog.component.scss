@@ -1,0 +1,32 @@
+.btn1{
+  float: right;
+  }
+  .add-icon{
+  .button.primary-btn {
+    background-color: #FF8E48;
+    border: 1px solid #FF8E48;
+    outline: none;
+    font-family: 'muliregular';
+    padding: 1px 10px;
+    color: #fff;
+    line-height: 20px;
+}
+img{
+  height: 10px;
+}
+
+  }
+  .chipset-block{
+    position: relative;
+    .add-icon{
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+  }
+  .added-value{
+    margin-top: 5px;
+    mat-chip{
+      margin: 5px 3px;
+    }
+  }

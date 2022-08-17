@@ -1,0 +1,80 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container">
+        <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          [routerLink]="['/search-variants']"></span>Add Variant</h1>
+        <div class="slider">
+            <mat-slide-toggle [(ngModel)]="toggleVal" (change)="toggleStatus($event)" class="example-margin text-right">
+                {{statusValue}}
+            </mat-slide-toggle>
+        </div>
+    </div>
+</div>
+<form id="addVariantTypeForm" (submit)="createVariant(variantFormGroup.value)" [formGroup]="variantFormGroup" #createVariantForm="ngForm">
+    <div class="page-wrap">
+        <div class="variants-wrapper">
+            <div class="row">
+                <div class="col-md-4 pad-r-0">
+                    <mat-card class="left-col">
+                        <div class="field">
+                            <mat-form-field>
+                                <input matInput placeholder="Variant Name" formControlName="variantName" maxlength="40" required>
+                                <mat-error *ngIf="variantFormGroup.get('variantName').hasError('required')">Please enter value</mat-error>
+                                <!-- <mat-error *ngIf="variantFormGroup.get('variantName').hasError('pattern')">Only Alphanumeric are allowed</mat-error> -->
+                            </mat-form-field>
+                        </div>
+                        <div class="master-fieldSet" formArrayName="variantTypeLocale">
+                            <fieldset class="language-fieldset">
+                                <legend class="fieldset-heading">Variant Type</legend>
+                                <div *ngFor="let locale of variantFormGroup['controls']['variantTypeLocale']['controls'];let i = index;" [formGroupName]="i">
+                                    <div class="example-container {{languageDirection[i]}}">
+                                        <mat-form-field [class.direction-right]="languageList[i].languageName == 'Arabic'">
+                                            <input matInput placeholder="{{languageList[i].languageName}}*" maxlength="40" formControlName="variantType">
+                                            <mat-error *ngIf="locale.get('variantType').hasError('required')">Please enter value</mat-error>
+                                            <!-- <mat-error *ngIf="locale.get('variantType').hasError('pattern')">Only Alphanumeric are allowed</mat-error> -->
+                                        </mat-form-field>
+                                        <div class="mat-error-display" *ngIf="showVariantError[i]">{{errorMsg[i]}}</div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="text-right">
+                            <button class='button tertiary-btn' type="button" (click)="addVariantType()">ADD VARIANT TYPE</button>
+                        </div>
+                    </mat-card>
+                </div>
+                <div class="col-md-8">
+                    <mat-card class="right-col">
+                        <h6 class="sub-title">Variants Type</h6>
+                        <div class="variants-table">
+                            <table mat-table [dataSource]="dataSource">
+
+                                <ng-container *ngFor="let lang of languageList;let i = index;" matColumnDef="{{lang.languageName}}">
+                                    <th mat-header-cell *matHeaderCellDef> {{lang.languageName}} </th>
+                                    <td mat-cell *matCellDef="let item" class="{{languageDirection[i]}}"> {{item[i].variantType}} </td>
+                                </ng-container>
+
+
+
+                                <ng-container matColumnDef="delete">
+                                    <th mat-header-cell *matHeaderCellDef> </th>
+                                    <td mat-cell *matCellDef="let item" class="text-right">
+                                        <a (click)="delete(item)" class="pointer"><img src="assets/images/icons/filter_close_ico.png" alt="" width="15px"></a>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                            </table>
+                        </div>
+                    </mat-card>
+                </div>
+            </div>
+            <div class="btm-button-wrap">
+                <button type="button" class="button secondary-btn" [routerLink]="['/search-variants']">CANCEL</button>
+                <button class="button primary-btn" type="submit">ADD</button>
+            </div>
+        </div>
+    </div>
+</form>

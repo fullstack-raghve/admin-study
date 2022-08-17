@@ -1,0 +1,82 @@
+.page-wrap-se {
+.table-wrap-inner {
+    // max-height: 300px;
+  //   overflow-y: scroll;
+     th.mat-header-cell {
+     //    padding: 3px 20px;
+         font-family: "muliregular" !important;
+     }
+     td.mat-cell,
+     td.mat-footer-cell,
+     th.mat-header-cell {
+       //  padding: 3px 20px;
+         font-family: "muliregular" !important;
+     }
+     tr.mat-header-row {
+         height: 56px;
+     }
+     .break-spaces{
+        white-space: break-spaces;
+     }
+  
+ }
+ .no-padd{
+     padding: 0px;
+ }
+ .fw-custom{
+    margin-bottom: 75px;
+    background: #fff;
+    max-width: 98%;
+    position: relative;
+    top: -57px;
+    padding: 1px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    margin: 0 auto;
+    width: 100%;
+ }
+ .plus-icon {
+    width: 9px;
+    margin-bottom: 4px;
+    margin-right: 5px;
+    color: #fff !important;
+}
+.pb-50{
+    padding-bottom: 50px;
+}
+.mat-paginator-page-size-select{
+    margin: 6px 4px 0 4px!important;
+    width: 56px!important;
+  }
+}
+
+@mixin mat-table-columns($columns)
+{
+    .mat-column-
+    {
+        @each $colName, $props in $columns {
+
+            $width: map-get($props, 'width');
+            
+            &#{$colName} 
+            {
+                flex: $width;
+                min-width: $width;
+
+                @if map-has-key($props, 'color') 
+                {
+                    color: map-get($props, 'color');
+                }
+            }  
+        }
+    }
+}
+
+@include mat-table-columns((
+    
+   // orderid: (width: 6rem, color: gray),
+  ///  date: (width: 9rem),
+  eventName: (width: 12rem),
+  BRAND_NAME: (width: 10rem)
+
+));

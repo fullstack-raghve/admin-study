@@ -1,0 +1,49 @@
+
+<div class="page-wrap">
+  <div class="header">
+    <h3>Change Customer Tier</h3>
+    <div class="close-icon">
+      <img src="assets/images/icons/filter_close_ico.png" alt="" (click)="onCloseClick()">
+    </div>
+  </div>
+  <div class="add-transaction">
+    <form (submit)="updateCustomerTier(customerProfileTierGroupForm.value)" [formGroup]="customerProfileTierGroup" #customerProfileTierGroupForm="ngForm">
+    <div class="row">
+      <div class="col-md-4">
+        <label>Current Tier</label>
+        <strong class="block">{{basicDetails.tierName}}</strong>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <mat-form-field>
+          <mat-select placeholder="Select New Customer Tier" formControlName="tierOid">
+            <mat-option *ngFor="let tier of tierList" value="{{tier.tierId}}" >
+              {{ tier.tierName }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="customerProfileTierGroup.get('tierOid').hasError('required')">Please select value</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="set_tier_radio mb-10px">
+      <mat-radio-group aria-label="Select an option" formControlName="expiryType" (change)="changeValidation()">
+        <mat-radio-button value="forever" class="block">Forever <span>(Auto-downgrade not possible)</span></mat-radio-button>
+        <mat-radio-button value="specifyDate">Specify Date <span>(Auto-downgrade not possible till this date)</span></mat-radio-button>
+      </mat-radio-group>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <mat-form-field>
+          <input matInput [matDatepicker]="picker" placeholder="Date" formControlName="tierExpiryDate"> 
+             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="button-wrap ml-20px">
+       <button type="submit" class="button primary-btn" [disabled]="customerProfileTierGroup.invalid">UPDATE</button>
+    </div>
+  </form>
+  </div>
+</div>

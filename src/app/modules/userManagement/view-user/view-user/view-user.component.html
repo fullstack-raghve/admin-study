@@ -1,0 +1,186 @@
+<div class="page-wrap">
+  <div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container">
+      <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow" [routerLink]="['/search-user']"></span>View User</h1>
+      <mat-slide-toggle [(ngModel)]="toggleVal" class="example-margin" [checked]="checked"  [disabled]="disabled">
+        {{toggleVal==true ? "ONLINE" : "OFFLINE"}}
+      </mat-slide-toggle>
+    </div>
+  </div>
+  <div class="form-wrap view-page mb-50px">
+    <mat-tab-group animationDuration="0ms" *ngIf="viewUserData" class="tabs-align">
+      <mat-tab label="Basic Details">
+        <ng-template matTabContent>
+          <div class="row">
+            <div class="col-md-5">
+              <h3 class="card-title">&nbsp;</h3>
+              <div class="card">
+                <div class="form-warpper">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <label>Role</label>
+                      <p>{{viewUserData.roleName}}</p>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="row">
+                        <div class="col-md-5">
+                          <label>Title</label>
+                          <p>{{viewUserData.title}}</p>
+                        </div>
+                        <div class="col-md-7">
+                          <label>First Name</label>
+                          <p>{{viewUserData.firstName}}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <label>Employee Id</label>
+                      <p>{{viewUserData.employeeId}}</p>
+                    </div>
+                    <div class="col-md-6">
+                      <label>Middle Name</label>
+                      <p>{{viewUserData.middleName}}</p>
+                    </div>
+                    <div class="col-md-6">
+                      <label>User Name</label>
+                      <p>{{viewUserData.userName}}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Last Name</label>
+                        <p>{{viewUserData.lastName}}</p>
+                      </div>
+                    <div class="col-md-6">
+                      <label>Email Id</label>
+                      <p>{{viewUserData.emailId}}</p>
+                    </div>
+                    <div class="col-md-6">
+                      <label>Phone Number</label>
+                      <p>{{viewUserData.phoneNumber}}</p>
+                    </div>
+                    <div class="col-md-6">
+                      <label>Access Type</label>
+                      <p>{{viewUserData.accessType}}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            
+            <div class="col-md-7 store-table">
+              <h3 class="card-title">Store Access</h3>
+              <div class="card no-pad">
+                <div class="heading">
+                  <div class="flex-container">
+                      <div class="select-stores">
+                        <button class='select-stores-btn disabled'>SELECT STORES</button>
+                      </div>
+                    </div>
+                </div>
+                <div class="table-wrap"  *ngIf="dataSource.data.length>0" >
+                  <div class="table-wrap-inner" malihu-scrollbar [scrollbarOptions]="scrollbarOptions">
+                      <table mat-table [dataSource]="dataSource" matSort>
+                          <ng-container matColumnDef="storeId">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> STORE ID </th>
+                            <td mat-cell *matCellDef="let row"> {{ row.storeId }} </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="storeName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> STORE NAME </th>
+                            <td mat-cell *matCellDef="let row"> {{row.storeName}} </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="address">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> ADDRESS </th>
+                            <td mat-cell *matCellDef="let row"> {{row.address}} </td>
+                          </ng-container>
+                          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                          <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                          </tr>
+                        </table>
+                  </div>
+
+                  <mat-paginator
+                    [pageSizeOptions]="[5, 10, 25, 100]"
+                    #paginator
+                    [pageSize]="5"></mat-paginator>
+                </div>
+                <div class="no-records" *ngIf="dataSource.data.length === 0">
+                  No Records Found!
+                </div>
+              </div>
+            </div>
+          </div>
+              <div class="btm-btn-wrap">
+                  <button class='button secondary-btn' [routerLink]="['/search-user']">CANCEL</button>
+                  <!-- <button class='button primary-btn' [routerLink]="['/edit-user/'+ viewUserData.userId]">EDIT</button> -->
+                  <button class='button primary-btn' type="button" (click)="MoveToEdit(viewUserData.userId)">EDIT</button>
+                </div>
+        </ng-template>
+      </mat-tab>
+      <mat-tab label="Permissions">
+        <ng-template matTabContent>
+          <div class="permission-tab-wrapper">
+            <div class="row heading">
+                <div class="col-md-3">
+                  <h5 class="title">
+                    Module
+                  </h5>
+                </div>
+                <div class="col-md-9">
+                  <h5 class="title">
+                    Permission
+                  </h5>
+                </div>
+            </div>
+            <div *ngFor='let permission of acessList; let i = index;'  >
+              <!-- JSON is looping  *ngIf="permissionArray.indexOf(permission.menuId) != -1" -->
+              <div class="row" >
+                <!-- Parent Level -->
+                <div class="col-md-3 left-column">
+                  <div class="module-header">
+                     {{permission.displayName}}
+                  </div>
+                </div>
+                <div class="col-md-9 p-0px">
+                  <div class="module-permission" *ngFor="let moduleName of permission.children; let j= index;">
+                    <ng-container *ngIf="moduleName.children.length!=0 ; else secondLevel">
+                  <div class="permission-title">
+                    {{moduleName.displayName}}
+                    <!-- <mat-checkbox></mat-checkbox> -->
+                  </div>
+                  <ul>
+                    <li *ngFor='let access of moduleName.children; let x = index;' class="col-md-3">
+                      <mat-checkbox [name]="'booRequired'+x"
+                      [checked]="permissionList.indexOf(access.menuId) != -1 ? true : false" [disabled]="true">
+                       {{access.displayName}}
+                      </mat-checkbox>
+                    </li>
+                  </ul>
+                </ng-container>
+                <ng-template #secondLevel>
+                    <ul>
+                        <li >
+                          <div class="module-title checkbox-align">
+                              <mat-checkbox [name]="'secondLevel'+j" [checked]="permissionList.indexOf(moduleName.menuId) != -1 ? true : false" [disabled]="true"> {{moduleName.displayName}}</mat-checkbox>
+                          </div>
+                        </li>
+                      </ul>
+                </ng-template>
+                </div>
+              </div>
+              </div>
+            </div>
+          </div>
+          <div class="btm-button-wrap">
+              <button class='button secondary-btn' [routerLink]="['/search-user']">CANCEL</button>
+              <!-- <button class='button primary-btn' [routerLink]="['/edit-user/'+ viewUserData.userId]">EDIT</button> -->
+              <button class='button primary-btn' type="button" (click)="MoveToEdit(viewUserData.userId)">EDIT</button>
+
+            </div>
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

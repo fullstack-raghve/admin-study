@@ -1,0 +1,391 @@
+<div class="bredcrumb-title-wrap">
+  <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+  <div class="title flex-container template-title">
+    <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          [routerLink]="['/search-gift-card']"></span>Gift Card</h1>
+    <mat-slide-toggle class="example-margin text-right" [(ngModel)]="toggleVal" (change)="toggleStatus($event); statusCall()">
+      {{statusValue}}
+    </mat-slide-toggle>
+  </div>
+</div>
+<div *ngIf="loadingResponse" class="select-store-block">
+    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+  </div>
+<div class="form-wrap" *ngIf="!loadingResponse">
+  <form [formGroup]="giftFormGroup" (submit)="UpdateGiftCard(giftFormGroup.value)">
+    <div class="row firstRow">
+      <div class="col-md-8">
+        <mat-card class="add-color">
+          <div class="row firstpadding">
+                <div   class="col-md-5 messageOverwrite">
+                  <div (click)="addGiftCard()" *ngIf="backgroundColor!=''" class="edit-avatar-zone">
+                    <button  id="templateButton" class="button edit-img-button" type="button">
+                      <img src="assets/images/icons/flaticon1562564280-svg.svg" alt=""></button>
+                   </div>
+                  <div  *ngIf="backgroundImage!=''" class="avatar-zone1"  [ngStyle]="{'background-color':backgroundColor}">
+                        <img  [src]="backgroundImage" 
+                          style="object-fit: fill">
+                      </div>
+                      <div *ngIf="backgroundImage=='' " class="avatar-zone" [ngStyle]="{'background-color':backgroundColor}" style="height:190px">
+                        
+                        </div>
+                      <div class="ImgHead">
+                          <div *ngIf="logoImage!=''" class="avatar-zone_logo">
+                              <img   [src]="logoImage" 
+                                height="30px;" style="object-fit: fill; ">
+                            </div>
+                           
+                            <div class="messages" [ngStyle]="{'color':textColor}">
+                              <h6>{{headingMessage1}}</h6>
+                              <h3>{{headingMessage2}}</h3>
+                              <p>{{textMessage}}</p>
+                            </div>
+                      </div>
+                      <mat-error *ngIf="giftFormGroup.get('templateId').hasError('required')">
+                          Please upload image</mat-error>
+                </div>            
+            <div class="col-md-6">
+              <div class="master-fieldSet">
+                <fieldset class="language-fieldset">
+                  <legend class="fieldset-heading">Card Name*</legend>
+                  <div formArrayName="giftLanguageList">
+                    <div
+                      *ngFor="let cardLanguage of giftFormGroup['controls']['giftLanguageList']['controls'];let i = index;"
+                      [formGroupName]="i">
+                      <mat-form-field class="{{alignCss[i]}}">
+                        <input matInput placeholder="{{viewData['TNC'][i]['languageName']}}" required
+                          formControlName="cardName" maxlength="40">
+                        <mat-error *ngIf="cardLanguage.get('cardName').hasError('required')">
+                          Please enter value</mat-error>
+                        <mat-error *ngIf="cardLanguage.get('cardName').hasError('pattern')">
+                          Invalid characters entered</mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+      <div class="col-md-4">
+        <mat-card>
+          <div class="row">
+              <div class="col-md-8" *ngIf="PublishStatus=='AWAITS APPROVAL'"></div>
+            <div class="col-md-9" *ngIf="PublishStatus!='AWAITS APPROVAL'"></div>
+            <div>
+              <p class="new-playicon">{{PublishStatus}}&nbsp;<span><img src="assets/images/icons/flaticon1558687912-svg.svg"></span></p>
+            </div>
+          </div>
+          <div class="templateFor">           
+                  <mat-form-field>
+                    <input matInput placeholder="Card For" readonly formControlName="cardFor"  >
+                  </mat-form-field>
+              </div>
+          <div class="cardcodes">
+            <p><b>Card codes</b></p>
+            <div class="row cardcodes-row">
+              <div class="col-md-6 cardcodes-col-left">
+                <mat-form-field>
+                  <input maxlength="3" formControlName="prefix" matInput placeholder="Prefix*">
+                  <mat-error *ngIf="giftFormGroup.get('prefix').hasError('pattern')">
+                      Invalid character entered</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6 cardcodes-col-right">
+                <mat-form-field>
+                  <input maxlength="3" matInput formControlName="suffix" placeholder="Suffix*">
+                  <mat-error *ngIf="giftFormGroup.get('suffix').hasError('pattern')">
+                      Invalid character entered</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="row"> 
+              <div class="col-md-5">
+
+                 <mat-form-field>
+                    <input (dateInput)="CheckDatecondtion()" matInput [min]="minDate"   [max]="giftFormGroup.get('expiryDate').value=='' ? '' : giftFormGroup.get('expiryDate').value"
+                    [matDatepicker]="publishDate" placeholder="Date of Publishing*" formControlName="publishDate" readonly>
+                    <mat-datepicker-toggle matSuffix [for]="publishDate"></mat-datepicker-toggle>
+                    <mat-datepicker #publishDate></mat-datepicker>
+                    <mat-error *ngIf="giftFormGroup.get('publishDate').hasError('required')">
+                        Please Select date</mat-error>
+                  </mat-form-field>
+                </div>
+
+           <div class="col-md-7 row">
+            <mat-radio-group formControlName="cardUsageType" aria-label="Select an option" style="padding-top:17px;">
+                <div class=" radiobutton-row" style="display:flex">
+                  <!-- <div class="col-md-4 "> -->
+                    <mat-radio-button value="SINGLE">Single Use</mat-radio-button>&nbsp;
+                  <!-- </div>
+                  <div class="col-md-4 "> -->
+                    <mat-radio-button value="MULTIPLE">Multi Use</mat-radio-button>
+                  <!-- </div> -->
+                </div>
+                <mat-error *ngIf="giftFormGroup.get('cardUsageType').hasError('required')">
+                  Please Select Either value</mat-error>
+              </mat-radio-group>
+         </div>
+           
+          </div>
+        </mat-card>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4" style="display: grid;">
+        <mat-card>
+          <h6>Card Value</h6>
+          <div class="row card-value">
+            <div class="col-md-4" style="font-size:12px">
+                <mat-form-field>
+                    <mat-select placeholder="Value-Type*" formControlName="valueType">
+                      <mat-option (click)="getFileTypeStatus('AMOUNT')" value="AMOUNT"> Amount </mat-option>
+                      <mat-option (click)="getFileTypeStatus('PRODUCT')" value="PRODUCT">Product</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="giftFormGroup.get('valueType').hasError('required')">
+                        Please select value</mat-error>
+                  </mat-form-field>
+                <!-- <mat-form-field>
+                    <mat-select placeholder="Value-Type*" formControlName="valueType">
+                        <mat-option *ngFor="let type of ValueTypeArray " [value]="type" (click)="getFileTypeStatus(type)">
+                          {{type}}</mat-option>
+                      </mat-select>
+                  </mat-form-field> -->
+            </div>
+            <div *ngIf="ValType == 'PRODUCT'" class="col-md-6 value-col-left sku" style="display: flex;">
+                <mat-form-field >
+                  <input style="width:250px" matInput formControlName="productName" placeholder="Select SKU Code*">
+                  <mat-error *ngIf="giftFormGroup.get('productName').hasError('required')">
+                      Please select SKU</mat-error>
+                </mat-form-field>
+                <div (click)="selcetProductSKU()" style="color: rgb(8, 151, 247);"><small><u style="cursor:pointer;">Select</u></small></div>
+              </div>
+              <div *ngIf="ValType == 'PRODUCT'" class="col-md-6 value-col-left">
+                  <mat-form-field >
+                    <input matInput min="1" max="999"  formControlName="oneProductCost" placeholder="Cost of 1*" maxlength="3"  onKeyPress="if(this.value.length==3) return false;">
+                    <mat-error *ngIf="giftFormGroup.get('oneProductCost').hasError('minlength(1)')">
+                      Please enter value more than zero</mat-error>
+                      <mat-error *ngIf="giftFormGroup.get('oneProductCost').hasError('pattern')">
+                        Invalid characters entered</mat-error>
+                        <mat-error *ngIf="giftFormGroup.get('oneProductCost').hasError('required')">
+                            Please enter value</mat-error>
+                  </mat-form-field>
+                </div>
+            <div class="col-md-6">
+                <!-- <ng-select #myselect [options]="CurrencyCode" placeholder="Choose your option" #myselect></ng-select> -->
+                <mat-form-field>
+                    <mat-select   placeholder="Currency*" formControlName="Currency"  >
+                        <mat-option *ngFor="let CCode of CurrencyCode" value="{{CCode.CurrencyID}}">
+                            {{ CCode.CurrencyName }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="giftFormGroup.get('Currency').hasError('required')">
+                        Please select currency</mat-error>
+                  </mat-form-field>
+            </div>
+          </div>
+
+          
+          <div class="value-selection">
+              <mat-form-field>
+                <input style="width: 425px;"   OnlyNumber=true type="text"  matInput placeholder="Fixed Value Selection" #gift_keyword formControlName="keywords" maxlength="50" (keyup)="checkPin($event)">
+                <mat-error *ngIf="giftFormGroup.get('keywords').hasError('required')">
+                  Please provide Fixed value or Range or Both</mat-error>
+              </mat-form-field>
+              <button (click)=showKeyword(gift_keyword) class="button primary-btn add-button" type="button">
+                <img src="assets/images/svg-icons/add_ico.svg" alt="" ></button>
+              <p *ngIf="!keywordStatus" style="color:red">Minimum value 1 & Maximum 5 values allowed</p>
+              <p *ngIf="keywordError" style="color:red">Please enter value more than zero.</p>
+              <p *ngIf="secondCon" style="color:red"> Please click on add button</p>
+              <div class="row addCardKeywords">
+                <div  class="" style="padding-bottom: 12px;" *ngFor='let key of keywords ; let i = index;'>{{key}}
+                  <img (click)=deleteKeyword(i) src="assets/images/icons/close_img_ico.png" ></div>
+              </div>
+            </div>
+
+          
+
+
+
+            <div   class="value-checkbox">
+                <mat-checkbox formcontroller="isMarkDefault" [checked]="isMarkDefault" (change)="CheckAmountType($event)" >Range Value Selection</mat-checkbox>
+              </div>
+              <div  class="row">
+                <div class="col-md-6 value-col-left" [class.nonEditable]="Editable">
+                  <mat-form-field  >
+                      <input matInput placeholder="Min Value" OnlyNumber="true" formControlName="minVal">
+                    <!-- <input  OnlyNumber="true"  type="number" matInput formControlName="minVal" placeholder="Min Value"> -->
+                    <mat-error *ngIf="giftFormGroup.get('minVal').hasError('required')">
+                      Please enter value</mat-error>
+                      
+                  </mat-form-field>
+                  <p *ngIf="minValueError" style="color:red">Value should be Greater than Zero</p>
+                </div>
+                <div  class="col-md-6 value-col-right" [class.nonEditable]="Editable">
+                  <mat-form-field  >
+                      <input matInput placeholder="Max Value" OnlyNumber="true" formControlName="maxVal">
+                    <!-- <input  OnlyNumber="true"  type="number" matInput formControlName="maxVal" placeholder="Max Value"> -->
+                    <mat-error *ngIf="giftFormGroup.get('maxVal').hasError('required')">
+                      Please enter value</mat-error>
+                  </mat-form-field>
+                  <p  *ngIf="MinValCondition" style="color:red"> Max Value should be greater than Min Value </p>
+                </div>
+              </div>
+        </mat-card>
+      </div>
+      <div class="col-md-4" style="display: grid;">
+        <mat-card class="coupn">
+          <h6>Discount & Charges</h6>
+          <div class="row">
+            <div class="col-md-4 value-col-left fontSiz">
+              <mat-form-field  >
+                <input type="number" min="1" step='1' max="99" formControlName="discount" matInput placeholder="Enter Percentage" onKeyPress="if(this.value.length==2) return false;">
+              </mat-form-field>
+              <mat-error *ngIf="giftFormGroup.get('discount').hasError('minlength')">
+                Invalid characters entered</mat-error>
+              <mat-error *ngIf="giftFormGroup.get('discount').hasError('pattern')">
+                Invalid characters entered</mat-error>
+            </div>
+            <div  class="col-md-6 value-col-right fontSiz"  style="display: flex;">
+              <mat-form-field >
+                    <input [readonly]=true style="width:200px;"  formControlName="couponTitile" matInput placeholder="Select Coupon">
+                  
+              </mat-form-field>
+              <div  style=" position: relative;top: 14px; left: 10px;color: rgb(8, 151, 247);" *ngIf="ValType != ''" (click)="addCoupon()" ><small><u style="cursor:pointer;">Select </u></small></div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 charges fontSiz">
+              <mat-form-field >
+                <input type="number" min="1" max="9999" matInput formControlName="additionalCharge" placeholder="Additional Charges" onKeyPress="if(this.value.length==4) return false;">
+              </mat-form-field>
+              <mat-error *ngIf="giftFormGroup.get('additionalCharge').hasError('minlength')">
+                Invalid characters entered</mat-error>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+      <div  class="col-md-4" style="display: grid;">
+        <mat-card>
+          <h6>Eligibility</h6>
+          <p class="date-days">Expiry Date / No of days</p>
+          <div [class.nonEditable]="CheckDate" class="row eligibility-date-picker">
+            <div (click)="checkExpiry('DATE')" class="col-md-6 eligibility-date-picker-left">
+              <mat-form-field>
+                <input (dateInput)="checkExpiry('DATE')" [min]="giftFormGroup.get('publishDate').value=='' ? 'maxDate' : giftFormGroup.get('publishDate').value" 
+                 formControlName="expiryDate" matInput [matDatepicker]="picker" placeholder="Select Date" readonly>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div (click)="checkExpiry('DAYS')" class="col-md-6 eligibility-date-picker-right fontSiz">
+              <mat-form-field>
+                <input  type="number" min="1" minlength="1" max="999" formControlName="noOfDay" matInput placeholder="No.of Days" onKeyPress="if(this.value.length==3) return false;">
+              </mat-form-field>
+              <mat-error *ngIf="giftFormGroup.get('noOfDay').hasError('pattern')">
+                Invalid characters entered</mat-error>
+                <mat-error *ngIf="giftFormGroup.get('noOfDay').hasError('minlength')">
+                  Invalid characters entered</mat-error>
+                 
+            </div>
+          </div>
+
+          <p  style="margin-top:10px"><b>Eligibility</b></p>
+          <p>Select applicable brands or stores</p>
+          <div *ngIf="ValType != ''" class="select-value">
+            <div class="row col-md-5" style="display: block;">
+                
+                    <p  (click)="openStoresDialog()" style="color: rgb(8, 151, 247);"><small><u style="cursor:pointer;">Select Store</u></small></p>
+                    <!-- <p *ngIf="dataStore">{{selectedStore.length}}</p><span>Stores </span> -->
+
+                  <div *ngIf="selectedStore!=null" class="select-store-block">
+                    <div *ngIf="selectStoreVal">
+                      <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                    </div>
+                 
+                </div>
+                <div  *ngIf="dataStore" style="display: flex;">
+                  <p>{{selectedStore.length}}</p>&nbsp;<span>Stores </span>
+                </div>
+              </div>
+        
+          <div *ngIf="ValType != 'PRODUCT'" class="col-md-5">
+              <p  (click)="selcetProductSKU()" style="color: rgb(8, 151, 247);"><small><u style="cursor:pointer;">Select Product</u></small></p>
+              <div *ngIf="selectedProduct!=null" class="select-store-block" style="justify-content: end;">
+                  <div *ngIf="selectStoreVal1">
+                    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                  </div>
+                 
+              </div>
+              <div *ngIf="dataStore1"  style="display: flex;">
+                <p *ngIf="selectedProduct.length>0">{{selectedProduct.length}}</p>&nbsp;<span *ngIf="selectedProduct.length>0">Products </span>
+              </div>
+            </div>  
+        <div *ngIf="ValType != 'PRODUCT'"  class="col-md-5" style="padding-left:5px">
+            <input class="upload_sku" type="file"  (change)="uploadSKU($event.target.files)" />
+            <p style="color: rgb(8, 151, 247);"><small><u style="cursor:pointer;">Upload Product</u></small></p>
+            <div class="row" *ngIf="ValType == 'AMOUNT'" style="padding-right: 39px;">
+              <p class="col-md-10" ><a [href]="this.SKUCODEurl" style="color:#353535">{{skuXslFileName}}</a></p>    
+            </div>
+           
+        </div>
+       
+             
+            
+          </div>
+          <div class="row eligibility_block">
+            <div class="col-md-6 eligibility_block-left fontSiz">
+              <mat-form-field >
+                <input type="number" min="1"  minlength="1" max="999999" formControlName="maxTxnValuePerDay" matInput placeholder="Max transaction value allowed per day" onKeyPress="if(this.value.length==6) return false;">
+              </mat-form-field>
+              <mat-error *ngIf="giftFormGroup.get('maxTxnValuePerDay').hasError('pattern')">
+                Invalid characters entered</mat-error>
+                <mat-error *ngIf="giftFormGroup.get('maxTxnValuePerDay').hasError('minlength')">
+                  Invalid characters entered</mat-error>
+            </div>
+            <div class="col-md-6 eligibility_block-right fontSiz">
+              <mat-form-field >
+                <input type="number" min="1" minlength="1" max="99" formControlName="maxTxnPerDay" matInput placeholder="Max no of transactions allowed per day"  onKeyPress="if(this.value.length==2) return false;">
+              </mat-form-field>
+              <mat-error *ngIf="giftFormGroup.get('maxTxnPerDay').hasError('pattern')">
+                Invalid characters entered</mat-error>
+                <mat-error *ngIf="giftFormGroup.get('maxTxnPerDay').hasError('minlength')">
+                  Invalid characters entered</mat-error>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+    <div class="terms&conditions-block">
+        <h3 class="card-title">Terms & Conditions </h3>
+        <mat-card class="description-card">
+          <div class="expansion-panel" formArrayName="conditionArray">
+            <mat-accordion>
+              <mat-expansion-panel class="mat-expansion-panel"
+                *ngFor="let program of giftFormGroup['controls']['conditionArray']['controls'];let i = index;"
+                [formGroupName]="i" (opened)="panelOpenState = true;expandtermAndCondition()" (closed)="panelOpenState = false">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                      {{viewData['TNC'][i]['languageName']}}
+                  </mat-panel-title>
+                </mat-expansion-panel-header> 
+                <div class= "pt-20px">
+                  <label>Content</label>
+                  <editor apiKey="test" formControlName="termAndCondition" *ngIf="viewData['TNC'][i]['languageName']!='Arabic'" ></editor>
+                  <editor apiKey="test" id="arabicIDtac" formControlName="termAndCondition" *ngIf="viewData['TNC'][i]['languageName']=='Arabic'" ></editor>
+                </div>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
+        </mat-card>
+      </div>
+
+    <div class="btm-button-wrap">
+      <button class="button secondary-btn" type="button" [routerLink]="['/search-gift-card']">CANCEL</button>
+      <button class="button primary-btn" type="submit">Update</button>
+    </div>
+  </form>
+  
+</div>

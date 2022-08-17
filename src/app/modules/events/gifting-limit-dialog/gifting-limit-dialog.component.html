@@ -1,0 +1,208 @@
+<div class="page-wrap">
+  <div class="search-panel-block">
+      <div class="bredcrumb-title-wrap">
+        <div class="row">
+          <div class="col-6">
+            <h3 class="card-title dark pd-14 mb-45">Gifting Limits   </h3>
+
+          </div>
+          <div class="col-6">
+            <!-- <p class="cross mb-45">
+              <img src="assets/images/icons/filter_close_ico.png">
+             </p> -->
+
+          </div>
+        </div>
+        <div class="header">
+        </div>
+      </div>
+
+   
+
+     <div class="table-block">
+      <div class="row">
+        <div class="col-12">
+
+         <table class="table table-hover pd-14">
+           <thead class="gift-head">
+             <tr>
+               <th>GIFT TYPE</th>
+               <th>GIFT NAME</th>
+               <th>MAX GIFT PER CUSTOMERS</th>
+               <th>MAX GIFT PER EVENT</th>
+               <th>BALANCE</th>
+
+             </tr>
+            </thead>
+           <tbody>
+            
+             
+            
+           
+           </tbody>
+         </table>
+        </div>
+      </div>
+       </div>
+
+      
+
+
+<div class="row">
+
+  <div class="col-12">
+    <!-- <form [formGroup]="myForm" >
+                 <div  formArrayName="myCouponArray">
+                <div  *ngFor="let item of myForm['controls']['myCouponArray'].controls; let i = index;">
+                    <div [formGroupName]="i">
+                          <div class="row">
+                            <div class="col-md-3">
+                              <mat-form-field>
+                                  <input matInput formControlName="giftType" 
+                                    readonly>
+                              </mat-form-field>      
+                         </div>
+                         <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput formControlName="couponName" 
+                                          readonly>
+                                    </mat-form-field>      
+                               </div>
+                            <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput  formControlName="maxGiftPerCustomer"
+                                        OnlyNumber="true"
+                                        maxlength="4"
+                                        (keypress)="numberOnly($event)"
+                                          placeholder="Max Gift Per Customer">
+                                    </mat-form-field>                                      
+                            </div>
+                            <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput formControlName="maxGiftPerEvent"
+                                        OnlyNumber="true"
+                                        maxlength="4"
+                                        (keypress)="numberOnly($event)"
+                                        placeholder="Max Gift Per Event">                          
+                                      </mat-form-field>
+                            </div>
+                            </div>                
+              </div>
+              </div>
+            </div>
+       
+
+      
+
+             
+                <div formArrayName="myProgramArray">
+
+              
+                    <div  *ngFor="let item of myForm['controls']['myProgramArray'].controls; let i = index;">
+                        <div [formGroupName]="i">
+                              <div class="row">
+                             <div class="col-md-6">
+                                        <mat-form-field>
+                                            <input matInput formControlName="programName" 
+                                              readonly>
+                                        </mat-form-field>      
+                                   </div>
+                                <div class="col-md-3">
+                                        <mat-form-field>
+                                            <input matInput  formControlName="maxGiftPerCustomer"
+                                            OnlyNumber="true"
+                                            maxlength="4"
+                                            (keypress)="numberOnly($event)"
+                                              placeholder="Max Gift Per Customer">
+                                        </mat-form-field>   
+                                        <mat-error *ngIf="item.get('maxGiftPerCustomer').hasError('required')">
+                                            Please enter value
+                                        </mat-error>
+                               
+                                </div>
+                                <div class="col-md-3">
+                                        <mat-form-field>
+                                            <input matInput formControlName="maxGiftPerEvent"
+                                            OnlyNumber="true"
+                                            maxlength="4"
+                                            (keypress)="numberOnly($event)"
+                                            placeholder="Max Gift Per Event">                          
+                                          </mat-form-field>
+                                          <mat-error *ngIf="item.get('maxGiftPerEvent').hasError('required')">
+                                            Please enter value
+                                        </mat-error>
+                                </div>
+                                </div>                
+                  </div>
+
+                </div>
+                  </div> 
+                
+           
+
+           
+                    
+              
+           
+              
+
+                 <div  formArrayName="myProductArray">
+
+              
+                    <div *ngFor="let item of myForm['controls']['myProductArray'].controls; let i = index;">
+                        <div [formGroupName]="i">
+                              <div class="row">
+                             <div class="col-md-6">
+                                        <mat-form-field>
+                                            <input matInput formControlName="productName" 
+                                              readonly>
+                                        </mat-form-field>      
+                                   </div>
+                                <div class="col-md-3">
+                                        <mat-form-field>
+                                            <input matInput  formControlName="maxGiftPerCustomer"
+                                            OnlyNumber="true"
+                                            maxlength="4"
+                                            (keypress)="numberOnly($event)"
+                                              placeholder="Max Gift Per Customer">
+                                        </mat-form-field>                                      
+                                </div>
+                                <div class="col-md-3">
+                                        <mat-form-field>
+                                            <input matInput formControlName="maxGiftPerEvent"
+                                            OnlyNumber="true"
+                                            maxlength="4"
+                                            (keypress)="numberOnly($event)"
+                                            placeholder="Max Gift Per Event">                          
+                                          </mat-form-field>
+                                </div>
+                                </div>                
+                  </div>
+                  </div>
+                </div> 
+          
+
+      
+    </form> -->
+  </div>
+</div>
+
+<div class="row">
+  <!-- <pre>{{myForm.value | json}}</pre>   -->
+
+</div>
+<div class="row">
+  <div class="col-12">
+   <!-- <p> myProgramArray>>> {{myForm.controls['myProgramArray'].valid}}</p> -->
+
+  </div>
+</div>
+   <div class="row">
+     <div class="col-12">
+      
+         <button class="button primary-btn" (click) = "closepopup()">SELECT</button>
+     </div>
+   </div>
+     
+  </div>
+</div>

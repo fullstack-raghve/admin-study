@@ -1,0 +1,183 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title">
+        <h1>Masters</h1>
+    </div>
+</div>
+<div class="page-wrap-masters">
+    <div class="row master-cards">
+        <div class="col-md-3 master-list master-left">
+            <mat-card>
+                <ul class="master_listing">
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-customer-type']">Customer Type</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-merchant']">Merchant</a></li> -->
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-brand']">Brand</a></li> -->
+                    <li class="master-list-selected"><a href="javascript:void(0)" [routerLink]="['/search-country']">Countries</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-cities']">Cities</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-malls']">Malls</a></li>
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-course']">Course</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-cities']">Cuisine</a></li> -->
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-currency']">Currency</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-currency-conversion']">Currency
+                            Conversion</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-brand-category']">Brand Category</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-language']">Language</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-faq-category']">FAQ Category</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-about-us-category']">About Us Category</a>
+                    </li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-feedback']">Feedback</a></li>
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-partner']">Partner</a></li> -->
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-enquiry-type']">Enquiry Type</a></li>
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/add-taxation']">Taxation</a></li> -->
+                    <li><a href="javascript:void(0)" [routerLink]="['/add-product-tag']">Product Tag</a></li>
+
+
+                </ul>
+            </mat-card>
+        </div>
+        <div class="col-md-9 master-right">
+            <mat-card class="master-content">
+                <div class="country-card">
+                    <div class="subtitle flex-center">
+                        <h3><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/left_arrow.png"
+                                    alt="leftArrow" [routerLink]="['/search-country']"></span>Edit Country</h3>
+                        <div class="slider">
+                            <mat-slide-toggle [(ngModel)]="toggleVal" (change)="toggleStatus($event)" class="mat-slide-toggle">{{statusValue}}</mat-slide-toggle>
+                        </div>
+                    </div>
+                    <form *ngIf="buildFlag" [formGroup]="countryFormGroup" (submit)="updateCountry(countryFormGroup.value)" id="editCountryForm" #editCountryForm="ngForm">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="master-fieldSet" formArrayName="countryLocale">
+                                    <fieldset class="language-fieldset">
+                                        <legend class="fieldset-heading-country">Country Name</legend>
+                                        <div *ngFor="let locale of countryFormGroup['controls']['countryLocale']['controls'];let i = index;" [formGroupName]="i">
+                                            <div class="example-container">
+                                                <mat-form-field class="{{alignCss[i]}}">
+                                                    <input matInput placeholder="{{languageList[i].languageName}}" maxlength="50" formControlName="countryName" required (input)="onChangeCountryName($event.target.value)">
+                                                    <mat-error *ngIf="locale.get('countryName').hasError('required')">
+                                                        Please enter value</mat-error>
+                                                    <mat-error *ngIf="locale.get('countryName').hasError('minlength')">
+                                                        Minimum 2 characters required</mat-error>
+                                                    <mat-error *ngIf="locale.get('countryName').hasError('pattern')">
+                                                        Invalid characters entered</mat-error>
+                                                    <!-- <mat-autocomplete #auto="matAutocomplete"
+                                                        (optionSelected)="onSelectionChanged($event)">
+                                                        <mat-option *ngFor="let option of countryNameList"
+                                                            [value]="option.name">{{option.name}}</mat-option>
+                                                    </mat-autocomplete> -->
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                            <!-- <div class="col-md-4">
+                                        <div class="master-fieldSet" formArrayName="countryLocale">
+                                            <fieldset class="language-fieldset">
+                                                <legend class="fieldset-heading-nationality">Nationality Name</legend>
+                                                <div *ngFor="let locale of countryFormGroup['controls']['countryLocale']['controls'];let i = index;"
+                                                    [formGroupName]="i">
+                                                    <div class="example-container">
+                                                        <mat-form-field class="{{alignCss[i]}}">
+                                                            <input matInput placeholder="{{languageList[i].languageName}}"
+                                                                [matAutocomplete]="auto" maxlength="50"
+                                                                formControlName="countryName" required
+                                                                (input)="onChangeCountryName($event.target.value)">
+                                                            <mat-error *ngIf="locale.get('countryName').hasError('required')">
+                                                                Please enter value</mat-error>
+                                                            <mat-error *ngIf="locale.get('countryName').hasError('minlength')">
+                                                                Minimum 2 characters required</mat-error>
+                                                            <mat-error *ngIf="locale.get('countryName').hasError('pattern')">
+                                                                Invalid characters entered</mat-error>
+                                                            <mat-autocomplete #auto="matAutocomplete"
+                                                                (optionSelected)="onSelectionChanged($event)">
+                                                                <mat-option *ngFor="let option of countryNameList"
+                                                                    [value]="option.name">{{option.name}}</mat-option>
+                                                            </mat-autocomplete>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </div> -->
+                            <div class="col-md-4">
+                                <div class="example-container">
+                                    <mat-form-field class="field-style">
+                                        <input matInput placeholder="Country Code" maxlength="2" formControlName="countryCode" required>
+                                        <mat-error *ngIf="countryFormGroup.get('countryCode').hasError('required')">
+                                            Please enter value</mat-error>
+                                        <mat-error *ngIf="countryFormGroup.get('countryCode').hasError('pattern')">
+                                            Only alphabets are allowed</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div>
+                                    <mat-form-field class="field-width">
+                                        <input matInput placeholder="Latitude" formControlName="latitude" maxlength="15" required>
+                                        <mat-error *ngIf="countryFormGroup.get('latitude').hasError('required')">
+                                            Please enter value</mat-error>
+                                        <mat-error *ngIf="countryFormGroup.get('latitude').hasError('pattern')">Only Numbers along with .(dot) and -(hyphen) characters are allowed
+                                        </mat-error>
+                                        <mat-error *ngIf="countryFormGroup.get('latitude').hasError('minlength')">
+                                            Minimum 2 digits required</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div>
+                                    <mat-form-field class="field-style field-width">
+                                        <mat-select placeholder="Store Flag" formControlName="storeFlag" required>
+                                            <mat-option *ngFor="let storeFlag of storeFlags" [value]="storeFlag.value">
+                                                {{ storeFlag.viewValue }}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="countryFormGroup.get('storeFlag').hasError('required')">
+                                            Please select value</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div>
+                                    <!-- <mat-form-field class="field-style field-width">
+                                        <mat-select placeholder="Currency" formControlName="currency" required>
+                                            <mat-option *ngFor="let currency of currencies"
+                                                [value]="currency.currencyId">
+                                                {{ currency.currencyCode }}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="countryFormGroup.get('currency').hasError('required')">
+                                            Please select value</mat-error>
+                                    </mat-form-field> -->
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput placeholder="Currency" aria-label="Currency" [matAutocomplete]="currencyAutoComplete" [formControl]="currencyCtrl" required>
+                                        <mat-autocomplete #currencyAutoComplete="matAutocomplete">
+                                            <mat-option *ngFor="let currency of filteredCurrencies | async" [value]="currency.currencyCode" (click)="oncurrencyChange(currency.currencyId)" #currencyInput>
+                                                <span>{{currency.currencyCode}}</span>
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <mat-error *ngIf="currencyCtrl.hasError('required')">
+                                            Please select value</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div>
+                                    <mat-form-field class="field-style field-width">
+                                        <input matInput placeholder="Longitude" formControlName="longitude" maxlength="15" required>
+                                        <mat-error *ngIf="countryFormGroup.get('longitude').hasError('required')">
+                                            Please enter value</mat-error>
+                                        <mat-error *ngIf="countryFormGroup.get('longitude').hasError('pattern')">
+                                            Only Numbers along with .(dot) and -(hyphen) characters are allowed
+                                        </mat-error>
+                                        <mat-error *ngIf="countryFormGroup.get('longitude').hasError('minlength')">
+                                            Minimum 2 digits required</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="btm-button-wrap">
+                            <button type="button" class="site_btn gray_btn" [routerLink]="['/search-country']">CANCEL</button>
+                            <button type="submit" class="button primary-btn" [disabled]="loading == true">UPDATE</button>
+                        </div>
+                    </form>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+</div>

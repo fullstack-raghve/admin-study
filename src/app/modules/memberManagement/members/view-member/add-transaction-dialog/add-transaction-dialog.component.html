@@ -1,0 +1,43 @@
+<div class="page-wrap">
+  <div class="header">
+    <h3>Add Transaction</h3>
+    <div class="close-icon">
+      <img src="assets/images/icons/filter_close_ico.png" alt="" (click)="onCloseClick()">
+    </div>
+  </div>
+  <div class="add-transaction">
+    <form (submit)="addTransaction()" [formGroup]="addTxnFormGroup">
+      <div class=container>
+        <div class="row">
+          <div class="col-md-10">
+            <mat-form-field>
+              <input #name name="enterBarCode" id="enterBarCode" [(ngModel)]="enterBarCode" matInput
+                placeholder="Enter Transaction Bar Code" formControlName="txnId">
+              <mat-error *ngIf="addTxnFormGroup.get('txnId').hasError('required')">Please enter Transaction Id
+              </mat-error>
+            </mat-form-field>
+            <p class="err-msg" *ngIf="errormesVal">
+              {{responseMsg}}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="button-wrap text-right" *ngIf="addTransBtnDisplay">
+        <button type="reset" class="button secondary-btn" (click)="onCloseClick()">CANCEL</button>
+        <button type="submit" class="button primary-btn" [disabled]="addTxnFormGroup.invalid">ADD
+          <!-- <span class="loading-img-hide" *ngIf="loadingResponse" [class.disabled]="loadingResponse">
+            <img src="assets/images/loader-icons/White-loading-200px.svg" alt="loader">
+          </span> -->
+        </button>
+      </div>
+      <div class="add-txn-btn">
+        <div *ngIf="resetDisplay">
+          <button type="reset" class="button secondary-btn" (click)="resetVal()">RESET</button>
+        </div>
+        <div class="button-wrap text-center" *ngIf="!addTransBtnDisplay">
+          <button type="reset" class="button primary-btn" (click)="onCloseClick()">OK</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

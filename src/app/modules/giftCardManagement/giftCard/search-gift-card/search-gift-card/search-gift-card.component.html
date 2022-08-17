@@ -1,0 +1,113 @@
+<div class="page-wrap">
+  <div class="search-panel-block">
+    <div class="bredcrumb-title-wrap">
+      <div class="search-container-block">
+        <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+        <div class="search-list ">
+          <form class="filter-wrap" [formGroup]="searchNotificationForm" (submit)="searchVal()">
+            <div class="row title-search-row">
+              <div class="col-md-3 title-search-col">
+                <div class="title">
+                  <h1>Gift Card</h1>
+                </div>
+              </div>
+              <div class="col-md-6 title-search-col">
+                <div class="searchform-block">
+                  <div class="common-search">
+                    <input type="text" formControlName="searchVal" (keyup)="applyFilter($event.target.value)" (click)="applyFilter($event.target.value)" placeholder="Search Enquiries" />
+                    <span class="search-btn" (click)="searchVal()"></span>
+                    <div class="filter-btn-wrap">
+                      <span class="filter-btn" (click)="openFilter();" [ngClass]="status ? 'open' : 'close'"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3 title-search-col ">
+                <button type="button" class="button primary-btn float-right" [routerLink]="['/add-gift-card']">ADD
+                </button>
+              </div>
+            </div>
+            <div class="feild-search ng-star-inserted" *ngIf="!status">
+                <div class="row feild-search-inner">
+                  <div class="col-md-4">
+                    <mat-form-field>
+                        <mat-select placeholder="Card For" formControlName="cardFor">
+                            <mat-option value="corporate"> Corporate </mat-option>
+                            <mat-option value="public">Public</mat-option>
+                          </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-4">
+                    <mat-form-field>
+                      <mat-select formControlName="cardValue" placeholder="Card Value">
+                        <mat-option value="Product">Product</mat-option>
+                        <mat-option value="Amount">Amount</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-4">
+                    <mat-form-field>
+                      <mat-select formControlName="status" placeholder="Status">
+                        <mat-option *ngFor="let statusDetail of satausDeatils" value="{{statusDetail}}">{{statusDetail}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="button-wrap">
+                      <button class='button quaternary-btn' (click)="resetForm()">RESET</button>
+                      <button class='button tertiary-btn' type="submit">APPLY</button>
+                  </div>
+                </div>
+              </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="form-wrap">
+      <div class="table-wrap">
+        <div class="table-wrap-inner"  [class.nodatafound]="noRecords">
+          <table mat-table [dataSource]="dataSource" matSort *ngIf="dataSource">
+            <ng-container matColumnDef="RP_OID">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>REFERENCE ID </th>
+              <td mat-cell *matCellDef="let row"> {{row.RP_OID}}</td>
+            </ng-container>
+            <ng-container matColumnDef="CARD_NAME">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>CARD  NAME</th>
+              <td mat-cell *matCellDef="let row"><u><a [routerLink]="['/view-gift-card/'+row.RP_OID]"
+                class="text-blue">{{row.CARD_NAME}}</a></u></td>
+            </ng-container>
+
+            <ng-container matColumnDef="CARD_FOR">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> CARD FOR </th>
+              <td mat-cell *matCellDef="let row"> {{row.CARD_FOR}} </td>
+            </ng-container>
+            
+            <ng-container matColumnDef="VALUE_TYPE">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>CARD VALUE</th>
+              <td mat-cell *matCellDef="let row">{{row.VALUE_TYPE}}</td>
+            </ng-container>
+            
+            <ng-container matColumnDef="DATE_OF_PUBLISH">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>DATE OF PUBLISHING </th>
+              <td mat-cell *matCellDef="let row">{{row.DATE_OF_PUBLISH  |date:"dd-MM-yyyy"}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="PUBLISH_STATUS">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>PUBLISH STATUS </th>
+              <td mat-cell *matCellDef="let row">{{row.PUBLISH_STATUS}}</td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+            </tr>
+          </table>
+          <div *ngIf="searchGiftVal" class="select-gift-block">
+            <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+          </div>
+          <div class="no-records" *ngIf="noRecords">
+              No Records Found!
+          </div>
+        </div>
+        <mat-paginator (change)="searchVal()" [pageSizeOptions]="[10,20,50,100]"></mat-paginator>
+      </div>
+    </div>
+  </div>
+</div>

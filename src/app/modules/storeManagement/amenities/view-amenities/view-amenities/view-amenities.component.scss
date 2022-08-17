@@ -1,0 +1,43 @@
+.page-wrap {
+    padding: 1.5rem;
+}
+.master-fieldSet {
+    .language-fieldset{
+        padding: 0px 26px 10px;
+        border: 1px solid #dbdbdb;
+        border-radius: 5px;
+        .fieldset-heading {
+            font-size: 14px;
+            padding-inline-start: 7px;
+            max-width: 15% !important;
+        }
+    }
+}
+.img-block{
+    .avatar-zone{
+        width: 100px;
+        height: 100px;
+        background-color: #F2F2F2;
+        text-align: center;
+        border: 1px dashed #dbdbdb;
+        margin-bottom: 15px;
+    }
+    .upload-img {
+        min-height: -webkit-fill-available;
+    }
+    .upload-icon {
+        width: 12px;
+        height: 12px;
+        margin-right: 5px;
+        cursor: pointer;
+    }
+
+}
+.placeholder-img {
+    display: none;
+}
+.upload-btn-text {
+    cursor: pointer;
+    font-size: 10px;
+    color: #145CBF;
+}

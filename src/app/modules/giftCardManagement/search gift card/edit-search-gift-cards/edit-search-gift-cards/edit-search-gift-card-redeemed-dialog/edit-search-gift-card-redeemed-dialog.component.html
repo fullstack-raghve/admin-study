@@ -1,0 +1,80 @@
+<div class="form-wrap">
+  <form [formGroup]="reedemedFormGroup" (submit)="cardDetails(reedemedFormGroup.value)">
+      <div class="close-icon text-right">
+          <img src="assets/images/icons/filter_close_ico.png" (click)="onCloseClick()" alt="">
+        </div>
+    <div>
+        <h6>Reedem request Approval</h6>
+    </div>
+    <mat-card style="box-shadow:none">
+   
+      <div class="row labelColor" *ngFor="let rList of redeemedList">
+
+
+        <div class="col">
+          <label>Value Type</label>
+          <p>{{rList.cardType}}</p>
+        </div>
+        <div class="col">
+          <label>SKU name</label>
+          <p>{{rList.skuName}}</p>
+        </div>
+        <div class="col">
+          <label>Balance</label>
+          <p>{{rList.balance}}</p>
+        </div>
+        <div class="col">
+          <label>Cost of One</label>
+          <p>{{rList.costOfOne}}</p>
+        </div>
+        <div class="col">
+          <label>Full Redemption Amount</label>
+          <p>{{rList.fullRedemptionMount}}</p>
+        </div>
+        <div class="col">
+          <label>SKU name</label>
+          <p>{{rList.skuName}}</p>
+        </div>
+
+      </div>
+      <div class="row">
+        <div class="col-md">
+          <mat-form-field>
+            <mat-select placeholder="Store Name" #Input formControlName="sId"
+              (selectionChange)="storeData(Input.value)">
+              <mat-option *ngFor="let storeDetail of storeDetails, let i = index;" [value]="i">
+                {{storeDetail.STORE_NAME}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="reedemedFormGroup.get('sId').hasError('required')">Please select value
+            </mat-error>
+          </mat-form-field>
+          <label>Store Id</label>
+          <p>{{storeId}}</p>
+        </div>
+        <div class="col">
+          <mat-form-field>
+            <mat-select placeholder="Cashier Name" formControlName="cashierId">
+              <mat-option *ngFor="let cashierDetail of cashierDetails" value="{{cashierDetail.cashierId}}">{{cashierDetail.Name}}</mat-option>
+
+            </mat-select>
+            <mat-error *ngIf="reedemedFormGroup.get('cashierId').hasError('required')">Please select value
+              </mat-error>
+          </mat-form-field>
+        
+        </div>
+        <div class="col">
+          <mat-form-field>
+            <input matInput formControlName="tId" placeholder="Transaction ID" maxlength="100">
+            <mat-error *ngIf="reedemedFormGroup.get('tId').hasError('required')">Please enter value
+              </mat-error>
+          </mat-form-field>
+         
+        </div>
+      </div>
+      <div style="float:right">
+        <button class="button secondary-btn" type="button" (click)="onClickClose()">CANCEL</button>
+        <button class="button primary-btn" type="button" type="submit">SELECT</button>
+      </div>
+    </mat-card>
+  </form>
+</div>

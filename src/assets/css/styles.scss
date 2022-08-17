@@ -1,0 +1,73 @@
+@import './shared/variable.scss';
+@import './shared/mixins.scss';
+@import './shared/modules/buttons.scss';
+@import './shared/modules/card.scss';
+@import './shared/common-styling.scss';
+@import './shared/fonts';
+@import '../css/shared/common-classes.scss';
+@import '../css/shared/modules/breadcrumb.scss';
+@import "~font-awesome/css/font-awesome.css";
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@import '~@angular/material/theming';
+@import "~bootstrap/dist/css/bootstrap.css";
+// Plus imports for other components in your app.
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat-core();
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$Reciproci-primary: mat-palette($mat-indigo);
+$Reciproci-accent: mat-palette($mat-pink, A200, A100, A400);
+@import "~bootstrap/dist/css/bootstrap.css";
+// The warn palette is optional (defaults to red).
+$Reciproci-warn: mat-palette($mat-red);
+// Create the theme object (a Sass map containing all of the palettes).
+$Reciproci-theme: mat-light-theme($Reciproci-primary, $Reciproci-accent, $Reciproci-warn);
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include angular-material-theme($Reciproci-theme);
+
+/* You can add global styles to this file, and also import other style files */
+
+@import "~ng-pick-datetime/assets/style/picker.min.css";
+html {
+    font-family: 'muliregular', 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.4!important;
+    letter-spacing: -.1px!important;
+}
+
+html,
+body {
+    height: 100%;
+    font-family: 'muliregular'!important;
+    position: unset;
+}
+
+#stripoSettingsContainer {
+    width: 400px;
+    float: left;
+  }
+  #stripoPreviewContainer {
+    width: calc(100% - 400px);
+    float: left;
+  }
+  
+  .esdev-app .nav-tabs.nav-justified {
+    width: 100%;
+    border-bottom: 0;
+    display: inline-block !important;
+  }
+
+.body {
+    margin: 10px;
+    margin-top: 25px;
+    font-family: 'muliregular'!important;
+}
+
+// @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import './animate.css';
+@import '~@ctrl/ngx-emoji-mart/picker';

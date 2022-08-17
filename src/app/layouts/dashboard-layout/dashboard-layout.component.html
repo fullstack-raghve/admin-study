@@ -1,0 +1,13 @@
+<div class='row content-panel main-header'>
+  <div class="col-md-2 left-sidenav-panel left-panel" [class.icon_menu]="isMenuActive">
+    <app-header (valueChangeNav)="toggleChange($event)">
+    </app-header>
+  </div>
+  <div class="col-md-10 head_panel right-panel" style="margin-bottom: 35px;" [class.rightpanel]="isMenuActive">
+    <app-top-nav>
+    </app-top-nav>
+    <router-outlet>
+    </router-outlet>
+    <app-footer></app-footer>
+  </div>
+</div>

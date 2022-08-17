@@ -1,0 +1,335 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container">
+        <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          [routerLink]="['/search-template']"></span>Edit Template</h1>
+        <mat-slide-toggle class="example-margin text-right" name="toggleVal" [(ngModel)]="toggleVal" [checked]="checked">
+            {{toggleVal==true ? "ONLINE" : "OFFLINE"}}
+        </mat-slide-toggle>
+    </div>
+    <div class="page-wrap">
+        <div>
+            <mat-card class="template-card">
+                <div class="row">
+                    <div class="col-md-3">
+                        <mat-form-field>
+                            <mat-select placeholder="Template Type" name="selectedTemplateType" [(ngModel)]="selectedTemplateType" required disabled>
+                                <mat-option name="appPushNotification" value="PUSH">App Push Notification</mat-option>
+                                <mat-option name="sms" value="SMS">SMS</mat-option>
+                                <mat-option name="email" value="EMAIL">Email</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="field-container">
+                            <mat-form-field>
+                                <input #name="ngModel" name="selectedTemplateName" id="selectedTemplateName" name="selectedTemplateName" [(ngModel)]="selectedTemplateName" matInput placeholder="Template Name" maxlength="50" required>
+                                <mat-error *ngIf="selectedTemplateName == '' || selectedTemplateName ==undefined">Please enter value
+                                </mat-error>
+                            </mat-form-field>
+                            <mat-error style="color:red;margin-top: -2em;font-size:10px;" *ngIf="selectedTemplateNameErr && (name.invalid || (name.pristine && !name.submitted))">Please enter value
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div class="col-md-3" *ngIf="editUserData && editUserData.templateType !== 'EMAIL' && editUserData && editUserData.templateType !== 'SMS'">
+                        <div class="field-container">
+                            <mat-form-field>
+                                <input #hyperLink="ngModel" maxlength="100" name="hyperlink" pattern="(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)" [(ngModel)]="hyperlink" matInput placeholder="Hyper Link">
+                            </mat-form-field>
+                            <div style="color:red;margin-top: -2em;font-size:10px;" *ngIf="hyperLink && hyperLink.invalid && hyperLink.touched">Invalid url </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3" *ngIf="editUserData && editUserData.templateType === 'SMS'">
+                        <mat-form-field>
+                            <input #name1="ngModel" name1="smsTemplateId" id="smsTemplateId" name="smsTemplateId" [(ngModel)]="smsTemplateId" matInput placeholder="SMS Template Id" required>
+                            <mat-error *ngIf="smsTemplateId == '' || smsTemplateId ==undefined">Please enter value
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-3" *ngIf="editUserData && editUserData.templateType === 'SMS'">
+                        <mat-form-field>
+                            <input #name2="ngModel" name1="smsEntityId" id="smsEntityId" name="smsEntityId" [(ngModel)]="smsEntityId" matInput placeholder="SMS Entity Id" required>
+                            <mat-error *ngIf="smsEntityId == '' || smsEntityId ==undefined">Please enter value
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <form class="" *ngIf="editUserData && editUserData.templateType == 'PUSH'" [formGroup]="pushNotificationGroup" (submit)="updateTemplate(hyperLink)">
+                    <div formArrayName="notificationArray">
+                        <mat-card class="pushNotification-card mb-20px pad-b-2em" *ngFor="let ln of editUserData.marketingTemplateLocales; let i = index;" [formGroupName]="i">
+                            <div class="lang-field {{langfield[i]}}">
+                                <p>{{ln.languageName}}</p>
+                            </div>
+                            <div class="row card-mb">
+                                <div class="col-md-9  content-pushimg-block">
+                                    <div class="content-img-block">
+                                        <div>
+                                            <div class="grid img-block">
+                                                <p class="note-text"><span>image size 1024x512</span>
+                                                </p>
+                                                <div class="avatar-zone">
+                                                    <label *ngIf="uploadFlag[i]==false || !prePopulateImg[i]" class="upload-text" [class.placeholder-img]="imgUpload">Upload
+                                                        Image</label>
+                                                    <img *ngIf="imagePath.length!=0 && imagePath[i]!='' && imagePath[i]!=null" class="upload-img" [class.uploaded-img]="imgUpload" [src]="filePathUrl+imagePath[i]" width="80px" height="70px">
+                                                </div>
+                                                <div class="remove-img pad-b-1em" *ngIf="uploadFlag[i]==true && prePopulateImg[i]">
+                                                    <span> <img
+                                                            src="assets/images/icons/filter_close_ico.png"
+                                                            alt=""
+                                                            (click)="removeImage(i)"><label>Remove</label></span>
+                                                </div>
+                                                <input style="display:none;" #uploadEl type="file" class="upload_btn" (change)="uploadImage($event.target.files,i)" />
+
+                                                <div class="text-center" style="width: 100%;" *ngIf="uploadFlag[i]==false || !prePopulateImg[i]">
+                                                    <span class="upload-btn-text" (click)='uploadEl.click()'>
+                                                        <span class="upload-icon">
+                                                            <img src="assets/images/svg-icons/uploadgray_ico.svg"
+                                                                width="12px" alt="Img">
+                                                        </span>Upload Image
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="store-image">
+                                                <div class="grid img-block">
+                                                    <p class="note-text"><span>image size
+                                                        1024x512</span></p>
+                                                    <div class="avatar-zone">
+                                                        <label class="upload-text" *ngIf="!storeImgFlag[i]" [class.placeholder-img]="imgUpload">Notification Detail Image</label>
+                                                        <img class="upload-img" *ngIf="imagePathTwo.length!=0 && imagePathTwo[i]!='' && imagePathTwo[i]!=null" [class.uploaded-img]="imgUpload" [src]="filePathUrl+imagePathTwo[i]" width="100px" height="100px">
+                                                    </div>
+                                                    <div class="remove-img pad-b-1em" *ngIf="storeImgFlag[i]==true">
+                                                        <span> <img src="assets/images/icons/filter_close_ico.png" alt=""
+                                                        (click)="removeDetailImage(i)">
+                                                        <span>
+                                                            <label class="cursor">Remove</label>  
+                                                        </span></span>
+                                                    </div>
+                                                    <input #uploadImgEl type="file" class="upload_btn display-none" (change)="uploadFullImage($event.target.files,i)" required />
+                                                    <div class="text-center upload-image-text" *ngIf="!storeImgFlag[i]">
+                                                        <span class="upload-btn-text" (click)='uploadImgEl.click()'>
+                                                    <span class="upload-icon" class="cursor">
+                                                        <img src="assets/images/svg-icons/uploadgray_ico.svg"
+                                                            width="12px" alt="Img">
+                                                    </span>Upload Image
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-fields {{ln.languageDirection == 'RTL' ? 'direction' : ''}}">
+                                            <div class="d-flex">
+                                                <div class='w-75'>
+                                                <mat-form-field [class.direction-right]="languageList[i].languageName == 'Arabic'">
+                                                    <input matInput placeholder="Subject" required formControlName="subject" [(ngModel)]="textAreaAppSubject[i]" #subInp maxlength="500">
+                                                    <mat-error *ngIf="pushNotificationGroup.controls['notificationArray']['controls'][i].controls['subject'].hasError('required')">
+                                                        Please enter value</mat-error>
+                                                    <mat-error *ngIf="pushNotificationGroup.controls['notificationArray']['controls'][i].controls['subject'].hasError('pattern')">
+                                                        Invalid characters entered</mat-error>
+                                                </mat-form-field>
+                                                </div>
+                                                <div>
+                                                    <div id="emojiBtn" (click)="toggleEmojiPicker(i)" style="cursor: pointer;position: absolute;top: 35px;font-size: large;">😀</div>
+                                                    <div style='position: absolute;top: 62px;z-index: 999;'>
+                                                        <emoji-mart class="emoji-mart" set="{{set}}" *ngIf="showEmojiPicker[i]" (emojiSelect)="addEmojiAppSubject($event,i)" title="Pick your emoji…"></emoji-mart>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex">
+                                                <div class='w-75'>
+                                                <mat-form-field [class.direction-right]="languageList[i].languageName == 'Arabic'">
+                                                    <textarea matInput placeholder="Content" required formControlName="content" [(ngModel)]="textAreaAppContent[i]" #content maxlength="640"></textarea>
+                                                    <mat-error *ngIf="pushNotificationGroup.controls['notificationArray']['controls'][i].controls['content'].hasError('required')">
+                                                        Please enter value</mat-error>
+                                                </mat-form-field>
+                                                </div>
+                                                <div>
+                                                    <div id="emojiContentBtn" (click)="toggleEmojiPickerAppContent(i)" style="cursor: pointer;position: absolute;top: 117px;font-size: large;">😀</div>
+                                                    <div style='position: absolute;top: 143px;z-index: 999;'>
+                                                        <emoji-mart class="emoji-mart" set="{{set}}" *ngIf="showEmojiPickerAppCOntent[i]" (emojiSelect)="addEmojiAppContent($event,i)" title="Pick your emoji…"></emoji-mart>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <label class="count-length"> *Indicative character length : {{content.value.length}}/640</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 img-container">
+                                    <div class="preview-container">
+                                        <div class="img-preview">
+                                            <p class="text-preview">Notification Preview</p>
+                                            <img src="assets/images/svg-icons/mobile_frame.svg" alt="">
+                                            <div class="notification-content">
+                                                <div class="notification-description">
+                                                    <h6 [class.direction-right]="languageList[i].languageName == 'Arabic'">
+                                                        {{pushNotificationGroup.controls['notificationArray']['controls'][i].controls['subject'].value}}
+                                                    </h6>
+                                                    <p [class.direction-right]="languageList[i].languageName == 'Arabic'">
+                                                        {{pushNotificationGroup.controls['notificationArray']['controls'][i].controls['content'].value}}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="row m-0px notification-area">
+                    <div class="col-md-10">
+
+                    </div>
+                  </div> -->
+                                    <div class="add-attribute" style="display: none;">
+                                        <button class='button tertiary-btn' type="button" (click)="attributeDialog(i , 'PUSH')">PERSONALIZE</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-card>
+                    </div><br><br>
+                    <div class="button-wrap">
+                        <div class="">
+                            <button type="button" class="button secondary-btn" [routerLink]="['/search-template']">CANCEL</button>
+                            <button type="submit" class="button primary-btn">{{btntxt}}</button>
+                        </div>
+                    </div>
+                </form>
+                <form class="" *ngIf=" editUserData &&  editUserData.templateType == 'SMS'" [formGroup]="SMSGroup" (submit)="updateTemplate(hyperLink)">
+                    <div formArrayName="smsArray">
+                        <mat-card class="pushNotification-card mb-20px" *ngFor="let ln of editUserData.marketingTemplateLocales; let i = index;" [formGroupName]="i">
+                            <div class="lang-field {{langfield[i]}}">
+                                <p>{{ln.languageName}}</p>
+                            </div>
+                            <div class="row card-mb">
+                                <div class="col-md-7  content-smsimg-block">
+                                    <div class="content-img-block">
+
+                                        <div class="text-fields">
+                                            <div class="field-container">
+                                                <mat-form-field [class.direction-right]="languageList[i].languageName == 'Arabic'">
+                                                    <textarea matInput placeholder="Content" required formControlName="content" #content maxlength="640"></textarea>
+                                                    <mat-error *ngIf="SMSGroup.controls['smsArray']['controls'][i].controls['content'].hasError('required')">
+                                                        Please enter value</mat-error>
+                                                    <mat-error *ngIf="SMSGroup.controls['smsArray']['controls'][i].controls['content'].hasError('pattern')" style="font-size: 10px;">
+                                                        Special character(s) is not allowed</mat-error>
+                                                </mat-form-field>
+                                                <label class="count-length"> *Indicative character length :
+                          {{content.value.length}}/640</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-5 img-container">
+                                    <div class="preview-container">
+                                        <div class="img-preview">
+                                            <p class="text-preview">Notification Preview</p>
+                                            <img src="assets/images/svg-icons/mobile_frame.svg" alt="">
+                                            <div class="notification-content">
+                                                <div class="notification-description">
+                                                    <p [class.direction-right]="languageList[i].languageName == 'Arabic'">
+                                                        {{SMSGroup.controls['smsArray']['controls'][i].controls['content'].value}}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="row m-0px notification-area">
+                    <div class="col-md-10">
+
+                    </div>
+                  </div> -->
+                                    <div class="add-attribute" style="display: none;">
+                                        <button class='button tertiary-btn' type="button" (click)="attributeDialog(i , 'SMS')">PERSONALIZE</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-card>
+                        <mat-error *ngIf="showError">Please enter all the value</mat-error>
+                    </div><br><br>
+                    <div class="button-wrap">
+                        <div class="">
+                            <button type="button" class="button secondary-btn" [routerLink]="['/search-template']">CANCEL</button>
+                            <button type="submit" class="button primary-btn">{{btntxt}}</button>
+                        </div>
+                    </div>
+                </form>
+                <form class="" *ngIf="editUserData &&  editUserData.templateType == 'EMAIL'" [formGroup]="EmailGroup"
+                    (submit)="updateTemplate(hyperLink)">
+                    <div class="email-panel" formArrayName="emailArray">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <mat-accordion (selectedTabChange)="call($event)">
+                                    <mat-expansion-panel (opened)="panelOpenState = true;expandDataEmail()"
+                                        (closed)="panelOpenState = false"
+                                        *ngFor="let ln of editUserData.marketingTemplateLocales; let i = index;" [formGroupName]="i"
+                                        [class.right-panel]="ln.languageName=='Arabic'">
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title>
+                                                {{ln.languageName}}
+                                            </mat-panel-title>
+                                        </mat-expansion-panel-header>
+                                        <div class="{{ln.languageDirection == 'RTL' ? 'direction' : ''}}" style="display: flex;">
+                                            <mat-form-field [class.direction-right]="languageList[i].languageName == 'Arabic'">
+                                                <input matInput placeholder="Subject" required formControlName="subject"
+                                                    maxlength="500">
+                                                <mat-error
+                                                    *ngIf="EmailGroup.controls['emailArray']['controls'][i].controls['subject'].hasError('required')">
+                                                    Please enter value</mat-error>
+                                                <mat-error
+                                                    *ngIf="EmailGroup.controls['emailArray']['controls'][i].controls['subject'].hasError('pattern')">
+                                                    Invalid charecters entered</mat-error>
+                                            </mat-form-field>
+                                            <div class="preview-title" style="display: none;">
+                                                <button class='button tertiary-btn' type="button"
+                                                    (click)="attributeDialog(i , 'EMAIL')">PERSONALIZE</button>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <button id="undoButton" class="control-button">Undo</button>
+                                            <button id="redoButton" class="control-button">Redo</button>
+                                            <button type='button' id="codeEditor" class="control-button">Code editor</button>
+                                            <!-- <button id="export" class="control-button" (click)="onExportHtml()">Export</button> -->
+                                        </div>
+                                        <!-- <editor *ngIf="ln.languageName != 'Arabic'" [init]="{
+                                      plugins: 'code, preview ,print,fullpage, searchreplace, directionality, visualblocks, visualchars, fullscreen, image, link, media, template, codesample, table, charmap, hr, pagebreak, nonbreaking, anchor, toc, insertdatetime, advlist, lists, wordcount, imagetools, textpattern, help',
+                                      toolbar:'code preview',
+                                      height : '480'
+                                            }" formControlName="content"
+                                            [class.direction-right]="languageList[i].languageName == 'Arabic'">
+                
+                                        </editor>
+                                        <editor id="arabicID" *ngIf="ln.languageName == 'Arabic'" [init]="{
+                                      plugins: 'code, preview ,print,fullpage, searchreplace, directionality, visualblocks, visualchars, fullscreen, image, link, media, template, codesample, table, charmap, hr, pagebreak, nonbreaking, anchor, toc, insertdatetime, advlist, lists, wordcount, imagetools, textpattern, help',
+                                      toolbar:'ltr rtl code preview',
+                                      directionality: 'rtl',
+                                      height : '480'
+                                            }" formControlName="content"
+                                            [class.direction-right]="languageList[i].languageName == 'Arabic'">
+                                        </editor> -->
+                                        <!--This is external system container where you can place plugin buttons -->
+                     <div id="externalSystemContainer">
+                     
+                        <span id="changeHistoryContainer" style="display: none;">Last change: <a id="changeHistoryLink"></a></span>                    
+                      </div>
+                      <div class="notification-zone"></div>
+                      <!--Plugin containers -->
+                      <div>
+                        <div id="stripoSettingsContainer" style="height:700px;">Loading...</div>
+                        <div id="stripoPreviewContainer" style="height:900px;" formControlName="content" ngDefaultControl class="{{alignCss[i]}}"></div>
+                      </div>
+                                        <mat-error
+                                            *ngIf="EmailGroup.controls['emailArray']['controls'][i].controls['content'].hasError('required')">
+                                            Please enter value</mat-error>
+                                    </mat-expansion-panel>
+                                </mat-accordion>
+                                <mat-error style="margin-top: 10px;" *ngIf="EmailGroup.controls['emailArray'].invalid && show_error">
+                                    Please fill all mandatory fields</mat-error>
+                            </div>
+                        </div>
+                    </div><br><br>
+                    <div class="button-wrap">
+                        <div class="">
+                            <button type="button" class="button secondary-btn" [routerLink]="['/search-template']">CANCEL</button>
+                            <button type="submit" class="button primary-btn">{{btntxt}}</button>
+                        </div>
+                    </div>
+                </form>
+            </mat-card>
+        </div>
+    </div>

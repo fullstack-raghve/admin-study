@@ -1,0 +1,128 @@
+<div class="order-detail-section">
+    <ul>
+        <li class="listing-details-block" *ngFor="let item of productDetails; let i=index;">
+            <div class="item-detail">
+                <div class="image-col">
+                    <div class="no-img" *ngIf="item.imgPath==='' || item.imgPath===null">
+                        No Image
+                    </div>
+                    <img [src]="fileImgPathUrl + item.imgPath" width="70px" height="70px" *ngIf="item.imgPath!='' && item.imgPath!=null" /> 
+                    <div class="left-col">
+                        <label class="label-font m-l-4em">{{item.productSku}}</label>
+                        <p class="flex item-name"><span class="p-r-1rem">{{item.quantity}} X</span><span *ngIf="item?.type == 'VEG'" class="veg-icon"></span><span *ngIf="item?.type == 'NONVEG'" class="nonVeg-icon"></span><span *ngIf="item?.type == 'EGG'" class="egg-icon"></span> {{item.productName}}
+                            (
+                            <label class="small-text" *ngIf="item.variantName">{{item.variantName}}&nbsp;&nbsp;</label> <label class="currency-font">{{orderDetails?.currency}}&nbsp;</label> {{item.netPrice}})
+                        </p>
+                        <div class="pad-l-3rem">
+                            <div *ngFor="let addon of item.shoppingCartItemAddons; let isLast=last" class="grey-font-label">
+                                {{addon.quantity}} X {{addon.addonName}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="right-col">
+                    <div class="modify-buttons" *ngIf="changeOrderQtyBtns">
+                        <label class="subtract-btn" (click)="itemDecrement(item)">-</label>
+                        <p>{{item.quantity}}</p>
+                        <label class="add-btn" (click)="itemIncrement(item)">+</label>
+                    </div>
+                    <div class="rate-col">
+                        <div class="price"><span class="currency-label">{{orderDetails?.currency}}</span> {{item.totalPrice | number : '1.2-2'}}</div>
+                        <div *ngFor="let addon of item.shoppingCartItemAddons; let isLast=last" class="grey-font-label">
+                            {{orderDetails?.currency}} <span class="addon-price">{{addon.totalPrice}}</span>
+                        </div>
+                    </div>
+                    <!-- <p class="price">
+            <span class="currency-label">{{orderDetails?.currency}}</span>
+            <span class="total-amount">{{item.totalPrice | number : '1.2-2'}}</span>
+          </p> -->
+                </div>
+            </div>
+        </li>
+    </ul>
+    <div class="order-charge-details">
+        <div class="charge-summary">
+            <h5>{{orderDetails?.noOfItems}} Total Items</h5>
+            <p class="sub-heading">Special Instructions</p>
+            <p>{{orderDetails?.specialInstruction}}</p>
+        </div>
+        <div class="price-col">
+            <p class="price"><span class="currency-label">Tax &nbsp; {{orderDetails?.currency}} &nbsp; &nbsp;</span>{{billingDetails?.totalTax | number : '1.2-2'}}
+            </p>
+            <p class="price" *ngIf="orderDetails?.orderType === 'DELIVERY'"><span class="currency-label">Delivery Charges &nbsp; {{orderDetails?.currency}} &nbsp; &nbsp;
+        </span>{{billingDetails?.deliveryCharge | number : '1.2-2'}}
+            </p>
+            <p class="price"><span class="currency-label">Packing Charges &nbsp; {{orderDetails?.currency}} &nbsp; &nbsp;</span> {{billingDetails?.totalPackageCost | number : '1.2-2'}}</p>
+            <p class="price"><span class="currency-label">Discount &nbsp; {{orderDetails?.currency}} &nbsp; &nbsp;</span> {{billingDetails?.totalDiscountPrice | number : '1.2-2'}}</p>
+            <p class="price"><span class="currency-label">Coupon Discount &nbsp; {{orderDetails?.currency}} &nbsp; &nbsp;</span> {{billingDetails?.couponDiscountPrice | number : '1.2-2'}}</p>
+        </div>
+    </div>
+
+
+    <div class="order-total-amount">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-4 pad-0">
+                    <div *ngIf="showStarRating">
+                        <div class="feedback-enquiry-details flex-center" *ngIf="orderDetails?.rating != null">
+                            <div class="star-section">
+                                <p><strong>Feedback</strong></p>
+                                <div class="stars flex" *ngIf="orderDetails?.rating == '5'">
+                                    <span class="star_icon"></span>
+                                    <span class="star_icon"></span>
+                                    <span class="star_icon"></span>
+                                    <span class="star_icon"></span>
+                                    <span class="star_icon"></span>
+                                </div>
+                                <div class="stars flex" *ngIf="orderDetails?.rating == '4'">
+                                    <span class="star_icon"></span>
+                                    <span class="star_icon"></span>
+                                    <span class="star_icon"></span>
+                                    <span class="star_icon"></span>
+                                </div>
+                                <div class="stars flex" *ngIf="orderDetails?.rating == '3'">
+                                    <span class="star_icon"></span>
+                                    <span class="star_icon"></span>
+                                    <span class="star_icon"></span>
+                                </div>
+                                <div class="stars flex" *ngIf="orderDetails?.rating == '2'">
+                                    <span class="star_icon"></span>
+                                    <span class="star_icon"></span>
+                                </div>
+                                <div class="stars flex" *ngIf="orderDetails?.rating == '1'">
+                                    <span class="star_icon"></span>
+                                </div>
+                                <p class="orange-text" *ngIf="feedbackEnqData?.feedbackOid != null" (click)="goToFeedbackNotification(feedbackEnqData?.feedbackOid)">View</p>
+                            </div>
+                            <div class="enquiry-section" *ngIf="feedbackEnqData?.enquiryOid != null">
+                                <p>Enquiry</p>
+                                <a href="javascript:void()" (click)="goToFeedbackNotification(feedbackEnqData?.enquiryOid)"><u>{{feedbackEnqData?.enquiryOid}}</u></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="total-price text-right">
+                        <p class="amount">Total Amount <span class="grey-font-col">{{orderDetails?.currency}}</span> {{billingDetails?.totalPrice | number : '1.2-2'}}</p>
+                        <div *ngIf="paymentModeDetails.length > 0">
+                            <p class="grey-font-label">
+                                Payment Mode:
+                                <span *ngFor="let i of paymentModeDetails">
+                                <span *ngIf="i.tenderType == 'Cards'"> DB Online Payment {{i.tenderValue}},</span>
+                                <span *ngIf="i.tenderType == 'COD'"> Cash On Delivery {{i.tenderValue}},</span>
+                                <span *ngIf="i.tenderType == 'Points'"> Points worth {{i.tenderValue}},</span>
+                                <span *ngIf="i.tenderCode == 'Free Product'"> Free Product {{i.tenderType}}/({{i.tenderValue}})</span>
+                                <span *ngIf="i.tenderType == 'E-Wallet'"> DB Wallet Payment {{i.tenderValue}}</span>
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div *ngIf="contentLoader" class="page-loader-block full-page-loader">
+    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+</div>

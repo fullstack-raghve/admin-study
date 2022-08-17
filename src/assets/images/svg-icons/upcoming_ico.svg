@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28">
+  <defs>
+    <style>
+      .cls-1, .cls-4 {
+        fill: none;
+      }
+
+      .cls-1 {
+        stroke: #ffba00;
+      }
+
+      .cls-2 {
+        fill: #ffba00;
+      }
+
+      .cls-3 {
+        stroke: none;
+      }
+    </style>
+  </defs>
+  <g id="upcoming_ico" transform="translate(-460 -300)">
+    <g id="Rectangle_4596" data-name="Rectangle 4596" class="cls-1" transform="translate(460 300)">
+      <rect class="cls-3" width="28" height="28" rx="3"/>
+      <rect class="cls-4" x="0.5" y="0.5" width="27" height="27" rx="2.5"/>
+    </g>
+    <circle id="Ellipse_256" data-name="Ellipse 256" class="cls-2" cx="5.765" cy="5.765" r="5.765" transform="translate(468.235 308.235)"/>
+  </g>
+</svg>

@@ -1,0 +1,96 @@
+<div class="page-wrap">
+  <div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container">
+      <h1>NPS Design</h1>
+      <div class="slider" style="pointer-events: none;">
+        {{statusValue}} <mat-slide-toggle [(ngModel)]="toggleVal" (change)="toggleStatus($event)"
+          class="mat-slide-toggle">
+        </mat-slide-toggle>
+      </div>
+    </div>
+  </div>
+  <div class="form-wrap">
+    <div class="nps-block">
+      <div class="row nps-row">
+        <div class="col-md-6 nps-col nps-smiles-col">
+          <h3>Smiles</h3>
+          <mat-card class="nps-card">
+            <div class="row nps-card-row">
+              <div class="col-md-12 nps-card-col nps-before-click">
+                <div>
+                  <div class="row sentimentCreateBean-row">
+                    <div class="col-md-12">
+                      <div class="row">
+                        <div class="col-md-6">
+                          <h5>Before Click</h5>
+                        </div>
+                        <div class="col-md-6">
+                          <h5>After Click</h5>
+                        </div>
+                      </div>
+                      <div class="row emoji-block" *ngFor="let viewNpsDatasentimentCreateBean of reactions">
+                        <div class="col-md-6 number-img">
+                          <div class="row num-mar-0">
+                            <div class="col-md-2 num-pad-0">
+                              <p>{{viewNpsDatasentimentCreateBean?.id - 1}}</p>
+                            </div>
+                            <div class="col-md-8 num-pad-0">
+                              <div class="emoji-img">
+                                <div class="emoji-img">
+                                  <img src="{{imgBaseUrl+viewNpsDatasentimentCreateBean?.beforeClickSentimentImage}}"
+                                    alt="">
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                        </div>
+                        <div class="col-md-6 number-img">
+                          <div class="row num-mar-0">
+                            <div class="col-md-2 num-pad-0">
+                              <p>{{viewNpsDatasentimentCreateBean?.id - 1}}</p>
+                            </div>
+                            <div class="col-md-8 num-pad-0">
+                              <div class="emoji-img">
+                                <img src="{{imgBaseUrl+viewNpsDatasentimentCreateBean?.afterClickSentimentImage}}"
+                                  alt="">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-card>
+        </div>
+        <div class="col-md-6 nps-col nps-nps-col">
+          <h3>NPS</h3>
+          <mat-card class="nps-card">
+            <div class="row nps-card-row">
+              <div class="colourCodingCreateBean-block">
+                <div *ngFor="let color of viewNpsDatacolourCodingCreateBean" class="colourCodingCreateBean-col">
+                  <div class="color-coding-box" [ngStyle]="{ 'background-color': color?.colourCoding}">
+                    <p>{{color?.id - 1}}</p>
+                  </div>
+                  <div class="color-code-input">
+                    <p>{{color?.colourCoding}}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="btm-button-wrap">
+        <!-- <button class="button secondary-btn" type="button" [routerLink]="['/search-programs/']">CANCEL</button> -->
+        <button class="button primary-btn" type="button" [routerLink]="['/nps-Design']">EDIT</button>
+      </div>
+    </div>
+  </div>
+</div>

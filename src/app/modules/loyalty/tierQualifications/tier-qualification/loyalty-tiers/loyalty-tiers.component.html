@@ -1,0 +1,67 @@
+<div class="tier-page">
+    <form id="editLoyaltyTiers" [formGroup]="edit_loyalty_tiers_form" (submit)="updateTier(edit_loyalty_tiers_form.value)" #editLoyaltyTiers="ngForm">
+        <input type="hidden" class="input-box" formControlName="tierId">
+        <div class=" image-block">
+            <div class="img-container text-center mt-3">
+                <label *ngIf="loyalty_tiers_data.tierImage==''" class="upload-text" class="placeholder-img">Program
+          Image</label>
+                <img *ngIf="loyalty_tiers_data.tierImage!=''" class="upload-img" [src]="filePathUrl+loyalty_tiers_data.tierImage" [class.uploaded-img]="imgUpload" style="width:100px; height:90px">
+            </div>
+
+            <div *ngIf="loyalty_tiers_data.imageErr" style="color:red; font-size: 10px;">
+                {{loyalty_tiers_data.imageErrMsg}}
+            </div>
+            <div class="uploaded-img text-center">
+                <input style='display: none;' type='file' (change)="uploadTierImage($event.target.files, loyalty_tiers_data)" #selectFileTier>
+                <span class="upload-btn-text " (click)='selectFileTier.click()' *ngIf="loyalty_tiers_data?.tierImage == '' ">
+          <span class="">
+            <img src="assets/images/svg-icons/uploadgray_ico.svg" width="15px" alt="Tier Img">
+          </span>
+                <span class="uploaded-link">Upload Image</span>
+                </span>
+                <span class="remove-img mb-10px" *ngIf="loyalty_tiers_data.tierImage != ''" (click)="removeImage()">
+          <span>
+            <img src="assets/images/icons/filter_close_ico.png" alt="close">
+            <label style="cursor: pointer"> Remove</label>
+          </span>
+                </span>
+            </div>
+        </div>
+        <div class="">
+            <mat-form-field>
+                <input matInput placeholder="Tier Name" formControlName="name" required maxlength="25" minlength="0" />
+                <mat-error *ngIf="edit_loyalty_tiers_form.get('name').hasError('required')">Please enter value</mat-error>
+                <mat-error *ngIf="edit_loyalty_tiers_form.get('name').hasError('pattern')">Only AlpaNumeric are allowed
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <mat-form-field>
+                    <input matInput placeholder="Min Value" formControlName="minValue" required maxlength="10" minlength="0" OnlyNumber="true" />
+                    <div class="tier-error-msg">
+                        <mat-error *ngIf="edit_loyalty_tiers_form.get('minValue').hasError('required')">Please enter value
+                        </mat-error>
+                        <mat-error *ngIf="minValue_new > maxValue_new  || edit_loyalty_tiers_form.get('minValue').hasError('max')">
+                            Min Value should be lesser than Max Value</mat-error>
+                    </div>
+                </mat-form-field>
+            </div>
+            <div class="col-md-6">
+                <mat-form-field>
+                    <input matInput placeholder="Max Value" formControlName="maxValue" required maxlength="10" OnlyNumber="true" />
+                    <div class="tier-error-msg">
+                        <mat-error *ngIf="edit_loyalty_tiers_form.get('maxValue').hasError('required')">Please enter value
+                        </mat-error>
+                        <mat-error *ngIf="maxValue_new < minValue_new || edit_loyalty_tiers_form.get('maxValue').hasError('min') && !lastTier">
+                            Max Value should be greater than Min Value</mat-error>
+                    </div>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="btm-button-wrap">
+            <button type="button" class="button secondary-btn" (click)="closeDialog()">CANCEL</button>
+            <button type="submit" class="button primary-btn" color="#FF8E48">UPDATE</button>
+        </div>
+    </form>
+</div>

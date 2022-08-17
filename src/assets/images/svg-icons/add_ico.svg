@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+  <path id="add_ico" class="cls-1" d="M14,6.333H7.667V0H6.333V6.333H0V7.667H6.333V14H7.667V7.667H14Z"/>
+</svg>

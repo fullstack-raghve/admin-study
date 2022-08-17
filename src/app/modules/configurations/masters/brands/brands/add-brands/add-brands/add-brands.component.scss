@@ -1,0 +1,81 @@
+.master-fieldSet {
+    .language-fieldset{
+        padding: 0px 26px 10px;
+        border: 1px solid #dbdbdb;
+        border-radius: 5px;
+        .fieldset-heading {
+            font-size: 14px;
+            padding-inline-start: 7px;
+            max-width: 32% !important;
+        }
+    }
+}
+.mat-form-field {
+    width: 100%;
+}
+.cuisine-list {
+    .mat-form-field {
+        margin-bottom: 0;
+    }
+    .mat-standard-chip {
+        border-radius: 5px;
+        min-height: 25px;
+    }
+    .mat-chip.mat-standard-chip {
+        background-color: #F5F5F5;
+        color: #5F5C5C;
+    }
+    .mat-chip {
+        font-size: 13px;
+        font-weight: 400;
+    }
+    .mat-standard-chip.mat-chip-with-trailing-icon {
+        margin-right: 5px;
+        margin-bottom: 5px;
+        height: 100%;
+        word-break: break-word;
+    }
+}
+.img-block{
+    .avatar-zone{
+        width:150px;
+        height:100px;
+        background-color: #F2F2F2;
+        text-align: center;
+        border: 1px dashed #dbdbdb;
+    }
+    .upload-img {
+        width: 100%;
+        height: 98px;
+    }
+    .upload-icon {
+        width: 12px;
+        height: 12px;
+        margin-right: 5px;
+        cursor: pointer;
+    }
+
+}
+.placeholder-img {
+    display: none;
+}
+.upload-btn-text {
+    cursor: pointer;
+    font-size: 10px;
+    color: #145CBF;
+}
+.remove-img {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+   img {
+       width: 15px;
+   }
+   label {
+       font-size: 13px;
+       color: grey;
+       padding-left: 5px;
+       margin-bottom: 0;
+   }
+}

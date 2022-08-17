@@ -1,0 +1,35 @@
+.assignRow{
+    border-top:20px solid #eaeaea;
+}
+.page-wrap{
+    margin: 20px 20px 20px 20px;
+}
+.mat-card{
+    box-shadow: none;
+}
+.primary-btn{
+    float: right;
+    margin: 10px;
+}
+
+.secondary-btn{
+    float: right;
+    margin: 10px;
+}
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  td, th {
+    border-right: 1px solid #dddddd;
+    text-align: center;
+    
+  }
+  
+th {
+     padding: 8px;
+     color: #727272;
+    background-color: #F2F2F2;
+  }

@@ -1,0 +1,13 @@
+<div class="page-wrap">
+  <div class="close-icon text-right">
+    <img src="assets/images/icons/filter_close_ico.png" alt="" (click)="onCloseClick()">
+  </div>
+  <div class="scan-block text-center">
+    <p>Scan the QR Code from your Kiosk</p>
+    <ngx-qrcode [qrc-element-type]="'img'" [qrc-value]="scanId" [width]="256">
+    </ngx-qrcode>
+  </div>
+  <div *ngIf="pageLoader" class="dialog-container">
+    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+  </div>
+</div>

@@ -1,0 +1,202 @@
+<div class="bredcrumb-title-wrap">
+  <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+  <div class="title flex-container template-title">
+    <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          [routerLink]="['/search-gifting']"></span>Giftings</h1>
+  </div>
+</div>
+<form>
+  <mat-card class="first-row">
+    <!-- <div class="row">
+      <div class="col-md-4"> -->
+        <!-- <mat-card> -->
+          <!-- <figure> -->
+            <!-- <div class="img-layout">
+            <div class="grid img-block">
+              <div class="images-placeholder">
+                <div class="img-thumbnail img-fluid">
+                  <img src="assets/images/store-office.jpg/" alt="img">
+                  
+                </div>
+              </div>
+            </div>
+          </div> -->
+
+          
+            <div class="row">
+              <div class="col-md-4">
+                <!-- <mat-card> -->
+                    <div   class="messageOverwrite"   >          
+                        <div   class="avatar-zone1" [ngStyle]="{'background-color':logoDetails.backgroundColor}">
+                            <img  [src]="logoDetails.backgroundImage" 
+                              style="object-fit: fill">
+                          </div>
+                          <div class="ImgHead">
+                              <div  class="avatar-zone_logo">
+                                  <img   [src]="logoDetails.logoImage" 
+                                    height="30px;" style="object-fit: fill; ">
+                                </div>
+                                
+                                <div class="messages" [ngStyle]="{'color':logoDetails.textColor}">
+                                  <h6>{{logoDetails.headingMessage1}}</h6>
+                                  <h3>{{logoDetails.headingMessage2}}</h3>
+                                  <p>{{logoDetails.textMessage}}</p>
+                                </div>
+                          </div>
+                    </div>
+                    <div   class="newMessage">                          
+                                <div class="messages row"  >
+                                  <div  class="col-md-8" >
+                                      <p>  {{viewGiftingData.message}}</p>
+                                  </div>
+                                    <div class="col-md-4">
+                                      <!-- <lable>value</lable> --> 
+                                      <label>value</label>
+                                      <br> 
+                                        <p>{{viewGiftingData.value}} {{viewGiftingData.curencyCode}}</p>
+                                    </div>
+                                   
+                                </div>
+                    </div>
+              </div> 
+
+
+
+              <!-- <div class="col-md-5 messageOverwrite" *ngFor="let logoDetail of  logoDetails">
+                <div class="avatar-zone1" [ngStyle]="{'background-color':logoDetail.backgroundColor}">
+                  <img [src]="logoDetail.backgroundImage" width="277px;" height="160px;" style="object-fit: fill">
+                </div>
+                <div class="ImgHead">
+                  <div class="avatar-zone_logo">
+                    <img [src]="logoDetail.logoImage" width="auto" height="30px;" style="object-fit: fill;">
+                  </div>
+                  <div class="messages" [ngStyle]="{'color':logoDetail.textColor}">
+                    <h6>{{logoDetail.headingMessage1}}</h6>
+                    <h3>{{logoDetail.headingMessage2}}</h3>
+                    <p>{{logoDetail.textMessage}}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <figcaption>
+              <div class="row" style="padding-top:5px">
+                <div class="col-md-8 card-value">
+                  <div>
+                    {{viewGiftingData.message}}
+                  </div>
+                </div>
+                <div class="col view-label">
+                  <label>Value</label>
+                  <p style="font-size:22px;color:#000000">{{viewGiftingData.value}}</p>
+                </div>
+              </div>
+            </figcaption>
+          </figure> -->
+
+        <!-- </mat-card> -->
+      <!-- </div> -->
+      <div class="col-md-4 view-label digital-card">
+        <mat-card>
+          <h6>{{viewGiftingData.giftingType}}</h6>
+          <label>Corporate</label>
+          <p>{{viewGiftingData.corporateName}}</p>
+          <label>Occassion Name</label>
+          <p>{{viewGiftingData.occasionName}}</p>
+          <label>Message</label>
+          <p>{{viewGiftingData.message}}</p>
+          <div><button type="button" class="btn btn-link" (click)="termCondition()"><u><a class="text-blue"
+                  style="font-size: 14px;">View T&C</a></u></button></div>
+        </mat-card>
+      </div>
+
+      <div class="col-md-4 select-gift-card">
+        <mat-card>
+          <div class="row">
+            <div class="col-md-12 view-label">
+              <label>Selected Gift card</label>
+              <p>{{viewGiftingData.giftcardName}}</p>
+            </div>
+          </div>
+          <div class="master-fieldSet">
+            <fieldset class="language-fieldset">
+              <legend class="fieldset-heading-card">Card Value</legend>
+              <div class="col-md-12 view-label">
+                <label>Value</label>
+                <p>{{viewGiftingData.value}}</p>
+              </div>
+            </fieldset>
+          </div>
+          <div class="row">
+            <div class="col view-label delivery-date">
+              <label>Delivery date</label>
+              <p>{{viewGiftingData.deliveryDate| date:'dd-MM-yyyy'}}</p>
+            </div>
+            <!-- <div class="col">
+              <img class="cal-img" src="assets/images/icons/cal_ico.png/">
+            </div> -->
+          </div>
+          <div class="row">
+            <div class="col view-label">
+              <label>Number of Recipients</label>
+              <p>{{viewGiftingData.noOfRecipients}}</p>
+            </div>
+          </div>
+        </mat-card>
+     </div>
+    </div>
+  </mat-card>
+<br>
+  <div  class="form-wrap"> 
+    <mat-card class="first-row" >
+    <div class="table-wrap">
+      <div class="table-wrap-inner"> 
+        <table mat-table [dataSource]="dataSource" matSort >
+          <ng-container matColumnDef="empId">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>ID </th>
+            <td mat-cell *matCellDef="let row"> {{row.empId}}</td>
+          </ng-container>
+          <ng-container matColumnDef="USER_NAME">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>NAME</th> 
+            <td mat-cell *matCellDef="let row">{{row.USER_NAME}}</td>              
+          </ng-container>
+
+          <ng-container matColumnDef="EMAIL">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> EMAIL ID </th>
+            <td mat-cell *matCellDef="let row"><u><a class="text-blue"> {{row.EMAIL}}</a></u> </td>
+          </ng-container>
+          <ng-container matColumnDef="CORPORATE_NAME">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> CORPORATE </th>
+            <td mat-cell *matCellDef="let row"> {{row.CORPORATE_NAME}}</td>
+          </ng-container>
+          
+          <ng-container matColumnDef="MOBILE_NUMBER">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>MOBILE NUMBER</th>
+            <td mat-cell *matCellDef="let row">{{row.MOBILE_NUMBER}}</td>
+          </ng-container>
+          
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> STATUS </th>
+            <td mat-cell *matCellDef="let row">{{row.status}}</td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+          </tr>
+        </table>
+        <!-- <div class="no-records" *ngIf="NoRecord">
+          No Records Found!
+        </div> -->
+        <!-- <div *ngIf="searchStoreVal" class="select-store-block">
+          <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+        </div> -->
+      </div>
+      <mat-paginator  [pageSizeOptions]="[5,10,20,50,100]"></mat-paginator>
+    </div>
+  </mat-card>
+  </div>
+  <!-- <button type="button" name="cancel"  [routerLink]="['/search-gifting']" class="button secondary-btn">CANCEL</button> -->
+  <button  style="float:right;margin:0.5rem" class="button primary-btn" [routerLink]="['/edit-gifting/'+viewGiftingId]" *ngIf="(viewGiftingData.giftingType !='PHYSICAL') &&(futureDate==true)">EDIT</button>
+  <!-- <button  style="float:right;margin:0.5rem" type="button" name="cancel"  [routerLink]="['/search-gifting']" class="button secondary-btn">CANCEL</button> -->
+
+</form>
+ 
+

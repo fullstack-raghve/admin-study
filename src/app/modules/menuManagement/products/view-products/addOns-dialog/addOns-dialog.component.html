@@ -1,0 +1,30 @@
+<div class="page-wrap">
+    <div class="header flex-container">
+        <h5>Select Add-ons</h5>
+        <div class="close-icon">
+            <img src="assets/images/icons/filter_close_ico.png" alt="close_icon" (click)="onCloseClick()">
+        </div>
+    </div>
+    <div class="addons-wrapper">
+        <div class="flex-wrap">
+            <div *ngFor="let item of addonsData">
+                <div class="addon-item">
+                    <div class="image-block">
+                        <div class="image-container">
+                            <img *ngIf="item.addonImagePath != ''" [src]="filePathUrl+item.addonImagePath" alt="Addon Image">
+                            <img *ngIf="item.addonImagePath == ''" src="assets/images/no_image.png" alt="Addon Image">
+                        </div>
+                    </div>
+                    <div class="addon-info">
+                        <mat-checkbox (change)="toggleVisibility($event)" [(ngModel)]="item.checked">{{item.addonName}}
+                        </mat-checkbox>
+                        <p>Price: {{item.displayPrice}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-right">
+            <button type="button" class="button primary-btn" (click)="createList()">ADD</button>
+        </div>
+    </div>
+</div>

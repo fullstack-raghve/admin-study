@@ -1,0 +1,188 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container">
+        <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+      (click)="GoToSearchBanner(bannerDataSingle?.sequenceNum, cityOid, countryId)"></span>View Banner
+        </h1>
+    </div>
+</div>
+
+<div class="page-wrap">
+    <form #viewBannerForm="ngForm">
+        <mat-card class="mb-20px">
+            <div class="view-basic-details">
+                <div class="country-name">
+                    <label>Showing Banner for selected Country : 
+                        <span class="display-color">
+                            {{bannerDetailList.countryName}}
+                        </span>
+                    </label>
+                </div>
+                <div class="city-name">
+                    <label>Showing Banner for selected City : 
+                        <span class="display-color">{{bannerDetailList.cityName}}</span>
+                    </label>
+                </div>
+                <div class="seq-selected">
+                    <label>Order is : 
+                        <span class="display-color">{{bannerDataSingle?.sequenceNum}}</span>
+                    </label>
+                </div>
+            </div>
+            <div>
+                <label>Banner Type :&nbsp;
+                    <span class="display-color" *ngIf="bannerType == 'type2'"> Type 2 Banner </span>
+                    <span class="display-color" *ngIf="bannerType != 'type2'"> Type 1 Banner </span>
+                </label>
+            </div>
+            <div>
+                <label>Banner Type :&nbsp;
+                    <span class="display-color" *ngIf="bannerType == 'type2'"> Type 2 Banner </span>
+                    <span class="display-color" *ngIf="bannerType != 'type2'"> Type 1 Banner </span>
+                </label>
+            </div>
+            <div class="row mt-20px">
+                <div class="col-md-4">
+                    <div class="view-details">
+                        <label>Banner Name 
+                        </label>
+                        <p>{{bannerDataSingle?.bannerName}}</p>
+                    </div>
+                </div>
+                <div class="col-md-4" *ngIf="bannerDataSingle?.bannerLinkThrough !== ''">
+                    <div class="view-details">
+                        <label>Banner Clickthrough</label>
+                        <p>{{bannerDataSingle?.bannerLinkThrough}}
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="view-details" *ngIf="bannerDataSingle?.bannerLinkThrough == 'Specific Brand'">
+                        <label>Link To</label>
+                        <p *ngFor="let link of brandList" class="mar0">
+                            <span *ngIf="bannerDataSingle?.linkToId == link.brandId"> {{ link?.brandName }} </span>
+                        </p>
+                    </div>
+                    <div class="view-details" *ngIf="bannerDataSingle?.bannerLinkThrough == 'Store'">
+                        <label>Link To</label>
+                        <p *ngFor="let link of storeList" class="mar0">
+                            <span *ngIf="bannerDataSingle?.linkToId == link.oid"> {{ link?.storeName }} </span>
+                        </p>
+                    </div>
+                    <div class="view-details" *ngIf="bannerDataSingle?.bannerLinkThrough == 'Mall'">
+                        <label>Link To</label>
+                        <p *ngFor="let link of mallList" class="mar0">
+                            <span *ngIf="bannerDataSingle?.linkToId == link.mallId"> {{ link?.mallName }} </span>
+                        </p>
+                    </div>
+                    <div class="view-details" *ngIf="bannerDataSingle?.bannerLinkThrough == 'FAQ'">
+                        <label>Link To</label>
+                        <p *ngFor="let link of faqList" class="mar0">
+                            <span *ngIf="bannerDataSingle?.linkToId == link.faqCategoryId"> {{ link?.faqCategoryTitle }} </span>
+                        </p>
+                    </div>
+                    <div class="view-details" *ngIf="bannerDataSingle?.bannerLinkThrough == 'Specific Url'">
+                        <label>URL</label>
+                        <p>
+                            <span> {{ bannerDataSingle?.externalLink }} </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4" *ngFor="let bannerLocale of bannerDataSingle?.bannerManagementLocaleBean;let j = index;">
+                    <div class="lang-field">
+                        <label>{{languageList[j].languageName}}</label>
+                    </div>
+                    <div class="banner-image" *ngIf="bannerLocale.imgPath != ''">
+                        <p class="note-text"><span>image size 1125*1350</span></p>
+                        <div class="grid img-block">
+                            <div class="avatar-zone">
+                                <img class="upload-img" [src]="filePathUrl+bannerLocale.imgPath" alt="banner_image">
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="bannerLocale.videoPath != ''">
+                        <p>{{bannerLocale.videoPath}}</p>
+                    </div>
+                </div>
+            </div>
+        </mat-card>
+        <div *ngIf="bannerType == 'type2' && bannerDataSingle?.bannerManagementLocaleBean.length > 0">
+            <h3 class="card-title">Detail Page Title</h3>
+            <mat-card>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="master-fieldSet">
+                            <fieldset class="language-fieldset">
+                                <legend class="fieldset-heading">Detail Page Title</legend>
+                                <div class="">
+                                    <div class="example-container" *ngFor="let locale of bannerDataSingle?.bannerManagementLocaleBean; let i=index">
+                                        <div [class.direction-right]="languageList[i].languageName == 'Arabic'">
+                                            <label>{{languageList[i].languageName}}</label>
+                                            <p>{{locale?.title}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="col-md-4 p-10px">
+                        <div class="row">
+                            <div class="col-md-6" *ngFor="let locale of bannerDataSingle?.bannerManagementLocaleBean; let j=index">
+                                <div class="lang-field">
+                                    <label>{{languageList[j].languageName}}</label>
+                                </div>
+                                <div class="img-block">
+                                    <div class="avatar-zone1">
+                                        <img class="upload-img" [src]="filePathUrl+locale['detailImage']" width="80px">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="note">
+                                <p>Note: Thumbnail image size 300 x 300 Image Format JPEG Or PNG</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+        <div *ngIf="bannerType == 'type2' && bannerDataSingle?.bannerManagementLocaleBean.length > 0 ">
+            <div class="content">
+                <h3 class="card-title">Detail Page Content</h3>
+            </div>
+            <div class="">
+                <mat-card class="terms-conditions-card">
+                    <div class="faq-card ">
+                        <div class="expansion-panel" *ngFor="let ln of bannerDataSingle?.bannerManagementLocaleBean; let k=index">
+                            <mat-accordion>
+                                <mat-expansion-panel [class.right-panel]="languageList[k].languageName == 'Arabic'">
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>
+                                            {{languageList[k].languageName}}
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
+                                    <div class="row card-mb" [class.text-right]="languageList[k].languageName == 'Arabic'">
+                                        <div class="col-md-12 text-fields {{languageDirection[ln]}}">
+                                            <div [class.direction]="languageList[k].languageName == 'Arabic'">
+                                                <div class="col-md-12">
+                                                    <label class="mat-placeholder-required">Content</label>
+                                                    <p [innerHTML]="contentText[k]"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-expansion-panel>
+                            </mat-accordion>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+        </div>
+    </form>
+    <div class="btm-button-wrap">
+        <button type="button" class="button secondary-btn" (click)="GoToSearchBanner(sequenceNum,cityOid, countryId)">CANCEL</button>
+        <button type="button" class="button primary-btn" (click)="deletBanner(sequenceNum, cityOid, countryId)" [disabled]="bannerDataSingle?.bannerDetailId == '0'">DELETE</button>
+        <button class="button primary-btn" type="button" (click)="MoveToEdit(sequenceNum,cityOid, countryId)">EDIT</button>
+    </div>
+</div>

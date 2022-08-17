@@ -1,0 +1,161 @@
+<div class="page-wrap">
+  <div class="search-panel-block">
+    <div class="bredcrumb-title-wrap">
+      <div class="search-container-block">
+        <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+        <div>
+          <form class="" [formGroup]="searchProgramsFormGroup" (submit)="searchKey()" #searchProductsForm="ngForm">
+            <div class="row search-bar">
+              <div class="col-md-3 search-bar-col-sm">
+                <div class="title">
+                  <h1>Search Program</h1>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="common-search">
+                  <input type="text" formControlName="searchVal" placeholder="Search Program" />
+                  <span class="search-btn" (click)="searchKey()"></span>
+                  <div class="filter-btn-wrap">
+                    <span class="filter-btn" (click)="openFilter();" [ngClass]="status ? 'open' : 'close'"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3 search-bar-col-sm">
+                <!-- <div class="add-btn text-right">
+                  <button type="button" class="button primary-btn m-0px" [routerLink]="['/add-programs']">
+                    <span class="add-plus">
+                      <img src="assets/images/svg-icons/add_ico.svg" alt="add" class="plus-icon">
+                    </span>ADD PROGRAM
+                  </button>
+                </div> -->
+              </div>
+            </div>
+            <div class="filter-wrap">
+              <div class="feild-search" *ngIf="!status">
+                <div class="row feild-search-inner">
+                  <div class="col-md-3">
+                    <mat-form-field>
+                      <mat-select placeholder="Rewards Type" formControlName="rewardsType">
+                        <mat-option value="POINTS">Points</mat-option>
+                        <mat-option value="STAMPS">Stamps</mat-option>
+                        <mat-option value="BASEREWARD">Base Rewards</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-3">
+                    <mat-form-field>
+                      <mat-select placeholder="Live/Upcoming/Expired" formControlName="liveOrUpcoming">
+                        <mat-option value="LIVE">Live</mat-option>
+                        <mat-option value="UPCOMING">Upcoming</mat-option>
+                        <mat-option value="EXPIRED">Expired</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-3">
+                    <mat-form-field>
+                      <mat-select placeholder="Approval Status" formControlName="approvalStatus">
+                        <mat-option value="NEW">NEW</mat-option>
+                        <mat-option value="APPROVED">APPROVED</mat-option>
+                        <mat-option value="UPDATED">UPDATED</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-3">
+                    <!-- <mat-form-field>
+                      <mat-select placeholder="Brand" formControlName="brandOid">
+                        <mat-option *ngFor="let brand of storeBrandList" value="{{brand.brandId}}">
+                          {{ brand.brandName }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field> -->
+                    <mat-form-field class="example-full-width">
+                      <input matInput placeholder="Brand" aria-label="Brand" [matAutocomplete]="brandAutoComplete"
+                        [formControl]="brandCtrl"  formControlName="brandOid">
+                      <mat-autocomplete #brandAutoComplete="matAutocomplete">
+                        <mat-option *ngFor="let brand of filteredbrands | async" [value]="brand.brandName"
+                          (click)="getbrandID(brand.brandId)" #brandInput>
+                          <span>{{brand.brandName}}</span>
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-3">
+                    <mat-form-field>
+                      <mat-select placeholder="Status" formControlName="status">
+                        <mat-option value="Online"> ONLINE</mat-option>
+                        <mat-option value="Offline">OFFLINE</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="button-wrap">
+                  <button class='button quaternary-btn' type="button" (click)="resetForm()">RESET</button>
+                  <button class='button tertiary-btn' type="submit">APPLY</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="form-wrap">
+      <!-- <div class="no-records" *ngIf="resultsLength === 0">
+                No Records Found!
+            </div> -->
+      <div class="table-wrap">
+        <div class="table-wrap-inner">
+          <!-- <table mat-table [dataSource]="dataSource" matSort > -->
+            <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)" *ngIf="dataSource">
+            <!-- <ng-container matColumnDef="programId">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> PROGRAM ID </th>
+              <td mat-cell *matCellDef="let row"> {{row.programId }} </td>
+            </ng-container> -->
+            <ng-container matColumnDef="publishStatus">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> PUBLISH </th>
+              <td mat-cell *matCellDef="let row">{{row.publishStatus}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="programName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> PROGRAM NAME </th>
+              <td (click)="moveToView(row.programId)" mat-cell *matCellDef="let row"><u><a class="text-blue">
+                    {{row.programName}} </a></u></td>
+            </ng-container>
+            <ng-container matColumnDef="rewardType">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> REWARD TYPE </th>
+              <td mat-cell *matCellDef="let row"> {{row.rewardType}}</td>
+            </ng-container>
+            <ng-container matColumnDef="endDate">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> END DATE </th>
+              <td mat-cell *matCellDef="let row">{{null!=row.endDate ? (row.endDate | date:'dd/MM/yyyy') : '-'}}</td>
+            </ng-container>
+            <ng-container matColumnDef="modifiedOn">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> MODIFIED ON </th>
+              <td mat-cell *matCellDef="let row"> {{row.modifiedTime | date:'dd/MM/yyyy'}} </td>
+            </ng-container>
+            <ng-container matColumnDef="approvalStatus">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> APPROVAL STATUS </th>
+              <td mat-cell *matCellDef="let row"> {{row.approvalStatus == 'WAITINGAPPROVAL'? 'PENDING APPROVAL' :
+                row.approvalStatus}} </td>
+            </ng-container>
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> STATUS </th>
+              <td mat-cell *matCellDef="let row"> {{row.status}} </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+            </tr>
+          </table>
+          <div *ngIf="searchStoreVal" class="select-store-block">
+            <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+          </div>
+          <div class="no-records" *ngIf="noRecords">
+            No Records Found!
+          </div>
+        </div>
+        <mat-paginator [length]="resultsLength" (change)="searchVal()" #paginator
+            (page)="getUpdate($event)" [pageSize]="10" [pageSizeOptions]="[10,20,50,100]">
+          </mat-paginator>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,97 @@
+<div class="bredcrumb-title-wrap">
+  <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+  <div class="addtier-block justify-content-between">
+    <div class="title flex-container">
+      <p class="page-title">Role Qualifications </p>
+    </div>
+  </div>
+</div>
+<div class="form-wrap">
+  <form id="roleTier" [formGroup]="roleTierFormGroup" (submit)="addRoleTier(roleTierFormGroup.value)">
+    <mat-card class="mat-card" *ngFor="let currency of currencyList;let i=index">
+      <div class="row member-top-block">
+        <div class="col-md-3">
+          <div class="view-label">
+            <label>Member Type</label>
+            <p>Employee</p>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <mat-form-field>
+            <input matInput type="text" placeholder="Active Engagement Days" formControlName="activeDays" required />
+            <mat-error *ngIf="roleTierFormGroup.get('minValue').hasError('required')">
+                Please enter value</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-3 checkbox">
+          <mat-checkbox>Downgrade Allowed</mat-checkbox>
+        </div>
+        <div>
+        </div>
+      </div>
+      <div class="tier-block">
+        <div class="row tier-block-row">
+          <div class="col-md-3 tier-block-col" *ngFor="let currency of currencyList;let i=index">
+            <div class="tier-block-content">
+              <div class="tier-block-inner">
+                <div class="row tier-inner-row">
+                  <div class="col-md-6">
+                    <div class="view-label">
+                      <label>Tier Name</label>
+                      <p class="tier-val">Silver</p>
+                    </div>
+                  </div>
+                  <div class="tier-checkbox col-md-6">
+                    <mat-checkbox></mat-checkbox>
+                  </div>
+                </div>
+              </div>
+              <div class="tier-block-inner">
+                <p>AED</p>
+                <div class="row tier-inner-row">
+                  <div class="col-md-6 tier-inner-col">
+                    <mat-form-field>
+                      <input matInput type="text" placeholder="Min Value" formControlName="minValue" required />
+                      <mat-error *ngIf="roleTierFormGroup.get('minValue').hasError('required')">
+                          Please enter value</mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-6 tier-inner-col">
+                    <mat-form-field>
+                      <input matInput type="text" placeholder="Max Value" formControlName="maxValue" required />
+                      <mat-error *ngIf="roleTierFormGroup.get('maxValue').hasError('required')">
+                          Please enter value</mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+              <div class="tier-block-inner-bottom">
+                <P>USD</P>
+                <div class="row tier-inner-row">
+                  <div class="col-md-6 tier-inner-col">
+                    <mat-form-field>
+                      <input matInput type="text" placeholder="Min Value" formControlName="minValue" required />
+                      <mat-error *ngIf="roleTierFormGroup.get('minValue').hasError('required')">
+                          Please enter value</mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-6 tier-inner-col">
+                    <mat-form-field>
+                      <input matInput type="text" placeholder="Max Value" formControlName="maxValue" required />
+                      <mat-error *ngIf="roleTierFormGroup.get('maxValue').hasError('required')">
+                          Please enter value</mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+    <div class="bttn-block-bottom">
+        <button class="button secondary-btn"> CANCEL </button>
+        <button class="button primary-btn" type="submit"> SAVE </button>
+    </div>
+  </form>
+</div>

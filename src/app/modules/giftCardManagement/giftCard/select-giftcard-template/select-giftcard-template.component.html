@@ -1,0 +1,84 @@
+ <div class="page-wrap">
+  <div class="bredcrumb-title-wrap">
+    <div class="search-wrap filter-wrap">
+      <div class="row common-search">
+          <div class="col-md-5 store-title" style="text-align: left;">
+            <h6>Select Template</h6>
+          </div>
+          <div class="col-md-7">
+            
+          </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-wrap">
+      <div class="table-wrap">
+        <div class="table-wrap-inner">
+          <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+            <ng-container matColumnDef="select">
+              <th mat-header-cell *matHeaderCellDef>
+              </th>
+              
+              <td mat-cell *matCellDef="let row">
+                <mat-radio-button (click)="$event.stopPropagation()"
+                (change)="$event ? selection.toggle(row) : null"
+                [checked]='isEarnRuleSelected(row)'></mat-radio-button>
+            </td>
+            </ng-container>
+
+            <!-- <ng-container matColumnDef="cardName">
+              <th class="mat-tab" mat-header-cell *matHeaderCellDef> CARD NAME </th>
+              <td mat-row *matCellDef="let element">
+                <img src="{{element.backgroundImage}}" alt="" class="gift-card-img">
+                <p class="gift-card-back"  *ngIf="element.backgroundImage==''" [style.background-color]="element.backgroundColor"><span>
+                  <p class="gift-card-backC"  *ngIf="element.backgroundImage=='' && element.backgroundColor=='#F2F2F2'" >&nbsp;&nbsp;</p>
+                </span></p>
+                
+                {{element.templateName}}
+              </td>   
+            </ng-container> -->
+            <ng-container matColumnDef="cardName">
+              <th class="mat-tab" mat-header-cell *matHeaderCellDef> CARD NAME </th>
+              <td mat-row *matCellDef="let element">
+                <img src="{{element.backgroundImage}}" alt="" class="gift-card-img">
+                <p class="gift-card-back"  *ngIf="element.backgroundImage==''" [style.background-color]="element.backgroundColor">
+                &nbsp;&nbsp;</p>
+              
+                
+                {{element.templateName}}
+              </td>   
+            </ng-container>
+
+            <ng-container matColumnDef="templateFor">
+              <th mat-header-cell *matHeaderCellDef> TEMPLATE FOR </th>
+              <td mat-row *matCellDef="let element"> {{element.templateFor}} </td>
+            </ng-container>
+
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns;sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
+            </tr>
+          </table>
+          <div class="no-records" *ngIf="resultsLength === 0">
+            No Records Found!
+          </div>
+        </div>
+        <mat-paginator  [length]="resultsLength"  #paginator
+        (page)="getUpdate($event)" [pageSize]="5" [pageSizeOptions]="[5,10,15,20]"></mat-paginator>
+      </div>
+      <div class="button-wrap">
+        <div class="">
+          <button class="button secondary-btn" [mat-dialog-close]="{
+            'buttonName': 'CANCEL'
+          }">CANCEL</button>
+          <button class="button primary-btn" [mat-dialog-close]="{
+            'buttonName': 'SELECT',
+            'tableData': selection.selected,
+            'totalCount':resultsLength
+          }">SELECT</button>
+        </div>
+      </div>
+  </div>
+</div>
+

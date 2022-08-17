@@ -1,0 +1,219 @@
+<div class="page-wrap">
+    <div class="search-panel-block">
+        <div class="bredcrumb-title-wrap">
+            <div class="search-container-block">
+                <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+                <div class="search-list">
+                    <form class="filter-wrap" [formGroup]="searchFeedbackAndEnquiryFormGroup" (submit)="searchKey()">
+                        <div class="row title-search-row">
+                            <div class="col-md-4 title-search-col">
+                                <div class="title">
+                                    <h1>Feedback & Enquiry</h1>
+                                </div>
+                            </div>
+                            <div class="col-md-5 title-search-col">
+                                <div class="searchform-block">
+                                    <div class="common-search">
+                                        <input type="text" formControlName="searchVal" placeholder="Search Feedback & Enquiry" />
+                                        <span class="search-btn" (click)="searchKey()"></span>
+                                        <div class="filter-btn-wrap">
+                                            <span class="filter-btn" (click)="openFilter();" [ngClass]="status ? 'open' : 'close'"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 title-search-col">
+
+                            </div>
+                        </div>
+                        <div class="feild-search" *ngIf="!status">
+                            <div class="row feild-search-inner">
+                                <div class="col-md-3">
+                                    <mat-select-autocomplete name="Country" ngDefaultControl [placeholder]="'COUNTRY'"
+                                      [options]="countryList" [display]="'countryName'" [value]="'value'" [multiple]='true'
+                                      [labelCount]="1" (selectionChange)="getAllCities($event) || getAllBrands($event)" [selectedOptions]="selectedCountryOptions"
+                                      [formControl]="searchFeedbackAndEnquiryFormGroup.controls['countryID']" #countryInput>
+                                    </mat-select-autocomplete>
+                                  </div>
+                                  <div class="col-md-3">
+                                    <mat-select-autocomplete name="CITY" ngDefaultControl [placeholder]="'CITY'" [options]="cityList"
+                                      [display]="'cityName'" [value]="'value'" [multiple]='true' [labelCount]="1"
+                                       [selectedOptions]="selectedCityOptions"
+                                      [formControl]="searchFeedbackAndEnquiryFormGroup.controls['cityID']" #cityInput>
+                                    </mat-select-autocomplete>
+                                  </div>
+                                  <div class="col-md-3">
+                                    <mat-select-autocomplete name="BRAND" ngDefaultControl [placeholder]="'BRAND'"
+                                      [options]="brandsList" [display]="'brandName'" [value]="'value'" [multiple]='true'
+                                      [labelCount]="1" (selectionChange)="getAllMalls($event,cityID,brandID)"
+                                      [selectedOptions]="selectedBrandOptions"
+                                      [formControl]="searchFeedbackAndEnquiryFormGroup.controls['brandID']" #brandInput>
+                                    </mat-select-autocomplete>
+                                  </div>
+                                  <div class="col-md-3">
+                                    <mat-select-autocomplete name="MALL" ngDefaultControl [placeholder]="'MALL'" [options]="mallList"
+                                      [display]="'mallName'" [value]="'value'" [multiple]='true' [labelCount]="1"
+                                      [selectedOptions]="selectedMallOptions" (selectionChange)="getAllStores($event, countryID, brandID, cityID)"
+                                      [formControl]="searchFeedbackAndEnquiryFormGroup.controls['mallID']" #mallInput>
+                                    </mat-select-autocomplete>
+                                  </div>
+
+                                <div class="col-md-3">
+                                    <mat-select-autocomplete name="store" ngDefaultControl [placeholder]="'Store Name'" [options]="storesArr" [display]="'storeName'" [value]="'value'" [multiple]='true' [labelCount]="1" [formControl]="searchFeedbackAndEnquiryFormGroup.controls['storeId']"
+                                        [selectedOptions]="selectedStoreOptions" #storeInput>
+                                    </mat-select-autocomplete>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-select-autocomplete name="Flows" ngDefaultControl [placeholder]="'Flow Name'" [options]="flows" [display]="'flowName'" [value]="'value'" [multiple]='true' [labelCount]="1" [formControl]="searchFeedbackAndEnquiryFormGroup.controls['flowId']" #flowInput>
+                                    </mat-select-autocomplete>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="select-tags">
+                                        <mat-form-field>
+                                            <mat-select placeholder="Order Type" formControlName="orderType">
+                                                <mat-option value="DELIVERY">Delivery </mat-option>
+                                                <mat-option value="PICKUP">Pickup</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="select-tags">
+                                        <mat-form-field>
+                                            <mat-select placeholder="Rating" formControlName="rating">
+                                                <mat-option value="1">1 Star </mat-option>
+                                                <mat-option value="2">2 Star </mat-option>
+                                                <mat-option value="3">3 Star </mat-option>
+                                                <mat-option value="4">4 Star </mat-option>
+                                                <mat-option value="5">5 Star </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-select placeholder="Is Complete" formControlName="isComplete">
+                                            <mat-option value="1">Yes</mat-option>
+                                            <mat-option value="0">No</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <!-- <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-select placeholder="Feedback Type" formControlName="feedbackType">
+                                            <mat-option value="GOOD">Good</mat-option>
+                                            <mat-option value="NEUTRAL">Neutral</mat-option>
+                                            <mat-option value="BAD">Bad</mat-option>
+                                            <mat-option value="NONE">None</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div> -->
+                                <!-- <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-select placeholder="Feedback / Enquiry" formControlName="feedbackOrEnquiryType">
+                                            <mat-option value="fbTransaction">F&B Transaction</mat-option>
+                                            <mat-option value="fbEnquiry">F&B Enquiry</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div> -->
+                                <div class="button-wrap">
+                                    <div class="">
+                                        <button class='button reset-btn' type="button" (click)="resetForm()">RESET</button>
+                                        <button class='button apply-btn' type="submit">APPLY</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="form-wrap">
+            <div class="table-wrap">
+                <div class="table-wrap-inner">
+                    <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)" *ngIf="dataSource">
+                        <ng-container matColumnDef="trnSlNo">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="trnSlNo"> SR NO. </th>
+                            <td mat-cell (click)="viewDetails(row.feedbackNotificationOid)" *matCellDef="let row"> <u><a
+                    class="text-blue">{{ row.trnSlNo }}</a></u>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="isRead">
+                            <th mat-header-cell *matHeaderCellDef> READ </th>
+                            <td mat-cell *matCellDef="let row"> {{ row.isRead }} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="flowName">
+                            <th mat-header-cell *matHeaderCellDef> FLOW NAME </th>
+                            <td mat-cell *matCellDef="let row"> {{row.flowName}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="txnId">
+                            <th mat-header-cell *matHeaderCellDef> ORDER ID </th>
+                            <td mat-cell *matCellDef="let row"> {{ row.txnId }} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="orderDeliveryType">
+                            <th mat-header-cell *matHeaderCellDef> ORDER TYPE </th>
+                            <td mat-cell *matCellDef="let row"> {{ row.orderDeliveryType != null ? row.orderDeliveryType : '-'}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="starRating">
+                            <th mat-header-cell *matHeaderCellDef> RATING </th>
+                            <td mat-cell *matCellDef="let row"> {{ row.starRating != null ? row.starRating : '-' }} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="feedbackEnquiryDate">
+                            <th mat-header-cell *matHeaderCellDef> DATE & TIME</th>
+                            <td mat-cell *matCellDef="let row">
+                                {{row.feedbackEnquiryDate === null ? '-' : row.feedbackEnquiryDate | date:'dd/MM/yyyy'}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="feedbackEnquiryType">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="feedbackEnquiryType"> FEEDBACK / ENQUIRY TYPE </th>
+                            <td mat-cell *matCellDef="let row"> {{row.feedbackEnquiryType}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="isComplete">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="isComplete"> IS COMPLETE </th>
+                            <td mat-cell *matCellDef="let row"> {{row.isComplete}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="brandName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="brandName"> BRAND </th>
+                            <td mat-cell *matCellDef="let row"> {{row.brandName}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="countryName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="countryName"> COUNTRY </th>
+                            <td mat-cell *matCellDef="let row"> {{row.countryName}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="cityName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="cityName"> CITY </th>
+                            <td mat-cell *matCellDef="let row"> {{row.cityName}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="storeName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="storeName"> STORE NAME </th>
+                            <td mat-cell *matCellDef="let row"> {{row.storeName}} </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                        </tr>
+                    </table>
+                    <div *ngIf="searchPageLoader" class="full-page-loader">
+                        <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                    </div>
+                    <div class="no-records" *ngIf="noRecords">
+                        No Records Found!
+                    </div>
+                </div>
+                <mat-paginator [length]="resultsLength" (change)="searchVal()" #paginator (page)="getUpdate($event)" [pageSize]="paginationData.pageSize" [pageSizeOptions]="[10,20,50,100]">
+                </mat-paginator>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,681 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex justify-content">
+        <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg"
+                    alt="leftArrow" [routerLink]="['/search-coupons']"></span>Add Coupons</h1>
+        <mat-slide-toggle [(ngModel)]="toggleVal" (change)="toggleStatus($event)" class="example-margin" [checked]="checked">
+            {{statusValue}}
+        </mat-slide-toggle>
+    </div>
+</div>
+<div class="page-wrap">
+    <form (submit)="createCoupon(couponFormGroup.value)" [formGroup]="couponFormGroup" #createCouponForm="ngForm">
+        <div class="coupons-info">
+            <div class="basic-details">
+                <h3 class="card-title">Basic Details </h3>
+                <mat-card class="basic-details-card">
+                    <div class="row align-center">
+                        <div class="col-md-3">
+                            <mat-form-field>
+                                <mat-select placeholder="Discount Type" formControlName="discountType" required (selectionChange)="updateValidation($event.value)">
+                                    <mat-option value="TRANSACTION_DISCOUNT_AMOUNT">Transaction Discount Amount
+                                    </mat-option>
+                                    <mat-option value="ITEM_DISCOUNT_AMOUNT">Item Discount Amount</mat-option>
+                                    <mat-option value="ITEM_DISCOUNT">Item Discount %</mat-option>
+                                    <mat-option value="TRANSACTION_DISCOUNT">Transaction Discount %</mat-option>
+                                    <mat-option value="DEAL_TYPE">Deal Type</mat-option>
+                                    <mat-option value="BUY_X_GET_Y">BUY_X_GET_Y_FREE</mat-option>
+                                    <mat-option value="BUY_X_GET_Z_DISCOUNT_ON_Y_PRODUCT">BUY_X_GET_Y_PERCENTAGE</mat-option>
+                                    <mat-option value="BUY_X_GET_Z_DISCOUNT_AMOUNT_ON_Y_PRODUCT">BUY_X_GET_Y_AMOUNT</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="couponFormGroup.get('discountType').hasError('required')">Please select value</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-2" *ngIf="!bogoSection">
+                            <mat-form-field>
+                                <input matInput type="text" placeholder="Percentage% / Amount" formControlName="discountValue" OnlyNumber="true" />
+                                <mat-error *ngIf="couponFormGroup.get('discountValue').hasError('required')">Please enter value</mat-error>
+                                <mat-error *ngIf="couponFormGroup.get('discountValue').hasError('pattern')">Only 3 digits with 2 decimal places allowed</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-2">
+                            <mat-form-field>
+                                <input matInput #ref [min]="currenctDate" readonly (dateChange)="setEndDate(couponFormGroup.value)" [matDatepicker]="startDate" placeholder="Start Date" formControlName="startDate" required>
+                                <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
+                                <mat-datepicker #startDate></mat-datepicker>
+                                <mat-error *ngIf="couponFormGroup.get('startDate').hasError('required')">Please select date
+                                </mat-error>
+                                <mat-error *ngIf="couponFormGroup.get('startDate').hasError('min')">Start Date is Expired
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-2">
+                            <mat-form-field>
+                                <input matInput [min]="minEndDates" readonly [matDatepicker]="endDate" placeholder="End Date" formControlName="endDate" required>
+                                <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
+                                <mat-datepicker #endDate></mat-datepicker>
+                                <mat-error *ngIf="couponFormGroup.get('endDate').hasError('required')">Please select date
+                                </mat-error>
+                                <mat-error *ngIf="endDateError">End date should be greater than start date</mat-error>
+                                <mat-error *ngIf="couponFormGroup.get('endDate').hasError('min')">End Date is Expired
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="custom-field">
+                                <label class="btn-toggle-label">Coupon will Expires in (After Notifying)</label>
+                                <p class="flex">
+                                    <input type="text" class="input-box" formControlName="expiryValue" OnlyNumber="true" (blur)="validateExpiryType()">
+                                    <mat-button-toggle-group name="fontStyle" #group="matButtonToggleGroup" aria-label="Font Style" formControlName="expiryType" (change)="validateExpiryType()">
+                                        <mat-button-toggle value="MINUTES" #MINUTES (change)="onChange($event, group)">
+                                            Minutes
+                                        </mat-button-toggle>
+                                        <mat-button-toggle value="HOURS" #HOURS (change)="onChange($event, group)">Hours
+                                        </mat-button-toggle>
+                                        <mat-button-toggle value="DAYS" #DAYS (change)="onChange($event, group)">Days
+                                        </mat-button-toggle>
+                                    </mat-button-toggle-group>
+                                </p>
+                                <!-- <label
+                                    *ngIf="createCouponForm.submitted &&  couponFormGroup.get('expiryType').hasError('required')"
+                                    style="color:red; font-size: 10px;">Please select expiry type</label> -->
+                                <label *ngIf="couponFormGroup.get('expiryValue').hasError('pattern')" style="color:red; font-size: 10px;">{{expiryMinValidation}}</label>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <mat-form-field>
+                                <textarea matInput type="text" placeholder="Internal Comments" formControlName="internalComment" maxlength="250"></textarea>
+                                <mat-error *ngIf="couponFormGroup.get('internalComment').hasError('maxlength')">Maxmium 250 character's allowed</mat-error>
+                                <mat-error *ngIf="couponFormGroup.get('internalComment').hasError('pattern')">This special character(s) is not allowed</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field>
+                                <input matInput type="text" placeholder="Internal Coupon Title" formControlName="internalCouponTitle" />
+                                <!-- <mat-error *ngIf="couponFormGroup.get('internalCouponTitle').hasError('required')">Please enter value</mat-error> -->
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="notification-type">
+                                <div class="">
+                                    <label class="btn-toggle-label">Notification Type*</label>
+                                </div>
+                                <mat-radio-group [(ngModel)]="notificationType" formControlName="notificationType">
+                                    <mat-radio-button value="ONLINE" class="mr-5px">Online Notification
+                                    </mat-radio-button>
+                                    <mat-radio-button value="INSTORE">Instore Notification (Beacons)</mat-radio-button>
+                                </mat-radio-group>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="notification-type">
+                                <div class="">
+                                    <label class="btn-toggle-label">Coupon Type*</label>
+                                </div>
+                                <mat-radio-group [(ngModel)]="couponType" formControlName="couponType">
+                                    <mat-radio-button value="TYPE1" class="mr-5px">Type 1 POS Coupon
+                                    </mat-radio-button>
+                                    <mat-radio-button value="TYPE2">Type 2 Online POS and App Coupons
+                                    </mat-radio-button>
+                                    <mat-radio-button value="ENTRY_POINT_COUPON">Entry Point Coupon
+                                    </mat-radio-button>
+                                </mat-radio-group>
+                                <mat-error *ngIf="createCouponForm.submitted && couponFormGroup.get('couponType').hasError('required')">
+                                    Please select
+                                </mat-error>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="couponFormGroup.get('couponType').value == 'TYPE2'" class="row">
+                        <div class="col-md-3">
+                            <!-- <mat-form-field class="example-full-width">
+                                <input matInput placeholder="Select Brand" aria-label="brand"
+                                    [matAutocomplete]="brandAutoComplete" [formControl]="brandCtrl" required>
+                                <mat-autocomplete #brandAutoComplete="matAutocomplete">
+                                    <mat-option *ngFor="let brand of BrandList | async" [value]="brand.brandName"
+                                        (click)="setBrandType(brand.brandId)"
+                                        #brandInput>
+                                        <span>{{brand.brandName}}</span>
+                                    </mat-option>
+                                </mat-autocomplete>
+                                <mat-error *ngIf="brandCtrl.hasError('required')">
+                                    Please select value</mat-error>
+                            </mat-form-field> -->
+                            <mat-form-field>
+                                <mat-select (selectionChange)="setBrandType(contentInput.value)" #contentInput formControlName="brandOids" placeholder="Brand">
+                                    <mat-option *ngFor="let brands of BrandList" value="{{brands.brandId}}">
+                                        {{ brands.brandName }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="view-label">
+                                <label>Brand Type</label>
+                                <p>{{brandType == '' ? '':brandType=='FB'?'F&B':'RETAIL'}}</p>
+                            </div>
+                        </div>
+
+                        <!-- <div class="col-md-3">
+                            <mat-select-autocomplete [placeholder]="'Brand'" [options]="BrandList"
+                                [display]="'brandName'" [value]="'value'" [multiple]='true' [labelCount]="1"
+                                [formControl]="couponFormGroup.controls['brandOids']">
+                            </mat-select-autocomplete>
+                        </div>
+                        <div class="col-md-3">
+                            <p>(click)="setBrandType(brand.brandId)
+                                <mat-form-field>
+                                    <mat-select formControlName="brandType" placeholder="Brand Type">
+                                        <mat-option value="FB">F&B</mat-option>
+                                        <mat-option value="RETAIL">RETAIL</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                        </div> -->
+                        <!-- <div class="col-md-3">
+                            <mat-form-field>
+                                <mat-select formControlName="couponType" placeholder="Counpon Type">
+                                    <mat-option value="TYPE1">TYPE1</mat-option>
+                                    <mat-option value="TYPE2">TYPE2</mat-option>
+
+                                </mat-select>
+
+                            </mat-form-field>
+                        </div> -->
+                        <!-- <div class="col-md-3">
+                            <mat-form-field>
+                                <mat-select formControlName="channelType" placeholder="Channel Type">
+                                    <mat-option value="APP">APP</mat-option>
+                                    <mat-option value="POS">POS</mat-option>
+
+                                </mat-select>
+                            </mat-form-field>
+                        </div> -->
+                    </div>
+
+                    <div class="lang" formArrayName="couponLocales">
+                        <mat-card class="faq-card mb-20px" *ngFor="let locale of couponFormGroup['controls']['couponLocales']['controls'];let i = index;" [formGroupName]="i">
+                            <div class="{{alignCss[i]}} {{langfield[i]}} {{languageDirection[i]}} lang-field">
+                                <p>{{languages[i].languageCode}}</p>
+                            </div>
+                            <div class="row card-mb field-top">
+                                <div class="col-md-10 text-fields  {{languageDirection[i]}}">
+                                    <div class="field-container">
+                                        <mat-form-field [class.direction-right]="languages[i].languageName == 'Arabic'">
+                                            <input matInput placeholder="Coupon Title" formControlName="couponTitle" required maxlength="40">
+                                            <mat-error *ngIf="locale.get('couponTitle').hasError('required')">Please enter value</mat-error>
+                                            <mat-error *ngIf="locale.get('couponTitle').hasError('maxLength')">Maxmium 40 characters allowed</mat-error>
+                                            <!-- <mat-error *ngIf="locale.get('couponTitle').hasError('pattern')">This
+                        special character(s) is not allowed</mat-error> -->
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="field-container">
+                                        <mat-form-field [class.direction-right]="languages[i].languageName == 'Arabic'">
+                                            <textarea matInput placeholder="Description" formControlName="description" required></textarea>
+                                            <mat-error *ngIf="locale.get('description').hasError('required')">Please enter value</mat-error>
+                                            <!-- <mat-error *ngIf="locale.get('description').hasError('pattern')">This
+                        special character(s) is not allowed</mat-error> -->
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 img-container">
+                                    <div class="grid img-block">
+                                        <p class="note-text" *ngIf="couponFormGroup.get('couponType').value == 'TYPE1'"><span>image size 732 x 992</span></p>
+                                        <p class="note-text" *ngIf="couponFormGroup.get('couponType').value == 'TYPE2'"><span>image size 894 x 426</span></p>
+                                        <div class="avatar-zone">
+                                            <label *ngIf="uploadFlag[i]==false" class="upload-text" [class.placeholder-img]="imgUpload">Coupon
+                                                Image</label>
+                                            <img *ngIf="imagePath.length!=0 && imagePath[i]!=undefined" class="upload-img" [src]="filePathUrl+imagePath[i]" [class.uploaded-img]="imgUpload" width="100px">
+                                        </div>
+                                        <input style="display:none;" #uploadEl type="file" class="upload_btn" (click)="selectImgFile.value = null" (change)="baseCouponImg($event.target.files,i)" #selectImgFile />
+                                        <span class="upload-btn-text" (click)='selectImgFile.click()' *ngIf="uploadFlag[i]==false">
+                                            <div class="browse-block">
+                                                <span class="upload-icon">
+                                                    <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px"
+                                                        alt="Img">
+                                                </span>Upload Image<span style="color: #7f7f8f;">*</span>
+                                    </div>
+                                    </span>
+                                    <p *ngIf="imageRequired[i]" style="color:red; font-size: 10px;">Please upload Image
+                                    </p>
+                                    <span class="upload-btn-text" *ngIf="uploadFlag[i]==true" (click)="removeImage(i)">
+                                            <div class="browse-block">
+                                                <span class="upload-icon">
+                                                    <img src="assets/images/icons/filter_close_ico.png" width="12px"
+                                                        alt="Img">
+                                                </span>Remove Image
+                                </div>
+                                </span>
+                            </div>
+                    </div>
+            </div>
+            </mat-card>
+        </div>
+        </mat-card>
+</div>
+<div class="bogo-block mb-1em" *ngIf="bogoSection">
+    <div class="row">
+        <div class="col-md-6">
+            <h3 class="card-title mb-1em">Customer Buys</h3>
+            <mat-card>
+                <mat-checkbox (change)="isFixedProductBogo($event.checked)">Specific Product only</mat-checkbox>
+                <div class="row">
+                    <div class="col-md-4">
+                        <mat-form-field>
+                            <input matInput type="text" #cbQuantity placeholder="Quantity*" formControlName="customerBuysQuantity"
+                            autocomplete="off"  maxlength="4" OnlyNumber="true" />
+                            <mat-error *ngIf="couponFormGroup.get('customerBuysQuantity').hasError('required')">Please enter value</mat-error>
+                            <mat-error *ngIf="couponFormGroup.get('customerBuysQuantity').hasError('pattern')">Please enter value greater than 0</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field>
+                            <mat-select placeholder="Any product from*" formControlName="customerBuysProduct"
+                                (selectionChange)="cbProductFromUpdate($event.value)">
+                                <mat-option value="CATEGORY" *ngIf="!showFixedProductBogo">Category</mat-option>
+                                <mat-option value="PRODUCT">Product</mat-option>
+                            </mat-select>
+                             <mat-error *ngIf="couponFormGroup.get('customerBuysProduct').hasError('required')">Please select value</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4 text-right">
+                        <button class="button tertiary-btn" [disabled]="couponFormGroup.get('customerBuysProduct').value == '' ? true : false"
+                            (click)="openProductOrCategory(couponFormGroup.get('customerBuysProduct').value)"
+                            type="button">SELECT</button>
+                    </div>
+                    <div class="col-md-12" *ngIf="datesValidationMsg && (couponFormGroup.get('startDate').value == '' && couponFormGroup.get('endDate').value == '')">
+                        <p class="error-msg text-center">Please enter Start Date and End Date to proceed</p>
+                    </div>
+                </div>
+                <div class="display-selected" *ngIf="couponBuysProducts.length != 0">
+                    <div class="product-list" *ngFor="let item of couponBuysProducts; let i = index;">
+                        <p class="flex-end">
+                            <span>{{item.productName}}</span>
+                            <span class="remove_icon cursor" (click)="removeBogoItem(i, 'productArray')"></span>
+                        </p>
+                    </div>
+                </div>
+                <div class="display-selected" *ngIf="couponBuysCategories.length != 0">
+                    <div class="product-list" *ngFor="let item of couponBuysCategories; let i = index;">
+                        <p class="flex-end">
+                            <span>{{item.categoryName}}</span>
+                            <span class="remove_icon cursor" (click)="removeBogoItem(i, 'categoryArray')"></span>
+                        </p>
+                    </div>
+                </div>
+                <div class="display-selected" *ngIf="fixedProductBuyVariants.length != 0 && showFixedProductBogo">
+                    <div class="product-list" *ngFor="let item of fixedProductBuyVariants; let i = index;">
+                        <p class="flex-end">
+                            <span>{{item.productName}} <span class="bold-text">({{item.variantTypeName}})</span></span>
+                            <span class="remove_icon cursor" (click)="removeBogoItem(i, 'variantArray')"></span>
+                        </p>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+        <div class="col-md-6 pl-0">
+            <h3 class="card-title mb-0">Customer Gets</h3>
+            <p class="grey-font">Customer must add the quantity of items specified below to the cart</p>
+            <mat-card>
+                <div class="row">
+                    <div class="col-md-4">
+                        <mat-form-field>
+                            <input matInput type="text" #cgQuantity placeholder="Quantity*" formControlName="customerGetsQuantity"
+                            maxlength="4" OnlyNumber="true" />
+                            <mat-error *ngIf="couponFormGroup.get('customerGetsQuantity').hasError('required')">Please enter value</mat-error>
+                            <mat-error *ngIf="couponFormGroup.get('customerGetsQuantity').hasError('pattern')">Please enter value greater than 0</mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div *ngIf="showFixedProductBogo">
+                    <div class="row mb-1em">
+                        <div class="col-md-6">
+                            <div class="group-fieldSet">
+                                <fieldset class="language-fieldset">
+                                    <legend class="fieldset-heading">English</legend>
+                                    <label class="sub-text">Buy {{couponFormGroup.get('customerBuysQuantity').value}}</label>
+                                    <mat-form-field>
+                                        <input matInput type="text" placeholder="Alert message*" maxlength="25" formControlName="enBuyAlertMsg"/>
+                                        <mat-error *ngIf="couponFormGroup.get('enBuyAlertMsg').hasError('required')">Please enter value</mat-error>
+                                    </mat-form-field>
+                                    <label class="sub-text">Get {{couponFormGroup.get('customerGetsQuantity').value}}</label>
+                                    <mat-form-field>
+                                        <input matInput type="text"  placeholder="Alert message*" maxlength="25" formControlName="enGetAlertMsg"/>
+                                        <mat-error *ngIf="couponFormGroup.get('enGetAlertMsg').hasError('required')">Please enter value</mat-error>
+                                    </mat-form-field>
+                                    <div class="alert-message">
+                                        <label>Offer Alert Message Preview</label>
+                                        <p>Buy {{couponFormGroup.get('customerBuysQuantity').value}} {{couponFormGroup.get('enBuyAlertMsg').value}} Get {{couponFormGroup.get('customerGetsQuantity').value}} {{couponFormGroup.get('enGetAlertMsg').value}}</p>
+                                    </div>  
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <mat-form-field>
+                                <mat-select placeholder="Any product from*" formControlName="customerGetsProduct">
+                                    <mat-option value="PRODUCT">Product</mat-option>
+                                </mat-select>
+                                 <mat-error *ngIf="couponFormGroup.get('customerGetsProduct').hasError('required')">Please select value</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-8 text-left">
+                            <button class="button tertiary-btn" [disabled]="couponFormGroup.get('customerGetsProduct').value == '' ? true : false"
+                                (click)="selectFixedProducts(couponFormGroup.get('customerGetsProduct').value)"
+                                type="button">SELECT</button>
+                        </div> 
+                        <div class="col-md-12" *ngIf="cgdatesValidationMsg && (couponFormGroup.get('startDate').value == '' && couponFormGroup.get('endDate').value == '')">
+                            <p class="error-msg text-left mb-1em">Please enter Start Date and End Date to proceed</p>
+                        </div> 
+                    </div>
+                    <div class="display-selected" *ngIf="fixedProductGetVariants.length != 0">
+                        <div class="product-list" *ngFor="let item of fixedProductGetVariants; let i = index;">
+                            <p class="flex-end">
+                                <span>{{item.productName}} <span class="bold-text">({{item.variantTypeName}})</span></span>
+                                <span class="remove_icon cursor" (click)="removeCustomerGetProductItem(i, 'variantArray')"></span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="error-msg text-left mb-1em" *ngIf="productGetVarinatsErrorMsg">Please select product</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <mat-checkbox (change)="checkMinCouponUse($event.checked)">Set a Maximum number of use per order</mat-checkbox>
+                    </div>
+                    <div class="col-md-4" *ngIf="showMinCouponUse">
+                        <mat-form-field>
+                            <input matInput type="text" #cgMinOrder placeholder="Maximum number of use per order*"
+                                formControlName="minCouponUsePerOffer" maxlength="4" OnlyNumber="true"/>
+                                <mat-error *ngIf="couponFormGroup.get('minCouponUsePerOffer').hasError('required')">Please enter value</mat-error>
+                                <mat-error *ngIf="couponFormGroup.get('minCouponUsePerOffer').hasError('pattern')">Please enter value greater than 0</mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div>
+                    <label class="note">At a discount value <small class="grey-tiny">(will be applied same for each
+                            item, Discount will be applied on lowest priced items</small></label>
+                </div>
+                <div class="row">
+                    <div class="col-md-12" *ngIf="couponFormGroup.get('discountType').value === 'BUY_X_GET_Y'">
+                        <p>100% Free Products</p>
+                    </div>
+                    <div class="col-md-6 flex-center" *ngIf="couponFormGroup.get('discountType').value === 'BUY_X_GET_Z_DISCOUNT_ON_Y_PRODUCT'">
+                        <label class="mr-2em">Percentage</label> 
+                        <div>
+                            <mat-form-field>
+                                <input matInput type="text" #bgPercentage placeholder="Percentage*"
+                                    formControlName="couponGetsPercentage" maxlength="3" OnlyNumber="true" percentageDirective/>
+                                    <mat-error *ngIf="couponFormGroup.get('couponGetsPercentage').hasError('required')">Please enter value</mat-error>
+                                    <mat-error *ngIf="couponFormGroup.get('couponGetsPercentage').hasError('pattern')">Please enter value greater than 0</mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 flex-center"
+                        *ngIf="couponFormGroup.get('discountType').value === 'BUY_X_GET_Z_DISCOUNT_AMOUNT_ON_Y_PRODUCT'">
+                        <label class="sub-text">Amount</label>
+                        <div formArrayName="regionCouponAmount" class="w-100">
+                            <div class="d-flex mb-1em"
+                                *ngFor="let amount of couponFormGroup['controls']['regionCouponAmount']['controls'];let i = index;"
+                                [formGroupName]="i">
+                                <!-- <p class="currency-lable mr-1em">{{rigionList[i].currencyCode}}*</p> -->
+                                <mat-form-field class="w-100">
+                                    <input matInput #inputCurrency placeholder="{{rigionList[i].currencyCode}}*"
+                                        formControlName="couponAmount"> 
+                                    <mat-error *ngIf="amount.get('couponAmount').hasError('required')">Please
+                                        enter value</mat-error>
+                                    <mat-error *ngIf="amount.get('couponAmount').hasError('pattern')">Please enter value greater than 0 and less than 9999.99
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="error-msg" *ngIf="regionAmountValidation">Please select any product</div>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+    <div class="error-msg" *ngIf="productselectionErrorMsg">Please select any product</div>
+</div>
+<div class="code-generation">
+    <h3 class="card-title">Code Generation</h3>
+    <mat-card class="code-generation-card">
+        <div class="row flex align-center">
+            <div class="col-md-4">
+                <div>
+                    <label class="btn-toggle-label">Code Generation Type *</label>
+                </div>
+                <mat-radio-group formControlName="codeGeneration" [(ngModel)]="codeGeneration" (change)="validateCodeGeneration(couponFormGroup.get('codeGeneration').value)">
+                    <mat-radio-button value="GENERIC" name="generic" class="mr-5px">Generic
+                    </mat-radio-button>
+                    <mat-radio-button value="UNIQUE" name="unique" class="mr-5px">Unique</mat-radio-button>
+                    <mat-radio-button value="MANUAL" name="manualUpload">Manual Upload</mat-radio-button>
+                </mat-radio-group>
+            </div>
+            <div class="col-md-3" *ngIf="codeGeneration == 'GENERIC'">
+                <mat-form-field>
+                    <input matInput type="text" placeholder="Enter Fixed Code*" formControlName="genericCodeValue" maxlength="16" />
+                    <mat-error *ngIf="couponFormGroup.get('genericCodeValue').hasError('required')">Please enter value</mat-error>
+                    <mat-error *ngIf="couponFormGroup.get('genericCodeValue').hasError('minlength')">Counpon code must be 16 characters</mat-error>
+                    <mat-error *ngIf="couponFormGroup.get('genericCodeValue').hasError('pattern')">Only Alphanumeric values are allowed</mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-md-4" *ngIf="codeGeneration == 'UNIQUE'">
+                <p class="flex">
+                    <input type="text" class="input-box" formControlName="uniqueCodeValue" maxlength="3">
+                    <mat-button-toggle-group name="fontStyle" aria-label="Font Style" formControlName="uniqueCodeType">
+                        <mat-button-toggle value="PREFIX">Prefix</mat-button-toggle>
+                        <mat-button-toggle value="SUFFIX">Suffix</mat-button-toggle>
+                    </mat-button-toggle-group>
+                </p>
+                <mat-error class="mat-err" *ngIf="check_unique && couponFormGroup.get('uniqueCodeValue').hasError('required')">
+                    Please enter value</mat-error>
+                <mat-error class="mat-err" *ngIf="couponFormGroup.get('uniqueCodeValue').hasError('maxLength')">code must be 3 characters
+                </mat-error>
+                <mat-error class="mat-err" *ngIf="couponFormGroup.get('uniqueCodeValue').hasError('pattern')">Only Alphanumeric values are allowed</mat-error>
+                <mat-error class="mat-err" *ngIf="check_unique && couponFormGroup.get('uniqueCodeType').hasError('required') &&  couponFormGroup.get('uniqueCodeValue').touched">
+                    Please select value</mat-error>
+            </div>
+
+            <div class="col-md-4 flex" *ngIf="codeGeneration == 'MANUAL'">
+                <div class="">
+                    <input style="display:none" type="file" (change)="uploadManualCoupon($event.target.files)" #uploadFile />
+                    <div class="upload-btn-text" (click)='uploadFile.click()'>
+                        <span class="upload-icon" *ngIf="manualFileName =='' && manualErrorFileName ==''">
+                                        <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px" alt="Img">
+                                        <label class="text">Upload File</label>
+                                    </span>
+                    </div>
+                    <u class="uploaded-file" *ngIf="manualFileName!=''">{{manualFileName}}</u>
+                    <u><a style="color:red; font-size: 10px;" *ngIf="manualErrorFileName!=''"
+                                        href="{{manualErrorFile}}"
+                                        download="{{manualErrorFileName}}">{{manualErrorFileName}}</a></u>
+                    <p *ngIf="codeCountmanualBool">{{codeCountmanual}} sku's are listed
+                    </p>
+                    <u style="color:red; font-size: 10px;" *ngIf="manualFileRequired">Please upload Coupon
+                                    list</u>
+                    <u style="color:red; font-size: 10px;" *ngIf="validCouponRequired">Please validate
+                                    Coupon list</u>
+                    <div class="remove-img" *ngIf="manualFileName!=='' || manualErrorFileName!=''">
+                        <span> <img src=" assets/images/icons/filter_close_ico.png" alt=""
+                                            (click)="removeManualFile()">
+                                        <label style="font-size:12px;cursor: pointer;">Remove</label></span>
+                    </div>
+                </div>
+                <div class="">
+                    <button class="button tertiary-btn" *ngIf="manualErrorFileName=='' && manualFileName!='' && !validCouponCode" (click)="validateCouponCodes()" type="button">VALIDATE</button>
+                </div>
+            </div>
+        </div>
+    </mat-card>
+</div>
+<div class="usage-limits">
+    <h3 class="card-title">Usage Limits & Restrictions</h3>
+    <mat-card class="usage-limits-card">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="master-fieldSet">
+                    <fieldset class="language-fieldset">
+                        <legend class="fieldset-heading">Minimum Order Amount</legend>
+                        <div class="" formArrayName="minOrderAmounts">
+                            <div class="" *ngFor="let amount of couponFormGroup['controls']['minOrderAmounts']['controls'];let i = index;" [formGroupName]="i">
+                                <mat-form-field class="field-style">
+                                    <input matInput #inputCurrency placeholder="{{rigionList[i].currencyCode}}" formControlName="orderAmount" OnlyNumber="true" (blur)="autoPopulateCurrencyValue(amount,i,inputCurrency.value)">
+                                    <!-- <mat-error *ngIf="amount.get('orderAmount').hasError('required')">Please
+                          enter value</mat-error> -->
+                                    <mat-error *ngIf="amount.get('orderAmount').hasError('pattern')">Only 19 digits and 3 decimal places allowed
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="row">
+                    <div class="col-md-4">
+                        <mat-form-field class="field-style">
+                            <input matInput placeholder="Coupon Usage Limit" formControlName="couponUsageLimit" required maxlength="8" OnlyNumber="true">
+                            <mat-error *ngIf="couponFormGroup.get('couponUsageLimit').hasError('required')">
+                                Please enter value</mat-error>
+                            <mat-error *ngIf="couponFormGroup.get('couponUsageLimit').hasError('maxLength')">
+                                Minimum 8 digits can be entered</mat-error>
+                            <mat-error *ngIf="couponFormGroup.get('couponUsageLimit').hasError('pattern')">
+                                Only numeric values allowed greater than zero</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-4">
+                        <mat-form-field class="field-style">
+                            <input matInput placeholder="Usage Limit Per Customer" OnlyNumber="true" formControlName="usageLimitPerCustomer" required maxlength="3">
+                            <mat-error *ngIf="couponFormGroup.get('usageLimitPerCustomer').hasError('required')">
+                                Please enter value</mat-error>
+                            <mat-error *ngIf="couponFormGroup.get('usageLimitPerCustomer').hasError('maxLength')">
+                                Minimum 3 digits can be entered</mat-error>
+                            <mat-error *ngIf="couponFormGroup.get('usageLimitPerCustomer').hasError('pattern')">
+                                Only numeric values allowed greater than zero</mat-error>
+                        </mat-form-field>
+                        <div *ngIf="isCouponLimitExceeded" class="error-msg" style="margin-top:-18px;font-size: 10px;">
+                            {{couponLimitErrMsg}}
+                        </div>
+                    </div>
+                    <div class="col-md-4" *ngIf="!bogoSection">
+                        <div class="custom-field">
+                            <div class="product_sku">
+                                <label>Product SKU Flat File</label>
+                                <input style="display:none" type="file" (change)="uploadFile($event.target.files)" #uploadSku />
+                                <div class="upload-btn-text" (click)='uploadSku.click()'>
+                                    <span class="upload-icon" *ngIf="skuFileName =='' && skuErrorFileName == ''">
+                                                    <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px"
+                                                        alt="Img">
+                                                    <label class="text">Upload</label>
+                                                </span>
+                                </div>
+                                <!-- <img src="assets/images/icons/filter_close_ico.png"
+                        *ngIf="skuFileName!='' || skuErrorFileName!=''" (click)="skuUpload($event.value)" width="12px"
+                        alt="Img"> -->
+                                <u class="uploaded-file" *ngIf="skuFileName!=''"> {{skuFileName}}</u>
+                                <!-- <u class="uploaded-file" *ngIf="skuFileName!=''" >{{skuFileName}}</u> -->
+                                <u> <a style="color:red; font-size: 10px;" *ngIf="skuErrorFileName!=''"
+                                                    href="{{skuErrorFile}}"
+                                                    download="{{skuErrorFileName}}">{{skuErrorFileName}}</a></u>
+                                <p *ngIf="codeCountBool">{{codeCount}} sku's are listed
+                                </p>
+                                <p *ngIf=skuRequired style="color:red; font-size: 10px;"> SKU file is required</p>
+                                <p *ngIf=validateSkuFile style="color:red; font-size: 10px;"> Please
+                                                validate SKU(s) list</p>
+                                <div class="remove-img" *ngIf="skuFileName!='' || skuErrorFileName!=''">
+                                    <span> <img src=" assets/images/icons/filter_close_ico.png" alt=""
+                                                        (click)="skuUpload($event.value)">
+                                                    <label style="font-size:12px;cursor: pointer;">Remove</label></span>
+                                </div>
+                            </div>
+                            <div class="button_wrap">
+                                <button class="button tertiary-btn" *ngIf="skuFileName!='' && !validSkuFile" (click)="validateSKUs()" type="button">VALIDATE</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="custom-field">
+                            <label>Coupon Code Usage By</label>
+                            <p>
+                                <mat-checkbox formControlName="couponUsageBy">Anyone Having the code
+                                </mat-checkbox>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="flex flex-col">
+                            <!-- <div class="stores-preview">
+                                        <p>{{selectedCount}} Stores Selected</p>
+                                        <label>of {{totalCount}} Stores</label>
+                                    </div>
+                                    <p style="color:red; font-size: 10px;" *ngIf="storeRequired">Please select value</p> -->
+                            <div>
+                                <button class='button tertiary-btn' type="button" (click)="openDialog()">SELECT
+                                                STORES</button>
+                            </div>
+                            <div *ngIf="selectedStore!=null" class="select-store-block">
+                                <div *ngIf="selectStoreVal">
+                                    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                                </div>
+                                <!-- <p>{{selectedStore.length}}</p> <span>Stores Selected</span> -->
+                                <p *ngIf="dataStore">{{selectedStorearray.length}}</p><span>Stores
+                                                Selected</span>
+                            </div>
+                        </div>
+                        <p *ngIf="storeRequiredFiled" class="storeerror-mes">{{storeErrorMsg}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </mat-card>
+</div>
+<div class="terms-conditions">
+    <h3 class="card-title">Terms & Conditions *</h3>
+    <mat-card class="terms-conditions-card">
+        <!-- <mat-accordion>
+                      <mat-expansion-panel>
+                        <mat-expansion-panel-header>
+                          <mat-panel-title>
+                                {{languages[i].languageName}}
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+                            <div class="pt-20px">
+                                <label>Content</label>
+                                <editor apiKey="test" [init]="{plugins: 'link'}" formControlName="termsAndCondition" required></editor>
+                            </div>
+                      </mat-expansion-panel>
+                      <mat-error *ngIf="createCouponForm.submitted && locale.get('termsAndCondition').hasError('required')">Please enter value</mat-error>
+                    </mat-accordion> -->
+        <div class="lang" formArrayName="couponLocales">
+            <mat-card class="faq-card mb-20px" *ngFor="let locale of couponFormGroup['controls']['couponLocales']['controls'];let i = index;" [formGroupName]="i">
+                <div class="lang-field" class="{{alignCss[i]}} {{langfield[i]}} {{languageDirection[i]}} lang-field">
+                    <p>{{languages[i].languageName}}</p>
+                </div>
+                <div class="row card-mb mt-30px {{languageDirection[i]}}">
+                    <div class="col-md-12 text-fields">
+                        <div class="field-container">
+                            <mat-form-field [class.direction-right]="languages[i].languageName == 'Arabic'">
+                                <textarea matInput placeholder="Content" formControlName="termsAndCondition" required></textarea>
+                                <mat-error *ngIf="createCouponForm.submitted && locale.get('termsAndCondition').hasError('required')">
+                                    Please enter value</mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+    </mat-card>
+</div>
+
+</div>
+<div class="btm-button-wrap">
+    <button class="button secondary-btn" type="button" [routerLink]="['/search-coupons']">CANCEL</button>
+    <button class="button primary-btn" type="submit">ADD</button>
+</div>
+<div *ngIf="loadingResponse" class="page-loader-block full-page-loader">
+    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+</div>
+</form>
+</div>

@@ -1,0 +1,160 @@
+<div class="bredcrumb-title-wrap">
+  <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+  <div class="title flex-container template-title">
+    <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          [routerLink]="['/search-physical-cards']"></span>Generate Codes</h1>
+
+  </div>
+</div>
+
+<div class="page-wrap">
+  <div class="row">
+    <div class="col-md-3" style="background: white;">
+      <form [formGroup]="GenerateCodeForm" (submit)="GenerateData(GenerateCodeForm.value)" >
+        <mat-card>
+          <mat-form-field>
+              <mat-select   (selectionChange)="getRangeValue(contentInput.value)" #contentInput formControlName="CardID" placeholder="Select *"   >
+                  <mat-option  *ngFor="let card of CardType" value="{{card.id}}">
+                      {{ card.cardName }}
+                  </mat-option>
+              </mat-select>
+              <mat-error *ngIf="GenerateCodeForm.get('CardID').hasError('required')">Please Select Card Type</mat-error>
+           
+          </mat-form-field>
+
+          <mat-form-field>
+              <input readonly  matInput placeholder="Start Range" #range formControlName="Range" maxlength="20">
+            </mat-form-field>
+
+
+          <mat-form-field>
+              <input matInput placeholder="Quantity *"  OnlyNumber="true" formControlName="Quantity" maxlength="12" >
+            <!-- <input matInput type="number" formControlName="Quantity" placeholder="Quantity"> -->
+                <mat-error *ngIf="GenerateCodeForm.get('Quantity').hasError('required')">Please enter value</mat-error>
+                <mat-error *ngIf="GenerateCodeForm.get('Quantity').hasError('min')">Please enter value greater than zero </mat-error>
+                <mat-error *ngIf="GenerateCodeForm.get('Quantity').hasError('pattern')">Please enter correct values
+                    </mat-error>
+          </mat-form-field>
+
+          <div class="value-selection">
+              <mat-form-field>
+                <input  matInput placeholder="Add Label" #labels formControlName="labels" maxlength="20">
+                <mat-error *ngIf="GenerateCodeForm.get('labels').hasError('pattern')">Please enter an alphanumeric value for the Label</mat-error>
+                <!-- <mat-error *ngIf="GenerateCodeForm.get('labels').hasError('required')">Please enter  value </mat-error> -->
+              </mat-form-field>
+              <button (click)=showlabel(labels) class="button primary-btn add-button" type="button">
+                <img src="assets/images/svg-icons/add_ico.svg" alt="" ></button>
+              <p *ngIf="!labelStatus" style="color:red">Maximum 5 Labels allowed</p>
+              <div class="row labels addCardKeywords">
+                <div  class="" *ngFor='let key of LabelArray ; let i = index;'>{{key}}
+                  <img (click)=deletelabel(i) src="assets/images/icons/close_img_ico.png" ></div>
+              </div>
+            </div>
+          <button type="button" class="button primary-btn" type="submit">GENERATE</button>
+          <button type="button" (click)="resetForm()" class="button secondary-btn">CANCEL</button>
+        </mat-card>
+      </form>
+    </div>
+    <div class="col-md-8" style="display: grid;">
+      <mat-card>
+        <!-- <div class="search-panel-block"> -->
+        
+          <!-- <div class="search-container-block">
+            <div class="search-list ">
+              <form class="filter-wrap" [formGroup]="searchGeneratedCards" >
+                <div class="row title-search-row">
+                  <div class="col-md-8 title-search-col">
+                    <div class="searchform-block">
+                      <div class="common-search">
+                        <input type="text" #seachval (keyup)="applyFilter($event.target.value)" style="text-align: center;" formControlName="searchVal"
+                          placeholder="Search by Card type" />
+                        <span class="search-btn" (click)="searchVal()"></span>
+                        <div class="filter-btn-wrap">
+                          <span class="filter-btn" (click)="openFilter();" [ngClass]="status ? 'open' : 'close'"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div [routerLink]="['/search-physical-cards']"  (click)="DownloadXLS(dataSource)" class="col-md-12">
+                    <div class="text-right">
+                      <span><button  class="btn btn-light" *ngIf="download">
+                        Download</button>
+                    </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="feild-search ng-star-inserted" *ngIf="!status">
+                  <div class="row feild-search-inner">
+                    <div class="col-md-5">
+                      <mat-form-field>
+                        <input matInput [matDatepicker]="picker" formControlName="lastMOdifiedDate"
+                          placeholder="Last modified date">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+                    <div class="col-md-5">
+                      <mat-form-field>
+                        <mat-select formControlName="status" placeholder="Status">
+                          <mat-option value="Online">Online</mat-option>
+                          <mat-option value="Offline">Offline</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="button-wrap">
+                      <button class='button quaternary-btn' (click)="resetForm()">RESET</button>
+                      <button class='button tertiary-btn' type="submit">APPLY</button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div> -->
+          <div class="form-wrap" *ngIf="dataSource">
+              <div [routerLink]="['/search-physical-cards']"  (click)="DownloadXLS(dataSource)" class="col-md-12">
+                <div class="text-right">
+                  <span><button  class="btn btn-light" *ngIf="download">
+                    Download</button>
+                </span>
+                </div>
+              </div>
+              <div class="table-wrap">
+                <div class="table-wrap-inner">
+                    <table mat-table [dataSource]="dataSource" matSort >
+                        <ng-container matColumnDef="SL_NO">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>SL NO.</th>
+                          <td mat-cell *matCellDef="let row"> {{row.SL_NO}}</td>
+                        </ng-container>
+      
+                        <ng-container matColumnDef="BARCODE">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>ID </th>
+                          <td mat-cell *matCellDef="let row"> {{row.BARCODE}} </td>
+                        </ng-container>
+      
+                        <ng-container matColumnDef="SECRET_CODE">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>SECURITY CODE</th>
+                          <td mat-cell *matCellDef="let row">{{row.SecretCode}}</td>
+                        </ng-container>
+      
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                        </tr>
+                      </table>
+                  <div class="no-records" *ngIf="NoRecord">
+                    No Records Found!
+                  </div>
+                  <div *ngIf="searchStoreVal" class="select-store-block">
+                      <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                    </div>
+                </div>
+                <mat-paginator [pageSizeOptions]="[5,10,20,100]"></mat-paginator>
+              </div>
+            
+            </div>
+
+
+        <!-- </div> -->
+      </mat-card>
+    </div>
+  </div>
+</div>

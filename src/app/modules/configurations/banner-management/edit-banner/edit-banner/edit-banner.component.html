@@ -1,0 +1,231 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container">
+        <h1>
+            <span class="left-arrow">
+        <img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          (click)="viewBannerManagement(sequenceNum, cityOid, countryId)">
+      </span> Edit Banner
+        </h1>
+    </div>
+</div>
+<div class="page-wrap" *ngIf="buildFlag">
+    <form id="updateBannersForm" (submit)="updateBanners(createBannerFormGroup.value,sequenceNum,cityOid, countryId)" [formGroup]="createBannerFormGroup" #editBannerForm="ngForm">
+        <mat-card class="mb-20px">
+            <div class="view-basic-details">
+                <div class="country-name">
+                    <label>Showing Banner for selected Country : <span class="display-color">{{bannerDetailList.countryName}}</span></label>
+                </div>
+                <div class="city-name">
+                    <label>Showing Banner for selected City : <span class="display-color">{{bannerDetailList.cityName}}</span></label>
+                </div>
+                <div class="seq-selected">
+                    <label>Order is : <span class="display-color">{{bannerDataSingle.sequenceNum}}</span></label>
+                </div>
+            </div>
+            <div>
+                <label>Banner Type :&nbsp;
+                    <span class="display-color" *ngIf="bannerType == 'type2'"> Type 2 Banner </span>
+                    <span class="display-color" *ngIf="bannerType != 'type2'"> Type 1 Banner </span>
+                </label>
+            </div>
+            <div class="row mt-20px">
+                <div class="col-md-4">
+                    <mat-form-field class="example-full-width">
+                        <input matInput placeholder="Select Banner to Update" aria-label="Banner" [matAutocomplete]="bannerAutoComplete" [formControl]="bannerCtrl" required>
+                        <mat-autocomplete #bannerAutoComplete="matAutocomplete">
+                            <mat-option *ngFor="let banner of filteredbanners | async" [value]="banner.bannerName" (click)="selectedBanner(banner.bannerId);prepopulateBannerDetails(banner.bannersLocaleBean)" #bannerInput>
+                                <span>{{banner.bannerName}}</span>
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                    <mat-error *ngIf="editBannerForm.submitted && bannerCtrl.hasError('required')" style="font-size: 10px;margin-top: -25px;">
+                        Please select value</mat-error>
+                </div>
+                <div class="col-md-4">
+                    <mat-form-field>
+                        <mat-select placeholder="Banner ClickThrough" formControlName="bannerLinkThrough" #bannerLinkThrough (selectionChange)="updateValidation($event.value)">
+                            <!-- <mat-option value="About Us">About Us</mat-option>
+                            <mat-option value="FAQ" (onSelectionChange)="getFaqByRegion()">FAQ</mat-option>
+                            <mat-option value="New Store Launch">New Store Launch </mat-option>
+                            <mat-option value="Profile – Personal">Profile – Personal</mat-option>
+                            <mat-option value="Store" (onSelectionChange)="getStoreByRegion()">Store</mat-option>
+                            <mat-option value="Transactions">Transactions</mat-option>
+                            <mat-option value="Specific Url">External Link</mat-option>
+                            <mat-option value="Delivery">Delivery</mat-option>
+                            <mat-option value="PickUp">PickUp</mat-option>
+                            <mat-option value="Curbside">Curbside</mat-option>
+                            <mat-option value="Category Menu">Category Menu</mat-option>
+                            <mat-option value="Menu">Menu</mat-option>
+                            <mat-option value="Contact Us">Contact Us</mat-option>
+                            <mat-option value="Tim Rewards">Tim Rewards</mat-option>
+                            <mat-option value="News">News</mat-option>
+                            <mat-option value="Favourites">Favourites</mat-option> -->
+                            <mat-option *ngFor="let link of pushList" [value]="link.value">
+                                {{link.label}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="createBannerFormGroup.get('bannerLinkThrough').hasError('required')">Please enter value
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                 <div class="col-md-4" *ngIf="createBannerFormGroup.get('bannerLinkThrough').value == 'Store'">
+                    <mat-form-field class="example-full-width">
+                        <input matInput placeholder="Link To" aria-label="linkToStore" [matAutocomplete]="linkToStoreAutoComplete" [formControl]="linkToStoreCtrl" required>
+                        <mat-autocomplete #linkToStoreAutoComplete="matAutocomplete">
+                            <mat-option *ngFor="let store of filteredStoreList | async" [value]="store.storeName" (click)="selectedStore(store.oid);" #storeInput>
+                                <span>{{store.storeName}}</span>
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                    <mat-error *ngIf="editBannerForm.submitted && linkToStoreCtrl.hasError('required')" style="font-size: 10px;margin-top: -25px;">
+                        Please select value</mat-error>
+                </div>                
+               <div class="col-md-4" *ngIf="createBannerFormGroup.get('bannerLinkThrough').value == 'Mall'">
+                    <mat-form-field class="example-full-width">
+                        <input matInput placeholder="Link To" aria-label="linkToMall" [matAutocomplete]="linkToMallAutoComplete" [formControl]="linkToMallCtrl" required>
+                        <mat-autocomplete #linkToMallAutoComplete="matAutocomplete">
+                            <mat-option *ngFor="let mall of filteredMallList | async" [value]="mall.mallName" (click)="selectedMall(mall.mallId);" #mallInput>
+                                <span>{{mall.mallName}}</span>
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                    <mat-error *ngIf="editBannerForm.submitted && linkToMallCtrl.hasError('required')" style="font-size: 10px;margin-top: -25px;">
+                        Please select value</mat-error>
+                </div>
+                <div class="col-md-4" *ngIf="createBannerFormGroup.get('bannerLinkThrough').value == 'FAQ'">
+                    <mat-form-field class="example-full-width">
+                        <input matInput placeholder="Link To" aria-label="linkToFaq" [matAutocomplete]="linkToFaqAutoComplete" [formControl]="linkToFaqCtrl" required>
+                        <mat-autocomplete #linkToFaqAutoComplete="matAutocomplete">
+                            <mat-option *ngFor="let faq of filteredFaqList | async" [value]="faq.faqCategoryTitle" (click)="selectedFaq(faq.faqCategoryId);" #faqInput>
+                                <span>{{faq.faqCategoryTitle}}</span>
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                    <mat-error *ngIf="editBannerForm.submitted && linkToFaqCtrl.hasError('required')" style="font-size: 10px;margin-top: -25px;">
+                        Please select value</mat-error>
+                </div>
+                <div class="col-md-4" *ngIf="createBannerFormGroup.get('bannerLinkThrough').value == 'Specific Brand'">
+                    <mat-form-field class="example-full-width">
+                        <input matInput placeholder="Link To" aria-label="linkToBrand" [matAutocomplete]="linkToBrandAutoComplete" [formControl]="linkToBrandCtrl" required>
+                        <mat-autocomplete #linkToBrandAutoComplete="matAutocomplete">
+                            <mat-option *ngFor="let brand of filteredBrandList | async" [value]="brand.brandName" (click)="selectedBrand(brand.brandId);" #brandInput>
+                                <span>{{brand.brandName}}</span>
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                    <mat-error *ngIf="editBannerForm.submitted && linkToBrandCtrl.hasError('required')" style="font-size: 10px;margin-top: -25px;">
+                        Please select value</mat-error>
+                </div>
+                <div class="col-md-4" *ngIf="createBannerFormGroup.get('bannerLinkThrough').value == 'Specific Url'">
+                    <mat-form-field>
+                        <input matInput placeholder="URL" type="url" formControlName="hyperlink" maxlength="500" required>
+                        <mat-error *ngIf="createBannerFormGroup.get('hyperlink').hasError('pattern')">Invalid url
+                        </mat-error>
+                        <mat-error *ngIf="createBannerFormGroup.get('hyperlink').hasError('required')">Link to Url is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div formArrayName="bannersLocaleBean">
+                <div class="banner-image">
+                    <div class="row">
+                        <div class="col-md-4" *ngFor="let regionLocale of createBannerFormGroup['controls']['bannersLocaleBean']['controls'];let j = index;" [formGroupName]="j">
+                            <div class="lang-field">
+                                <label>{{languageList[j].languageName}}</label>
+                            </div>
+                            <div *ngIf="imagePath[j] != ''">
+                                <p class="note-text"><span>image size 1125*1350</span></p>
+                                <div class="grid img-block">
+                                    <div class="avatar-zone">
+                                        <img *ngIf="imagePath.length!=0 && imagePath[j]!=''" class="upload-img" [class.uploaded-img]="imgUpload" [src]="filePathUrl+imagePath[j]" width="80px">
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="videoPath[j] != ''">
+                                <p>{{videoPath[j]}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-card>
+        <div *ngIf="bannerType == 'type2'">
+            <h3 class="card-title">Detail Page Title</h3>
+            <mat-card>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="master-fieldSet">
+                            <fieldset class="language-fieldset">
+                                <legend class="fieldset-heading">Detail Page Title</legend>
+                                <div formArrayName="bannersLocaleBean">
+                                    <div class="example-container" *ngFor="let locale of createBannerFormGroup['controls']['bannersLocaleBean']['controls']; let i=index" [formGroupName]="i">
+                                        <div class="{{alignCss[i]}}">
+                                            <mat-form-field [class.direction-right]="languageList[i].languageName == 'Arabic'">
+                                                <input matInput placeholder="{{languageList[i].languageName}}*" formControlName="title" readonly>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="col-md-4 p-10px">
+                        <div class="row" formArrayName="bannersLocaleBean">
+                            <div class="col-md-6" *ngFor="let image of createBannerFormGroup['controls']['bannersLocaleBean']['controls'];let j = index;" [formGroupName]="j">
+                                <div class="lang-field">
+                                    <label>{{languageList[j].languageName}}</label>
+                                </div>
+                                <div class="grid img-block">
+                                    <div class="avatar-zone1">
+                                        <label *ngIf="uploadFlag1[j]==false" class="upload-text" [class.placeholder-img]="imgUpload">Thumbnail Image</label>
+                                        <img *ngIf="imagePath1.length!=0 && imagePath1[j]!=''" class="upload-img" [class.uploaded-img]="imgUpload1" [src]="filePathUrl+imagePath1[j]" width="80px">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="note">
+                                <p>Note: Thumbnail image size 300 x 300 Image Format JPEG Or PNG</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+        <div *ngIf="bannerType == 'type2'">
+            <div class="content">
+                <h3 class="card-title">Detail Page Content</h3>
+            </div>
+            <mat-card class="terms-conditions-card">
+                <div formArrayName="bannersLocaleBean">
+                    <div class="expansion-panel" *ngFor="let ln of createBannerFormGroup['controls']['bannersLocaleBean']['controls'];let i = index;" [formGroupName]="i">
+                        <mat-accordion>
+                            <mat-expansion-panel [class.right-panel]="languageList[i].languageName == 'Arabic'">
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        {{languageList[i].languageName}}
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <div class="row card-mb" [class.text-right]="languageList[i].languageName == 'Arabic'">
+                                    <div class="col-md-12 text-fields {{languageDirection[ln]}}">
+                                        <div [class.direction-right]="languageList[i].languageName == 'Arabic'">
+                                            <div class="col-md-12">
+                                                <label class="mat-placeholder-required">Content</label>
+                                                <p [innerHTML]="contentText[i]"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+        <div class="btm-button-wrap">
+            <div class="btm-button-wrap">
+                <button type="button" class="button secondary-btn" (click)="GoToSearchBannerCanCel(sequenceNum,cityOid, countryId)">CANCEL</button>
+                <button class="button primary-btn" type="submit">UPDATE</button>
+            </div>
+        </div>
+    </form>
+</div>

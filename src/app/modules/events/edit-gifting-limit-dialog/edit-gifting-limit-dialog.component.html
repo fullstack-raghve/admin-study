@@ -1,0 +1,253 @@
+<div class="page-wrap-editt">
+  <div class="search-panel-block">
+      <div class="bredcrumb-title-wrap">
+        <div class="row" style = "padding: 15px;">
+          <div class="col-6">
+            <h3 class="card-title dark pd-14 mb-45">Gifting Limits   </h3>
+
+          </div>
+          <div class="col-6">
+            <!-- <p class="cross mb-45 text-right">
+              <img src="assets/images/icons/filter_close_ico.png" (click) = "closePOPup()">
+            </p> -->
+
+          </div>
+        </div>
+         <div class="header">
+        </div>
+      </div>
+
+      
+          <div class="table-block">
+         <div class="row">
+           <div class="col-12">
+
+            <table class="table table-hover pd-14">
+              <thead class="gift-head">
+                <tr>
+                  <th>GIFT TYPE</th>
+                  <th style="width: 27%;">GIFT NAME</th>
+                  <th>MAX GIFT PER CUSTOMERS</th>
+                  <th>MAX GIFT PER EVENT</th>
+                  <th *ngIf="mode == 'edit'">BALANCE</th>
+
+                </tr>
+               </thead>
+              <tbody>
+               
+                
+               
+              
+              </tbody>
+            </table>
+           </div>
+         </div>
+          </div>
+
+
+
+  <div class="row">
+
+    <div style="padding: 27px;" [class.nonEditableInEditMode4]="isLive">
+      <form [formGroup]="myForm" #myFormdata="ngForm" (ngSubmit)="save()">
+     
+  
+        <div  formArrayName="myCouponArray">
+                    <div 
+                       *ngFor="let item of getControlsmyCouponArray(); let i = index;">
+                      <div [formGroupName]="i">
+                            <div class="row">
+                              <div class="col-md-1">
+                                <mat-form-field>
+                                    <input matInput formControlName="giftingType" 
+                                      readonly>
+                                </mat-form-field>      
+                           </div>
+                           <div class="col-md-4">
+                                      <mat-form-field>
+                                          <input matInput formControlName="couponName" 
+                                            readonly>
+                                      </mat-form-field>      
+                                 </div>
+                              <div class="col-md-3">
+                                      <mat-form-field>
+                                          <input matInput  formControlName="maxGiftPerCustomer"
+                                        
+                                          OnlyNumber="true"
+                                          maxlength="4"
+                                          (keypress)="numberOnly($event)"
+                                            placeholder="Max Gift Per Customer">
+                                            <!-- <mat-error *ngIf="item.get('maxGiftPerCustomer').hasError('required')">Please enter value</mat-error> -->
+                                            <mat-error *ngIf="item.controls.maxGiftPerCustomer.hasError('required') && ( item.controls.maxGiftPerCustomer.dirty || item.controls.maxGiftPerCustomer.touched)">
+                                              Please enter value
+                                          </mat-error>
+                                      </mat-form-field>                                      
+                              </div>
+                              <div class="col-md-3">
+                                      <mat-form-field>
+                                          <input matInput formControlName="maxGiftPerEvent"
+                                        
+                                          OnlyNumber="true"
+                                          maxlength="4"
+                                          (keypress)="numberOnly($event)"
+                                          placeholder="Max Gift Per Event">   
+                                          <mat-error *ngIf="item.controls.maxGiftPerEvent.hasError('required') && ( item.controls.maxGiftPerEvent.dirty || item.controls.maxGiftPerEvent.touched)">
+                                            Please enter value
+                                        </mat-error>                       
+                                        </mat-form-field>
+                              </div>
+                              <div class="col-md-1">
+                                <mat-form-field>
+                                    <input matInput formControlName="balance" 
+                                      readonly>
+                                </mat-form-field>      
+                           </div>
+                              </div>                
+                </div>
+                </div>
+              </div>
+         
+  
+        <!--coupon array end-->
+  
+                             <!--myProgramArray array start-->
+
+                  <div formArrayName="myProgramArray">
+  
+<!--                 
+                      <div  
+                      *ngFor="let item of myForm['controls']['myProgramArray'].controls; let i = index;"> -->
+                      <div  
+                      *ngFor="let item of getControlsmyProgramArray(); let i = index;">
+                          <div [formGroupName]="i">
+                                <div class="row">
+                                  <div class="col-md-1">
+                                    <mat-form-field>
+                                        <input matInput formControlName="giftingType" 
+                                          readonly>
+                                    </mat-form-field>      
+                               </div>
+                               <div class="col-md-4">
+                                          <mat-form-field>
+                                              <input matInput formControlName="programName" 
+                                                readonly>
+                                          </mat-form-field>      
+                                     </div>
+                                  <div class="col-md-3">
+                                          <mat-form-field>
+                                              <input matInput  formControlName="maxGiftPerCustomer"
+                                              OnlyNumber="true"
+                                              maxlength="4"
+                                              (keypress)="numberOnly($event)"
+                                                placeholder="Max Gift Per Customer">
+                                          </mat-form-field>   
+                                          <mat-error *ngIf="item.controls.maxGiftPerCustomer.hasError('required') && ( item.controls.maxGiftPerCustomer.dirty || item.controls.maxGiftPerCustomer.touched)">
+                                            Please enter value
+                                        </mat-error>
+                                 
+                                  </div>
+                                  <div class="col-md-3">
+                                          <mat-form-field>
+                                              <input matInput formControlName="maxGiftPerEvent"
+                                              OnlyNumber="true"
+                                              maxlength="4"
+                                              (keypress)="numberOnly($event)"
+                                              placeholder="Max Gift Per Event">                          
+                                            </mat-form-field>
+                                            <mat-error *ngIf="item.controls.maxGiftPerEvent.hasError('required') && ( item.controls.maxGiftPerEvent.dirty || item.controls.maxGiftPerEvent.touched)">
+                                              Please enter value
+                                          </mat-error> 
+                                  </div>
+                                  <div class="col-md-1">
+                                    <mat-form-field>
+                                        <input matInput formControlName="balance" 
+                                          readonly>
+                                    </mat-form-field>      
+                               </div>
+                                  </div>                
+                    </div>
+  
+                  </div>
+                    </div> 
+                  
+             
+  
+                                          <!--myProgramArray array end-->
+
+                      
+                
+             
+                
+  
+                   <div  formArrayName="myProductArray">
+  
+                
+                      <div 
+                      *ngFor="let item of getControlsmyProductArray(); let i = index;">
+                          <div [formGroupName]="i">
+                                <div class="row">
+                                  <div class="col-md-1">
+                                    <mat-form-field>
+                                        <input matInput formControlName="giftingType" 
+                                          readonly>
+                                    </mat-form-field>      
+                               </div>
+                               <div class="col-md-4">
+                                          <mat-form-field>
+                                              <input matInput formControlName="productName" 
+                                                readonly>
+                                          </mat-form-field>      
+                                     </div>
+                                  <div class="col-md-3">
+                                          <mat-form-field>
+                                              <input matInput  formControlName="maxGiftPerCustomer"
+                                              OnlyNumber="true"
+                                              maxlength="4"
+                                              (keypress)="numberOnly($event)"
+                                                placeholder="Max Gift Per Customer">
+                                                <mat-error *ngIf="item.controls.maxGiftPerCustomer.hasError('required') && ( item.controls.maxGiftPerCustomer.dirty || item.controls.maxGiftPerCustomer.touched)">
+                                                  Please enter value
+                                              </mat-error>
+                                          </mat-form-field>                                      
+                                  </div>
+                                  <div class="col-md-3">
+                                          <mat-form-field>
+                                              <input matInput formControlName="maxGiftPerEvent"
+                                              OnlyNumber="true"
+                                              maxlength="4"
+                                              (keypress)="numberOnly($event)"
+                                              placeholder="Max Gift Per Event">   
+                                              <mat-error *ngIf="item.controls.maxGiftPerEvent.hasError('required') && ( item.controls.maxGiftPerEvent.dirty || item.controls.maxGiftPerEvent.touched)">
+                                                Please enter value
+                                            </mat-error>                        
+                                            </mat-form-field>
+                                  </div>
+
+                                  <div class="col-md-1">
+                                    <mat-form-field>
+                                        <input matInput formControlName="balance" 
+                                          readonly>
+                                    </mat-form-field>      
+                               </div>
+                                  </div>                
+                    </div>
+                    </div>
+                  </div> 
+             
+  
+        
+      </form>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="custom">
+      <button matRipple class="button primary-btn" (click)="save()"
+           
+      >SAVE</button>
+    </div>
+  </div>
+</div>
+</div>
+</div>

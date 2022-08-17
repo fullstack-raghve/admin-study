@@ -1,0 +1,590 @@
+<div class="page-wrap">
+    <div class="bredcrumb-title-wrap">
+        <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+        <div class="title flex-container">
+            <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg"
+            alt="leftArrow" [routerLink]="previousUrl"></span>View Store</h1>
+            <mat-slide-toggle class="example-margin" [checked]="checked" [disabled]="true">
+                {{statusValue}}
+            </mat-slide-toggle>
+        </div>
+    </div>
+    <div class="form-wrap view-page" *ngIf="storeData.length!=0">
+
+        <mat-tab-group animationDuration="0ms" class="tabs-align">
+            <mat-tab label="Basic Details">
+                <ng-template matTabContent>
+                    <div class="basic-details">
+                        <mat-card class="summary-card-details mb-3">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="view-label">
+                                        <label>Brand </label>
+                                        <p>{{storeData['brand']['brandName']}}</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="view-label">
+                                        <label>Brand Type</label>
+                                        <p>{{storeData['brand']['brandType']}}</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="view-label">
+                                        <label>Store Type</label>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <span *ngFor="let store of StoreTypeList">{{store}}, </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </mat-card>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <mat-card class="store-card">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="view-label">
+                                                <label>Store ID</label>
+                                                <p>{{storeData.storeId}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="view-label">
+                                                <label>Country</label>
+                                                <p>{{storeData.country.countryName}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="view-label">
+                                                <label>City</label>
+                                                <p>{{storeData.city.cityName}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="view-label">
+                                                <label>Mall</label>
+                                                <p>{{storeData.mall.mallName}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="view-label">
+                                                <label>Brand</label>
+                                                <p>{{storeData.brand.brandName}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="view-label">
+                                                <label>Currency</label>
+                                                <p>{{storeData.currencyCode}}</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <div class="view-label">
+                                                <label>Google Map URL</label>
+                                                <p>{{storeData.locationUrl}}</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="view-label">
+                                                <label>Longitude</label>
+                                                <p>{{storeData.longitude}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="view-label">
+                                                <label>Latitude</label>
+                                                <p>{{storeData.latitude}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="view-label">
+                                                <label>Launch Date</label>
+                                                <p>{{storeData.launchDate | date:'dd/MM/yyyy hh:mm a' }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="view-label">
+                                                <label>Menu URL</label>
+                                                <p>{{storeData.menuUrl}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="view-label">
+                                                <label>Store Logo</label>
+                                                <div class="grid img-block">
+                                                    <div class="avatar-zone">
+                                                        <img class="upload-img" [src]="filePathUrl+storeData.storeImage" width="80px">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6" *ngIf="storeData.menuUrl != null && storeData.menuUrl != ''">
+                                            <ngx-qrcode #parent [qrc-element-type]="elementType" [qrc-value]="value" [level]="'M'">
+                                            </ngx-qrcode>
+                                            <a (click)="saveAsImage(parent)" style="color: blue; cursor: pointer;font-size: 11px;margin-left: 2em;">Download QR Code</a>
+                                        </div>
+                                    </div>
+                                </mat-card>
+                                <div class="amenities-section" *ngIf="storeData.brand.brandType=='FB' && storeData.amenities.length!=0">
+                                    <h3 class="card-title">Amenities</h3>
+                                    <mat-card class="store-amenities-card">
+                                        <div malihu-scrollbar [scrollbarOptions]="scrollbarForAmenities" class="amenity-block">
+                                            <div class="amenities-list">
+                                                <div class="items" *ngFor="let aminity of storeData.amenities">
+                                                    <img [src]="filePathUrl+aminity.imagePath" alt="" width="50px">
+                                                    <p>{{aminity.amenityTitle}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </mat-card>
+                                </div>
+                                <div class="service-settings-section" *ngIf="storeData.brand.brandType=='FB' && storeService.length!=0">
+                                    <mat-card class="service-settings-card">
+                                        <div class="row pb-10px">
+                                            <div class="col-md-4">
+                                                <mat-checkbox disabled [checked]="storeService.pickup">Pickup</mat-checkbox>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <mat-checkbox disabled [checked]="storeService.delivery">Delivery</mat-checkbox>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <mat-checkbox disabled [checked]="storeService.dropInCar">Drop In Car</mat-checkbox>
+                                            </div>
+                                            <!-- <div class="col-md-4">
+                                                <mat-checkbox disabled [checked]="storeService.shipping">Shipping</mat-checkbox>
+                                            </div> -->
+                                            <div class="col-md-4">
+                                                <mat-checkbox disabled [checked]="storeService.siningStore">Signing Store</mat-checkbox>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <mat-checkbox disabled [checked]="storeService.sameBuildingDelivery">Same Building
+                                                    <br> Delivery
+                                                </mat-checkbox>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <mat-checkbox disabled [checked]="storeService.driveThru">Drive Thru</mat-checkbox>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="storeService.delivery" class="view-label">
+                                            <label>Pickup No:</label>
+                                            <p>{{storeService.deliveryId}}</p>
+                                        </div>
+                                        <div class="store-order-service" *ngIf="storeService.delivery">
+                                            <div class="view-label">
+                                                <label>Store Order Service</label>
+                                                <p>{{storeService.deliveryAreas.length !=0 ? 'Area Mapping':'Delivery Radius'}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="area-mapping-list chip-list" *ngIf="storeService.delivery">
+                                            <mat-chip-list *ngFor="let area of storeService.deliveryAreas;">
+                                                <mat-chip>{{area.areaName}}
+                                                </mat-chip>
+                                            </mat-chip-list>
+                                            <label *ngIf="storeService.deliveryAreas.length ==0">{{storeService.deliveryRadius}} Kms</label>
+                                        </div>
+                                    </mat-card>
+                                </div>
+                                <mat-card class="store-card" *ngFor="let locale of storeData.storeLocales;let i=index">
+                                    <!-- <div class="row">
+                    <div class="col-md-12"> -->
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="store-img">
+                                                <!-- <h6 class="img-subtitle" [class.title-right-heading]="locale.languageCode == 'AR'"> -->
+                                                <h6 class="img-subtitle">
+
+                                                    {{locale.languageCode}}</h6>
+                                                <div class="view-label">
+                                                    <p class="note-text"><span>image size 1125*660</span></p>
+                                                    <div class="grid img-block">
+                                                        <div class="avatar-zone">
+                                                            <img class="upload-img" [src]="filePathUrl+locale.storeImagePath" width="80px">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="store-img" *ngIf="locale.store360ImagePath != ''">
+                                                <div class="view-label">
+                                                    <p class="note-text"><span>image size 1125*660</span></p>
+                                                    <div class="grid img-block">
+                                                        <div class="avatar-zone">
+                                                            <img class="upload-img" [src]="filePathUrl+locale.store360ImagePath" width="80px">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8 {{languageDirection[i]}}">
+                                            <div class="view-label {{alignCss[i]}}">
+                                                <label>Store Name</label>
+                                                <p>{{locale.storeName}}</p>
+                                            </div>
+                                            <div class="view-label {{alignCss[i]}}">
+                                                <label>Video URL</label>
+                                                <p>{{locale.videoUrl}}</p>
+                                            </div>
+                                            <div class="view-label {{alignCss[i]}}">
+                                                <label>Address</label>
+                                                <p>{{locale.storeAddress}}</p>
+                                            </div>
+                                            <div class="view-label {{alignCss[i]}}">
+                                                <label>Keywords</label>
+                                                <p>{{locale.storeKeywords}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- 
+                    </div>
+                  </div> -->
+                                </mat-card>
+
+                            </div>
+                            <div class="col-md-7">
+                                <h3 class="card-title">Store Admin Details</h3>
+                                <mat-card class="store-card">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="view-label">
+                                                <label>Name</label>
+                                                <p>{{storeData.storeAdmin.adminName}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="view-label">
+                                                <label>Phone Number</label>
+                                                <p>{{storeData.storeAdmin.phoneNumber}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="view-label">
+                                                <label>Email Id</label>
+                                                <p>{{storeData.storeAdmin.emailId}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="view-label">
+                                                <label>Employee Id</label>
+                                                <p>{{storeData.storeAdmin.employeeId}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-card>
+                                <h3 class="card-title">Contact Person for Store</h3>
+                                <mat-card class="store-card overflow_scroll">
+                                    <div class="contact-info">
+                                        <div class="flex-container" *ngIf="showNotification">
+                                            <div class="contact-panel" *ngFor="let p of storeData.storeContactPersonDetails">
+                                                <div *ngFor="let n of p.contactDetailLocales;let ind=index">
+                                                    <div class="view-contact {{contactCss[ind]}} {{languageDirection[ind]}}">
+                                                        <label>{{n.languageName}}</label>
+                                                        <p> {{n.contactPersonName}} </p>
+                                                    </div>
+                                                    <div class="contact-hl">
+                                                    </div>
+                                                </div>
+                                                <div class="view-contact-details">
+                                                    <p>{{p.phoneNumber}}</p>
+                                                    <p>{{p.emailId}}</p>
+                                                </div>
+                                                <div class="contact-hl">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </mat-card>
+                                <mat-card class="store-timings-card">
+                                    <div class="business-delivery-block">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="flex-center">
+                                                    <p class="group-heading">Business Hours</p>
+                                                    <mat-checkbox disabled [checked]=businessAvailable247>Available for 24/7</mat-checkbox>
+                                                </div>
+                                                <div *ngIf="!businessAvailable247" class="timings-block">
+                                                    <div class="daily" *ngFor="let hour of businessHours;let i=index">
+                                                        <div class="flex-center">
+                                                            <p class="days">
+                                                                {{hour.day =='SUNDAY' ? 'SUN':hour.day =='MONDAY' ? 'MON' : hour.day =='TUESDAY'?'TUE' :hour.day =='WEDNESDAY'?'WED':hour.day =='THURSDAY'?'THU':hour.day =='FRIDAY'?'FRI':hour.day =='SATURDAY'?'SAT':'-' }}
+                                                            </p>
+                                                            <p class="holiday-text" *ngIf="hour.isHoliday">Holiday</p>
+                                                        </div>
+                                                        <div class="timings-row flex" *ngFor="let time of hour.storeTimings">
+                                                            <div class="view-timer-block">
+                                                                <label>Open Time</label>
+                                                                <p>{{time.openTime }}</p>
+                                                            </div>
+                                                            <div class="vl">&nbsp;</div>
+                                                            <div class="view-timer-block">
+                                                                <label>Close Time</label>
+                                                                <p>{{time.closeTime}}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6" *ngIf="storeData.brand.brandType=='FB'">
+                                                <div class="flex-center">
+                                                    <p class="group-heading">Delivery Hours</p>
+                                                    <mat-checkbox disabled [checked]="deliveryAvailable247">Available for 24/7</mat-checkbox>
+                                                </div>
+                                                <div *ngIf="!deliveryAvailable247" class="timings-block">
+                                                    <div class="daily" *ngFor="let hour of deliveryHours;let i=index">
+                                                        <div class="flex-center">
+                                                            <p class="days">
+                                                                {{hour.day =='SUNDAY' ? 'SUN':hour.day =='MONDAY' ? 'MON' : hour.day =='TUESDAY'?'TUE' :hour.day =='WEDNESDAY'?'WED':hour.day =='THURSDAY'?'THU':hour.day =='FRIDAY'?'FRI':hour.day =='SATURDAY'?'SAT':'-' }}
+                                                            </p>
+                                                            <p class="holiday-text" *ngIf="hour.isHoliday">Holiday</p>
+                                                        </div>
+                                                        <div class="timings-row flex" *ngFor="let time of hour.storeTimings">
+                                                            <div class="view-timer-block">
+                                                                <label>Open Time</label>
+                                                                <p>{{time.openTime}}</p>
+                                                            </div>
+                                                            <div class="vl">&nbsp;</div>
+                                                            <div class="view-timer-block">
+                                                                <label>Close Time</label>
+                                                                <p>{{time.closeTime}}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-card>
+
+                            </div>
+                        </div>
+                        <div class="button-wrap">
+                            <!-- <button class="button primary-btn" type="submit" [routerLink]="['/edit-store/'+storeId]">EDIT</button> -->
+                            <button class="button primary-btn" type="button" (click)="MoveToEdit(storeId)">EDIT</button>
+
+                        </div>
+                    </div>
+                </ng-template>
+            </mat-tab>
+            <mat-tab label="Menu">
+                <ng-template matTabContent>
+                    <div *ngFor="let category of categoryList;let i=index;">
+                        <mat-card class="menuData">
+                            <div class="row heading">
+                                <p class="col-md-4"></p>
+                                <p class="col-md-5">Varients</p>
+                                <p class="col-md-3">Status</p>
+                            </div>
+                            <div class="row heading1">
+                                <p class="col-md-4">{{category.categoryName}}</p>
+                            </div>
+                            <div class="row heading2">
+                                <p class="col-md-4">Product Name</p>
+                            </div>
+                            <div class="product_nav">
+                                <div *ngFor="let product of category.products;let j=index" class="row productList ">
+                                    <div class="products-list col-md-4">
+                                        <div class="flex">
+                                            <div *ngIf="product.productImages.length > 0" class="product-img-block">
+                                                <img [src]="product.productImages[0]['imgPath']" alt="item_ico">
+                                            </div>
+                                            <div *ngIf="product.productImages.length == 0" class="product-img-block">
+                                                <img src="assets/images/icons/defaultProduct.png" alt="item_ico">
+                                            </div>
+                                            {{product.productImage}}
+                                            <div>
+                                                <span class="flex-center mr-5px">
+                                               <img *ngIf="product.productType == 'VEG'" src="assets/images/svg-icons/veg_ico.svg" width="12px" alt="">
+                                               <img *ngIf="product.productType == 'NONVEG'" src="assets/images/svg-icons/nonveg_ico.svg" width="12px" alt=""> 
+                                               <img *ngIf="product.productType == 'EGG'" src="assets/images/icons/Egg_1x.png" width="12px" alt=""> &nbsp;&nbsp; {{ product.productName }}
+                                             </span>
+                                                <span class="currency-label">{{storeData.currencyCode}}&nbsp;&nbsp;
+                                             </span>
+                                            </div>
+                                            <div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5 varient">
+                                        <div *ngFor="let varient of product.productVariant.productVariants">
+                                            <p>{{varient.variantName}}-{{varient.storePrice}}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3 varient">
+                                        <mat-slide-toggle (change)="toggleStatus($event,i,j,product.productOid)" [checked]="toggleVal" *ngIf="product.menuStatus=='ONLINE'" class="mat-slide-toggle">
+                                            {{product.menuStatus}}</mat-slide-toggle>
+                                        <mat-slide-toggle [checked]="!toggleVal" (change)="toggleStatus($event,i,j,product.productOid)" *ngIf="product.menuStatus=='OFFLINE'" class="mat-slide-toggle">
+                                            {{product.menuStatus}}</mat-slide-toggle>
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-card>
+                    </div>
+                </ng-template>
+            </mat-tab>
+            <mat-tab label="Store Staff">
+                <ng-template matTabContent>
+                    <div class="staff-tab-wrapper">
+                        <div class="add-btn text-right">
+                            <button type="button" class="button primary-btn" (click)="openStoreStaffDialog()">
+                <span class="add-plus">
+                  <img src="assets/images/svg-icons/add_ico.svg" alt="add" class="plus-icon">
+                </span>ADD STORE STAFF
+              </button>
+                        </div>
+                        <div class="table-wrap">
+                            <div class="table-wrap-inner" malihu-scrollbar [scrollbarOptions]="scrollbarOptions">
+                                <table mat-table [dataSource]="dataSourceStaff" matSort>
+                                    <ng-container matColumnDef="userId">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> EMPLOYEE ID </th>
+                                        <td mat-cell *matCellDef="let row">{{ row.oid }}{{row.employeeId}}</td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="userName">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border">USER NAME </th>
+                                        <td mat-cell *matCellDef="let row">{{row.userName}}</td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="firstName">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> FIRST NAME </th>
+                                        <td mat-cell *matCellDef="let row"> {{row.firstName}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="lastName">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> LAST NAME </th>
+                                        <td mat-cell *matCellDef="let row"> {{row.lastName}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="role">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> ROLE </th>
+                                        <td mat-cell *matCellDef="let row"> {{row.roleTitle}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="phoneNumber">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> PHONE NUMBER </th>
+                                        <td mat-cell *matCellDef="let row"> {{row.phoneNumber}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="email">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> EMAIL </th>
+                                        <td mat-cell *matCellDef="let row"> {{row.emailId}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="status">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> STATUS </th>
+                                        <td mat-cell *matCellDef="let row"> {{row.status}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="actions">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> ACTIONS </th>
+                                        <td mat-cell *matCellDef="let row" (click)="deleteStaff(row)"> <img class="delete-icon" src='assets/images/icons/delete_ico.png'> </td>
+                                    </ng-container>
+
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumnsStaff"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumnsStaff;">
+                                    </tr>
+                                </table>
+                            </div>
+                            <!-- <mat-paginator  [length]="staffResultsLength"  #paginator
+                (page)="getUpdate($event)" [pageSize]="10" [pageSizeOptions]="[10,20,50,100]">
+              </mat-paginator> -->
+                        </div>
+
+                    </div>
+                </ng-template>
+            </mat-tab>
+            <mat-tab label="Beacons">
+                <ng-template matTabContent>
+                    <div class="beacons-tab-wrapper">
+                        <div class="">
+                            <div class="add-btn text-right">
+                                <button type="button" class="button primary-btn" (click)="openDialog()">
+                  <span class="add-plus">
+                    <img src="assets/images/svg-icons/add_ico.svg" alt="add" class="plus-icon">
+                  </span>ADD BEACONS
+                </button>
+                            </div>
+                        </div>
+                        <div class="table-wrap">
+                            <div class="table-wrap-inner">
+                                <table mat-table [dataSource]="dataSource1" matSort>
+                                    <ng-container matColumnDef="beaconId">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> BEACON ID </th>
+                                        <td mat-cell *matCellDef="let row"><u class="text-blue"> {{ row.beaconOid }} </u></td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="beaconDisplayName">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border">BEACON DISPLAY NAME </th>
+                                        <td mat-cell *matCellDef="let row">{{ row.beaconName }}</td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="status">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> STATUS </th>
+                                        <td mat-cell *matCellDef="let row"> {{row.status}} </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumns1;">
+                                    </tr>
+                                </table>
+                            </div>
+                            <mat-paginator (click)="searchVal()" [length]="beaconResultsLength" (change)="searchVal()" #paginator (page)="getUpdate($event)" [pageSize]="10" [pageSizeOptions]="[10,20,50,100]">
+                            </mat-paginator>
+                        </div>
+                    </div>
+                </ng-template>
+            </mat-tab>
+            <mat-tab label="Store Wall" *ngIf="null != storeWallData">
+                <ng-template matTabContent>
+                    <div class="store-wall-tab-wrapper">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <mat-card class="pad0">
+                                    <div>
+                                        <h3 class="store-name pad-em">{{storeWallData.storeName}}</h3>
+                                        <div>
+                                            <h3 class="product-status pad-em">PRODUCTS ADDED</h3>
+                                        </div>
+                                        <div>
+                                            <div class="store_wall_product_nav">
+                                                <ul (click)="selectedItem(id)">
+                                                    <li class="store-thumb pad-em" [ngClass]="id === activeElement ? 'active' : 'none'" *ngFor="let storeWall of storeWallData.storeWallProducts">
+                                                        <span class="img-wrap">
+                              <img [src]="filePathUrl+storeWall.productImagePath" />
+                            </span>
+                                                        <span>
+                              <strong class="grey product-sku">Product SKU : {{storeWall.productSku}}</strong>
+                              <p class="product-name"> Product Name : {{storeWall.productName}}</p>
+                            </span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-card>
+                            </div>
+                            <div class="col-md-8">
+                                <mat-card>
+                                    <div class="container-gallery">
+                                        <div class="row  store-catalogue">
+                                            <div class="col-md-3" *ngFor="let storeWall of storeWallData.storeWallProducts">
+                                                <div class="thumbnail">
+                                                    <img [src]="filePathUrl+storeWall.productImagePath" alt="Product_1">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-card>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </mat-tab>
+
+        </mat-tab-group>
+    </div>
+</div>

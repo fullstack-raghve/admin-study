@@ -1,0 +1,1030 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container">
+        <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg"
+                    alt="leftArrow" [routerLink]="['/search-campaign']"></span>Add Campaigns</h1>
+        <mat-slide-toggle class="example-margin text-right" [(ngModel)]="toggleVal" (change)="toggleStatus($event)">
+            {{statusValue}}
+        </mat-slide-toggle>
+    </div>
+</div>
+<div class="page-wrap">
+    <div class="campaign-block">
+        <mat-horizontal-stepper #stepper class="campaign-stepper" linear (selectionChange)="onSelectionChange(stepper)">
+            <mat-step [stepControl]="firstFormGroup">
+                <form [formGroup]="firstFormGroup" #createCampaignForm="ngForm">
+                    <ng-template matStepLabel>Basic Details</ng-template>
+                    <div class="basic-details">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <mat-form-field>
+                                    <mat-select placeholder="Activity" formControlName="activity" (ngModelChange)="getCampaignData()" required>
+                                        <mat-option *ngFor="let activity of activities" [value]="activity.id" (click)="getCampaignVal(activity)">
+                                            {{activity.value}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="firstFormGroup.get('activity').hasError('required')">Please select value
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <mat-form-field>
+                                    <input matInput placeholder="Campaign Name" formControlName="campaignName" maxLength="100" (ngModelChange)="getCampaignData()" required>
+                                    <mat-error *ngIf="firstFormGroup.get('campaignName').hasError('required')">Please Enter value</mat-error>
+                                    <!-- <mat-error *ngIf="firstFormGroup.get('campaignName').hasError('pattern')">Invalid characters entered</mat-error> -->
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row mb-20px">
+                            <div class="col-md-12">
+                                <mat-form-field>
+                                    <textarea matInput placeholder="Description" formControlName="campaignDesc" maxLength="500" required></textarea>
+                                    <mat-error *ngIf="firstFormGroup.get('campaignDesc').hasError('required')">Please Enter value</mat-error>
+                                    <!-- <mat-error *ngIf="firstFormGroup.get('campaignDesc').hasError('pattern')">Invalid characters entered</mat-error> -->
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="card-title">Select Communication Type *</p>
+                                <mat-card class="select-communication">
+                                    <div class="communication">
+                                        <div class="communication-types" *ngFor="let item of communicationTypes;">
+                                            <mat-checkbox formControlName="communication" [(ngModel)]="item.checked" (change)="updateCheckedOptions()" *ngIf="item.display">
+                                                {{item.viewValue}}</mat-checkbox>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="commError" class="color-red text-center" class="ft-size-10">Please select value</div>
+                                    <p>Delivery Schedule</p>
+                                    <div class="select-frequency">
+                                        <mat-form-field>
+                                            <mat-select placeholder="Frequency" formControlName="deliveryFrequency" required (selectionChange)="updateValidation($event.value)">
+                                                <mat-option *ngFor="let frequency of frequencies" [value]="frequency.value">
+                                                    {{frequency.viewValue}}
+                                                </mat-option>
+                                            </mat-select>
+                                            <mat-error *ngIf="firstFormGroup.get('deliveryFrequency').hasError('required')">
+                                                Please select value</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-12" *ngIf="firstFormGroup.get('deliveryFrequency').value != 'IMMEDIATE' && firstFormGroup.get('deliveryFrequency').value != 'ONE_TIME'">
+                                        <div class="row mat-row-col">
+                                            <div class="col-md-6">
+                                                <mat-form-field>
+                                                    <input matInput [matDatepicker]="picker" [min]="minDate" readonly #startDate formControlName="startDate" placeholder="Start Date" (ngModelChange)="getCampaignData()" required>
+                                                    <mat-datepicker-toggle matSuffix [for]="picker">
+                                                    </mat-datepicker-toggle>
+                                                    <mat-datepicker #picker></mat-datepicker>
+                                                    <mat-error *ngIf="firstFormGroup.get('startDate').hasError('required')">
+                                                        Please select date</mat-error>
+                                                </mat-form-field>
+                                                <div *ngIf="dateError" class="color-red">Invalid Date</div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <mat-form-field>
+                                                    <input matInput [matDatepicker]="endDate" placeholder="End Date" formControlName="endDate" readonly [min]="startDate.value=='' ? minDate : firstFormGroup.get('startDate').value" (ngModelChange)="getCampaignData()" required>
+                                                    <mat-datepicker-toggle matSuffix [for]="endDate">
+                                                    </mat-datepicker-toggle>
+                                                    <mat-datepicker #endDate></mat-datepicker>
+                                                    <mat-error *ngIf="firstFormGroup.get('endDate').hasError('required')">
+                                                        Please select date</mat-error>
+                                                </mat-form-field>
+                                                <div *ngIf="dateError" class="color-red">Invalid Date</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row date-time">
+                                        <div class="col-md-6" *ngIf="firstFormGroup.get('deliveryFrequency').value == 'ONE_TIME'">
+                                            <mat-form-field>
+                                                <input matInput [matDatepicker]="Date" placeholder="Date" readonly formControlName="deliveryDate" [min]="minDate">
+                                                <mat-datepicker-toggle matSuffix [for]="Date"></mat-datepicker-toggle>
+                                                <mat-datepicker #Date></mat-datepicker>
+
+                                                <mat-error *ngIf="firstFormGroup.get('deliveryFrequency').value == 'ONE_TIME' && firstFormGroup.get('deliveryDate').hasError('required')">
+                                                    Please select date</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-md-6 days-block" *ngIf="firstFormGroup.get('deliveryFrequency').value == 'WEEKLY'">
+
+                                            <mat-select-autocomplete [placeholder]="'Days'" [options]="weekDays" [display]="'viewValue'" [value]="'value'" [multiple]='true' [labelCount]="1" [selectedOptions]="selectedWeekdaysOptions" [formControl]="firstFormGroup.controls['deliveryWeekDay']" required>
+                                            </mat-select-autocomplete>
+                                            <mat-error class="ft-size-10 mt-25" *ngIf="firstFormGroup.get('deliveryFrequency').value == 'WEEKLY' && firstFormGroup.get('deliveryWeekDay').hasError('required')">
+                                                Please select days</mat-error>
+                                        </div>
+                                        <div class="col-md-6 days-block" *ngIf="firstFormGroup.get('deliveryFrequency').value == 'MONTHLY'">
+
+                                            <mat-select-autocomplete [placeholder]="'Days'" [options]="dates" [display]="'date'" [value]="'value'" [multiple]='true' [labelCount]="1" [selectedOptions]="selectedDaysOptions" (selectionChange)="getWeekDaysValue($event)" [formControl]="firstFormGroup.controls['deliveryMonthDay']"
+                                                required>
+                                            </mat-select-autocomplete>
+                                            <mat-error class="ft-size-10 mt-25" *ngIf="firstFormGroup.get('deliveryFrequency').value == 'MONTHLY' && firstFormGroup.get('deliveryMonthDay').hasError('required')">
+                                                Please select dates</mat-error>
+                                        </div>
+                                        <div class="col-md-6 mb-15px" *ngIf="firstFormGroup.get('deliveryFrequency').value != 'IMMEDIATE' && firstFormGroup.get('deliveryFrequency').value != 'ONE_TIME'">
+                                            <label class="example-input-wrapper">
+                                                Time <img src="assets/images/icons/time_ico.svg" width="15px" alt="">
+                                                <input [owlDateTimeTrigger]="dt" [owlDateTime]="dt" class="timer"
+                                                    formControlName="deliveryTime">
+                                                <owl-date-time [pickerType]="'timer'" #dt>
+                                                </owl-date-time>
+                                            </label>
+
+                                            <mat-error *ngIf="firstFormGroup.get('deliveryTime').hasError('required')" class="ft-size-10">
+                                                Please select value</mat-error>
+                                        </div>
+                                        <div class="col-md-6 mb-15px" *ngIf="firstFormGroup.get('deliveryFrequency').value == 'ONE_TIME'">
+                                            <label class="example-input-wrapper">
+                                                Time <img src="assets/images/icons/time_ico.svg" width="15px" alt="">
+                                                <input [owlDateTimeTrigger]="dt" [owlDateTime]="dt" class="timer"
+                                                    formControlName="deliveryTime">
+                                                <owl-date-time [pickerType]="'timer'" #dt>
+                                                </owl-date-time>
+                                            </label>
+
+                                            <mat-error *ngIf="firstFormGroup.get('deliveryTime').hasError('required')" class="ft-size-10">
+                                                Please select value</mat-error>
+                                        </div>
+                                    </div>
+                                </mat-card>
+                            </div>
+
+                            <div class="col-md-6" *ngIf="!nonMembercamp">
+                                <p class="card-title">Want to add promotion to this campaign? *</p>
+                                <mat-card class="select-promotion">
+                                    <div class="rule-coupon select-rule" *ngIf="couponData.length === 0 && burnRuleData.length === 0 && earnRuleData.length === 0 && !flowData ">
+                                        <a class='button tertiary-btn p-5px' (click)="addRule()">ATTACH RULE</a>
+                                        <a class='button tertiary-btn p-5px' (click)="addCoupon()">ATTACH COUPON</a>
+                                        <a class='button tertiary-btn p-5px' (click)="addFlow()">ATTACH FLOW</a>
+                                        <a class='button tertiary-btn p-5px' (click)="addEvent()">ATTACH EVENT</a>
+
+                                        <!-- <div *ngIf="promotionError" class="color-red text-center">Please select Promotion</div> -->
+
+                                    </div>
+                                    <div class="rule-coupon" *ngIf="couponData.length != 0">
+                                        <div>
+                                            <div class="close-icon text-right" (click)="closeDialog()">
+                                                <img src="assets/images/icons/filter_close_ico.png" alt="">
+                                            </div>
+                                            <div>
+                                                <label>Coupon Name</label>
+                                                <p><u class="sky-blue"> {{couponData.couponTitle}}</u></p>
+                                            </div>
+                                            <div class="hl">
+                                            </div>
+                                            <div>
+                                                <label>Discount Type</label>
+                                                <p>{{couponData.discountType}}</p>
+                                            </div>
+                                            <div>
+                                                <label>Notification Type</label>
+                                                <p>{{couponData.notificationType}}</p>
+                                            </div>
+                                            <div>
+                                                <label>Usage Limit per customer</label>
+                                                <p>{{couponData.usageLimitPerCustomer}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="rule-coupon" *ngIf="earnRuleData.length != 0">
+                                        <div class="close-icon text-right" (click)="closeDialog()">
+                                            <img src="assets/images/icons/filter_close_ico.png" alt="">
+                                        </div>
+                                        <div>
+                                            <label>Rule Name</label>
+                                            <p><u class="sky-blue"> {{earnRuleData.ruleName}}</u></p>
+                                        </div>
+                                        <div class="hl">
+                                        </div>
+                                        <div>
+                                            <label>Program Name</label>
+                                            <p>{{earnRuleData.programName}}</p>
+                                        </div>
+                                        <div>
+                                            <label>Program Type</label>
+                                            <p>{{earnRuleData.programType}}</p>
+                                        </div>
+                                        <div>
+                                            <label>Reward Type</label>
+                                            <p>{{earnRuleData.rewardType}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="rule-coupon" *ngIf="burnRuleData.length != 0">
+                                        <div class="close-icon text-right" (click)="closeDialog()">
+                                            <img src="assets/images/icons/filter_close_ico.png" alt="">
+                                        </div>
+                                        <div>
+                                            <label>Rule Name</label>
+                                            <p><u class="sky-blue"> {{burnRuleData.ruleName}}</u></p>
+                                        </div>
+                                        <div class="hl">
+                                        </div>
+                                        <div>
+                                            <label>Reward Type</label>
+                                            <p>{{burnRuleData.rewardType}}</p>
+                                        </div>
+                                        <div>
+                                            <label>Reward Qty</label>
+                                            <p>{{burnRuleData.rewardQty}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="rule-flow" *ngIf="flowData">
+                                        <div>
+                                            <div class="close-icon text-right" (click)="closeDialog()">
+                                                <img src="assets/images/icons/filter_close_ico.png" alt="">
+                                            </div>
+                                            <div>
+                                                <label>Flow ID</label>
+                                                <p> {{flowData?.flowId}}</p>
+                                            </div>
+                                            <div class="hl">
+                                            </div>
+                                            <div>
+                                                <label>Communication Type</label>
+                                                <p>{{flowData?.communicationType}}</p>
+                                            </div>
+                                            <div>
+                                                <label>Flow Name </label>
+                                                <p>{{flowData?.flowName}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-card>
+                            </div>
+                            <div class="col-md-6" *ngIf="activityValue == 'File Upload Segment Campaign'">
+                                <p class="card-title">Want to add promotion to this campaign? *</p>
+                                <mat-card class="select-promotion">
+                                    <div class="rule-coupon select-rule" *ngIf="couponData.length === 0">
+                                        <!-- <a class='button tertiary-btn p-5px' (click)="addRule()">ATTACH RULE</a> -->
+                                        <a class='button tertiary-btn p-5px' (click)="addCoupon()">ATTACH COUPON</a>
+                                        <!-- <a class='button tertiary-btn p-5px' (click)="addFlow()">ATTACH FLOW</a> -->
+
+                                        <!-- <div *ngIf="promotionError" class="color-red text-center">Please select Promotion</div> -->
+
+                                    </div>
+                                    <div class="rule-coupon" *ngIf="couponData.length != 0">
+                                        <div>
+                                            <div class="close-icon text-right" (click)="closeDialog()">
+                                                <img src="assets/images/icons/filter_close_ico.png" alt="">
+                                            </div>
+                                            <div>
+                                                <label>Coupon Name</label>
+                                                <p><u class="sky-blue"> {{couponData.couponTitle}}</u></p>
+                                            </div>
+                                            <div class="hl">
+                                            </div>
+                                            <div>
+                                                <label>Discount Type</label>
+                                                <p>{{couponData.discountType}}</p>
+                                            </div>
+                                            <div>
+                                                <label>Notification Type</label>
+                                                <p>{{couponData.notificationType}}</p>
+                                            </div>
+                                            <div>
+                                                <label>Usage Limit per customer</label>
+                                                <p>{{couponData.usageLimitPerCustomer}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-card>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-right mr-20px">
+                        <button class="button secondary-btn text-right" type="button" [routerLink]="['/search-campaign']">CANCEL</button>
+                        <button matStepperNext class="button primary-btn text-right" type="button" (click)="goBackToFirst(stepper,1)">CONTINUE</button>
+                    </div>
+
+                </form>
+            </mat-step>
+            <mat-step [stepControl]="secondFormGroup">
+                <form [formGroup]="secondFormGroup" #updateSegmentForm="ngForm">
+                    <ng-template matStepLabel>Audience</ng-template>
+                    <div class="second-template">
+                        <div class="summary">
+                            <div class="summary-details">
+                                <div class="flex-center">
+                                    <div class="p-r-1rem">
+                                        <p class="org-color-code">{{campaignName}}</p>
+                                    </div>
+                                    <div class="vl">
+                                    </div>
+                                    <div class="p-l-1rem">
+                                        <p>{{campStartDate}} || {{campEndDate}} ,</p>
+                                        <p>{{activity}}</p>
+                                        <span *ngIf="promotionType"> {{promotionType}} </span>
+                                    </div>
+                                </div>
+                                <div class="vl">
+                                </div>
+                                <div class="cus-selected member_count" *ngIf="!nonMembercamp && segmentTypeValue != 'SEGMENT_MEMBER'">
+                                    <div class="cus-selected-block">
+                                        <p> {{customersSelected}} </p> <span>Customers Selected</span>
+                                    </div>
+                                </div>
+                                <div class="cus-selected member_count" *ngIf="segmentTypeValue == 'SEGMENT_MEMBER'">
+                                    <div class="cus-selected-block">
+                                        <p> {{segmentvalidMemberCount}} </p> <span>Customers Selected</span>
+                                    </div>
+                                </div>
+                                <div class="cus-selected non_member_count" *ngIf="nonMembercamp && segmentTypeValue != 'SEGMENT_MEMBER'">
+                                    <div class="cus-selected-block">
+                                        <p> {{segmentvalidMemberCount}} </p> <span>Customers Selected</span>
+                                    </div>
+                                </div>
+                                <div class="vl">
+                                </div>
+                                <div>
+                                    <p *ngIf="pushChecked" [class.pushLabel_hide]="nonMembercamp">App-Push Notification
+                                    </p>
+                                    <p *ngIf="emailChecked">Email</p>
+                                    <p *ngIf="smsChecked">SMS</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="audience-content">
+                            <div class="row">
+                                <div class="col-md-3" [class.segmentOther]="segmentTypeSelection">
+                                    <!-- <mat-form-field>
+                      <mat-select placeholder="Select Segment" formControlName="segmentId"
+                        (selectionChange)="getSegmentData($event.value)">
+                        <mat-option *ngFor="let segment of segments" [value]="segment.id">
+                          {{segment.value}}
+                        </mat-option>
+                      </mat-select>
+                      
+                    </mat-form-field> -->
+                                    <mat-form-field>
+                                        <mat-select placeholder="Segement Type" formControlName="segmentType" required (selectionChange)="segmentChanges($event.value)">
+                                            <mat-option *ngFor="let segment of segmentTypes" [value]="segment.value" [disabled]="segment.value=='SEGMENT_RULE' || segment.value=='SEGMENT_MEMBER'" (click)="segmentTypeSelectionObj(segment)">
+                                                {{segment.viewValue}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="secondFormGroup.get('segmentType').hasError('required')">
+                                            Please select value</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput placeholder="Select Segment" aria-label="Segment" [matAutocomplete]="segmentAutoComplete" [formControl]="segmentCtrl">
+                                        <mat-autocomplete #segmentAutoComplete="matAutocomplete">
+                                            <mat-option *ngFor="let segment of filteredsegments | async" [value]="segment.segmentName" (click)="getSegmentData(segment.segmentId);getSegmentValue(segment);" #segmentInput>
+                                                <span>{{segment.segmentName}}</span>
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <!-- <mat-error *ngIf="segmentCtrl.hasError('forbiddenNames')">
+                                            Please enter value
+                                        </mat-error> -->
+                                    </mat-form-field>
+                                    <p class="error-mes" *ngIf="segmentFileUploadValueError">
+                                        Please enter value
+                                    </p>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput placeholder="Notification Limit" formControlName="notificationLimit" OnlyNumber="true" maxlength="10" required>
+                                        <mat-error *ngIf="secondFormGroup.get('notificationLimit').hasError('required')">Please enter a value</mat-error>
+                                        <mat-error *ngIf="secondFormGroup.get('notificationLimit').hasError('min')">
+                                            Please enter number greater than 0</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+
+
+                                <div class="col-md-2" style="padding-top: 18px;">
+                                      <div class="communication">
+                                     <!-- <label>IsInclude Arabic</label> -->
+                                     <div class="communication-types" *ngFor="let item of isIncludeArabicText;">
+                                         <mat-checkbox formControlName="isIncludeArabic" [(ngModel)]="item.checked"
+                                             (change)="updateCheckedArabicOptions(item)">IsInclude Arabic
+                                         </mat-checkbox>
+                                     </div>
+                                 </div>
+
+                             </div>
+
+
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <mat-form-field>
+                                        <textarea matInput placeholder="Description" formControlName="segmentDesc" maxLength="500"></textarea>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row" *ngIf="segmentTypeValue != 'SEGMENT_RULE'">
+                                <div class="col-md-3">
+                                    <label>File Validate Status</label>
+                                    <div>
+                                        <p *ngIf="segmentfileValidateStatus==null" class="text-left">-</p>
+                                        <p *ngIf="segmentfileValidateStatus!=null">
+                                            {{segmentfileValidateStatus != 0 ? 'Yes' : 'No' }}</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <label>Success File Path</label>
+                                    <div>
+                                        <p *ngIf="segmentFileSucessFileData==null" class="text-left">-</p>
+                                        <a *ngIf="segmentFileSucessFileData!=null" href="{{fileUrl}}{{segmentFileSucessFileData}}"><img class="downoad-icon" src="assets/images/download_icon.png" alt=""><span class="download-info">Download
+                                                Success File Path</span></a>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <label>Error File Path</label>
+                                    <div>
+                                        <p *ngIf="segmentFileErrorFileData==null" class="text-left">-</p>
+                                        <a *ngIf="segmentFileErrorFileData!=null" href="{{fileUrl}}{{segmentFileErrorFileData}}"><img class="downoad-icon" src="assets/images/download_icon.png" alt=""><span class="download-info">Download
+                                                Error File Path</span></a>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <label *ngIf="!segmentMemNonMem">Valid Member
+                                        Count</label>
+                                    <label *ngIf="segmentMemNonMem">Valid Member and Non Member
+                                        Count</label>
+                                    <div>
+                                        <p *ngIf="segmentvalidMemberCount==null" class="text-left">-</p>
+                                        <p *ngIf="segmentvalidMemberCount!=null">{{segmentvalidMemberCount}}</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <label>Invalid Member Count</label>
+                                    <div>
+                                        <p *ngIf="segmentinValidMemeberCount == null" class="text-left">-</p>
+                                        <p *ngIf="segmentinValidMemeberCount != null">{{segmentinValidMemeberCount}}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row audience-segment" *ngIf="segmentTypeValue == 'SEGMENT_RULE'">
+                                <div class="col-md-5 pad-l-0">
+                                    <div class="details">
+                                        <h2>{{customersSelected}}</h2>
+                                        <p>Customers Selected</p>
+                                    </div>
+                                    <div class="notification-types txt-center">
+                                        <div *ngIf="emailChecked == true">
+                                            <label>Email</label>
+                                            <p>{{emailCustomersSelected}}</p>
+                                        </div>
+                                        <div class="vl" *ngIf="emailChecked == true">
+                                        </div>
+                                        <div *ngIf="smsChecked == true">
+                                            <label>SMS</label>
+                                            <p>{{customersSelected}}</p>
+                                        </div>
+                                        <div class="vl" *ngIf="smsChecked == true && pushChecked == true">
+                                        </div>
+                                        <div *ngIf="!nonMembercamp && pushChecked == true">
+                                            <label>Push</label>
+                                            <p>{{customersSelected}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    <div class="row" *ngIf="!nonMembercamp">
+                                        <div class="col-md-8">
+                                            <div class="notification-filter">
+                                                <mat-radio-group formControlName="fixedScheduled" [(ngModel)]="fixedScheduled">
+                                                    <mat-radio-button value="fixed" [checked]="true">Fix the customer list (Qualified as of now)
+                                                    </mat-radio-button>
+                                                    <mat-radio-button value="scheduled">Qualified when the campaign is scheduled
+                                                    </mat-radio-button>
+                                                </mat-radio-group>
+                                                <mat-checkbox formControlName="smsRestriction"><label>Apply SMS
+                                                        Restriction </label> (Last 7 days 2 promotional SMS)
+                                                </mat-checkbox>
+                                            </div>
+                                            <div class="hl">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="pt-25px">
+                                                <a class='button tertiary-btn p-5px' [class.segment-btndisable]="selectfinalQuery" (click)="selectSegmentDialog()">SEGMENT RULE</a>
+                                                <mat-error *ngIf="secondFormGroup.get('segmentId').hasError('required')">Please select Segment or Segment rule</mat-error>
+                                                <div class="getcustomer-download">
+                                                    <div>
+                                                        <a class="getdetails" (click)="getCustomerList()" *ngIf="getCustomerBtnEnbale" [class.disable-cusbtn]="disableData"><span
+                                                                class="download-info">
+                                                                <img class="downoad-icon"
+                                                                    src="assets/images/svg-icons/uploadgray_ico.svg"
+                                                                    alt=""><span class="download-info">Download
+                                                                    Customer Data</span>
+                                                            </span></a>
+                                                    </div>
+                                                    <div class="download-loader" *ngIf="downloadQuery">
+                                                        <div class="segment-loader  download-loader">
+                                                            <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                                                        </div>
+                                                        <span>Downloading</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="ml-20px">
+                                            <label>Segmentation</label>
+                                            <div *ngIf="selectfinalQuery" class="segment-loader">
+                                                <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                                            </div>
+                                            <p *ngIf="!selectfinalQuery">{{segmentQuery}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-right mr-25px">
+                        <button matStepperPrevious class="button secondary-btn text-right" [routerLink]="['/search-campaign']">CANCEL</button>
+                        <button class="button primary-btn text-right" matStepperNext (click)="goBackToSecond(stepper)" type="button">CONTINUE</button>
+                    </div>
+                </form>
+            </mat-step>
+            <mat-step>
+                <form [formGroup]="thirdFormGroup" #updateContentForm="ngForm">
+                    <ng-template matStepLabel>Content</ng-template>
+                    <div class="third-template">
+                        <div class="summary">
+                            <div class="summary-details">
+                                <div class="flex-center">
+                                    <div class="p-r-1rem">
+                                        <p class="org-color-code">{{campaignName}}</p>
+                                    </div>
+                                    <div class="vl">
+                                    </div>
+                                    <div class="p-l-1rem">
+                                        <p>{{campStartDate}} || {{campEndDate}} ,</p>
+                                        <p>{{activity}}</p>
+                                        <span *ngIf="promotionType"> {{promotionType}} </span>
+                                    </div>
+                                </div>
+                                <div class="vl"></div>
+                                <div *ngIf="customersSelected && segmentTypeValue != 'SEGMENT_MEMBER' && segmentTypeValue != 'SEGMENT_MEMBER_AND_NON_MEMBER'  && segmentTypeValue != 'SEGMENT_NON_MEMBER'">
+                                    <p>{{customersSelected}} Customers</p>
+                                    <p>{{segmentName}}</p>
+                                    <p *ngIf="notificationLimit">{{notificationLimit}} Notification Limit,</p>
+                                    <p>{{fixedScheduled}} List</p>
+                                </div>
+                                <div class="cus-selected member_count" *ngIf="!customersSelected && segmentTypeValue == 'SEGMENT_MEMBER'">
+                                    <div class="cus-selected-block">
+                                        <p> {{segmentvalidMemberCount}} </p> <span>Customers Selected</span>
+                                    </div>
+                                </div>
+                                <div class="cus-selected non_member_count" *ngIf="!customersSelected && segmentTypeValue != 'SEGMENT_MEMBER'">
+                                    <div class="cus-selected-block">
+                                        <p> {{segmentvalidMemberCount}} </p> <span>Customers Selected</span>
+                                    </div>
+                                </div>
+                                <div class="vl">
+                                </div>
+                                <div>
+                                    <p *ngIf="pushChecked" [class.pushLabel_hide]="nonMembercamp">App-Push Notification
+                                    </p>
+                                    <p *ngIf="emailChecked">Email</p>
+                                    <p *ngIf="smsChecked">SMS</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="expansion-panel">
+                            <mat-accordion>
+                                <mat-expansion-panel *ngIf="pushChecked" [class.pushLabel_hide]="nonMembercamp">
+                                    <mat-expansion-panel-header [collapsedHeight]="'38px'" [expandedHeight]="'38px'">
+                                        <mat-panel-title>
+                                            App-Push Notification
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
+                                    <div class="panel-wrap">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <mat-form-field class="example-full-width">
+                                                    <input matInput placeholder="Select Template" aria-label="pushTemplate" [matAutocomplete]="pushTemplateAutoComplete" [formControl]="pushTemplateCtrl">
+                                                    <mat-autocomplete #pushTemplateAutoComplete="matAutocomplete">
+                                                        <mat-option *ngFor="let pushTemplate of filteredpushTemplates | async" [value]="pushTemplate.pushTemplateName" (click)="onPushChange(pushTemplate.pushTemplateId)" #pushTemplateInput>
+                                                            <span>{{pushTemplate.pushTemplateName}}</span>
+                                                        </mat-option>
+                                                    </mat-autocomplete>
+                                                    <!-- <mat-error *ngIf="pushTemplateCtrl.hasError('required')">
+                                                        Please enter value
+                                                    </mat-error> -->
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <div class="field-container">
+                                                    <mat-form-field>
+                                                        <mat-select placeholder="Link To" formControlName="pushLinkTo" #linkTo required (selectionChange)="updateValidationHyperLink($event.value)">
+                                                            <mat-option *ngFor="let link of pushList" [value]="link.value">
+                                                                {{link.label}}
+                                                            </mat-option>
+                                                        </mat-select>
+                                                        <mat-error *ngIf="thirdFormGroup.get('pushLinkTo').hasError('required')">
+                                                            Please select value</mat-error>
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3" *ngIf="thirdFormGroup.get('pushLinkTo').value=='Our Brands'">
+
+                                                <mat-form-field>
+                                                    <mat-select placeholder="Select Brand" formControlName="specificBrand" required>
+                                                        <mat-option *ngFor="let specificBrand of specificBrands" [value]="specificBrand.brandId">
+                                                            {{specificBrand.brandName}}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                    <mat-error *ngIf="thirdFormGroup.get('specificBrand').hasError('required')">
+                                                        Please select value</mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="row"  *ngIf="thirdFormGroup.get('pushLinkTo').value == 'Category'">
+                                                    <div class="col-md-5 selectedsm_col">
+                                                        <button class='button tertiary-btn' (click)="openLinkToItemPopUP()"
+                                                        type="button">ADD CATEGORY</button>
+                                                        <mat-error *ngIf="linkToItemErr" style="font-size:11px">Please select category</mat-error>
+                                                    </div>
+                                                    <div class="col-md-7 selected-label" *ngIf="linkToIteamName != ''">
+                                                        <p>Category selected</p>
+                                                        <label>{{linkToIteamName}}</label>
+                                                    </div>
+                                                </div>
+                                                <div class="row" *ngIf="thirdFormGroup.get('pushLinkTo').value == 'Product'">
+                                                    <div class="col-md-5 selectedsm_col">
+                                                      <button class='button tertiary-btn' (click)="openLinkToItemPopUP()"
+                                                        type="button">ADD PRODUCT</button>
+                                                        <mat-error *ngIf="linkToItemErr" style="font-size:11px">Please select product</mat-error>
+                                                    </div>
+                                                    <div class="col-md-7 selected-label" *ngIf="linkToIteamName != ''">
+                                                        <p>Product selected</p>
+                                                        <label>{{linkToIteamName}}</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <mat-form-field>
+                                                    <input matInput placeholder="Hyper Link" formControlName="pushHyperLink">
+                                                    <mat-error *ngIf="thirdFormGroup.get('pushLinkTo').value=='External Link'">
+                                                        Please select value</mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                        <div formArrayName="pushLocaleArray" class="scrollBox">
+                                            
+
+                                            <mat-card class="pushNotification-card mb-20px">
+                                                <div class="pushNotification-card mb-20px matcard-inner mat-card {{arbicInvalid[i]}}" *ngFor="let locale of thirdFormGroup['controls']['pushLocaleArray']['controls'];let i = index;" [formGroupName]="i">
+                                                    <div class="lang-field" *ngIf="!pushTemplateChecked">
+                                                        <p>{{ languages[i].languageName}}</p>
+                                                    </div>
+
+                                                    <div>
+                                                        <div class="lang-field" *ngIf="pushTemplateChecked">
+                                                            <p>{{locale.get('languageId').value}}</p>
+                                                        </div>
+                                                        <div class="row card-mb fieldtop">
+                                                            <div class="col-md-8 content-pushimg-block">
+
+                                                                <div class="content-img-block">
+                                                                    <div>
+                                                                        <div class="grid img-block">
+                                                                            <p class="note-text"><span>image size
+                                                                                    1024x512</span></p>
+                                                                            <div class="avatar-zone">
+                                                                                <label *ngIf="uploadFlag[i]==false && !prePopulateImg[i]" class="upload-text" [class.placeholder-img]="imgUploadPath">Upload
+                                                                                    Image</label>
+                                                                                <img *ngIf="imagePath.length!=0 && imagePath[i]!=''" class="upload-img" [class.uploaded-img]="imgUploadPath" [src]="filePathUrl+imagePath[i]" width="100px" height="100px">
+                                                                            </div>
+                                                                            <div class="remove-img" *ngIf="prePopulateImg[i]">
+                                                                                <span> <img
+                                                                                        src="assets/images/icons/filter_close_ico.png"
+                                                                                        alt=""
+                                                                                        (click)="removeImage(i)"><label>Remove</label></span>
+                                                                            </div>
+                                                                            <input style="display: none;" #uploadEl type="file" class="upload_btn" (change)="uploadImage($event.target.files,i)" />
+
+                                                                            <div class="text-center wid-100" *ngIf="uploadFlag[i]==false && !prePopulateImg[i]">
+                                                                                <span class="upload-btn-text" (click)='uploadEl.click()'>
+                                                                                    <span class="upload-icon">
+                                                                                        <img src="assets/images/svg-icons/uploadgray_ico.svg"
+                                                                                            width="12px" alt="Img">
+                                                                                    </span>Upload Image
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="store-image">
+                                                                            <div class="grid img-block">
+                                                                                <p class="note-text"><span>image size
+                                                                                    1024x512</span></p>
+                                                                                <div class="avatar-zone">
+                                                                                    <label class="upload-text" *ngIf="!storeImgFlag[i]" [class.placeholder-img]="imgUploadtwo">Campaign Detail Image</label>
+                                                                                    <img class="upload-img" *ngIf="imagePathTwo.length!=0 && imagePathTwo[i]!=''" [class.uploaded-img]="imgUploadtwo" [src]="filePathUrl+imagePathTwo[i]" width="100px" height="100px">
+                                                                                </div>
+                                                                                <div class="remove-img" *ngIf="storeImgFlag[i]==true">
+                                                                                    <span> <img src="assets/images/icons/filter_close_ico.png" alt=""
+                                                                                        (click)="removeDetailImage(i)"><span>
+                                                                                            <label class="cursor">Remove</label>  
+                                                                                        </span></span>
+                                                                                </div>
+                                                                                <input #uploadImgEl type="file" class="upload_btn display-none" (change)="uploadFullImage($event.target.files,i)" required />
+                                                                                <div class="text-center upload-image-text" *ngIf="!storeImgFlag[i]">
+                                                                                    <span class="upload-btn-text" (click)='uploadImgEl.click()'>
+                                                                                    <span class="upload-icon">
+                                                                                        <img src="assets/images/svg-icons/uploadgray_ico.svg"
+                                                                                            width="12px" alt="Img">
+                                                                                    </span><span class="cursor">Upload Image</span>
+                                                                                    </span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="text-fields {{langfield[i]}}" [class.arabicenable]="optionsArabicChecked[i]==='true'">
+                                                                        <div class="d-flex">
+                                                                            <div class="w-75">
+                                                                                <mat-form-field
+                                                                                    [class.direction-right]="languages[i].languageName == 'Arabic'">
+                                                                                    <textarea matInput placeholder="Subject" #subInp
+                                                                                        formControlName="subject" [(ngModel)]="textAreaAppSubject[i]"
+                                                                                        maxLength="500"></textarea>
+                                                                                    <mat-error
+                                                                                        *ngIf=" locale.hasError('required', 'subject')">
+                                                                                        Please enter value</mat-error>
+                                                                                </mat-form-field>
+                                                                            </div>
+                                                                            <div>
+                                                                                <div id="emojiBtn" (click)="toggleEmojiPicker(i)" style="cursor: pointer;position: absolute;top: 35px; font-size: large;">😀</div>
+                                                                                <div style='position: absolute;top: 58px;z-index: 999;'>
+                                                                                    <emoji-mart class="emoji-mart" set="{{set}}" [hideObsolete]="true"
+                                                                                    [isNative]="true" *ngIf="showEmojiPicker[i]" (emojiSelect)="addEmojiAppSubject($event,i)" title="Pick your emoji…"></emoji-mart>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="d-flex">
+                                                                            <div class="w-75">
+                                                                                <mat-form-field
+                                                                                    [class.direction-right]="languages[i].languageName == 'Arabic'">
+                                                                                    <textarea matInput placeholder="Content" [(ngModel)]="textAreaAppContent[i]"
+                                                                                        [id]="'textareaPush' + i"
+                                                                                        formControlName="content" #someTag
+                                                                                        maxlength="640"></textarea>
+                                                                                    <mat-error
+                                                                                        *ngIf="locale.hasError('required', 'content')">
+                                                                                        Please enter value</mat-error>
+                                                                                </mat-form-field>
+                                                                            </div>
+                                                                            <div>
+                                                                                <div id="emojiContentBtn" (click)="toggleEmojiPickerAppContent(i)" style="cursor: pointer;position: absolute;top: 117px; font-size: large;">😀</div>
+                                                                                <div style='position: absolute;top: 143px;z-index: 999;'>
+                                                                                    <emoji-mart class="emoji-mart" set="{{set}}" *ngIf="showEmojiPickerAppCOntent[i]" (emojiSelect)="addEmojiAppContent($event,i)" title="Pick your emoji…"></emoji-mart>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                            <label class="count-length"> *Indicative
+                                                                                character
+                                                                                length :
+                                                                                {{someTag.value.length}}/640</label>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="col-md-4 img-container">
+                                                                <div class="preview-container">
+                                                                    <div class="img-preview">
+                                                                        <p class="text-preview">Notification Preview</p>
+                                                                        <img src="assets/images/svg-icons/mobile_frame.svg" alt="">
+                                                                        <div class="notification-content">
+                                                                            <div class="notification-description {{langfield[i]}}">
+                                                                                <h6>
+                                                                                    {{locale.get('subject').value}}
+                                                                                </h6>
+                                                                                <p>
+                                                                                    {{locale.get('content').value}}
+                                                                                </p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="add-attribute">
+                                                                    <a class='button tertiary-btn p-5px' (click)="attributeDialog(i , 'PUSH')">PERSONALISE</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </mat-card>
+                                        </div>
+                                    </div>
+                                </mat-expansion-panel>
+                                <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" *ngIf="smsChecked">
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>
+                                            SMS
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
+                                    <div class="panel-wrap">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <mat-form-field class="example-full-width">
+                                                    <input matInput placeholder="Select Template" aria-label="smsTemplate" [matAutocomplete]="smsTemplateAutoComplete" [formControl]="smsTemplateCtrl">
+                                                    <mat-autocomplete #smsTemplateAutoComplete="matAutocomplete">
+                                                        <mat-option *ngFor="let smsTemplate of filteredsmsTemplates | async" [value]="smsTemplate.smsTemplateName" (click)="onSMSChange(smsTemplate.smsTemplateId)" #smsTemplateInput>
+                                                            <span>{{smsTemplate.smsTemplateName}}</span>
+                                                        </mat-option>
+                                                    </mat-autocomplete>
+                                                    <!-- <mat-error *ngIf="smsTemplateCtrl.hasError('required')">
+                                                        Please enter value
+                                                    </mat-error> -->
+                                                </mat-form-field>
+
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="field-container">
+                                                    <mat-form-field>
+                                                        <mat-select placeholder="Sender ID" formControlName="smsSenderId" required>
+                                                            <mat-option *ngFor="let smsSenderId of smsSenderList" [value]="smsSenderId">
+                                                                {{smsSenderId}}
+                                                            </mat-option>
+                                                        </mat-select>
+                                                        <mat-error *ngIf="thirdFormGroup.get('smsSenderId').hasError('required')">
+                                                            Please Select a value</mat-error>
+
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div formArrayName="smsLocaleArray" class="scrollBox_sms">
+                                            <mat-card class="pushNotification-card mb-20px">
+                                                <div class="pushNotification-card mb-20px matcard-inner mat-card {{arbicInvalid[i]}}" *ngFor="let locale of thirdFormGroup['controls']['smsLocaleArray']['controls'];let i = index;" [formGroupName]="i">
+                                                    <div class="lang-field" *ngIf="!smsTemplateChecked">
+                                                        <p>{{ languages[i].languageName}}</p>
+                                                    </div>
+                                                    <div class="lang-field" *ngIf="smsTemplateChecked">
+                                                        <p>{{locale.get('languageId').value}}</p>
+                                                    </div>
+                                                    <div class="row card-mb fieldtop">
+                                                        <div class="col-md-7 content-smsimg-block {{langfield[i]}}">
+                                                            <div class="content-img-block">
+                                                                <div class="text-fields">
+                                                                    <div class="field-container">
+                                                                        <mat-form-field [class.direction-right]="languages[i].languageName == 'Arabic'">
+                                                                            <textarea matInput placeholder="Content" [id]="'textarea' + i" formControlName="content" #content maxlength="640"></textarea>
+                                                                            <mat-error *ngIf="locale.hasError('required', 'content')">
+                                                                                Please enter value</mat-error>
+                                                                            <mat-error *ngIf="locale.hasError('pattern','content')" class="ft-size-10">
+                                                                                Special character(s) is not allowed
+                                                                            </mat-error>
+                                                                            <!-- <mat-error *ngIf=" locale.hasError('pattern', 'content')">Invalid characters entered</mat-error> -->
+                                                                        </mat-form-field>
+                                                                        <label class="count-length"> *Indicative
+                                                                            character
+                                                                            length :
+                                                                            {{content.value.length}}/640</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-5 img-container">
+                                                            <div class="preview-container">
+                                                                <div class="img-preview">
+                                                                    <p class="text-preview">Notification Preview</p>
+                                                                    <img src="assets/images/svg-icons/mobile_frame.svg" alt="">
+                                                                    <div class="notification-content">
+                                                                        <div class="notification-description {{langfield[i]}}">
+                                                                            <p>
+                                                                                {{locale.get('content').value}}
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="add-attribute">
+                                                                <a class='button tertiary-btn p-5px' (click)="attributeDialog(i , 'SMS')">PERSONALISE</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </mat-card>
+                                        </div>
+                                    </div>
+                                </mat-expansion-panel>
+                                <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" *ngIf="emailChecked">
+                                    <mat-expansion-panel-header>
+                                        <mat-panel-title>
+                                            Email
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
+                                    <div class="email-panel">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div>
+                                                    <mat-form-field class="example-full-width">
+                                                        <input matInput placeholder="Select Template" aria-label="emailTemplate" [matAutocomplete]="emailTemplateAutoComplete" [formControl]="emailTemplateCtrl">
+                                                        <mat-autocomplete #emailTemplateAutoComplete="matAutocomplete">
+                                                            <mat-option *ngFor="let emailTemplate of filteredemailTemplates | async" [value]="emailTemplate.emailTemplateName" (click)="onEmailChange(emailTemplate.emailTemplateId)" #emailTemplateInput>
+                                                                <span>{{emailTemplate.emailTemplateName}}</span>
+                                                            </mat-option>
+                                                        </mat-autocomplete>
+                                                    </mat-form-field>
+                                                </div>
+                                                <div>
+                                                    <mat-form-field>
+                                                        <mat-select placeholder="Sender Email ID" formControlName="emailSenderId" required>
+                                                            <mat-option *ngFor="let emailSenderId of emailSenderList" [value]="emailSenderId">
+                                                                {{emailSenderId}}
+                                                            </mat-option>
+                                                        </mat-select>
+                                                        <mat-error *ngIf="thirdFormGroup.get('emailSenderId').hasError('required')">
+                                                            Please enter value</mat-error>
+
+                                                    </mat-form-field>
+                                                </div>
+
+                                            </div>
+                                            <div formArrayName="emailLocaleArray" class="col-md-12">
+                                                <mat-accordion (selectedTabChange)="call($event)">
+                                                    <mat-expansion-panel [class.right-panelarabic]="languages[i].languageName =='Arabic'" (opened)="panelOpenState = true;" (closed)="panelOpenState = false" *ngFor="let locale of thirdFormGroup['controls']['emailLocaleArray']['controls'];let i = index;"
+                                                        [formGroupName]="i">
+
+                                                        <mat-expansion-panel-header [collapsedHeight]="'38px'" [expandedHeight]="'38px'">
+                                                            <mat-panel-title *ngIf="!emailTemplateChecked">
+                                                                {{ languages[i].languageName}}
+                                                            </mat-panel-title>
+                                                            <mat-panel-title *ngIf="emailTemplateChecked">
+                                                                {{locale.get('languageId').value}}
+                                                            </mat-panel-title>
+                                                        </mat-expansion-panel-header>
+
+
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <div class="mb-20px flex-center">
+                                                                    <mat-form-field [class.direction-right]="languages[i].languageName == 'Arabic'">
+                                                                        <textarea matInput placeholder="Subject" formControlName="subject" maxLength="500"></textarea>
+                                                                        <mat-error *ngIf="locale.hasError('required', 'subject')">
+                                                                            Please enter value</mat-error>
+                                                                    </mat-form-field>
+                                                                    <div class="preview-title"  style="display: none;">
+                                                                        <a class='button tertiary-btn p-5px' (click)="attributeDialog(i , 'EMAIL')">PERSONALISE</a>
+                                                                    </div>
+                                                                    <div>
+                                                                        <button id="undoButton" class="control-button">Undo</button>
+                                                                        <button id="redoButton" class="control-button">Redo</button>
+                                                                        <button type='button' id="codeEditor" class="control-button">Code editor</button>
+                                                                        <!-- <button id="export" class="control-button" (click)="onExportHtml()">Export</button> -->
+                                                                    </div>
+                                                                    </div>
+                                                                    </div>
+                                                                    </div>
+                                                                    <div class="{{languageDirection[i]}} {{langfield[i]}} {{langfieldname[i]}}">
+                                                                    </div>
+                                                                    <!-- <editor *ngIf="languages[i].languageName!='Arabic'" [init]="{ plugins: 'code, preview ,print,fullpage, searchreplace, directionality, visualblocks, visualchars, fullscreen, image, link, media, template, codesample, table, charmap, hr, pagebreak, nonbreaking, anchor, toc, insertdatetime, advlist, lists, wordcount, imagetools, textpattern, help',
+                                                                                                                                  toolbar:'code preview',
+                                                                                                                                  height : '480',
+                                                                                                                                  directionality: 'rtl'
+                                                                                                                                        }" formControlName="content" [class.direction-right]="languages[i].languageName == 'Arabic'" required (onChange)="onChangeInEditor($event)" (onSelectionChange)="onChangeInEditor($event)">
+                                                                                                                            </editor>
+                                                                                                                            <editor id="arabicID" *ngIf="languages[i].languageName=='Arabic'" [init]="{ plugins: 'code, preview ,print,fullpage, searchreplace, directionality, visualblocks, visualchars, fullscreen, image, link, media, template, codesample, table, charmap, hr, pagebreak, nonbreaking, anchor, toc, insertdatetime, advlist, lists, wordcount, imagetools, textpattern, help',
+                                                                                                                                  toolbar:'code preview',
+                                                                                                                                  height : '480',
+                                                                                                                                  directionality: 'rtl'
+                                                                                                                                        }" formControlName="content" [class.direction-right]="languages[i].languageName == 'Arabic'" (onChange)="onChangeInEditor($event)" (onSelectionChange)="onChangeInEditor($event)">
+                                                                                                                            </editor> -->
+                                                                    <!--This is external system container where you can place plugin buttons -->
+                                                                    <div id="externalSystemContainer">
+                                                                    
+                                                                        <span id="changeHistoryContainer" style="display: none;">Last change: <a id="changeHistoryLink"></a></span>
+                                                                    </div>
+                                                                    <div class="notification-zone"></div>
+                                                                    <!--Plugin containers -->
+                                                                    <div>
+                                                                        <div id="stripoSettingsContainer" style="height:700px;">Loading...</div>
+                                                                        <div id="stripoPreviewContainer" style="height:900px;"></div>
+                                                                    </div>
+
+                                                        <mat-error *ngIf="locale.hasError('required', 'content') &&  (locale.controls['content'].touched || locale.controls['content'].dirty)">
+                                                            Please enter value</mat-error>
+                                                    </mat-expansion-panel>
+                                                </mat-accordion>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-expansion-panel>
+                            </mat-accordion>
+                        </div>
+                        <div *ngIf="contentError" class="color-red pl-23">Please fill all mandatory fields
+                        </div>
+                    </div>
+                    <div class="text-right mr-15px">
+                        <button class="button secondary-btn text-right" [routerLink]="['/search-campaign']">CANCEL</button>
+                        <button type="submit" class="button primary-btn text-right" matStepperNext (click)="createCampaign()" [class.disablebtn]="loadingResponse">
+                            <span class="loading-img-hide" *ngIf="loadingResponse">
+                                <img src="assets/images/loader-icons/White-loading-200px.svg" alt="loader">
+                            </span>ADD</button>
+                    </div>
+                </form>
+            </mat-step>
+        </mat-horizontal-stepper>
+    </div>
+</div>

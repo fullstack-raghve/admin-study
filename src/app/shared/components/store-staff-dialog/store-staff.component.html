@@ -1,0 +1,147 @@
+<div class="page-wrap">
+  <div class="bredcrumb-title-wrap">
+    <div class="space-between close-dialog">
+      <div class="title">
+        <h6>Add Store Staff</h6>
+      </div>
+      <div class="close-icon text-right">
+        <img src="assets/images/icons/filter_close_ico.png" (click)="onCloseClick()" alt="">
+      </div>
+    </div>
+    <form class="filter-wrap" [formGroup]="searchStaffForm">
+      <div class="common-search">
+        <input type="text" formControlName="searchVal" placeholder="Search by Employee ID" />
+        <span class="search-btn" (click)="searchVal(searchStaffForm.value)"></span>
+        <div class="filter-btn-wrap">
+          <span class="filter-btn" (click)="openFilter();" [ngClass]="status ? 'open' : 'close'"></span>
+        </div>
+      </div>
+      <div class="feild-search" *ngIf="!status">
+        <div class="row feild-search-inner">
+          <div class="col-md-3">
+            <mat-form-field>
+              <input matInput type="text" formControlName="employeeId" placeholder="Employee Id" />
+              <mat-error *ngIf="searchStaffForm.get('employeeId').hasError('pattern')">This special character(s) is not
+                allowed</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-md-3">
+            <mat-form-field>
+              <input matInput type="text" formControlName="fullName" placeholder="Full Name" />
+              <mat-error *ngIf="searchStaffForm.get('fullName').hasError('pattern')">Only alphabets are allowed
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-md-3">
+            <mat-form-field>
+              <input matInput type="text" formControlName="email" placeholder="Email" />
+              <mat-error *ngIf="searchStaffForm.get('email').hasError('pattern')">Invalid Email Id</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-md-3">
+            <mat-form-field>
+              <mat-select placeholder="Status" formControlName="status">
+                <mat-option value="Online">Online</mat-option>
+                <mat-option value="Offline">Offline</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="button-wrap">
+            <div class="">
+              <button class='button quaternary-btn' type="button" (click)="resetForm()">Reset</button>
+              <button class='button tertiary-btn' type="button"
+                (click)="searchVal(searchStaffForm.value)">Apply</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="form-wrap">
+    <div class="no-records" *ngIf="dataSource === undefined">
+      No Records Found!
+    </div>
+    <div class="table-wrap selectall-table" [class.disabletable]="disabledTable">
+      <div class="table-wrap-inner" malihu-scrollbar [scrollbarOptions]="scrollbarOptions">
+        <table mat-table [dataSource]="dataSource" matSort>
+
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-checkbox (change)="$event ? masterToggle() : null"
+                [checked]="selection.hasValue() && isAllSelected()"
+                [indeterminate]="selection.hasValue() && !isAllSelected()">
+              </mat-checkbox> SELECT ALL
+            </th>
+            <td mat-cell *matCellDef="let row">
+              <mat-checkbox (click)="$event.stopPropagation()" (change)="$event.checked ? checked(row) : unchecked(row)"
+                [checked]="isChecked(row)">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="empId">
+            <th mat-header-cell *matHeaderCellDef>EMPLOYEE ID</th>
+            <td mat-cell *matCellDef="let row">{{row.employeeId}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="userName">
+            <th mat-header-cell *matHeaderCellDef>USER NAME</th>
+            <td mat-cell *matCellDef="let row">{{ row.userName }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="fullName">
+            <th mat-header-cell *matHeaderCellDef>FULL NAME</th>
+            <td mat-cell *matCellDef="let row">{{ row.fullName }}</td>
+          </ng-container>
+          <ng-container matColumnDef="role">
+            <th mat-header-cell *matHeaderCellDef>ROLE</th>
+            <td mat-cell *matCellDef="let row">{{ row.roleTitle }}</td>
+          </ng-container>
+          <ng-container matColumnDef="phoneNumber">
+            <th mat-header-cell *matHeaderCellDef>PHONE NUMBER</th>
+            <td mat-cell *matCellDef="let row">{{ row.phoneNumber }}</td>
+          </ng-container>
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef>EMAIL</th>
+            <td mat-cell *matCellDef="let row">{{ row.emailId }}</td>
+          </ng-container>
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>STATUS</th>
+            <td mat-cell *matCellDef="let row">{{ row.status }}</td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+        <div class="no-records" *ngIf="resultsLength === 0">
+          No data found
+        </div>
+      </div>
+      <div class="loader-block" *ngIf="loadingResponse">
+        <span class="loading-img-hide">
+          <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="loader">
+        </span>
+      </div>
+      <mat-paginator (click)="searchVal(searchStaffForm.value)" [length]="resultsLength" (change)="searchVal(searchStaffForm.value)" #paginator
+        (page)="getUpdate($event)" [pageSize]="10" [pageSizeOptions]="arrlength"></mat-paginator>
+      <div class="total-val-block">
+        <div class="total-value-block" *ngIf="totalRecordVal">
+          <div class="total-value">
+            <p>Total Records : </p>
+            <span>{{totalCount}}</span>
+          </div>
+        </div>
+        <div class="total-value-block" *ngIf="totalFilterRecordVal">
+          <div class="total-value">
+            <p>Filter Stores : </p>
+            <span>{{total}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="button-wrap">
+      <div class="">
+        <button class="button primary-btn" [disabled]="resultsLength === 0"
+          [mat-dialog-close]="selection.selected">ASSIGN TO STORE</button>
+      </div>
+    </div>
+  </div>
+</div>

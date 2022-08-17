@@ -1,0 +1,146 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container">
+        <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          [routerLink]="['/search-flow']"></span>View Feedback Flow</h1>
+        <!-- <button class="button primary-btn" (click)="openDumpFlow()">DUMP</button> -->
+    </div>
+</div>
+<div class="page-wrap">
+    <form (submit)="updateFlow(updateFlowFormGroup.value)" [formGroup]="updateFlowFormGroup" #createFlowForm="ngForm">
+        <mat-card class="mb-20px">
+            <div class="row">
+                <div class="col-3">
+                    <mat-form-field>
+                        <input matInput placeholder="Flow Name" readonly formControlName="flowName">
+                        <mat-error *ngIf="updateFlowFormGroup.get('flowName').hasError('required')">Please enter value</mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <mat-form-field>
+                                <mat-label>Select Brands</mat-label>
+                                <mat-select formControlName="brandOid" disabled multiple>
+                                    <mat-option *ngFor="let brand of brand" [value]="brand.brandId" (click)="selectCountryByBrandId(brand)">
+                                        {{brand.brandName}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-sm-6">
+                            <mat-form-field>
+                                <mat-label>Select Country</mat-label>
+                                <mat-select formControlName="countryOid" disabled multiple>
+                                    <mat-option *ngFor="let country of countries" [value]="country.countryId">
+                                        {{ country.countryName }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5 text-right">
+                    <div class="add_channel">
+                        <p>Select Channel</p>
+                        <div class="channel_checkbox">
+                            <mat-checkbox formControlName="kioskType" [disabled]="kisokCheckbox">Kiosk</mat-checkbox>
+                            <mat-checkbox formControlName="emailType" [disabled]="emailCheckbox">Email</mat-checkbox>
+                            <mat-checkbox formControlName="smsType" [disabled]="smsCheckbox">SMS</mat-checkbox>
+                            <mat-checkbox formControlName="onlineType" [disabled]="onlineCheckbox">Online</mat-checkbox>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label style="font-size: 11px; color: #7b7979;">Feedback Flow For</label>
+                    <p *ngIf="fbTransaction == true">F&B Transaction</p>
+                    <p *ngIf="caTransaction == true">DB Transacion</p>
+                    <p *ngIf="fbEnquiry == true">F&B Enquiry</p>
+                    <p *ngIf="caEnquiry == true">DB Enquiry</p>
+                    <p *ngIf="qrEnquiry == true">QR Code</p>
+                    <p *ngIf="fbTransactionPickUp == true">F&B Transaction Pick Up</p>
+                    <p *ngIf="fbTransactionDelivery == true">F&B Transaction Delivery</p>
+                    <p *ngIf="qrTransactionPickUp == true">QR Code Pick Up</p>
+                    <p *ngIf="qrTransactionDelivery == true">QR Code Delivery</p>
+                </div>
+                <div class="col-md-3">
+                    <p style="margin-bottom: 3px;color: rgba(0, 0, 0, 0.42);">Select Language</p>
+                    <mat-radio-group name="language" formControlName="language" [disabled]='true'>
+                        <mat-radio-button value="EN" style="margin-right:8px;">English</mat-radio-button>
+                        <mat-radio-button value="AR">Arabic</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            </div>
+        </mat-card>
+        <mat-card>
+            <div *ngIf="model && !report" class="padding20 white-bg">
+                <div class="row">
+                    <div class="col-3 mt-40px flow_tool">
+                        <div class="fields" *ngFor="let item of fieldModels">
+                            <div class="field pointer shadow-bg" [dndDraggable]="item" [dndEffectAllowed]="'copy'" (dndEnd)="onDragEnd($event)">
+                                <!-- <i [ngClass]="item.icon" class="fa pull-left"></i> -->
+                                <div class="left_menu">
+                                    <div class="menu_icon">
+                                        <img src="{{item.icon}}" alt="menu_icon">
+                                    </div>
+                                    <h5>{{item.question}}</h5>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-9">
+                        <div class="pages">
+                            <!-- <div class="text-right">
+                <button class="button primary-btn" type="button" (click)="addTab(true)">
+                  Add new page
+                </button>
+              </div> -->
+                            <!-- {{tabs | json}} -->
+
+                            <mat-tab-group [selectedIndex]="selected.value" (selectedIndexChange)="selected.setValue($event)">
+                                <mat-tab *ngFor="let tab of tabs; let index = index" [label]="'page' + tab">
+
+                                    <!-- <div class="text-right">
+                    <button mat-raised-button class="button tertiary-btn" [disabled]="tabs.length === 1"
+                      (click)="removeTab(index)">
+                      Delete Page
+                    </button>
+                  </div> -->
+                                    <app-dragAndDropArea [pageNumberDyanamic]="selected.value" [getModelFieldsData]="clickOnTab == false ? pageLength[index] : ''" (childData)="receiveDataFromChild($event)" [tabs]="tabs"></app-dragAndDropArea>
+                                </mat-tab>
+
+                            </mat-tab-group>
+                            <div class="text-center color-red" *ngIf="pagesArray">
+                                Please add atleast one question in the page to create flow.
+                            </div>
+                            <div class="btm-button-wrap">
+                                <button type="button" class="button primary-btn" (click)="dynamicDownloadJson()">EXPORT</button>
+                            </div>
+                            <!-- {{pageLength | json}} -->
+                            <!-- {{pages | json}} -->
+                            <!-- <div class="btm-button-wrap">
+                <button type="button" class="button secondary-btn" [routerLink]="['/search-flow']">CANCEL</button>
+                <button type="button" class="button primary-btn" [disabled]='disabled'
+                  (click)="updateFlow(updateFlowFormGroup.value)">
+                  <span class="loading-img-hide" *ngIf="loading">
+                      <img src="assets/images/svg-icons/Blue-loading-200px.svg" alt="">
+                    </span>
+                    <span>UPDATE</span>
+                  </button>
+              </div> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-card>
+    </form>
+</div>
+
+<!-- <pre>
+  {{pageLength | json}}
+</pre> -->
+<!--
+  <pre>
+    Page First{{pageLength[0] | json}}
+</pre> -->

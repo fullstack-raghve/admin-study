@@ -1,0 +1,607 @@
+<div class="bredcrumb-title-wrap live-order-breadcrumb">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex" style="align-items: flex-end;">
+        <h1>Live Orders</h1>
+        <!-- <p class="alert-message pointer" (click)="openErrorMessageDialog()"><span class="alert_icon"></span><u> High Alert</u></p> -->
+    </div>
+</div>
+<div class="form-wrap">
+    <div class="live-orders-listing">
+        <mat-tab-group animationDuration="0ms" class="tabs-align" [selectedIndex]=seletedTabIndex #tabGroup (selectedTabChange)="onTabChange($event)">
+
+            <!-- Rejected -->
+            <mat-tab>
+                <ng-template matTabLabel>
+                    <span [matBadge]="rejectedOrdersCount" matBadgeOverlap="false" [class.badgeWidthClass]="rejectedOrdersCount>100" [ngClass]=" rejectedBadgeActive ? 'primary' : 'secondary'">Rejected</span>
+                </ng-template>
+                <ng-template matTabContent>
+                    <mat-card>
+                        <div class="table-wrap">
+                            <div class="table-wrap-inner">
+                                <table mat-table [dataSource]="dataRejectedOrderSource" matSort>
+                                    <ng-container matColumnDef="txnId">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> ORDER ID </th>
+                                        <td mat-cell *matCellDef="let row"><u (click)="viewRejectOrder(row.orderId)"><a
+                           class="text-blue">
+                          {{ row.txnId }} </a></u></td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="storeName">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> STORE NAME </th>
+                                        <td mat-cell *matCellDef="let row">{{row.storeName != null ? row.storeName : '-'}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="noOfItems">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> NO. OF ITEMS </th>
+                                        <td mat-cell *matCellDef="let row">{{ row.noOfItems }}</td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="totalAmount">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> TOTAL AMOUNT </th>
+                                        <td mat-cell *matCellDef="let row"> {{row.totalAmount}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="timeElapsed">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> TIME ELAPSED</th>
+                                        <td mat-cell *matCellDef="let row">{{row.timeElapsed != null ? row.timeElapsed : '-'}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="orderType">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border">ORDER TYPE </th>
+                                        <td mat-cell *matCellDef="let row">{{row.orderType}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="assignedTo">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> ASSIGNED TO </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            {{row.assignedTo != null && row.assignedTo != "" ? row.assignedTo : '-'}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="dateTime">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> DATE & TIME </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            {{row.dateTime | dateTime }} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="status">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> STATUS </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            <p> {{row.status}} </p>
+                                        </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedRejectedOrderColumns"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedRejectedOrderColumns;">
+                                    </tr>
+                                </table>
+                                <div *ngIf="rejectedOrderLoader" class="page-loader-block full-page-loader">
+                                    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                                </div>
+                                <div class="no-records" *ngIf="rejectedOrdersCount == 0">
+                                    No Records Found!
+                                </div>
+                                <mat-paginator [length]="rejectedOrdersCount" #rejectedOrdersPaginator [pageSize]="10" [pageSizeOptions]="[10,20,50,100]"></mat-paginator>
+                            </div>
+                        </div>
+                    </mat-card>
+                </ng-template>
+            </mat-tab>
+
+            <!-- My Tickets -->
+            <mat-tab>
+                <ng-template matTabLabel>
+                    <span [matBadge]="myTicketsCount" matBadgeOverlap="false" [class.badgeWidthClass]="myTicketsCount>100" [ngClass]=" myTicketBadgeActive ? 'primary' : 'secondary'">My Tickets</span>
+                </ng-template>
+                <ng-template matTabContent>
+                    <mat-card>
+                        <div class="table-wrap">
+                            <div class="table-wrap-inner">
+                                <table mat-table [dataSource]="dataMyTicketOrderSource" matSort>
+                                    <ng-container matColumnDef="txnId">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> ORDER ID </th>
+                                        <td mat-cell *matCellDef="let row"><u (click)="viewMyTicketsOrder(row.orderId)"><a
+                           class="text-blue">
+                          {{ row.txnId }} </a></u></td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="storeName">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> STORE NAME </th>
+                                        <td mat-cell *matCellDef="let row">{{row.storeName != null ? row.storeName : '-'}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="noOfItems">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> NO. OF ITEMS </th>
+                                        <td mat-cell *matCellDef="let row">{{ row.noOfItems }}</td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="totalAmount">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> TOTAL AMOUNT </th>
+                                        <td mat-cell *matCellDef="let row"> {{row.totalAmount}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="timeElapsed">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> TIME ELAPSED</th>
+                                        <td mat-cell *matCellDef="let row">{{row.timeElapsed != null ? row.timeElapsed : '-'}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="orderType">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border">ORDER TYPE </th>
+                                        <td mat-cell *matCellDef="let row">{{row.orderType}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="assignedTo">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> ASSIGNED TO </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            {{row.assignedTo != null && row.assignedTo != "" ? row.assignedTo : '-'}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="dateTime">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> DATE & TIME </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            {{row.dateTime | dateTime }} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="status">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> STATUS </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            <p>{{row.status}}</p>
+                                        </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedMyTicketOrdersColumns"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedMyTicketOrdersColumns;">
+                                    </tr>
+                                </table>
+                                <div *ngIf="myTicketsLoader" class="page-loader-block full-page-loader">
+                                    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                                </div>
+                                <div class="no-records" *ngIf="myTicketsCount == 0">
+                                    No Records Found!
+                                </div>
+                                <mat-paginator [length]="myTicketsCount" #myTicketsPaginator [pageSize]="10" [pageSizeOptions]="[10,20,50,100]"></mat-paginator>
+                            </div>
+                        </div>
+                    </mat-card>
+                </ng-template>
+            </mat-tab>
+
+            <!-- All Pending Orders  -->
+            <mat-tab>
+                <ng-template matTabLabel>
+                    <span [matBadge]="pendingOrdersCount" matBadgeOverlap="false" [class.badgeWidthClass]="pendingOrdersCount>100" [ngClass]=" pendingBadgeActive ? 'primary' : 'secondary'">All Pending Orders</span>
+                </ng-template>
+                <ng-template matTabContent>
+                    <mat-card>
+                        <div class="table-wrap">
+                            <div class="table-wrap-inner">
+                                <table mat-table [dataSource]="dataPendingOrderSource" matSort>
+                                    <ng-container matColumnDef="txnId">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> ORDER ID </th>
+                                        <td mat-cell *matCellDef="let row"><u (click)="viewLiveOrder(row.orderId)"><a
+                           class="text-blue">
+                          {{ row.txnId }} </a></u></td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="storeName">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> STORE NAME </th>
+                                        <td mat-cell *matCellDef="let row">{{row.storeName != null ? row.storeName : '-'}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="noOfItems">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> NO. OF ITEMS </th>
+                                        <td mat-cell *matCellDef="let row">{{ row.noOfItems }}</td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="totalAmount">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> TOTAL AMOUNT </th>
+                                        <td mat-cell *matCellDef="let row"> {{row.totalAmount}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="timeElapsed">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> TIME ELAPSED</th>
+                                        <td mat-cell *matCellDef="let row">{{row.timeElapsed != null ? row.timeElapsed : '-'}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="orderType">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border">ORDER TYPE </th>
+                                        <td mat-cell *matCellDef="let row">{{row.orderType}} </td>
+                                    </ng-container>
+
+                                    <!-- <ng-container matColumnDef="assignedTo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> ASSIGNED TO </th>
+                    <td mat-cell *matCellDef="let row">
+                      {{row.assignedTo != null && row.assignedTo != "" ? row.assignedTo : '-'}} </td>
+                  </ng-container> -->
+
+                                    <ng-container matColumnDef="dateTime">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> DATE & TIME </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            {{row.dateTime | dateTime }} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="status">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> STATUS </th>
+                                        <td mat-cell *matCellDef="let row"> {{row.status}} </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedPendingOrdersColumns"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedPendingOrdersColumns;">
+                                    </tr>
+                                </table>
+                                <div *ngIf="pendingOrderLoader" class="page-loader-block full-page-loader">
+                                    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                                </div>
+                                <div class="no-records" *ngIf="pendingOrdersCount == 0">
+                                    No Records Found!
+                                </div>
+                                <mat-paginator [length]="pendingOrdersCount" #pendingOrderPaginator [pageSize]="10" [pageSizeOptions]="[10,20,50,100]"></mat-paginator>
+                            </div>
+                        </div>
+                    </mat-card>
+                </ng-template>
+            </mat-tab>
+
+            <!-- New -->
+            <mat-tab [disabled]='!showNewOrderTab'>
+                <ng-template matTabLabel>
+                    <span [matBadge]="newOrdersCount" matBadgeOverlap="false" [class.badgeWidthClass]="newOrdersCount>100" [ngClass]=" newOrderBadgeActive ? 'primary' : 'secondary'">New</span>
+                </ng-template>
+                <ng-template matTabContent>
+                    <mat-card>
+                        <div class="table-wrap">
+                            <div class="table-wrap-inner">
+                                <table mat-table [dataSource]="dataNewOrderSource" matSort>
+                                    <ng-container matColumnDef="txnId">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> ORDER ID </th>
+                                        <td mat-cell *matCellDef="let row"><u (click)="viewLiveOrder(row.orderId)"><a
+                           class="text-blue">
+                          {{ row.txnId }} </a></u></td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="storeName">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> STORE NAME </th>
+                                        <td mat-cell *matCellDef="let row">{{row.storeName != null ? row.storeName : '-'}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="noOfItems">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> NO. OF ITEMS </th>
+                                        <td mat-cell *matCellDef="let row">{{ row.noOfItems }}</td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="totalAmount">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> TOTAL AMOUNT </th>
+                                        <td mat-cell *matCellDef="let row"> {{row.totalAmount}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="timeElapsed">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> TIME ELAPSED</th>
+                                        <td mat-cell *matCellDef="let row">{{row.timeElapsed != null ? row.timeElapsed : '-'}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="orderType">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border">ORDER TYPE </th>
+                                        <td mat-cell *matCellDef="let row">{{row.orderType}} </td>
+                                    </ng-container>
+
+                                    <!-- <ng-container matColumnDef="assignedTo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> ASSIGNED TO </th>
+                    <td mat-cell *matCellDef="let row">
+                      {{row.assignedTo != null && row.assignedTo != "" ? row.assignedTo : '-'}} </td>
+                  </ng-container> -->
+
+                                    <ng-container matColumnDef="dateTime">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> DATE & TIME </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            {{row.dateTime | dateTime }} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="status">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> STATUS </th>
+                                        <td mat-cell *matCellDef="let row"> {{row.status}} </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedNewOrdersColumns"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedNewOrdersColumns;">
+                                    </tr>
+                                </table>
+                                <div *ngIf="newOrderLoader" class="page-loader-block full-page-loader">
+                                    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                                </div>
+                                <div class="no-records" *ngIf="newOrdersCount == 0">
+                                    No Records Found!
+                                </div>
+                                <mat-paginator [length]="newOrdersCount" #newOrderPaginator [pageSize]="10" [pageSizeOptions]="[10,20,50,100,200,300]">
+                                </mat-paginator>
+                            </div>
+                        </div>
+                    </mat-card>
+                </ng-template>
+            </mat-tab>
+
+            <!-- Food Preparing -->
+            <mat-tab>
+                <ng-template matTabLabel>
+                    <span [matBadge]="foodPreparingOrdersCount" matBadgeOverlap="false" [class.badgeWidthClass]="foodPreparingOrdersCount>100" [ngClass]=" foodPreparingBadgeActive ? 'primary' : 'secondary'">Food Preparing</span>
+                </ng-template>
+                <ng-template matTabContent>
+                    <mat-card>
+                        <div class="table-wrap">
+                            <div class="table-wrap-inner">
+                                <table mat-table [dataSource]="dataFoodPreparingOrderSource" matSort>
+                                    <ng-container matColumnDef="txnId">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> ORDER ID </th>
+                                        <td mat-cell *matCellDef="let row"><u (click)="viewLiveOrder(row.orderId)"><a
+                           class="text-blue">
+                          {{ row.txnId }} </a></u></td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="storeName">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> STORE NAME </th>
+                                        <td mat-cell *matCellDef="let row">{{row.storeName != null ? row.storeName : '-'}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="noOfItems">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> NO. OF ITEMS </th>
+                                        <td mat-cell *matCellDef="let row">{{ row.noOfItems }}</td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="totalAmount">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> TOTAL AMOUNT </th>
+                                        <td mat-cell *matCellDef="let row"> {{row.totalAmount}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="timeElapsed">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> TIME ELAPSED</th>
+                                        <td mat-cell *matCellDef="let row">{{row.timeElapsed != null ? row.timeElapsed : '-'}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="orderType">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border">ORDER TYPE </th>
+                                        <td mat-cell *matCellDef="let row">{{row.orderType}} </td>
+                                    </ng-container>
+
+                                    <!-- <ng-container matColumnDef="assignedTo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> ASSIGNED TO </th>
+                    <td mat-cell *matCellDef="let row">
+                      {{row.assignedTo != null && row.assignedTo != "" ? row.assignedTo : '-'}} </td>
+                  </ng-container> -->
+
+                                    <ng-container matColumnDef="dateTime">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> DATE & TIME </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            {{row.dateTime | dateTime }} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="status">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> STATUS </th>
+                                        <td mat-cell *matCellDef="let row"> {{row.status}} </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedFoodPreparingOrdersColumns"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedFoodPreparingOrdersColumns;">
+                                    </tr>
+                                </table>
+                                <div *ngIf="foodPreparingLoader" class="page-loader-block full-page-loader">
+                                    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                                </div>
+                                <div class="no-records" *ngIf="foodPreparingOrdersCount == 0">
+                                    No Records Found!
+                                </div>
+                                <mat-paginator [length]="foodPreparingOrdersCount" #foodPreparingPaginator [pageSize]="10" [pageSizeOptions]="[10,20,50,100]"></mat-paginator>
+                            </div>
+                        </div>
+                    </mat-card>
+                </ng-template>
+            </mat-tab>
+
+            <!-- Ready For Pickup -->
+            <mat-tab>
+                <ng-template matTabLabel>
+                    <span [matBadge]="readyForPickupOrdersCount" matBadgeOverlap="false" [class.badgeWidthClass]="readyForPickupOrdersCount>100" [ngClass]=" readyForPickupBadgeActive ? 'primary' : 'secondary'">Ready For Pickup</span>
+                </ng-template>
+                <ng-template matTabContent>
+                    <mat-card>
+                        <div class="table-wrap">
+                            <div class="table-wrap-inner">
+                                <table mat-table [dataSource]="dataReadyForPickupOrderSource" matSort>
+                                    <ng-container matColumnDef="txnId">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> ORDER ID </th>
+                                        <td mat-cell *matCellDef="let row"><u (click)="viewLiveOrder(row.orderId)"><a
+                           class="text-blue">
+                          {{ row.txnId }} </a></u></td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="storeName">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> STORE NAME </th>
+                                        <td mat-cell *matCellDef="let row">{{row.storeName != null ? row.storeName : '-'}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="noOfItems">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> NO. OF ITEMS </th>
+                                        <td mat-cell *matCellDef="let row">{{ row.noOfItems }}</td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="totalAmount">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> TOTAL AMOUNT </th>
+                                        <td mat-cell *matCellDef="let row"> {{row.totalAmount}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="timeElapsed">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> TIME ELAPSED</th>
+                                        <td mat-cell *matCellDef="let row">{{row.timeElapsed != null ? row.timeElapsed : '-'}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="orderType">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border">ORDER TYPE </th>
+                                        <td mat-cell *matCellDef="let row">{{row.orderType}} </td>
+                                    </ng-container>
+
+                                    <!-- <ng-container matColumnDef="assignedTo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> ASSIGNED TO </th>
+                    <td mat-cell *matCellDef="let row">
+                      {{row.assignedTo != null && row.assignedTo != "" ? row.assignedTo : '-'}} </td>
+                  </ng-container> -->
+
+                                    <ng-container matColumnDef="dateTime">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> DATE & TIME </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            {{row.dateTime | dateTime }} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="status">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> STATUS </th>
+                                        <td mat-cell *matCellDef="let row"> {{row.status}} </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedReadyForPickupOrdersColumns"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedReadyForPickupOrdersColumns;">
+                                    </tr>
+                                </table>
+                                <div *ngIf="readyForPickupLoader" class="page-loader-block full-page-loader">
+                                    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                                </div>
+                                <div class="no-records" *ngIf="readyForPickupOrdersCount == 0">
+                                    No Records Found!
+                                </div>
+                                <mat-paginator [length]="readyForPickupOrdersCount" #readyForPickupPaginator [pageSize]="10" [pageSizeOptions]="[10,20,50,100]"></mat-paginator>
+                            </div>
+                        </div>
+                    </mat-card>
+                </ng-template>
+            </mat-tab>
+
+            <!-- On the way -->
+            <mat-tab>
+                <ng-template matTabLabel>
+                    <span [matBadge]="onTheWayOrdersCount" matBadgeOverlap="false" [class.badgeWidthClass]="onTheWayOrdersCount>100" [ngClass]=" onTheWayBadgeActive ? 'primary' : 'secondary'">On the way</span>
+                </ng-template>
+                <ng-template matTabContent>
+                    <mat-card>
+                        <div class="table-wrap">
+                            <div class="table-wrap-inner">
+                                <table mat-table [dataSource]="dataOnTheWayOrderSource" matSort>
+                                    <ng-container matColumnDef="txnId">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> ORDER ID </th>
+                                        <td mat-cell *matCellDef="let row"><u (click)="viewLiveOrder(row.orderId)"><a
+
+                      class="text-blue">
+                          {{ row.txnId }} </a></u></td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="storeName">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> STORE NAME </th>
+                                        <td mat-cell *matCellDef="let row">{{row.storeName != null ? row.storeName : '-'}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="noOfItems">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> NO. OF ITEMS </th>
+                                        <td mat-cell *matCellDef="let row">{{ row.noOfItems }}</td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="totalAmount">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> TOTAL AMOUNT </th>
+                                        <td mat-cell *matCellDef="let row"> {{row.totalAmount}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="timeElapsed">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> TIME ELAPSED</th>
+                                        <td mat-cell *matCellDef="let row">{{row.timeElapsed != null ? row.timeElapsed : '-'}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="orderType">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border">ORDER TYPE </th>
+                                        <td mat-cell *matCellDef="let row">{{row.orderType}} </td>
+                                    </ng-container>
+
+                                    <!-- <ng-container matColumnDef="assignedTo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> ASSIGNED TO </th>
+                    <td mat-cell *matCellDef="let row">
+                      {{row.assignedTo != null && row.assignedTo != "" ? row.assignedTo : '-'}} </td>
+                  </ng-container> -->
+
+                                    <ng-container matColumnDef="dateTime">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> DATE & TIME </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            {{row.dateTime | dateTime }} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="status">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> STATUS </th>
+                                        <td mat-cell *matCellDef="let row"> {{row.status}} </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedOnTheWayOrdersColumns"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedOnTheWayOrdersColumns;">
+                                    </tr>
+                                </table>
+                                <div *ngIf="onTheWayOrderLoader" class="page-loader-block full-page-loader">
+                                    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                                </div>
+                                <div class="no-records" *ngIf="onTheWayOrdersCount == 0">
+                                    No Records Found!
+                                </div>
+                                <mat-paginator [length]="onTheWayOrdersCount" #onTheWayPaginator [pageSize]="10" [pageSizeOptions]="[10,20,50,100]"></mat-paginator>
+                            </div>
+                        </div>
+                    </mat-card>
+                </ng-template>
+            </mat-tab>
+
+
+
+            <!-- Delivery Delay -->
+            <mat-tab>
+                <ng-template matTabLabel>
+                    <span [matBadge]="deliveryDelayOrdersCount" matBadgeOverlap="false" [class.badgeWidthClass]="deliveryDelayOrdersCount>100" [ngClass]=" deliveryDelayBadgeActive ? 'primary' : 'secondary'">Delivery Delay</span>
+                </ng-template>
+                <ng-template matTabContent>
+                    <mat-card>
+                        <div class="table-wrap">
+                            <div class="table-wrap-inner">
+                                <table mat-table [dataSource]="dataDeliveryDelayOrderSource" matSort>
+                                    <ng-container matColumnDef="txnId">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> ORDER ID </th>
+                                        <td mat-cell *matCellDef="let row"><u (click)="viewLiveOrder(row.orderId)"><a
+                           class="text-blue">
+                          {{ row.txnId }} </a></u></td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="storeName">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> STORE NAME </th>
+                                        <td mat-cell *matCellDef="let row">{{row.storeName != null ? row.storeName : '-'}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="noOfItems">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> NO. OF ITEMS </th>
+                                        <td mat-cell *matCellDef="let row">{{ row.noOfItems }}</td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="totalAmount">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> TOTAL AMOUNT </th>
+                                        <td mat-cell *matCellDef="let row"> {{row.totalAmount}} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="timeElapsed">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> TIME ELAPSED</th>
+                                        <td mat-cell *matCellDef="let row">{{row.timeElapsed != null ? row.timeElapsed : '-'}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="orderType">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border">ORDER TYPE </th>
+                                        <td mat-cell *matCellDef="let row">{{row.orderType}} </td>
+                                    </ng-container>
+
+                                    <!-- <ng-container matColumnDef="assignedTo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> ASSIGNED TO </th>
+                    <td mat-cell *matCellDef="let row">
+                      {{row.assignedTo != null && row.assignedTo != "" ? row.assignedTo : '-'}} </td>
+                  </ng-container> -->
+
+                                    <ng-container matColumnDef="dateTime">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> DATE & TIME </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            {{row.dateTime | dateTime }} </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="status">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> STATUS </th>
+                                        <td mat-cell *matCellDef="let row"> {{row.status}} </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedDeliveryDelayOrderColumns"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedDeliveryDelayOrderColumns;">
+                                    </tr>
+                                </table>
+                                <div *ngIf="deliveryDelayOrderLoader" class="full-page-loader">
+                                    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                                </div>
+                                <div class="no-records" *ngIf="deliveryDelayOrdersCount == 0">
+                                    No Records Found!
+                                </div>
+                                <mat-paginator [length]="deliveryDelayOrdersCount" #deliveryDelayPaginator [pageSize]="10" [pageSizeOptions]="[10,20,50,100]"></mat-paginator>
+                            </div>
+                        </div>
+                    </mat-card>
+                </ng-template>
+            </mat-tab>
+
+            <mat-tab disabled class="search-btn-tab">
+                <ng-template mat-tab-label> <button class="button tertiary-btn" (click)="showFilteredTable()"> Search</button> </ng-template>
+            </mat-tab>
+
+        </mat-tab-group>
+
+
+    </div>
+</div>
+<div *ngIf="statusLoader" class="page-loader-block full-page-loader">
+    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+</div>

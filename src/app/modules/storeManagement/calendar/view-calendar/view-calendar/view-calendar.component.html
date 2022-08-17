@@ -1,0 +1,150 @@
+<div class="bredcrumb-title-wrap">
+  <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+  <div class="title flex-container">
+    <h1><span class="left-arrow"><img class="left-img"
+          src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          [routerLink]="['/search-calendar']"></span>View Calendar</h1>
+    <mat-slide-toggle class="text-right" [(ngModel)]="toggleVal" [checked]="checked" [disabled]="disabled">
+      {{toggleVal==true ? "ONLINE" : "OFFLINE"}}
+    </mat-slide-toggle>
+  </div>
+</div>
+<div class="calender-page-wrap">
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="card-title">Calendar Details</h3>
+      <mat-card class="calendar-details-card">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="view-label">
+              <label>Calendar Type</label>
+              <p>{{calendarData.calendarType=='BUSINESS_HOURS'?'Business Hours':calendarData.calendarType=='HOLIDAY'?'Holiday':'Festival Hours'}}</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="view-label">
+              <label>Country</label>
+              <p>{{calendarData.country.countryName}}</p>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="view-label">
+              <label>Brand</label>
+              <p>{{calendarData.brandName}}</p>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="view-label">
+              <label>Calendar Title</label>
+              <p>{{calendarData.calendarTitle}}</p>
+            </div>
+          </div>
+          <div class="col-md-6" *ngIf="calendarData.calendarType!='BUSINESS_HOURS'">
+            <div class="view-label">
+              <label>Start Date</label>
+              <p>{{calendarData.startDate | date:'M/d/yyyy'}}</p>
+            </div>
+          </div>
+          <div class="col-md-6" *ngIf="calendarData.calendarType!='BUSINESS_HOURS'">
+            <div class="view-label">
+              <label>End Date</label>
+              <p>{{calendarData.endDate | date:'M/d/yyyy'}}</p>
+            </div>
+          </div>
+        </div>
+        <div class="business-delivery-block" *ngIf="calendarData.calendarType!='HOLIDAY'">
+          <div class="row">
+            <div class="col-md-6">
+              <p class="group-heading">Business Hours</p>
+              <div class="timings-block">
+                <div class="daily" *ngFor="let hour of businessHours;let i=index">
+                  <div class="flex-center">
+                    <p class="days">{{hour.weekDay =='SUNDAY' ? 'SUN':hour.weekDay =='MONDAY' ? 'MON' : hour.weekDay =='TUESDAY'?'TUE' :hour.weekDay =='WEDNESDAY'?'WED':hour.weekDay =='THURSDAY'?'THU':hour.weekDay =='FRIDAY'?'FRI':hour.weekDay =='SATURDAY'?'SAT':'-' }}</p>
+                    <p class="holiday-text" *ngIf="!hour.isHoliday">Holiday</p>
+                  </div>
+                  <div class="timings-row flex" *ngFor="let time of hour.storeTimings">
+                    <div class="view-timer-block">
+                      <label>Open Time</label>
+                      <p>{{time.openTime }}</p>
+                    </div>
+                    <div class="vl">&nbsp;</div>
+                    <div class="view-timer-block">
+                      <label>Close Time</label>
+                      <p>{{time.closeTime }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <p class="group-heading">Delivery Hours</p>
+              <div class="timings-block">
+                <div class="daily" *ngFor="let hour of deliveryHours;let i=index">
+                  <div class="flex-center">
+                    <p class="days">{{hour.weekDay =='SUNDAY' ? 'SUN':hour.weekDay =='MONDAY' ? 'MON' : hour.weekDay =='TUESDAY'?'TUE' :hour.weekDay =='WEDNESDAY'?'WED':hour.weekDay =='THURSDAY'?'THU':hour.weekDay =='FRIDAY'?'FRI':hour.weekDay =='SATURDAY'?'SAT':'-' }}</p>
+                    <p class="holiday-text" *ngIf="!hour.isHoliday">Holiday</p>
+                  </div>
+                  <div class="timings-row flex" *ngFor="let time of hour.storeTimings">
+                    <div class="view-timer-block">
+                      <label>Open Time</label>
+                      <p>{{time.openTime }}</p>
+                    </div>
+                    <div class="vl">&nbsp;</div>
+                    <div class="view-timer-block">
+                      <label>Close Time</label>
+                      <p>{{time.closeTime }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+    <div class="col-md-6">
+      <h3 class="card-title">Store Access</h3>
+      <mat-card class="store-access-card search-panel-block">
+        <div class="table-top-section flex-center">
+          <p>All {{calendarData.selectedStoreCount}} Stores</p>
+        </div>
+        <div class="form-wrap">
+          <div class="table-wrap">
+            <div class="table-wrap-inner">
+              <table mat-table [dataSource]="dataSource" matSort>
+                <ng-container matColumnDef="storeId">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> STORE ID </th>
+                  <td mat-cell *matCellDef="let row">{{row.storeId }}</td>
+                </ng-container>
+                <ng-container matColumnDef="storeName">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> STORE NAME </th>
+                  <td mat-cell *matCellDef="let row">{{ row.storeName }}</td>
+                </ng-container>
+                <ng-container matColumnDef="address">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> ADDRESS </th>
+                  <td mat-cell *matCellDef="let row">{{ row.storeAddress }}</td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                </tr>
+              </table>
+            </div>
+            <div>
+                <mat-paginator #paginator [length]="totalLength"
+                [pageSize]="limit" 
+                [pageSizeOptions]="pageLimit"                 
+                (page)="changePage($event)">
+              </mat-paginator>
+            </div>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+  <div class="btm-button-wrap">
+    <button type="button" class="button secondary-btn" [routerLink]="['/search-calendar']">CANCEL</button>
+    <button type="button" (click)="MoveToEdit(id)" class="button primary-btn">EDIT</button>
+    <!-- <button type="submit" class="button primary-btn" [routerLink]="['/edit-calendar/id']">EDIT</button> -->
+  </div>
+</div>

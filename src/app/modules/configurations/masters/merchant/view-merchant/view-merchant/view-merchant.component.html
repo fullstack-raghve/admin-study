@@ -1,0 +1,102 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title">
+        <h1>Masters</h1>
+    </div>
+</div>
+<div class="page-wrap-masters">
+    <div class="row master-cards">
+        <div class="col-md-3 master-list master-left">
+            <mat-card>
+                <ul class="master_listing">
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-customer-type']">Customer Type</a></li>
+          <li  class="master-list-selected"><a href="javascript:void(0)" [routerLink]="['/search-merchant']">Merchant</a></li> -->
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-brand']">Brand</a></li> -->
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-country']">Countries</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-cities']">Cities</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-malls']">Malls</a></li>
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-course']">Course</a></li>
+          <li><a href="javascript:void(0)" [routerLink]="['/search-cuisine']">Cuisine</a></li> -->
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-currency']">Currency</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-currency-conversion']">Currency Conversion</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-brand-category']">Brand Category</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-language']">Language</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-faq-category']">FAQ Category</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-about-us-category']">About Us Category</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-feedback']">Feedback</a></li>
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-partner']">Partner</a></li> -->
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-enquiry-type']">Enquiry Type</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/add-taxation']">Taxation</a></li>
+
+                </ul>
+            </mat-card>
+        </div>
+        <div class="col-md-9 master-right">
+            <mat-card class="master-content">
+                <div class="country-card">
+                    <form id="viewBrandsForm">
+                        <div class="subtitle flex-center mb-25px">
+                            <h3><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/left_arrow.png"
+                    alt="leftArrow" [routerLink]="['/search-merchant']"></span>View Merchant</h3>
+                            <div class="slider">
+                                <mat-slide-toggle class="mat-slide-toggle" [checked]="checked" [disabled]='true'>
+                                </mat-slide-toggle>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="master-fieldSet">
+                                    <fieldset class="language-fieldset">
+                                        <legend class="fieldset-heading">Merchant Name *</legend>
+                                        <div col-md-3>
+                                            <!-- <div class="view-label" *ngFor="let c of cityData.cityLocales; let i=index">
+                                            <div class="{{alignCss[i]}}">
+                                                <label>{{c.languageName}}</label>
+                                                <p>{{c.cityName}}</p>
+                                            </div>
+                                        </div> -->
+                                            <div class="view-label">
+                                                <label>English</label>
+                                                <p>Birthday Template</p>
+                                            </div>
+                                            <div class="view-label">
+                                                <div class="arabic-alignment">
+                                                    <label>Arabic</label>
+                                                    <p>Birthday Template</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="view-label">
+                                            <label>Merchant Code *</label>
+                                            <p>IND</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="view-label">
+                                            <label>Merchant Image*</label>
+                                        </div>
+                                        <div class="avatar-zone">
+                                            <img src="assets/images/store-office.jpg" style="object-fit: fill">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="btm-button-wrap">
+                            <button type="button" class="site_btn gray_btn" [routerLink]="['/search-merchant']">CANCEL</button>
+                            <button type="button" class="button primary-btn" [routerLink]="['/edit-merchant']">EDIT</button>
+                        </div>
+                    </form>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+</div>

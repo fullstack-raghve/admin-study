@@ -1,0 +1,33 @@
+.search-panel-block .form-wrap{
+  top: 0px;
+}
+.search-panel-block .form-wrap .button-wrap .button{
+  height: 31px;
+  line-height: 10px;
+  font-size: 12px;
+}
+/deep/ .mat-datepicker-content-touch{
+  margin: unset;
+}
+/deep/ .mat-dialog-container{
+  width: 100%;
+}
+.datepickericon_flow{
+  position: absolute;
+  right: 0px;
+  top: 0px;
+}
+.highlight{
+  background: #42A948; /* green */
+}
+.width-2{
+  width: 2px;
+}
+.timing-block, .date-block .p {
+  word-break: initial;
+}
+.timing-block{
+  p{
+    margin-bottom: 1em;
+  }
+}

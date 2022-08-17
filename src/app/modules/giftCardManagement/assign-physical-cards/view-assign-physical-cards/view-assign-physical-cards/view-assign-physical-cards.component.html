@@ -1,0 +1,150 @@
+<div class="bredcrumb-title-wrap">
+  <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+  <div class="title flex-container template-title">
+    <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          [routerLink]="['/search-assign-physical-cards']"></span>Assign Cards</h1>
+  </div>
+</div>
+<div *ngIf="loadingResponse" class="select-store-block">
+    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+  </div>
+<div *ngIf="!loadingResponse" class="page-wrap">
+  <div class="row">
+    <div class="col-md-3 view-label" style="background:white;margin-bottom: 1px;">
+      <mat-card>
+        <label> Assignment Id </label>
+        <p>{{ViewJson?.assignmentId}}</p>
+
+        <label>Assignment Name</label>
+        <p>{{ViewJson?.assignmentName}}</p>
+
+        <label>Card Type</label>
+        <p>{{ViewJson?.cardType}}</p>
+
+        <label>Date</label>
+        <!-- <p>{{ViewJson?.Date}}</p> -->
+        <p>{{ViewJson?.Date | date:'dd/MM/yyyy'}}  {{ViewJson?.Date | date:'HH:mm:ss'}}</p>
+      </mat-card>
+    </div>
+
+    <div class="col-md-9">
+      <mat-card  style="padding-bottom: 1px;">
+        <div  class="row" style="display: flex; background:white;">
+          <div class="col-md-4 view-label">
+            <label>Starting Card ID</label>
+            <p>{{ViewJson?.startingCardId}}</p>
+          </div>
+
+          <div class="col-md-4 view-label">
+            <label>Ending Card ID</label>
+            <p>{{ViewJson?.endingCardId}}</p>
+          </div>
+
+          <div class="col-md-4 view-label">
+            <label>Quantity</label>
+            <p>{{ViewJson?.QUANTITY}}</p>
+          </div>
+        </div>
+          <div class="row" style="display: flex; background:white;">
+          <table class="col-md-12">
+            <thead>
+              <tr >
+                <th >Status</th>
+                <th >Selected Quantity</th>
+                <th >NewStatus</th>
+                <th >Comment</th>
+  
+               
+              </tr>
+            </thead>
+            <tbody  >
+                <tr>
+                  <td>
+                    <div class="table-cell">
+                      <p>
+                        Available-{{ViewJson?.selectedQuantity}}
+                      </p>
+
+                    </div>
+                  </td>
+                  <td (click)="addGiftCard()">
+                      <div  class="table-cell">
+                          <p style="color: rgb(8, 151, 247);">
+                            {{PopupData.length}}
+                            </p>
+                        
+                      </div>
+                    </td>
+                    <td >
+                        <div  class="table-cell">
+                            <p>
+                              {{ViewJson?.newStatus}}
+                              </p>
+                         
+                        </div>
+                      </td>
+                      <td>
+                          <div class="table-cell">
+                            <p>{{ViewJson?.COMMENT}}</p>
+                          </div>
+                        </td>
+                        </tr>
+                        </tbody>
+                        </table>
+          </div>
+
+      </mat-card>
+      <br>
+    <mat-card>
+        <div class="row ">
+          <div class="col-md-12">
+            <h6>Assign to</h6>
+          </div>
+          <div *ngIf="ViewJson['assignTo'] !='CORPORATE'" class="col-md-4 view-label">
+            <label>Store Name</label> 
+            <p>{{ViewJson?.storeName}}</p>
+          </div>
+          <div  *ngIf="ViewJson['assignTo'] !='CORPORATE'" class="col-md-4 view-label">
+            <label>Store ID</label>
+            <p>{{ViewJson?.storeId}}</p>
+          </div>
+          <div  *ngIf="ViewJson['assignTo'] !='CORPORATE'" class="col-md-4 view-label">
+            <label>Gift card</label>
+            <div *ngFor="let card of giftCardList">
+              <p>{{card.giftcardName}},</p>
+            </div>
+           
+          </div>
+          <div *ngIf="ViewJson['assignTo']=='CORPORATE'" class="col-md-4 view-label">
+            <label>Corporate Name</label> 
+            <p>{{ViewJson?.storeName}}</p>
+          </div>
+          <div *ngIf="ViewJson['assignTo']=='CORPORATE'" class="col-md-4 view-label">
+            <label>Corporate ID</label>
+            <p>{{ViewJson?.storeId}}</p>
+          </div>
+        
+
+          <div class="col-md-12">
+            <h6>Handed Over to</h6>
+          </div>
+          <div class="col-md-3 view-label">
+            <label>Name</label>
+            <p>{{ViewJson?.contactName}}</p>
+          </div>
+
+          <div class="col-md-3 view-label">
+            <label>Email</label>
+            <p>{{ViewJson?.contactEmail}}</p>
+          </div>
+
+          <div class="col-md-3 view-label">
+            <label>Mobile Number</label>
+            <p>{{ViewJson?.contactNumber}}</p>
+          </div>
+
+        </div>
+      </mat-card>
+    </div>
+  </div>
+</div>

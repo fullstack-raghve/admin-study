@@ -1,0 +1,105 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title">
+        <h1>Masters</h1>
+    </div>
+</div>
+<div class="page-wrap-masters">
+    <div class="row master-cards">
+        <div class="col-md-3 master-list master-left">
+            <mat-card>
+                <ul class="master_listing">
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-country']">Countries</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-cities']">Cities</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-malls']">Malls</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-course']">Course</a></li>
+                    <li class="master-list-selected"><a href="javascript:void(0)" [routerLink]="['/search-brands']">Brands</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-currency']">Currency</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-currency-conversion']">Currency Conversion</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-brand-category']">Brand Category</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-language']">Language</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-faq-category']">FAQ Category</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-about-us-category']">About Us Category</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-feedback']">Feedback</a></li>
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-partner']">Partner</a></li> -->
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-enquiry-type']">Enquiry Type</a></li>
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/add-taxation']">Taxation</a></li> -->
+                    <li><a href="javascript:void(0)" [routerLink]="['/add-product-tag']">Product Tag</a></li>
+
+
+                </ul>
+            </mat-card>
+        </div>
+        <div class="col-md-9 master-right" *ngIf="brandData!=undefined">
+            <mat-card class="master-content">
+                <div class="country-card">
+                    <form id="viewBrandsForm">
+                        <div class="subtitle flex-center mb-25px">
+                            <h3><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/left_arrow.png" alt="leftArrow" [routerLink]="['/search-brands']"></span>View Brands</h3>
+                            <div class="slider">
+                                <mat-slide-toggle class="mat-slide-toggle" [checked]="isChecked" [disabled]="true">{{brandData?.status}}</mat-slide-toggle>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="master-fieldSet">
+                                    <fieldset class="language-fieldset">
+                                        <legend class="fieldset-heading">Brand Name</legend>
+                                        <div class="view-label" *ngFor="let brand of brandData.brandLocales">
+                                            <label>{{brand?.languageName}}</label>
+                                            <p>{{brand?.brandName}}</p>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row pt-25px">
+                                    <div class="col-md-6">
+                                        <div class="view-label">
+                                            <label>Brand Code</label>
+                                            <p>{{brandData.brandCode}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="view-label">
+                                            <label>Brand Category</label>
+                                            <p class="mb-0px" *ngFor="let cat of brandData.brandCategories">{{cat?.categoryTitle}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="img-block">
+                                            <div class="avatar-zone">
+                                                <label class="upload-text" *ngIf="brandImage == ''" [class.placeholder-img]="imgUpload">Brand Image</label>
+                                                <img class="upload-img" *ngIf="brandImage != ''" [src]="filePathUrl+brandImage" [class.uploaded-img]="imgUpload" width="150px">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="view-label">
+                                            <label>Price For Two</label>
+                                            <p>{{brandData?.priceForTwo}}</p>
+                                        </div>
+                                        <div class="view-label">
+                                            <label>Cuisine</label>
+                                            <p class="cuisine-list">
+                                                <mat-chip-list *ngFor="let cuisine of brandData.cuisines">
+                                                    <mat-chip>{{cuisine}}</mat-chip>
+                                                </mat-chip-list>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="btm-button-wrap">
+                            <button type="button" class="site_btn gray_btn" [routerLink]="['/search-brands']">CANCEL</button>
+                            <button type="button" class="button primary-btn" [routerLink]="['/edit-brands/'+brandId]">EDIT</button>
+                        </div>
+                    </form>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+</div>

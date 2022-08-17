@@ -1,0 +1,99 @@
+<div class="page-wrap">
+    <div class="bredcrumb-title-wrap">
+      <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+      <div class="title flex-container">
+        <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow" [routerLink]="['/search-role']"></span>Edit Roles & Permissions</h1>
+        <mat-slide-toggle [(ngModel)]="toggleVal" class="example-margin" [checked]="checked" [disabled]="disabled">
+          {{toggleVal==true ? "ONLINE" : "OFFLINE"}}
+        </mat-slide-toggle>
+      </div>
+    </div>
+    <div class="form-wrap">
+      <div class="row mb-40px">
+        <div class="col-md-4">
+          <h3 class="card-title">Basic Details</h3>
+          <div class="card">
+            <div class="form-warpper">
+              <form [formGroup]="editRoleFormGroup">
+                <div class="row">
+                  <div class="col-md-12">
+                    <mat-form-field>
+                      <input matInput type="text" placeholder="Role" maxlength="50" minlength="4" required formControlName="role"/>
+                      <mat-error *ngIf="editRoleFormGroup.get('role').hasError('required')">Please enter value</mat-error>
+                      <mat-error *ngIf="editRoleFormGroup.get('role').hasError('minlength')">Minimum 4 characters required</mat-error>
+                    </mat-form-field>
+                    <!--
+                      <div class="error email_error" *ngIf="addUserFormGroup.controls.role.invalid">Field is invalid</div>
+                    -->
+                  </div>
+                  <div class="col-md-12">
+                    <mat-form-field>
+                      <textarea matInput type="text" placeholder="Role Description" formControlName="roleDescription" maxlength="250"></textarea>
+                      <mat-error *ngIf="editRoleFormGroup.get('roleDescription').hasError('minlength')">Minimum 4 characters required</mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <h3 class="card-title">Role Permissions</h3>
+          <div class="card">
+            <div class="permission-tab-wrapper custom-scroll" malihu-scrollbar [scrollbarOptions]="scrollbarOptions">
+              <div class="row heading">
+                <div class="col-md-3">
+                  <h5 class="title">
+                    Module
+                  </h5>
+                </div>
+                <div class="col-md-9 p-0px">
+                  <h5 class="title">
+                    Permission
+                  </h5>
+                </div>
+              </div>
+              <div class="row" *ngFor='let permission of acessList; let i = index;'>
+                <div class="col-md-3">
+                  <div class="module-title">
+                    {{permission.displayName}}
+                  </div>
+                </div>
+                <div class="col-md-9 p-0px">
+                  <div class="module-permission" *ngFor="let moduleName of permission.children; let j= index;" >
+                      <ng-container *ngIf="moduleName.children.length!=0 ; else secondLevel">
+                    <div class="permission-title">
+                      {{moduleName.displayName}}
+                      <!-- <mat-checkbox></mat-checkbox> -->
+                    </div>
+                    <ul>
+                      <li *ngFor='let access of moduleName.children; let x = index;'>
+                        <mat-checkbox [name]="'thirdLevel'+x"
+                        [(ngModel)]="access.checked" >
+                         {{access.displayName}}
+                        </mat-checkbox>
+                      </li>
+                    </ul>
+                  </ng-container>
+                  <ng-template #secondLevel>
+                      <ul>
+                          <li >
+                            <div class="module-title">
+                                <mat-checkbox [name]="'secondLevel'+j" [(ngModel)]="moduleName.checked"> {{moduleName.displayName}}</mat-checkbox>
+                            </div>
+                          </li>
+                        </ul>
+                  </ng-template>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+        <div class="btm-button-wrap">
+            <button class='button secondary-btn' [routerLink]="['/search-role']">CANCEL</button>
+            <button class="button primary-btn" (click)='addRole(acessList , editRoleFormGroup.value)'>UPDATE</button>
+        </div>
+    </div>
+  </div>

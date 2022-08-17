@@ -1,0 +1,549 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container">
+        <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+           (click)="goToPreviousPage(txnDetails?.customerOid)"></span>Transaction Details</h1>
+        <div class="slider">
+            <mat-slide-toggle [(ngModel)]="toggleVal" class="example-margin text-right">
+                {{toggleVal==true ? "ONLINE" : "OFFLINE"}}
+            </mat-slide-toggle>
+        </div>
+    </div>
+</div>
+<div *ngIf="viewTxnsData" class="select-store-block">
+    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+</div>
+<div class="page-wrap" *ngIf="viewTxnDataView">
+    <form #viewTransactionForm="ngForm" [formGroup]="viewFormGroup">
+        <mat-card class="mb-20px transaction-details-section">
+            <div class="row">
+
+                <div class="col-md-2">
+                    <div class="view-details">
+                        <label class="item-title">Transaction ID</label>
+                        <p class="transaction-id">{{txnDetails?.transactionId}}</p>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="view-details">
+                        <label>Order Status</label>
+                        <p>{{txnDetails?.txnStatus}}</p>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="view-details">
+                        <label>Order Date/Time</label>
+                        <p>{{txnDetails?.txnDate}}</p>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="view-details">
+                        <label>Source Of Transaction</label>
+                        <p>{{txnDetails?.omniChannel}}</p>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="view-details">
+                        <label>Coupon</label>
+                        <p>{{txnDetails?.couponCode}}</p>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div *ngIf="txnDetails?.feedbackRating != null && txnDetails?.feedbackRating != ''">
+                        <div class="star-section">
+                            <div class="stars flex" *ngIf="txnDetails?.feedbackRating == '5'">
+                                <span class="star_icon"></span>
+                                <span class="star_icon"></span>
+                                <span class="star_icon"></span>
+                                <span class="star_icon"></span>
+                                <span class="star_icon"></span>
+                            </div>
+                            <div class="stars flex" *ngIf="txnDetails?.feedbackRating == '4'">
+                                <span class="star_icon"></span>
+                                <span class="star_icon"></span>
+                                <span class="star_icon"></span>
+                                <span class="star_icon"></span>
+                            </div>
+                            <div class="stars flex" *ngIf="txnDetails?.feedbackRating == '3'">
+                                <span class="star_icon"></span>
+                                <span class="star_icon"></span>
+                                <span class="star_icon"></span>
+                            </div>
+                            <div class="stars flex" *ngIf="txnDetails?.feedbackRating == '2'">
+                                <span class="star_icon"></span>
+                                <span class="star_icon"></span>
+                            </div>
+                            <div class="stars flex" *ngIf="txnDetails?.feedbackRating == '1'">
+                                <span class="star_icon"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-card>
+        <div class="view-transaction-details">
+            <div class="row">
+                <div class="col-md-4">
+                    <mat-card>
+                        <label class="section-heading">Location</label>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="view-mode">
+                                    <label class="item-title">Store ID</label>
+                                    <p>{{txnDetails?.store?.storeId}}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="view-mode">
+                                    <label class="item-title">Mall Name</label>
+                                    <p>{{txnDetails?.mall?.mallName}}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="view-mode">
+                                    <label class="item-title">Store Name</label>
+                                    <p>{{txnDetails?.store?.storeName}}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="view-mode">
+                                    <label class="item-title">Coupon ID</label>
+                                    <p>{{txnDetails?.couponCode}}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="view-mode">
+                                    <label class="item-title">Contact No. Of Store</label>
+                                    <p>8975768979</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="view-mode">
+                                    <label class="item-title">Transaction Type</label>
+                                    <p>{{txnDetails?.txnType}}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="view-mode">
+                                    <label class="item-title">Brand Name</label>
+                                    <p>{{txnDetails?.brand?.brandName}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-card>
+                </div>
+                <div class="col-md-4">
+                    <mat-card>
+                        <label class="section-heading">Summary</label>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="view-mode">
+                                    <label class="item-title">Slip Number</label>
+                                    <p>{{txnDetails?.transactionId}}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="view-mode">
+                                    <label class="item-title">Transaction Type</label>
+                                    <p>{{txnDetails?.txnType}}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="view-mode">
+                                    <label class="item-title">Discount Amount</label>
+                                    <p>{{txnDetails?.totalDiscount}} {{txnDetails?.currencyCode}}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="view-mode">
+                                    <label class="item-title">Total Amount</label>
+                                    <p>{{txnDetails?.billAmount}} {{txnDetails?.currencyCode}}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="view-mode">
+                                    <label class="item-title">Payment Method</label>
+                                    <div class="view-label" *ngFor="let tender of txnDetails.tenderDetails; let i=index">
+                                        <p>{{tender.tenderCode}}:{{tender.tenderType}}:{{tender.tenderValue}} {{txnDetails.currencyCode}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-card>
+                </div>
+                <div class="col-md-4">
+                    <div class="points-section">
+                        <div class="points">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <mat-card class="add-card">
+                                        <div class="points-accrued">
+                                            <h3 class="card-title-points">Points / Stamps Accrued</h3>
+                                            <div class="flex-container">
+                                                <div class="ca-points">
+                                                    <label>Base Points</label>
+                                                    <p class="ca-points-availed">{{txnDetails?.baseEarnPoints}}
+                                                    </p>
+                                                </div>
+
+                                                <div class="brand-points">
+                                                    <label>Brand Points</label>
+                                                    <p class="brand-points-availed">
+                                                        <span>{{txnDetails?.brandEarnPoints}}</span>
+                                                        <!-- <span *ngIf="txnDetails?.businessType=='FNB'">
+                              <span *ngIf="txnDetails?.earnedStamps;">
+                                <span
+                                  *ngIf="txnDetails?.earnedStamps && txnDetails?.earnedStamps.Ice_Cream && txnDetails?.earnedStamps.Ice_Cream > 0">{{txnDetails?.earnedStamps.Ice_Cream}}
+                                  Ice Cream</span>
+                                                        <span *ngIf="txnDetails?.earnedStamps && txnDetails?.earnedStamps.Ice_Cream && txnDetails?.earnedStamps.Ice_Cream > 0 && txnDetails?.earnedStamps.Ice_Cream_Cake && txnDetails?.earnedStamps.Ice_Cream_Cake > 0">,
+                                </span>
+                                                        <span *ngIf="txnDetails?.earnedStamps && txnDetails?.earnedStamps.Ice_Cream_Cake && txnDetails?.earnedStamps.Ice_Cream_Cake > 0">{{txnDetails?.earnedStamps.Ice_Cream_Cake}}
+                                  Ice Cream Cake</span>
+                                                        <span *ngIf="txnDetails?.earnedStamps && txnDetails?.earnedStamps.Beverages && txnDetails?.earnedStamps.Beverages > 0">{{txnDetails?.earnedStamps.Beverages}}
+                                  Beverages</span>
+                                                        <span *ngIf="txnDetails?.earnedStamps && txnDetails?.earnedStamps.Beverages && txnDetails?.earnedStamps.Beverages > 0 && txnDetails?.earnedStamps.Sandwich && txnDetails?.earnedStamps.Sandwich > 0">,
+                                </span>
+                                                        <span *ngIf="txnDetails?.earnedStamps && txnDetails?.earnedStamps.Sandwich && txnDetails?.earnedStamps.Sandwich > 0">{{txnDetails?.earnedStamps.Sandwich}}
+                                  Sandwich</span>
+                                                        </span>
+                                                        <ng-earnedStampsEmpty *ngIf="!txnDetails?.earnedStamps;"> <span class="points-val">0</span> </ng-earnedStampsEmpty>
+                                                        </span> -->
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </mat-card>
+                                </div>
+                                <div class="col-md-12">
+                                    <mat-card class="add-card">
+                                        <div class="points-redeemed">
+                                            <h3 class="card-title-points">Points Redeemed</h3>
+                                            <div class="flex-container">
+                                                <div class="ca-points">
+                                                    <label>Base Points</label>
+                                                    <p class="ca-points-availed">{{txnDetails?.baseBurnPoints}}
+                                                    </p>
+                                                </div>
+
+                                                <div class="brand-points">
+                                                    <!-- <label>{{txnDetails?.businessType=='FNB'?'Free Products':'Brand Points'}}</label> -->
+                                                    <label>
+                                                        Brand Points
+                                                    </label>
+                                                    <p class="brand-points-availed">
+                                                        <span>{{txnDetails?.brandBurnPoints}}</span>
+                                                        <!-- <span *ngIf="txnDetails?.businessType=='FNB'">
+                              <span *ngIf="txnDetails?.redeemedProducts">
+                                <span
+                                  *ngIf="txnDetails?.redeemedProducts && txnDetails?.redeemedProducts.Ice_Cream && txnDetails?.redeemedProducts.Ice_Cream > 0 ">
+                                  {{txnDetails?.redeemedProducts.Ice_Cream}} Ice Cream</span>
+                                                        <span *ngIf="txnDetails?.redeemedProducts && txnDetails?.redeemedProducts.Beverages && txnDetails?.redeemedProducts.Beverages > 0 ">
+                                  {{txnDetails?.redeemedProducts.Beverages}} Beverages</span>
+                                                        <span *ngIf="txnDetails?.redeemedProducts && txnDetails?.redeemedProducts.Beverages && txnDetails?.redeemedProducts.Sandwich && txnDetails?.redeemedProducts.Beverages > 0 && txnDetails?.redeemedProducts.Sandwich > 0">,
+                                </span>
+                                                        <span *ngIf="txnDetails?.redeemedProducts && txnDetails?.redeemedProducts.Sandwich && txnDetails?.redeemedProducts.Sandwich > 0">
+                                  {{txnDetails?.redeemedProducts.Sandwich}} Sandwich</span>
+                                                        <span *ngIf="txnDetails?.redeemedProducts && txnDetails?.redeemedProducts.Beverages && txnDetails?.redeemedProducts.Sandwich && txnDetails?.redeemedProducts.Beverages > 0 && txnDetails?.redeemedProducts.Sandwich > 0">,
+                                </span>
+                                                        </span>
+                                                        <ng-redeemedPorductsEmpty *ngIf="!txnDetails?.redeemedProducts"> <span class="points-val">0</span> </ng-redeemedPorductsEmpty>
+                                                        </span> -->
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </mat-card>
+                                </div>
+                                <div class="col-md-12">
+                                    <mat-card>
+                                        <div class="points-reversed">
+                                            <!-- <h3 class="card-title-points">
+                                                {{txnDetails?.businessType=='FNB'?'Free Products Earned':'Points Reversed'}}</h3> -->
+                                            <h3 class="card-title-points">Points Reversed</h3>
+                                            <div class="flex-container">
+                                                <div class="ca-points">
+                                                    <label>Base Points</label>
+                                                    <p class="ca-points-availed">
+                                                        {{txnDetails?.baseReversedPoints}}
+                                                    </p>
+                                                </div>
+
+                                                <div class="brand-points">
+                                                    <label>Brand Points</label>
+                                                    <p class="brand-points-availed">
+                                                        {{txnDetails?.brandReversedPoints}}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <!-- <div class="flex-container" *ngIf="txnDetails?.businessType=='FNB'">
+                                                <span *ngIf="txnDetails?.freeProducts">
+                          <span class="points-val"
+                            *ngIf="txnDetails?.freeProducts && txnDetails?.freeProducts.Ice_Cream && txnDetails?.freeProducts.Ice_Cream > 0">{{txnDetails?.freeProducts.Ice_Cream}}
+                            Ice Cream </span>
+                                                <span class="points-val" *ngIf="txnDetails?.freeProducts && txnDetails?.freeProducts.Beverages && txnDetails?.freeProducts.Beverages > 0 ">
+                            Beverages {{txnDetails?.freeProducts.Beverages}} </span>
+                                                <span class="points-val" *ngIf="txnDetails?.freeProducts && txnDetails?.freeProducts.Beverages && txnDetails?.freeProducts.Sandwich  && txnDetails?.freeProducts.Beverages > 0 && txnDetails?.freeProducts.Sandwich > 0">,
+                          </span>
+                                                <span class="points-val" *ngIf="txnDetails?.freeProducts && txnDetails?.freeProducts.Sandwich && txnDetails?.freeProducts.Sandwich > 0 ">
+                            Sandwich {{txnDetails?.freeProducts.Sandwich}} </span>
+                                                </span>
+                                                <ng-freeProductsEmpty *ngIf="!txnDetails?.freeProducts"> <span class="points-val">0</span>
+                                                </ng-freeProductsEmpty>
+                                            </div> -->
+                                        </div>
+                                    </mat-card>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="item-details pt-30px">
+            <mat-card>
+                <label class="section-heading">Item Details</label>
+                <table cellspacing="10" cellpadding="10">
+                    <tr>
+                        <th>Product Description (Barcode Info)</th>
+                        <th>Qty</th>
+                        <th>Amount</th>
+                        <th>Tax</th>
+                        <th>Discount / Coupon Code</th>
+                        <th>Total Amount(With Taxes)</th>
+                        <th>Delivery Charge</th>
+                    </tr>
+                    <tr *ngFor="let lineItem of lineItems; let itemIndex=index">
+                        <td>
+                            <p>
+                                Product Name
+                            </p>
+                            <p class="bold">
+                                {{lineItem?.productName}}
+                            </p>
+                            <p>
+                                Product Specification
+                            </p>
+                            <p class="bold">
+                                {{lineItem?.specification}}
+                            </p>
+                            <p>
+                                Unit Price
+                            </p>
+                            <p class="bold">
+                                {{lineItem?.netPrice}} {{txnDetails?.currencyCode}}
+                            </p>
+                        </td>
+                        <td class="bold">{{lineItem?.quantity}}</td>
+                        <td class="bold">
+                            {{lineItem?.netPrice}} {{txnDetails?.currencyCode}}</td>
+                        <td class="bold">{{lineItem?.tax}} {{txnDetails?.currencyCode}}</td>
+                        <td class="bold">{{lineItem?.discount}} {{txnDetails?.currencyCode}}</td>
+                        <td class="bold">{{lineItem?.totalPrice}} {{txnDetails?.currencyCode}}</td>
+                        <td class="bold" *ngIf="itemIndex == 0" [attr.rowspan]="lineItems.length">{{txnDetails?.totalDeliveryCharge}} {{txnDetails?.currencyCode}}</td>
+                    </tr>
+                </table>
+            </mat-card>
+        </div>
+    </form>
+
+    <div *ngIf="feedbackEnq" class="feedbackEnq">
+        <mat-accordion>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-card class="mb-20px transaction-details-section">
+                        <div class="row enq-row" *ngFor="let enq of enquiriesItems;let itemIndex=index">
+                            <div class="col-md-8">
+                                <div class="row">
+
+                                    <div class="col-md-4">
+                                        <div class="view-details enq-view-details">
+                                            <label class="item-title">Enquiry Reference ID</label>
+                                            <p class="transaction-id">{{enq.enquiryId}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4" *ngIf="feedbackData!='' || feedbackData!= undefined">
+                                        <div class="view-details enq-view-details">
+                                            <label>Status</label>
+                                            <p class="transaction-id">{{feedbackData}}</p>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </mat-card>
+                </mat-expansion-panel-header>
+
+                <div class="representative-response">
+                    <div class="rep-res-block">
+                        <div class="rep-res-flex">
+                            <h3 class="card-title">Representative Response</h3>
+                            <div class="change-status-val">
+                                <form class="filter-wrap txn-form" [formGroup]="viewEnquiryStatusFormGroup" *ngIf="buildFlag" (submit)="addResponse(viewEnquiryStatusFormGroup.value)">
+                                    <div class="notification-status">
+                                        <mat-form-field>
+                                            <mat-select placeholder="Change Status" formControlName="notificationStatus" (selectionChange)="onSelection($event.value)">
+                                                <mat-option value="CLOSE">Close</mat-option>
+                                                <mat-option value="INPROGRESS" *ngIf="feedbackData !=='OPEN'">In Progress</mat-option>
+                                                <mat-option value="OPEN" *ngIf="feedbackData !=='REOPEN' && feedbackData !=='INPROGRESS' && feedbackData !=='CLOSE'">Open</mat-option>
+                                                <mat-option value="REOPEN" *ngIf="feedbackData !=='OPEN'  && feedbackData !=='INPROGRESS'">Reopened</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <mat-tab-group animationDuration="0ms" class="tabs-align" [selectedIndex]="seletedTabIndex" (selectedTabChange)="tabChanged($event)">
+                        <mat-tab>
+                            <ng-template mat-tab-label>
+                                <span class="enq-label">Internal Comments</span>
+                            </ng-template>
+                            <ng-template matTabContent>
+                                <mat-card class="representative-card response-card customer-reply-card">
+                                    <form class="filter-wrap" [formGroup]="createEnquiryResponse" (submit)="createResponse(createEnquiryResponse.value)" #enquiryResponseForm="ngForm">
+                                        <div>
+                                            <mat-radio-group name="Language Select" formControlName="languageOptions" (change)="changeValidation($event.value)">
+                                                <mat-radio-button *ngFor="let languageVal of languageVals" [checked]="languageVal.checked" value="{{languageVal.value}}">{{languageVal.label}}
+                                                </mat-radio-button>
+                                            </mat-radio-group>
+                                        </div>
+                                        <div class="row" formArrayName="enquiryResponses">
+                                            <div class="col-md-12 customer-reply-col" *ngFor="let locale of createEnquiryResponse['controls']['enquiryResponses']['controls'];let i = index;" [formGroupName]="i">
+                                                <mat-card class="faq-card mb-20px" [class.direction-right]="languages[i].languageCode=='AR'">
+                                                    <div class="lang-field">
+                                                        <p>{{languages[i].languageCode}}</p>
+                                                    </div>
+                                                    <div class="row card-mb">
+                                                        <div class="col-md-12 text-fields">
+                                                            <div class="field-container">
+                                                                <mat-form-field class="{{alignCss[i]}}">
+                                                                    <textarea matInput #responseValue placeholder="Write your response" maxlength="500" formControlName="representativeResponse" (keydown)="removeValidation()"></textarea>
+                                                                    <mat-error *ngIf="locale.get('representativeResponse').hasError('pattern')">This special character(s) is not allowed</mat-error>
+                                                                </mat-form-field>
+                                                                <p style="color:red; font-size: 10px;" *ngIf="responseRequired">Please Enter value</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </mat-card>
+                                            </div>
+                                        </div>
+                                        <div class="button-wrap">
+                                            <button type="submit" class="button primary-btn">ADD</button>
+                                        </div>
+                                    </form>
+                                    <div class="previous-response" [class.selectTabInternal]="seletedTabIndex == 0">
+                                        <h3 class="card-title">Previous Response</h3>
+                                        <mat-card class="previous-card" *ngFor="let response of responseData;let i = index;" [class.internalreplyCard]="response.postTo == '' || response.postTo == null">
+                                            <div class="row">
+                                                <div class="col-md-12 mb-20px" *ngFor="let locale of response.enquiryResponseLocales;let j = index;">
+                                                    <mat-card class="faq-card" [class.direction-right]="response.enquiryResponseLocales[j].langauageName=='Arabic'">
+                                                        <div class="lang-field">
+                                                            <p>{{response.enquiryResponseLocales[j].langauageName}}</p>
+                                                        </div>
+
+                                                        <div class="text-right preview">
+                                                            <p>{{response.createdBy}}</p>
+                                                            <label>{{response.createdTime}}</label>
+                                                        </div>
+                                                        <div class="row card-mb">
+                                                            <div class="col-md-12 text-fields">
+                                                                <div class="view-mode " [ngClass]="alignCssResponse[j]">
+                                                                    <label>Response</label>
+                                                                    <p>{{response.enquiryResponseLocales[j].response}}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </mat-card>
+                                                </div>
+                                            </div>
+                                        </mat-card>
+                                    </div>
+                                </mat-card>
+                            </ng-template>
+                        </mat-tab>
+                        <mat-tab>
+                            <ng-template mat-tab-label>
+                                <span class="enq-label">Customer Reply</span>
+                            </ng-template>
+                            <ng-template matTabContent>
+                                <mat-card class="representative-card response-card customer-reply-card">
+                                    <form class="filter-wrap" [formGroup]="createEnquiryResponsePostOptions" (submit)="createResponsePost(createEnquiryResponsePostOptions.value)" #enquiryResponsePostForm="ngForm">
+                                        <div>
+                                            <mat-radio-group name="Language Select" formControlName="languageOptionsPost" (change)="changeValidationPost($event.value)">
+                                                <mat-radio-button *ngFor="let languageValpost of languageValposts" [checked]="languageValpost.checked" value="{{languageValpost.value}}">
+                                                    {{languageValpost.label}}
+                                                </mat-radio-button>
+                                            </mat-radio-group>
+                                        </div>
+                                        <div class="row" formArrayName="enquiryResponses">
+                                            <div class="col-md-12 customer-reply-col" *ngFor="let locale of createEnquiryResponsePostOptions['controls']['enquiryResponses']['controls'];let i = index;" [formGroupName]="i">
+                                                <mat-card class="faq-card mb-20px" [class.direction-right-post]="languages[i].languageCode=='AR'">
+                                                    <div class="lang-field">
+                                                        <p>{{languages[i].languageCode}}</p>
+                                                    </div>
+                                                    <div class="row card-mb">
+                                                        <div class="col-md-12 text-fields">
+                                                            <div class="field-container">
+                                                                <mat-form-field class="{{alignCss[i]}}">
+                                                                    <textarea matInput #responseValue placeholder="Write your response" maxlength="500" formControlName="representativeResponse" (keydown)="removeValidation()"></textarea>
+                                                                    <mat-error *ngIf="locale.get('representativeResponse').hasError('pattern')">This special character(s) is not allowed</mat-error>
+                                                                </mat-form-field>
+                                                                <p style="color:red; font-size: 10px;" *ngIf="responseRequired">Please Enter value</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </mat-card>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="communication-types">
+                                                <mat-checkbox name="Post As" formControlName="postAsOptions" *ngFor="let option of postAsOptionsVals" [checked]="option.value" value="{{option.value}}" (change)="postVal(option)">{{option.label}}
+                                                </mat-checkbox>
+                                            </div>
+                                            <p class="mat-err" *ngIf="matVal">Please Select the option</p>
+
+                                        </div>
+                                        <div class="button-wrap">
+                                            <button type="submit" class="button primary-btn">ADD</button>
+                                        </div>
+                                    </form>
+                                    <div class="previous-response" [class.selectTabCustomer]="seletedTabIndex!=0">
+                                        <h3 class="card-title">Previous Response</h3>
+                                        <mat-card class="previous-card" [class.userreplyCard]="response.postTo == 'USER'" *ngFor="let response of responseData;let i = index;">
+                                            <div class="row">
+                                                <div class="col-md-12 mb-20px" *ngFor="let locale of response.enquiryResponseLocales;let j = index;" [class.userreply]="response.postTo == 'USER'">
+                                                    <mat-card class="faq-card" [class.direction-right]="response.enquiryResponseLocales[j].langauageName=='Arabic'">
+                                                        <div class="lang-field">
+                                                            <p>{{response.enquiryResponseLocales[j].langauageName}}</p>
+                                                        </div>
+
+                                                        <div class="text-right preview">
+                                                            <p>{{response.createdBy}}</p>
+                                                            <label>{{response.createdTime}}</label>
+                                                            <label>{{response.postAs}}</label>
+                                                        </div>
+                                                        <div class="row card-mb">
+                                                            <div class="col-md-12 text-fields">
+                                                                <div class="view-mode " [ngClass]="alignCssResponse[j]">
+                                                                    <label>Response</label>
+                                                                    <p>{{response.enquiryResponseLocales[j].response}}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </mat-card>
+                                                </div>
+                                            </div>
+                                        </mat-card>
+                                    </div>
+                                </mat-card>
+                            </ng-template>
+                        </mat-tab>
+                    </mat-tab-group>
+                </div>
+
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+</div>

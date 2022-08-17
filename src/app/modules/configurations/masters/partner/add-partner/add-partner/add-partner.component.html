@@ -1,0 +1,84 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title">
+        <h1>Masters</h1>
+    </div>
+</div>
+<div class="row master-cards">
+    <div class="col-md-3 master-list master-left">
+        <mat-card>
+            <ul class="master_listing">
+                <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-customer-type']">Customer Type</a></li>
+                <li><a href="javascript:void(0)" [routerLink]="['/search-merchant']">Merchant</a></li> -->
+                <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-brand']">Brand</a></li> -->
+                <li><a href="javascript:void(0)" [routerLink]="['/search-country']">Countries</a></li>
+                <li><a href="javascript:void(0)" [routerLink]="['/search-cities']">Cities</a></li>
+                <li><a href="javascript:void(0)" [routerLink]="['/search-malls']">Malls</a></li>
+                <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-course']">Course</a></li>
+                <li><a href="javascript:void(0)" [routerLink]="['/search-cuisine']">Cuisine</a></li> -->
+                <li><a href="javascript:void(0)" [routerLink]="['/search-currency']">Currency</a></li>
+                <li><a href="javascript:void(0)" [routerLink]="['/search-currency-conversion']">Currency Conversion</a></li>
+                <li><a href="javascript:void(0)" [routerLink]="['/search-brand-category']">Brand Category</a></li>
+                <li><a href="javascript:void(0)" [routerLink]="['/search-language']">Language</a></li>
+                <li><a href="javascript:void(0)" [routerLink]="['/search-faq-category']">FAQ Category</a></li>
+                <li><a href="javascript:void(0)" [routerLink]="['/search-about-us-category']">About Us Category</a></li>
+                <li><a href="javascript:void(0)" [routerLink]="['/search-feedback']">Feedback</a></li>
+                <!-- <li class="master-list-selected"><a href="javascript:void(0)" [routerLink]="['/search-partner']">Partner</a></li> -->
+                <li><a href="javascript:void(0)" [routerLink]="['/search-enquiry-type']">Enquiry Type</a></li>
+                <li><a href="javascript:void(0)" [routerLink]="['/add-taxation']">Taxation</a></li>
+
+            </ul>
+        </mat-card>
+    </div>
+    <div class="col-md-9 master-right">
+        <mat-card class="master-content">
+            <div class="country-card">
+                <form id="addPartnerForm" [formGroup]="partnerFormGroup" #createPartnerForm="ngForm" (submit)="createPartner(partnerFormGroup.value)">
+                    <div class="subtitle flex-center">
+                        <h3 class="card-title"><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/left_arrow.png" alt="leftArrow" [routerLink]="['/search-partner']"></span>Add Partner</h3>
+                        <div class="slider">
+                            <mat-slide-toggle [checked]="checked" (change)="toggleStatus($event)" class="mat-slide-toggle">{{statusValue}}</mat-slide-toggle>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="master-fieldSet">
+                                <fieldset class="language-fieldset">
+                                    <legend class="fieldset-heading">Partner Title*</legend>
+                                    <div class="" formArrayName="partnerTitleArray">
+                                        <div class="example-container" *ngFor="let locale of partnerFormGroup['controls']['partnerTitleArray']['controls']; let i=index" [formGroupName]="i">
+                                            <mat-form-field class="{{alignCss[i]}}">
+                                                <input matInput placeholder="{{languageList[i].languageName}}" maxlength="100" required formControlName="partnerTitle">
+                                                <mat-error *ngIf="locale.get('partnerTitle').hasError('required')">Please enter value</mat-error>
+                                                <mat-error *ngIf="locale.get('partnerTitle').hasError('minlength')">Minimum 2 characters required</mat-error>
+                                                <mat-error *ngIf="locale.get('partnerTitle').hasError('pattern')">Invalid characters entered</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row mt-30px">
+                                <div class="col-md-6">
+                                    <div class="example-container">
+                                        <mat-form-field class="field-style">
+                                            <input matInput placeholder="Partner Code" maxlength="20" formControlName="partnerCode" required>
+                                            <mat-error *ngIf="partnerFormGroup.get('partnerCode').hasError('required')">Please enter value</mat-error>
+                                            <mat-error *ngIf="partnerFormGroup.get('partnerCode').hasError('minlength')">Minimum 2 characters required</mat-error>
+                                            <mat-error *ngIf="partnerFormGroup.get('partnerCode').hasError('pattern')">Only alphanumerics are allowed</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn-wrap text-right">
+                        <button type="button" class="site_btn gray_btn" [routerLink]="['/search-partner']">CANCEL</button>
+                        <button type="submit" class="button primary-btn">ADD</button>
+                    </div>
+                </form>
+            </div>
+        </mat-card>
+    </div>
+</div>

@@ -1,0 +1,110 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title">
+        <h1>Masters</h1>
+    </div>
+</div>
+<div class="page-wrap-masters">
+    <div class="row master-cards">
+        <div class="col-md-3 master-list master-left">
+            <mat-card>
+                <ul class="master_listing">
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-customer-type']">Customer Type</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-merchant']">Merchant</a></li> -->
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-brand']">Brand</a></li> -->
+                    <li class="master-list-selected"><a href="javascript:void(0)" [routerLink]="['/search-country']">Countries</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-cities']">Cities</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-malls']">Malls</a></li>
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-course']">Course</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-cities']">Cuisine</a></li> -->
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-currency']">Currency</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-currency-conversion']">Currency Conversion</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-brand-category']">Brand Category</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-language']">Language</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-faq-category']">FAQ Category</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-about-us-category']">About Us Category</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-feedback']">Feedback</a></li>
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-partner']">Partner</a></li> -->
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-enquiry-type']">Enquiry Type</a></li>
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/add-taxation']">Taxation</a></li> -->
+                    <li><a href="javascript:void(0)" [routerLink]="['/add-product-tag']">Product Tag</a></li>
+
+
+                </ul>
+            </mat-card>
+        </div>
+        <div class="col-md-9 master-right" *ngIf="countryData!=undefined">
+            <mat-card class="master-content">
+                <div class="country-card">
+                    <form id="viewCountryForm">
+                        <div class="subtitle flex-center">
+                            <h3><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/left_arrow.png" alt="leftArrow" [routerLink]="['/search-country']"></span> View Country</h3>
+                            <div class="slider">
+                                <mat-slide-toggle class="mat-slide-toggle" [checked]="checked" [disabled]='true'>{{countryData.status}}</mat-slide-toggle>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="master-fieldSet">
+                                    <fieldset class="language-fieldset">
+                                        <legend class="fieldset-heading">Country Name</legend>
+                                        <div *ngFor="let c of countryData.countryLocales; let i=index">
+                                            <div class="{{alignCss[i]}} view-label">
+                                                <label>{{c.languageName}}</label>
+                                                <p>{{c.countryName}}</p>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="row mt-30px">
+                                    <div class="col-md-6">
+                                        <div class="view-label">
+                                            <label>Country Code</label>
+                                            <p>{{countryData.countryCode}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="view-label">
+                                            <label>Currency</label>
+                                            <p>{{countryData.currencyMaster.currencyCode}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="view-label">
+                                            <label>Longitude</label>
+                                            <p>{{countryData.latitude}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="view-label">
+                                            <label>Latitude</label>
+                                            <p>{{countryData.longitude}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="view-label">
+                                            <label>Store Flag</label>
+                                            <p>{{countryData.storeFlag == true ? 'Yes' : 'No'}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="btm-button-wrap">
+                            <button type="button" class="site_btn gray_btn" [routerLink]="['/search-country']">CANCEL</button>
+                            <button type="button" class="button primary-btn" type="button" (click)="MoveToEdit(countryId)">EDIT</button>
+
+                            <!-- <button type="button" class="button primary-btn" [routerLink]="['/edit-country/'+countryId]">EDIT</button> -->
+                        </div>
+                    </form>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+</div>

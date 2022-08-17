@@ -1,0 +1,31 @@
+.page-wrap {
+    padding: 25px;
+    h5 {
+        color: #6b6868;
+    }
+    .amenities-listing {
+        height: 200px;
+        overflow-y: auto;
+        margin-bottom: 20px;
+    }
+
+}
+.pt-60px {
+    padding-top: 60px;
+}
+/deep/.mat-dialog-container {
+    min-width: 28vw!important;
+}
+/deep/.mat-list-base .mat-list-item {
+    font-size: 14px!important;
+}
+/deep/.mat-list-base .mat-list-item, .mat-list-base .mat-list-option {
+    height: 36px!important;
+}
+/deep/.mat-list-base .mat-list-item {
+    color: rgba(135, 135, 135, 0.87)!important;
+}
+/deep/.mat-checkbox-inner-container {
+    height: 13px!important;
+    width: 13px!important;
+}

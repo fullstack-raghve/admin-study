@@ -1,0 +1,286 @@
+<div class="bredcrumb-title-wrap">
+  <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+  <div class="title flex-container template-title">
+    <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          [routerLink]="['/search-assign-physical-cards']"></span>Assign Cards</h1>
+  </div>
+</div>
+
+<div class="page-wrap">
+  <div class="row">
+    <div class="col-md-3" >
+      <form style="display: flex; ;height:395px" [formGroup]="GenerateRangeForm" (submit)="getAssigncardDetails(GenerateRangeForm.value)">
+        <mat-card>
+          <mat-form-field>
+            <input maxlength="25" matInput placeholder="Assignment Name *" formControlName="AssignmentName">
+            <mat-error *ngIf="GenerateRangeForm.get('AssignmentName').hasError('required')">Please enter Assignment Name</mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-select formControlName="CardID" placeholder="Card Type">
+              <mat-option *ngFor="let card of CardType" value="{{card.id}}">
+                {{ card.cardName }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="GenerateRangeForm.get('CardID').hasError('required')">Please Select Card Type</mat-error>
+
+          </mat-form-field>
+          <!-- <mat-form-field> -->
+          <mat-radio-group  aria-label="Select an option" formControlName="rangeUpload">
+            <mat-radio-button (click)="checkType('range')" value="range">Range</mat-radio-button>&nbsp;
+            <mat-radio-button (click)="checkType('upload')" value="upload">Upload</mat-radio-button>
+          </mat-radio-group>
+          <div style="color:red" *ngIf="isSubmitted &&GenerateRangeForm.get('rangeUpload').hasError('required')">
+            <p>Please select either value</p>
+          </div>
+
+          <div *ngIf="GenerateRangeForm.get('rangeUpload').value == 'upload'" class="col-md-12 " style="display:flex;padding-left:0px;">
+            <div class="col-">
+                <input class="upload_sku" type="file"
+                (change)="uploadPhysicalCard($event.target.files,GenerateRangeForm.get('CardID').value)" />
+              <p style="color: rgb(8, 151, 247);"><small><u>Upload File</u></small></p>
+            </div>
+            
+            <div *ngIf="UploadedData" class="col-md-8 ">
+              <p style="color: green"><small><u>{{uploadFileName}}</u></small></p>
+            </div>
+          </div>
+         
+          <mat-form-field *ngIf="GenerateRangeForm.get('rangeUpload').value == 'range'">
+            <input onlynumber matInput placeholder="Start Range *" #range formControlName="Range" maxlength="20">
+          </mat-form-field>
+
+
+          <mat-form-field *ngIf="GenerateRangeForm.get('rangeUpload').value == 'range'">
+            <input OnlyNumber="true" matInput type="number" formControlName="Quantity" placeholder="Quantity *">
+            <mat-error *ngIf="GenerateRangeForm.get('Quantity').hasError('required')">
+              Please enter value</mat-error>
+              <mat-error *ngIf="GenerateRangeForm.get('Quantity').hasError('minLength')">Please enter valid value </mat-error>
+              <mat-error *ngIf="GenerateRangeForm.get('Quantity').hasError('pattern')">Please enter value greater than zero</mat-error>
+              </mat-form-field>
+      
+
+
+          <button *ngIf="GenerateRangeForm.get('rangeUpload').value == 'range'" type="button" class="button primary-btn"
+            type="submit">GET RANGE</button>
+
+        </mat-card>
+      </form>
+    </div>
+
+
+    <div class="col-md-9" [class.nonEditable]="Editable">
+      <form [formGroup]="RangeForm">
+        <mat-card  style="padding-bottom: 1px;">
+          <div class="row" style="display: flex; background:white;">
+            <div class="col-md-4 ">
+              <mat-form-field>
+                <input readonly matInput placeholder="Starting Card ID" formControlName="StartingCardID">
+                <mat-error *ngIf="RangeForm.get('StartingCardID').hasError('required')">
+                  Please enter value</mat-error>
+              </mat-form-field>
+
+            </div>
+            <div class="col-md-4">
+              <mat-form-field>
+                <input readonly matInput placeholder="Ending Card ID" OnlyNumber="true" formControlName="EndingCardID">
+                <mat-error *ngIf="RangeForm.get('EndingCardID').hasError('required')">
+                  Please enter value</mat-error>
+              </mat-form-field>
+
+            </div>
+            <div class="col-md-4">
+              <mat-form-field>
+                <input readonly matInput placeholder="Quantity" OnlyNumber="true" formControlName="Quantity">
+                <mat-error *ngIf="RangeForm.get('Quantity').hasError('required')">
+                  Please enter value</mat-error>
+           
+                      
+              </mat-form-field>
+
+            </div>
+          </div>
+          <div class="row" style="display: flex; background:white;">
+   
+                      <table class="col-md-12">
+                          <thead>
+                            <tr >
+                              <th >Status</th>
+                              <th >Selected Quantity</th>
+                              <th >NewStatus</th>
+                              <th >Comment</th>
+                
+                             
+                            </tr>
+                          </thead>
+                          <tbody  >
+                              <tr>
+                                <td>
+                                  <div class="table-cell">
+                                    <p>
+                                      {{RangeForm.get('Status').value}}
+                                    </p>
+
+                                  </div>
+                                </td>
+                                <td (click)="addGiftCard()">
+                                    <div  class="table-cell">
+                                        <p style="color: rgb(8, 151, 247);">
+                                            {{RangeForm.get('SelectedQuantity').value}}
+                                            <!-- {{RangeForm.get('Quantity').value}} -->
+                                          </p>
+                                      
+                                    </div>
+                                  </td>
+                                  <td >
+                                      <div  class="table-cell">
+                                          <p>
+                                              {{RangeForm.get('NewStatus').value}}
+                                            </p>
+                                       
+                                      </div>
+                                    </td>
+                                    <td>
+                                        <div class="table-cell">
+                                          <mat-form-field>
+                                            <input matInput placeholder="Enter Comment *" (keyup)="checkComments()" formControlName="Comment"  >
+                                            <mat-error *ngIf="RangeForm.get('Comment').hasError('required')">
+                                                Please enter value</mat-error>
+                                         
+                                                 
+                                          </mat-form-field>
+                                          <p  style="color:red;text-align: left;" *ngIf="checkComment">
+                                            Please enter value</p>
+                                        </div>
+                                      </td>
+                                      </tr>
+                                      </tbody>
+                                      </table>
+                 
+          </div>
+
+        </mat-card>
+      </form>
+      <!-- <div class="col-md-9"> -->
+        <br>
+      <form (submit)="addAssignPhysicalCard(DetailsForm.value)" [formGroup]="DetailsForm">
+        <mat-card>
+          <div class="row assignRow ">
+            <div class="col-md-12">
+              <h6>Assign to</h6>
+            </div>            
+            <div class="col-md-3 view-label radioblock">
+                <mat-radio-group aria-label="Select an option" (change)="changeValidation($event)" formControlName="storeCorporate">
+                    <mat-radio-button  value="STORE">Store</mat-radio-button>&nbsp;&nbsp;
+                    <mat-radio-button  value="CORPORATE">Corporate</mat-radio-button>
+                  </mat-radio-group>
+            </div>
+
+            <div *ngIf="DetailsForm.get('storeCorporate').value === 'STORE'" class="col-md-3 view-label">
+              <mat-form-field>
+                <mat-select (selectionChange)="SelectedStoreID(contentInput.value)" #contentInput placeholder="Select"
+                  formControlName="selectStore">
+                  <mat-option value="">Select Store</mat-option>
+                  <mat-option *ngFor="let store of StoreList;let i=index" value="{{i}}">
+                    {{ store.STORE_NAME }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="DetailsForm.get('selectStore').hasError('required')">
+                  Please select Store</mat-error>
+              </mat-form-field>
+            </div>
+            <div *ngIf="DetailsForm.get('storeCorporate').value === 'CORPORATE'" class="col-md-3 view-label">
+              <mat-form-field>
+                <mat-select (selectionChange)="SelectedCorporateID(contentInput.value)" #contentInput placeholder="Select"
+                  formControlName="selectCorporate">
+                  <mat-option value="">Select Corporate</mat-option>
+                  <mat-option *ngFor="let store of CorporateList;let i=index" value="{{i}}">
+                    {{ store.corporateName }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="DetailsForm.get('selectCorporate').hasError('required')">
+                  Please select Corporate</mat-error>
+              </mat-form-field>
+            </div>
+            <div *ngIf="DetailsForm.get('storeCorporate').value === 'STORE'"  class="col-md-2">
+              <mat-form-field>
+                <input readonly matInput placeholder="Store ID" OnlyNumber="true" formControlName="StoreID">
+                <mat-error *ngIf="DetailsForm.get('StoreID').hasError('required')">
+                  Please select value</mat-error>
+              </mat-form-field>
+            </div>
+            <div *ngIf="DetailsForm.get('storeCorporate').value === 'CORPORATE'" class="col-md-2">
+                <mat-form-field>
+                  <input readonly matInput placeholder="Corporate ID" OnlyNumber="true" formControlName="CorporateID">
+                </mat-form-field>
+              </div>
+            <div   *ngIf="DetailsForm.get('storeCorporate').value === 'STORE'"class="col-md-3 view-label giftcard">
+              <mat-select-autocomplete [placeholder]="'Gift Card'" [options]="giftCardIdList1" [display]="'cardName'"
+                name="cardName" ngDefaultControl [value]="'value'" [multiple]='true' [labelCount]="1"
+                [formControl]="DetailsForm.controls['GiftCard']" >
+            
+              </mat-select-autocomplete>
+              
+              <mat-error *ngIf="DetailsForm.get('GiftCard').hasError('required') && checkGiftCard==false">
+                Please select Giftcard</mat-error>
+              <mat-error *ngIf="checkGiftCard">
+               This store doesn't have giftcard</mat-error>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <h6>Handed Over to</h6>
+            </div>
+            <div class="col-md-3">
+              <mat-form-field>
+                <input matInput placeholder="Enter Name *" formControlName="EnterName">
+                <mat-error *ngIf="DetailsForm.get('EnterName').hasError('required')">
+                  Please enter value</mat-error>
+              </mat-form-field>
+
+            </div>
+            <div class="col-md-3">
+              <mat-form-field>
+                <input matInput placeholder="Email *" formControlName="Email">
+                <mat-error *ngIf="DetailsForm.get('Email').hasError('required')">
+                  Please enter value</mat-error>
+              </mat-form-field>
+
+            </div>
+            <div class="col-md-3">
+                <mat-form-field>
+                    <mat-select  placeholder="CountryCode *"
+                      formControlName="CountryCode">
+                      <mat-option value="">select</mat-option>
+                      <mat-option *ngFor="let country of CountryCodeList" value="{{country.dial_code}}">
+                        {{ country.name }}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="DetailsForm.get('CountryCode').hasError('required')">
+                        Please enter value</mat-error>
+                  </mat-form-field>
+            </div>
+            <div class="col-md-3">
+              <mat-form-field>
+                <input matInput  type="tel" placeholder="Mobile Number *" OnlyNumber="true"  maxlength="10" formControlName="MobileNumber">
+                <mat-error *ngIf="DetailsForm.get('MobileNumber').hasError('required')">
+                  Please enter value</mat-error>
+              </mat-form-field>
+
+            </div>
+          </div>
+        </mat-card>
+        <div>
+          <button type="button" class="button primary-btn" type="submit">ASSIGN</button>
+          <button type="button" class="button secondary-btn">CANCEL</button>
+        </div>
+      </form>
+    </div>
+
+
+
+  </div>
+ <!-- <div>
+          <button type="button" class="button primary-btn" type="submit">ASSIGN</button>
+          <button type="button" class="button secondary-btn">CANCEL</button>
+        </div> -->
+</div>

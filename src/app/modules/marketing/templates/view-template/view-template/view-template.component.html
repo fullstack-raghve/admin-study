@@ -1,0 +1,158 @@
+<div class="bredcrumb-title-wrap" *ngIf="viewTemplateData">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container">
+        <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          [routerLink]="['/search-template']"></span>View Template</h1>
+        <mat-slide-toggle class="example-margin text-right" name="toggleVal" [(ngModel)]="toggleVal" [checked]="checked" [disabled]="disabled">
+            {{toggleVal==true ? "ONLINE" : "OFFLINE"}}
+        </mat-slide-toggle>
+    </div>
+</div>
+<div class="page-wrap" *ngIf="viewTemplateData">
+    <mat-card class="template-card scrollBox" malihu-scrollbar [scrollbarOptions]="scrollbarOptions">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="view-mode">
+                    <label>Template Type</label>
+                    <p>{{viewTemplateData.templateType=='PUSH' ? 'Push Notification App' : viewTemplateData.templateType }}</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="view-mode">
+                    <label>Template Name</label>
+                    <p>{{viewTemplateData.templateName}}</p>
+                </div>
+            </div>
+            <div class="col-md-3" *ngIf="viewTemplateData.templateType !== 'EMAIL' && viewTemplateData.templateType !== 'SMS'">
+                <div class="view-mode">
+                    <label>Hyper Link</label>
+                    <p style="overflow: hidden;
+                      word-break: break-all;">{{viewTemplateData.hyperLink}}</p>
+                </div>
+            </div>
+            <div class="col-md-3" *ngIf="viewTemplateData.templateType == 'SMS'">
+                <div class="view-mode">
+                    <label>SMS Template Id</label>
+                    <p style="overflow: hidden;
+                      word-break: break-all;">{{viewTemplateData.smsTemplateId}}</p>
+                </div>
+            </div>
+            <div class="col-md-3" *ngIf="viewTemplateData.templateType == 'SMS'">
+                <div class="view-mode">
+                    <label>SMS Entity Id</label>
+                    <p style="overflow: hidden;
+                      word-break: break-all;">{{viewTemplateData.smsEntityId}}</p>
+                </div>
+            </div>
+            <div class="col-md-3 text-right">
+                <!-- <button type="button" class="button tertiary-btn" name="button"
+            [routerLink]="['/edit-template/'+ viewTemplateData.templateId ,'clone']">CLONE
+            TEMPLATE</button> -->
+                <button type="button" class="button tertiary-btn" name="button" (click)="MoveToEdit(viewTemplateData.templateId,'clone')">CLONE
+          TEMPLATE</button>
+            </div>
+        </div>
+        <div class="" *ngIf="viewTemplateData.templateType !='EMAIL'">
+            <mat-card class="pushNotification-card mb-20px" *ngFor=" let i of viewTemplateData.marketingTemplateLocales">
+                <div class="lang-field {{i.languageDirection == 'RTL' ? 'lang-name-right' : ''}}">
+                    <p>{{i.languageName}}</p>
+                </div>
+                <div class="row card-mb">
+                    <div class="col-md-8 text-fields">
+                        <div class="view-img-block row">
+                            <div class="col-md-4">
+                                <div class="grid img-block" *ngIf="viewTemplateData.templateType !== 'EMAIL' && viewTemplateData.templateType !== 'SMS'">
+                                    <p class="note-text"><span>image size 1025*512</span></p>
+                                    <div class="no-img" *ngIf="i.imagePath=='' || i.imagePath==null">
+                                        No Image
+                                    </div>
+                                    <div class="avatar-zone">
+                                        <img height="100px" *ngIf="i.imagePath!=null" [src]="filePathUrl + i.imagePath" [class.uploaded-img]="imgUpload" width="150px" />
+                                    </div>
+                                </div>
+                                <div class="grid img-block" *ngIf="viewTemplateData.templateType !== 'EMAIL' && viewTemplateData.templateType !== 'SMS'">
+                                    <p class="note-text"><span>image size 1025*512</span></p>
+                                    <div class="no-img" *ngIf="i.imagePathTwo=='' || i.imagePathTwo==null">
+                                        No Image
+                                    </div>
+                                    <div class="avatar-zone">
+                                        <img height="100px" *ngIf="i.imagePathTwo!=null" [src]="filePathUrl + i.imagePathTwo" [class.uploaded-img]="imgUpload" width="150px" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="content-val-block col-md-8">
+                                <div class="field-container" *ngIf="viewTemplateData.templateType !='SMS'">
+                                    <div class="view-mode {{i.languageDirection == 'RTL' ? 'direction' : ''}}">
+                                        <label>Subject</label>
+                                        <p>{{i.subject}}</p>
+                                    </div>
+                                </div>
+                                <div class="field-container pad-t-10">
+                                    <div class="view-mode {{i.languageDirection == 'RTL' ? 'direction' : ''}}">
+                                        <label>Content</label>
+                                        <p [innerHTML]="i.content" class="content-blk"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 img-container">
+                        <div class="preview-container wid-200">
+                            <div class="img-preview">
+                                <p class="text-preview">Notification Preview</p>
+                                <img src="assets/images/svg-icons/mobile_frame.svg" alt="">
+                                <div class="notification-content">
+                                    <div class="notification-description {{i.languageDirection == 'RTL' ? 'direction' : ''}}">
+                                        <h6>
+                                            {{i.subject}}
+                                        </h6>
+                                        <p [innerHTML]="i.content"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="row m-0px notification-area">
+                  <div class="col-md-8">
+                    
+                  </div>
+                </div> -->
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+        <div *ngIf="viewTemplateData.templateType =='EMAIL'">
+            <div class="email-panel">
+                <div class="row">
+                    <div class="col-md-12">
+                        <mat-accordion (selectedTabChange)="call($event)">
+                            <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" *ngFor=" let i of viewTemplateData.marketingTemplateLocales">
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        {{i.languageName}}
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <div class="{{i.languageDirection == 'RTL' ? 'text-right' : ''}}">
+                                    <label>Subject</label>
+                                    <p> {{i.subject}}</p>
+                                </div>
+                                <div class="{{i.languageDirection == 'RTL' ? 'text-right' : ''}}">
+                                    <label>Content</label>
+                                    <!-- <p [innerHTML]="i.content"></p> -->
+                                    <div [innerHTML]="genratedTemplate" style="pointer-events: none;"></div>
+                                </div>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </mat-card>
+
+    <div class="btm-button-wrap">
+        <button type="button" class="button secondary-btn" [routerLink]="['/search-template']">CANCEL</button>
+        <!-- <button type="submit" class="button primary-btn"
+        [routerLink]="['/edit-template/'+ viewTemplateData.templateId, 'edit']">EDIT</button> -->
+        <button type="submit" class="button primary-btn" (click)="MoveToEdit(viewTemplateData.templateId,'edit')">EDIT</button>
+    </div>
+</div>

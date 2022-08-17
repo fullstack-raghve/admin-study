@@ -1,0 +1,71 @@
+<div class="page-wrap">
+  <div class="bredcrumb-title-wrap">
+    <div class="close-icon text-right" style="cursor: pointer">
+      <img src="assets/images/icons/filter_close_ico.png" (click)="onCloseClick()" alt="">
+    </div>
+    <h6>History</h6>
+  </div>
+  <div class="form-wrap" style="padding-left: 10px;padding-right: 10px;position: relative;bottom:67px">
+    <div class="table-wrap">
+      <div class="table-wrap-inner">
+    <table style="width:100%;margin-top:17px" mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+
+
+      <ng-container matColumnDef="date">
+        <th class=mat-header-cell *matHeaderCellDef> DATE </th>
+        <td mat-cell *matCellDef="let element"> {{element.date|date:"dd-MM-yyyy"}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="time">
+        <th class=mat-header-cell *matHeaderCellDef> TIME </th>
+        <td mat-cell *matCellDef="let element"> {{element.time}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="addAmt">
+        <th class=mat-header-cell *matHeaderCellDef> ADD AMOUNT </th>
+        <td mat-cell *matCellDef="let element"> {{element.addAmt}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="deductAmt">
+        <th class=mat-header-cell *matHeaderCellDef> DEDUCTED AMOUNT </th>
+        <td mat-cell *matCellDef="let element"> {{element.deductAmt}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="BALANCE">
+        <th class=mat-header-cell *matHeaderCellDef> BALANCE AMOUNT </th>
+        <td mat-cell *matCellDef="let element"> {{element.BALANCE}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <th class=mat-header-cell *matHeaderCellDef> USER NAME </th>
+        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+      </ng-container>
+
+
+      <!-- <ng-container matColumnDef="status">
+        <th class=mat-header-cell *matHeaderCellDef> ACTION </th>
+        <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+      </ng-container> -->
+{{IssendForApproval}}
+      <ng-container  matColumnDef="approveStatus">
+         <th mat-header-cell class="btnHeader" *matHeaderCellDef > Actions </th>
+        <td mat-cell *matCellDef="let element" >
+             <button mat-button class="btn"   *ngIf="IssendForApproval && element.approveStatus=='SEND FOR APPROVAL'" (click)="getApprove(element)" >APPROVE</button>
+             <p   *ngIf="IssendForApproval == false && element.approveStatus=='SEND FOR APPROVAL'">APPROVE</p>
+             <p style="margin-top:11px;padding-left:16px" *ngIf="element.approveStatus!='SEND FOR APPROVAL'">APPROVED</p>
+             
+        </td>
+      </ng-container>
+
+
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    </table>
+    <mat-paginator [pageSizeOptions]="[10,20,50,100]"></mat-paginator>
+</div>
+</div>
+  </div>
+</div>

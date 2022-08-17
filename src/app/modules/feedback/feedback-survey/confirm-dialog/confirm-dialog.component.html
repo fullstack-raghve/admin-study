@@ -1,0 +1,27 @@
+<div class="confirm-dialog">
+  <h6>Below kiosk are assigned to Survey/Flow</h6>
+  <div class="details">
+    <!-- {{errorDetails | json}} -->
+    <p *ngFor="let item of errorDetails">Kiosk {{item?.id}} is assigned  to survey/Flow {{item?.value}}</p>
+  </div>
+  <h6>
+    Do you want to override and assign to this survey.
+  </h6>
+  <div class="button-wrap text-right pt-20px">
+    <button class="button secondary-btn" [mat-dialog-close]="{
+      'buttonName': 'NO'
+    }">NO</button>
+    <button class="button primary-btn" [mat-dialog-close]="{
+      'buttonName': 'YES'
+    }">YES</button>
+  </div>
+  <!-- <div class="button-wrap text-right pt-20px">
+    <button class='button secondary-btn' type="button" [mat-dialog-close]="{
+      'buttonName': 'NO'
+    }" (click)="noChange()">NO</button> -->
+  <!-- <button class='button primary-btn ' type="submit"  (click)="yesChange()" [mat-dialog-close]="{
+      'buttonName': 'YES',
+    }">YES</button> -->
+  <!-- </div> -->
+
+</div>

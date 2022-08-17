@@ -1,0 +1,330 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex justify-content">
+        <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg"
+                    alt="leftArrow" [routerLink]="['/search-programs']"></span>View Burn Rule</h1>
+    </div>
+</div>
+<div class="page-wrap">
+    <div class="burn-rule" *ngIf="programDetails!=undefined">
+        <mat-card class="summary-card">
+            <div class="summary">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label>Program</label>
+                        <p class="word-wrap">{{programDetails?.programLocales[0].programName}}</p>
+                    </div>
+                    <div class="col-md-3">
+                        <p>{{programDetails?.programId}}, {{programDetails?.programType}}, {{brand}}</p>
+                        <p class="word-wrap">{{programDetails?.programLocales[0].programName}}</p>
+                    </div>
+                    <div class="col-md-2">
+                        <label>Reward Type</label>
+                        <p>{{programDetails?.rewardType}}</p>
+                    </div>
+                    <div class="col-md-2">
+                        <label>Start Date & Time</label>
+                        <p>{{startDateTime | date:'dd/MM/yyyy hh:mm a'}} </p>
+                    </div>
+                    <div class="col-md-2" *ngIf="endDateTime!=''">
+                        <label>End Date & Time</label>
+                        <p>{{endDateTime | date:'dd/MM/yyyy hh:mm a'}}</p>
+                    </div>
+                </div>
+            </div>
+        </mat-card>
+        <div class="burn-rule-info">
+            <mat-card class="rule-info-card">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="flex justify-content">
+                            <mat-checkbox class="check-box-text" [checked]="burnRuleDetails?.isDisplayHomeScreen"
+                                [disabled]="true">Display on Screen Home</mat-checkbox>
+                            <mat-checkbox class="check-box-text" [checked]="burnRuleDetails?.isExclusive"
+                                [disabled]="true">Exclusive</mat-checkbox>
+                        </div>
+                        <div class="img-block">
+                            <div class="avatar-zone">
+                                <img class="upload-img" [src]="filePathUrl+burnRuleDetails?.ruleImagePath"
+                                    [class.uploaded-img]="imgUpload" width="235px">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="master-fieldSet">
+                            <fieldset class="language-fieldset">
+                                <legend class="fieldset-heading">Rule Name</legend>
+                                <div class="" *ngFor="let burnRule of burnRuleDetails?.ruleLocaleList; let i=index">
+                                    <div class="{{alignCss[i]}} view-mode">
+                                        <label>{{burnRule.languageName}}</label>
+                                        <p>{{burnRule.ruleName}}</p>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="view-mode">
+                            <label>Redeem Type</label>
+                            <p>{{burnRuleDetails?.rewardType}}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3"
+                        *ngIf="null!=burnRuleDetails?.freeProductType && burnRuleDetails?.rewardType === 'FREE_PRODUCT'">
+                        <div class="view-mode">
+                            <label>Free Product</label>
+                            <p>
+                                {{burnRuleDetails?.freeProductType}}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+        <div class="reward-stams-section" *ngIf="burnRuleDetails.rewardType==='FREE_PRODUCT'">
+            <mat-card class="rewardStamps-card">
+                <div class="row pb-20px">
+                    <div class="col-md-6">
+                        <div class="table-heading">
+                            <h6>Reward</h6>
+                            <p>What the customer will get</p>
+                        </div>
+                        <div class="reward-details">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="img-block">
+                                        <div class="avatar-zone">
+                                            <label class="upload-text" *ngIf="burnRuleDetails?.rewardImagePath ==''"
+                                                [class.placeholder-img]="imgUpload">Reward Image</label>
+                                            <img class="upload-img" [src]="filePathUrl+burnRuleDetails?.rewardImagePath"
+                                                [class.uploaded-img]="imgUpload" width="100px">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="view-mode">
+                                        <label>Redeem Qty</label>
+                                        <p>{{burnRuleDetails?.rewardQty}}</p>
+                                    </div>
+                                    <div class="redeem-info flex redeem-direction-col">
+                                        <div class="">
+                                            <p>Uploaded Products</p>
+                                            <label>Upload the product to be provide as free</label>
+                                        </div>
+                                        <!-- <div>
+                                            <p>Uploaded SKU</p>
+                                            <p *ngIf="burnRuleDetails?.skuFilePath==''">{{productCount?.length}}
+                                                Products Selected</p>
+
+                                                <p *ngIf="burnRuleDetails?.skuFilePath==''">{{productCount?.length}}
+                                                    Products Selected</p>
+
+                                            <label for="skuFile"
+                                                class="word-wrap">{{burnRuleDetails.skuFilePath}}</label>
+                                            <div class="">
+                                                <a href="{{fileUrl}}{{burnRuleDetails.skuFilePath}}"><img
+                                                        class="downoad-icon"
+                                                        src="assets/images/svg-icons/download_xl.svg" alt=""><span
+                                                        class="download-info">Download
+                                                        SKU uploaded</span></a>
+                                            </div>
+                                        </div> -->
+                                        <div>
+                                            <p>Uploaded SKU</p>
+                                            <p *ngIf="burnRuleDetails?.skuFilePath==''">{{productCount?.length}}
+                                                Products Selected</p>
+
+                                            <!-- <a class="text-blue word-wrap" *ngIf="burnRuleDetails.skuFilePath!=''"
+                                                href="{{filePathUrl}}{{burnRuleDetails.skuFilePath}}"
+                                                download="{{burnRuleDetails.skuFilePath}}">{{burnRuleDetails.skuFilePath}}</a> -->
+
+                                            <label for="skuFile"
+                                                class="word-wrap">{{burnRuleDetails.skuFilePath}}</label>
+                                            <div class="" [class.disablevalue]="productCount?.length==0">
+                                                <a href="{{fileUrl}}{{burnRuleDetails.skuFilePath}}"><img
+                                                        class="downoad-icon"
+                                                        src="assets/images/svg-icons/download_xl.svg" alt=""><span
+                                                        class="download-info">Download
+                                                        SKU uploaded</span></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="table-heading">
+                            <h6>Stamps</h6>
+                            <p>How many stamps required to get this reward</p>
+                        </div>
+                        <div class="program-table">
+                            <div class="header">
+                                <div class="table-cell">
+                                    <label class="common-tex"></label>
+                                </div>
+                                <div class="table-cell">
+                                    <label class="head-text">No. of stamps required</label>
+                                </div>
+                            </div>
+                            <div class="content">
+                                <div class="content-column"
+                                    *ngFor="let tier of burnRuleDetails?.ruleTierList; let i=index">
+                                    <div class="table-cell">
+                                        <label class="tier-list">{{tier?.tierName}}</label>
+                                    </div>
+                                    <div class="table-cell">
+                                        <input type="text" class="input-box" value="{{tier?.noOfStamps}}"
+                                            [disabled]="true">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="attach-store">
+                    <p>{{excIncStore}} Stores</p>
+                    <label>Attach list of stores is any to be {{excIncStore}} from this rule</label>
+                    <div class="">
+                        <p (click)="openStoreDialog()" class="text-blue">{{storeCount?.length}} Stores Selected</p>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+        <div class="rewardStamps-card mat-card" *ngIf="burnRuleDetails.rewardType==='POINTS'">
+            <div class="col-md-9">
+                <h3 class="card-title">Value/ Worth of 1 Point</h3>
+                <mat-card class=" ">
+                    <div class="program-table">
+                        <div class="header">
+                            <div class="table-cell">
+                                <label class="common-text">Region</label>
+                            </div>
+                            <div class="table-cell" *ngFor="let currency of burnRuleCurrencies">
+                                <label class="head-text">{{currency}}</label>
+                            </div>
+                        </div>
+                        <div class="content">
+                            <div class="content-column" *ngFor="let rewardType of rewardWorths">
+                                <div class="table-cell">
+                                    <label class="tier-list">{{rewardType?.tierName}}</label>
+                                </div>
+                                <div class="table-cell" *ngFor="let value of rewardType.rewardValues">
+                                    <input type="text" class="input-box" [value]="value?.rewardValue" disabled>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="exclude-store">
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <!-- <div class="">
+                                    <p>Include SKU</p>
+                                    <p><span class="text-blue"> {{excludeSkuCount}} skus selected</span></p>
+                                </div> -->
+                                <div>
+                                    <p class="upload-sku">Uploaded SKU</p>
+                                    <p *ngIf="burnRuleDetails?.skuFilePath==''">{{productCount?.length}}
+                                        Products Selected</p>
+                                    <label for="skuFile"
+                                        class="word-wrap sku-path">{{burnRuleDetails.skuFilePath}}</label>
+                                    <div class=""  [class.disablevalue]="productCount?.length==0">
+                                        <a href="{{fileUrl}}{{burnRuleDetails.skuFilePath}}"><img
+                                                class="downoad-icon download-ico"
+                                                src="assets/images/svg-icons/download_xl.svg" alt=""><span
+                                                class="download-info download-label">Download
+                                                SKU uploaded</span></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="">
+                                    <p>{{excIncStore}} Stores</p>
+                                    <p><span class="text-blue" (click)="openStoreDialog()"> {{excludeStoreCount}} stores
+                                            selected</span></p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="view-mode">
+                                    <label>Minimum Points </label>
+                                    <p>{{burnRuleDetails.minimumPoints}} <small> (Minimum points required to
+                                            burn)</small></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+        </div>
+        <div class="description-block">
+            <h3 class="card-title">Description</h3>
+            <mat-card class="description-card">
+                <div class="expansion-panel">
+                    <mat-accordion>
+                        <mat-expansion-panel *ngFor="let description of burnRuleDetails?.ruleLocaleList; let i=index"  [class.right-panel]="description?.languageName == 'Arabic'">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                 {{description?.languageName}} 
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div class="view-content" class="{{alignCss[i]}}">
+                                <label>Content</label>
+                                <div class="content-block">
+                                    <p [innerHTML]="descriptionText[i]"></p>
+                                </div>
+                            </div>
+                        </mat-expansion-panel>
+                        <!-- <mat-expansion-panel (opened)="panelOpenState = true"
+                                           (closed)="panelOpenState = false">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title>
+                            Arabic
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <div class="view-content">
+                            <label>Content</label>
+                            <div class="content-block">
+                                This Coupon is valid only on selected stores. It is valid only for 5 days
+                            </div>
+                        </div>
+                      </mat-expansion-panel> -->
+                    </mat-accordion>
+                </div>
+            </mat-card>
+        </div>
+        <div class="terms-block">
+            <h3 class="card-title">Terms & Conditions</h3>
+            <mat-card class="terms-card">
+                <div class="expansion-panel">
+                    <mat-accordion>
+                        <mat-expansion-panel
+                            *ngFor="let termAndCondition of burnRuleDetails?.ruleLocaleList; let i=index"   [class.right-panel]="termAndCondition?.languageName == 'Arabic'">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                {{termAndCondition?.languageName}}
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div class="view-content" class="{{alignCss[i]}}">
+                                <label>Content</label>
+                                <div class="content-block">
+                                    <p [innerHTML]="termAndConditionText[i]"></p>
+                                </div>
+                            </div>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </div>
+            </mat-card>
+        </div>
+        <div class="text-right">
+            <button class="button secondary-btn" type="button" 
+            (click)="moveToViewProgram(programId)">CANCEL</button>
+            <button class="button primary-btn" type="button" (click)="EditBurnRule(burnRuleId)"
+                *ngIf="programDetails?.publishStatus=='UPCOMING' && programDetails?.approvedStatus!='APPROVED'">EDIT</button>
+            <!-- <button class="button secondary-btn" type="button"
+                [routerLink]="['/view-programs/'+programId]">CANCEL</button> -->
+            <!-- <button class="button primary-btn" type="submit" [routerLink]="['/edit-burn-rule/'+burnRuleId]"
+                *ngIf="programDetails?.publishStatus=='UPCOMING' && programDetails?.approvedStatus!='APPROVED'">EDIT</button> -->
+        </div>
+    </div>
+</div>

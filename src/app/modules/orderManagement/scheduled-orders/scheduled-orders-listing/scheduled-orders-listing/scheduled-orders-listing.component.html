@@ -1,0 +1,140 @@
+<div class="page-wrap">
+    <div class="search-panel-block">
+        <div class="bredcrumb-title-wrap">
+            <div class="search-container-block">
+                <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+                <div class="search-list">
+                    <form class="filter-wrap" [formGroup]="searchScheduledOrdersFormGroup" (submit)="searchKey()">
+                        <div class="row title-search-row">
+                            <div class="col-md-4 title-search-col">
+                                <div class="title flex">
+                                    <!-- <h1>Scheduled Orders</h1> -->
+                                    <h1>Scheduled Orders</h1>
+                                    <!-- <p class="alert-message pointer" (click)="openErrorMessageDialog()"><span class="alert_icon"></span><u> High Alert</u></p> -->
+                                </div>
+                            </div>
+                            <div class="col-md-5 title-search-col">
+                                <div class="searchform-block">
+                                    <div class="common-search">
+                                        <input type="text" formControlName="searchVal" placeholder="Search Scheduled Orders" />
+                                        <span class="search-btn" (click)="searchKey()"></span>
+                                        <div class="filter-btn-wrap">
+                                            <span class="filter-btn" (click)="openFilter();" [ngClass]="status ? 'open' : 'close'"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 title-search-col">
+
+                            </div>
+                        </div>
+                        <div class="feild-search" *ngIf="!status">
+                            <div class="row feild-search-inner">
+                                <div class="col-md-3">
+                                    <mat-select-autocomplete name="Brand" ngDefaultControl [placeholder]="'Select Brand'" [options]="brandsList" [display]="'brandName'" [value]="'value'" [multiple]='true' [labelCount]="1" (selectionChange)="getAllStores($event)"
+                                        [formControl]="searchScheduledOrdersFormGroup.controls['brandId']" #brandInput>
+                                    </mat-select-autocomplete>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-select-autocomplete name="Store" ngDefaultControl [placeholder]="'Select Store'" [options]="storesList" [display]="'storeName'" [value]="'value'" [multiple]='true' [labelCount]="1" [formControl]="searchScheduledOrdersFormGroup.controls['storeId']"
+                                        #storeInput>
+                                    </mat-select-autocomplete>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="select-tags">
+                                        <mat-form-field>
+                                            <mat-select placeholder="Order Type" formControlName="orderType">
+                                                <mat-option value="DELIVERY">Delivery</mat-option>
+                                                <mat-option value="PICKUP">Pickup</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="select-tags">
+                                        <mat-form-field>
+                                            <input matInput type="text" formControlName="skuCode" maxlength="100" placeholder="SKU Code" />
+                                            <mat-error *ngIf="searchScheduledOrdersFormGroup.get('skuCode').hasError('pattern')">This special character(s) is not allowed
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="button-wrap">
+                                    <div class="">
+                                        <button class='button reset-btn' type="button" (click)="resetForm()">RESET</button>
+                                        <button class='button apply-btn' type="submit">APPLY</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="form-wrap">
+            <div class="table-wrap">
+                <div class="table-wrap-inner">
+                    <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)" *ngIf="dataSource">
+                        <ng-container matColumnDef="txnId">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="txnId"> ORDER ID </th>
+                            <td mat-cell (click)="viewScheduledOrder(row.orderId)" *matCellDef="let row"> <u><a
+                    class="text-blue">{{ row.txnId }}</a></u>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="storeName">
+                            <th mat-header-cell *matHeaderCellDef> STORE NAME </th>
+                            <td mat-cell *matCellDef="let row"> {{ row.storeName }} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="noOfItems">
+                            <th mat-header-cell *matHeaderCellDef> NO. OF ITEMS </th>
+                            <td mat-cell *matCellDef="let row"> {{row.noOfItems}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="totalAmount">
+                            <th mat-header-cell *matHeaderCellDef> TOTAL AMOUNT </th>
+                            <td mat-cell *matCellDef="let row"> {{ row.totalAmount }} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="scheduledTime">
+                            <th mat-header-cell *matHeaderCellDef>SCHEDULED TIME</th>
+                            <td mat-cell *matCellDef="let row">
+                                {{row.scheduledTime === null ? '-' : row.scheduledTime | date:'dd/MM/yyyy'}} {{row.scheduledTime | date:'shortTime'}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="productName">
+                            <th mat-header-cell *matHeaderCellDef> PRODUCT NAME </th>
+                            <td mat-cell *matCellDef="let row"> {{ row.productName != null ? row.productName : '-'}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="orderType">
+                            <th mat-header-cell *matHeaderCellDef> ORDER TYPE </th>
+                            <td mat-cell *matCellDef="let row"> {{ row.orderType != null ? row.orderType : '-' }} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="txnReqDate">
+                            <th mat-header-cell *matHeaderCellDef> DATE & TIME</th>
+                            <td mat-cell *matCellDef="let row">
+                                {{row.txnReqDate === null ? '-' : row.txnReqDate | date:'dd/MM/yyyy'}} {{row.txnReqDate | date:'shortTime'}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="orderStatus">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="orderStatus"> STATUS </th>
+                            <td mat-cell *matCellDef="let row"> Scheduled </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                        </tr>
+                    </table>
+                    <div *ngIf="searchPageLoader" class="full-page-loader">
+                        <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                    </div>
+                    <div class="no-records" *ngIf="noRecords">
+                        No Records Found!
+                    </div>
+                </div>
+                <mat-paginator [length]="resultsLength" (change)="searchVal()" #paginator (page)="getUpdate($event)" [pageSize]="paginationData.pageSize" [pageSizeOptions]="[10,20,50,100]">
+                </mat-paginator>
+            </div>
+        </div>
+    </div>
+</div>

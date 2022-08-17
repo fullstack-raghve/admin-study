@@ -1,0 +1,29 @@
+.select-tags {
+    position: absolute;
+    bottom: 0px;
+    width: 92%;
+}
+
+/deep/ .mat-autocomplete-panel {
+    /deep/ .mat-option {
+        /deep/ .mat-option-text {
+            span {
+                font-size: 12px;
+            }
+        }
+    }
+}
+
+.flex-align {
+    display: flex;
+    align-items: center;
+}
+
+.wrap {
+    white-space: nowrap;
+}
+
+.padlr-10 {
+    padding-left: 10px;
+    padding-right: 10px;
+}

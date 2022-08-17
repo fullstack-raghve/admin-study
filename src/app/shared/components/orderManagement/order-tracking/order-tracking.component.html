@@ -1,0 +1,57 @@
+<div class="main-container">
+    <p class="timelineHeader">Order tracking</p>
+    <section id="timeline" class="timeline-outer">
+        <div class="container" id="content">
+            <div class="row">
+                <div class="col s12 m12 l12">
+                    <!-- <ul class="timeline">
+                        <li class="event" [attr.data-date]="trackingDetails?.orderPlaceTime">
+                            <h3 [ngClass]="trackingDetails?.orderPlaceTime === '' ? '': 'bold'">
+                                Order Placed</h3>
+                        </li>
+                        <li class="event" [attr.data-date]="trackingDetails?.orderAcceptTime">
+                            <h3 [ngClass]="trackingDetails?.orderAcceptTime === '' ? '': 'bold'">
+                                Accepted</h3>
+                        </li>
+                        <li class="event" [attr.data-date]="trackingDetails?.orderReadyTime">
+                            <h3 [ngClass]="trackingDetails?.orderReadyTime === '' ? '': 'bold'">
+                                Packed</h3>
+                        </li>
+                        <li class="event" [attr.data-date]="trackingDetails?.orderOnTheWayTime">
+                            <h3 [ngClass]="trackingDetails?.orderOnTheWayTime === '' ? '': 'bold'">
+                                Shipped
+                            </h3>
+                        </li>
+                        <li class="event" [attr.data-date]="trackingDetails?.orderCompletedTime">
+                            <h3 [ngClass]="trackingDetails?.orderCompletedTime === '' ? '': 'bold'">
+                                Completed</h3>
+                        </li>
+                    </ul> -->
+                    <ul class="timeline">
+                        <li class="event" [attr.data-date]="trackingDetails?.orderPlaceTime">
+                          <h3 [ngClass]="trackingDetails?.orderPlaceTime === '' ? '': 'bold'">
+                            Order Placed</h3>
+                        </li>
+                        <li class="event" [attr.data-date]="trackingDetails?.orderAcceptTime">
+                          <h3 [ngClass]="trackingDetails?.orderAcceptTime === '' ? '': 'bold'">
+                            Accept</h3>
+                        </li>
+                        <li class="event" [attr.data-date]="trackingDetails?.orderReadyTime">
+                          <h3 [ngClass]="trackingDetails?.orderReadyTime === '' ? '': 'bold'">
+                            Food Ready</h3>
+                        </li>
+                        <li class="event" [attr.data-date]="trackingDetails?.orderOnTheWayTime">
+                          <h3 [ngClass]="trackingDetails?.orderOnTheWayTime === '' ? '': 'bold'">
+                            {{orderType !== 'PICKUP' ? 'On The Way' : 'Ready for Pickup'}}</h3>
+                        </li>
+                        <li class="event" [attr.data-date]="trackingDetails?.orderCompletedTime">
+                          <h3 [ngClass]="trackingDetails?.orderCompletedTime === '' ? '': 'bold'">
+                            Completed</h3>
+                        </li>
+                      </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    <br />
+</div>

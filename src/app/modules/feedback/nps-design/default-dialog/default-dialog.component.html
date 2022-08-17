@@ -1,0 +1,13 @@
+<div class="confirm-dialog">
+    <h6>
+      Reset will change all the values to default. Existing flows will not be affected by it.
+    </h6>
+    <div class="button-wrap text-right pt-20px">
+      <button class="button secondary-btn" [mat-dialog-close]="{
+        'buttonName': 'NO'
+      }">Cancel</button>
+      <button class="button primary-btn" [mat-dialog-close]="{
+        'buttonName': 'YES'
+      }">Continue</button>
+    </div>  
+  </div>

@@ -1,0 +1,57 @@
+<div class="page-wrap">
+    <div class="space-between close-dialog">
+        <h5>Edit Contact</h5>
+        <div class="close-icon text-right">
+            <img src="assets/images/icons/filter_close_ico.png" (click)="onCloseClick()" alt="">
+        </div>
+    </div>
+    <form [formGroup]="contactFormGroup" (submit)="createContact(contactFormGroup.value)">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="master-fieldSet">
+                    <fieldset class="language-fieldset" formArrayName="contactLocale">
+                        <legend class="fieldset-heading"> Name</legend>
+                        <div *ngFor="let locale of contactFormGroup['controls']['contactLocale']['controls'];let i = index;" [formGroupName]="i">
+                            <div class="example-container  {{languageDirection[i]}}">
+                                <mat-form-field class="{{alignCss[i]}}">
+                                    <input matInput placeholder="{{languageList[i].languageName}}" maxlength="30" formControlName="name" required>
+                                    <mat-error *ngIf="locale.get('name').hasError('required')">Please enter value</mat-error>
+                                    <mat-error *ngIf="locale.get('name').hasError('minlength')"> Minimum 2 character(s) required</mat-error>
+                                    <mat-error *ngIf="locale.get('name').hasError('pattern')"> Invalid character</mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="">
+                    <mat-form-field class="field-width">
+                        <input matInput placeholder="Phone Number" OnlyNumber="true" maxlength="15" formControlName="personNumber" required>
+                        <mat-error *ngIf="contactFormGroup.get('personNumber').hasError('required')">Please enter value</mat-error>
+                        <mat-error *ngIf="contactFormGroup.get('personNumber').hasError('pattern')">Invalid Number</mat-error>
+                        <mat-error *ngIf="contactFormGroup.get('personNumber').hasError('minlength')">Minimum 8 numbers required</mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="">
+                    <mat-form-field class="field-width">
+                        <input matInput placeholder="Email Id" formControlName="personMailId" maxlength="50" required>
+                        <mat-error *ngIf="contactFormGroup.get('personMailId').hasError('required')">Please enter value</mat-error>
+                        <mat-error *ngIf="contactFormGroup.get('personMailId').hasError('pattern')">Invalid email id</mat-error>
+                        <!-- <mat-error *ngIf="contactFormGroup.get('personMailId').hasError('pattern') == false && contactFormGroup.get('personMailId').hasError('minlength')">Minimum 7 characters required</mat-error> -->
+                    </mat-form-field>
+                </div>
+                <div class="">
+                    <mat-form-field class="field-width">
+                        <input matInput placeholder="Employee Id" formControlName="employeeId" maxlength="20" required>
+                        <mat-error *ngIf="contactFormGroup.get('employeeId').hasError('required')">Please enter value</mat-error>
+                        <mat-error *ngIf="contactFormGroup.get('employeeId').hasError('pattern')">Please enter valid value</mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="text-right pt-60px">
+                    <button class='button primary-btn' type="submit">UPDATE</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

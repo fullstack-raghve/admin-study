@@ -1,0 +1,28 @@
+.export {
+    color: #a0a0a0;
+    .export-icon {
+        cursor: pointer;
+    }
+}
+
+.select-store-block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    img {
+        width: 5rem;
+    }
+    span {
+        padding-left: 5px;
+    }
+}
+
+/deep/ .mat-autocomplete-panel {
+    /deep/ .mat-option {
+        /deep/ .mat-option-text {
+            span {
+                font-size: 12px;
+            }
+        }
+    }
+}

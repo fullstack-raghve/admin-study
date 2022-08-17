@@ -1,0 +1,284 @@
+.form-wrap {
+    margin-bottom: 5px;
+    padding: 1.8em 1.8em 4em;
+    .add-color{
+        padding: 15px 16px;
+        .img-block{
+                // margin-bottom: 5px;
+                position: relative;
+             .overlay-layer{
+                 width:100%;
+                 top : 2rem;
+                 position:absolute;
+                 z-index:0;
+                 font-size:12px;
+                 color:gray;
+                 text-align:center;
+                 line-height:40px;
+                font-weight: 500;
+                .add-button{
+                    width: 2rem;
+                }
+             }
+             .upload_btn{
+                position:absolute;
+                width: 100%;
+                // height:40px;
+                // margin-top:130px;
+                z-index:10;
+                opacity: 0;
+                cursor: pointer;
+            }
+            .avatar-zone{               
+                margin:0.5rem;
+                width: 310px;
+                height: 190px!important;
+                background-color: #F2F2F2;
+                text-align: center;
+                border: 1px dashed #dbdbdb;
+                
+                .upload-img {
+                  width: 250px;
+                  object-fit: contain!important;
+                }
+            }
+            .upload-icon {
+                width: 12px;
+                height: 12px;
+                margin-right: 5px;
+            }
+            
+        }
+        
+    }
+}
+
+
+.master-fieldSet {
+    .language-fieldset{
+        padding: 0px 26px 10px;
+        border: 1px solid #dbdbdb;
+        border-radius: 5px;
+        .fieldset-heading {
+            font-size: 10px;
+            padding-inline-start: 7px;
+            max-width: 30% !important;
+        }
+    }
+}
+.cardCodes{
+    width: 100%;
+    margin:5px 0px;
+    display: flex;
+    justify-content: space-between;
+}
+.templateFor{
+    margin:28px 0px;
+}
+mat-card{
+   margin-bottom: 1rem;
+}
+.value-selection{
+    position: relative;
+    margin: 1rem 0rem 0rem 0rem;
+    .value-input{ 
+        margin-bottom: 0px !important; 
+    }
+    .add-button{
+        position: absolute;
+        right:0rem;
+        width: 2rem;
+    }
+}
+
+
+  
+    .select-value{
+        display: flex;
+    justify-content: space-between;
+    padding: 0;
+    width: 100%;
+    .selValue{
+       p{
+font-size: 9px;
+       } 
+    }
+    .upload_sku{
+        position:absolute;
+        width: 100%;
+        // height:40px;
+        // margin-top:130px;
+        z-index:10;
+        opacity: 0;
+        cursor: pointer;
+    }
+        // position: absolute;
+        // top: 1rem;
+        // left: 9rem;
+        // color: rgb(8, 151, 247);
+    }
+.card-value,.date-days,.value-checkbox{
+padding: 0rem 0rem 0rem 0rem;
+}
+p{
+    margin-bottom: 0rem !important;
+}
+.charges{
+    margin-bottom: 5.5rem;
+}
+
+/deep/ .expansion-panel .mat-expansion-panel-header {
+    background-color: #eaeaea !important;
+}
+/deep/.expansion-panel .mat-expansion-panel-header-title {
+    color: #000 !important;
+}
+/deep/.expansion-panel .mat-expansion-indicator::after {
+    color: #000 !important;
+}
+
+.new-playicon{
+    background-color: #efefef;
+    padding: 2px 2px;
+    border-radius: 5px;
+    font-size: 10px;
+    width: 180%;
+    text-align: center;
+}
+.messageOverwrite{
+    top:6px;
+    margin: 0;
+    width: 351px;
+    height: 190px;
+    background-color: #F2F2F2;
+    text-align: center;
+    border: 1px dashed #dbdbdb;
+    padding: 0;
+    .messages{
+        color: #000000;
+        margin: 0.5rem 0.6rem;
+        width: 190px;
+        word-wrap: break-word;
+        height: 100px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+     
+         h6{
+            font-family: 'Great Vibes';
+            font-size: 1rem;
+            line-height: 15px;
+        }
+        h3{
+            font-family: 'Great Vibes';
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            line-height: 20px;
+        }
+        p{
+            font-size: 11px;
+            line-height: 13px;
+        }
+    }
+ 
+}
+.ImgHead{
+    position: absolute;
+    top: 0;
+    img{
+        width: 100%;
+    }
+  }
+  .avatar-zone1{
+    position: relative;
+    width: 100%;
+    height: 190px;
+    background-color: #F2F2F2;
+    text-align: center;
+    border: 1px dashed #dbdbdb;
+    margin: 0 auto;
+
+    .upload-img {
+      width: 250px;
+      object-fit: contain!important;
+    }
+    img{
+        width: 100% !important;
+        height: 188px!important;
+    }
+}
+
+.avatar-zone_logo{
+    width: 120px;
+    height: 35px;
+    // position: absolute;
+    top: 0rem;
+    margin: 0.5rem 0.6rem;
+    .upload-text{
+        padding: 60px 0;
+        color: #a7a3a3;
+        font-size: 16px;
+    }
+}
+.addCardKeywords{
+    padding: 0 1em;
+    div{
+        margin-right: 1em;
+        border-radius: 2px;
+        background: #eaeaea;
+        padding: 5px 5px 5px 5px;
+        margin-bottom: 10px;
+        img{
+            padding: 0 5px;
+        }
+    }
+
+}
+.radiobutton-row{
+    font-size: 11px;
+}
+.firstRow{
+    .col-md-8{
+        display: grid;
+    }
+}
+.nonEditable{
+    pointer-events: none;
+    opacity: 0.5;
+}
+.firstpadding{
+    padding: 0 1em !important;
+}
+.edit-avatar-zone{
+    position: absolute;
+    z-index: 99;
+    right: 0;
+    .edit-img-button{
+        background-color: #fff;
+        border: 1px solid #fbfbfb;
+        margin: 0;
+        img{
+            width: 15px;
+        }
+    }
+}
+
+.coupn{
+    /deep/.mat-form-field-infix {
+        display: flex;
+    }
+}
+.sku{
+    /deep/.mat-form-field-infix {
+        display: flex;
+    } 
+   div{
+    position: relative;
+    top: 14px;
+    left: 10px;
+   }
+}
+.aLogo{
+    display: none;
+}

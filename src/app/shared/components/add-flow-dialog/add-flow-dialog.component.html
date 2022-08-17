@@ -1,0 +1,139 @@
+<div class="page-wrap">
+    <div class="search-panel-block">
+      <div class="bredcrumb-title-wrap">
+        <div class="search-container-block">
+          <div class="search-list">
+            <form class="filter-wrap" [formGroup]="searchFlowFormGroup" (submit)="searchVal()" #searchFlowForm="ngForm">
+              <div class="row title-search-row">
+                <div class="col-md-4 title-search-col">
+                  <div class="title">
+                    <h1>Select Flow</h1>
+                  </div>
+                </div>
+                <div class="col-md-5 title-search-col">
+                  <div class="searchform-block">
+                    <div class="common-search">
+                      <input type="text" formControlName="searchVal" placeholder="Search Flow" />
+                      <span class="search-btn" (click)="searchVal()"></span>
+                      <div class="filter-btn-wrap">
+                        <span class="filter-btn" (click)="openFilter();" [ngClass]="status ? 'open' : 'close'"></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3 title-search-col">
+                  <div class="add-btn text-right">
+                      <span class="add-plus">
+                          <img src="assets/images/icons/filter_close_ico.png" style="width:24px;cursor: pointer;" alt="add" (click)="onCloseClick()"  class="plus-icon">
+                        </span>
+                  </div>
+                </div>
+              </div>
+              <div class="feild-search" *ngIf="!status">
+                <div class="row feild-search-inner">
+
+                  <div class="col-md-3">
+                    <mat-form-field>
+                      <input matInput [matDatepicker]="picker1" [OnlyNumber]="true" placeholder="Start Date" formControlName="fromDate">
+                      <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                      <mat-datepicker #picker1></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-3">
+                    <mat-form-field>
+                      <input matInput [matDatepicker]="picker2"  [OnlyNumber]="true" placeholder="End date" formControlName="endDate">
+                      <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                      <mat-datepicker #picker2></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                  <div class="button-wrap">
+                    <div class="">
+                      <button class='button quaternary-btn' (click)="reset()">RESET</button>
+                      <button class='button tertiary-btn' type="submit">APPLY</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="form-wrap">
+        <div class="table-wrap">
+          <div class="table-wrap-inner" malihu-scrollbar [scrollbarOptions]="scrollbarOptions">
+            <table mat-table [dataSource]="dataSource" matSort>
+                <ng-container matColumnDef="select">
+                    <th mat-header-cell *matHeaderCellDef>
+                    </th>
+                    <td mat-cell *matCellDef="let row">
+                        <mat-radio-button (click)="$event.stopPropagation()"
+                        (change)="$event ? selection.toggle(row) : null"
+                         ></mat-radio-button>
+                    </td>
+                  </ng-container>
+              <ng-container matColumnDef="flowId">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> FLOW ID </th>
+                <td mat-cell *matCellDef="let row"><u><a href="{{flowURL}}/flow/?flowId={{row.flowId}}&kioskId=0&ispreview=true" target="_blank" class="text-blue">{{ row.flowId }} </a></u></td>
+              </ng-container>
+
+              <ng-container matColumnDef="flowName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> FLOW NAME </th>
+                <td mat-cell *matCellDef="let row">
+                      {{row.flowName}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="communicationType">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> CHANNELS </th>
+                  <td mat-cell *matCellDef="let row">
+                        {{row.communicationType}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="feedbackCount">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> FEEDBACK COUNT </th>
+                    <td mat-cell *matCellDef="let row">
+                          {{row.feedbackCount ? row.feedbackCount : '10'}} </td>
+                  </ng-container>
+
+              <ng-container matColumnDef="createdTime">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> CREATED DATE & TIME </th>
+                <td mat-cell *matCellDef="let row"> {{row.createdTime | date:'dd/MM/yyyy, h:mm'}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="preview">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> PREVIEW </th>
+                  <td mat-cell *matCellDef="let row">
+                    <p class="pointer">
+                     <a href="{{flowURL}}/flow/?flowId={{row.flowId}}&kioskId=0&ispreview=true" target="_blank"> <img src="assets/images/svg-icons/preview_icon.svg" alt="preview_icon" width="20px;"></a>
+                    </p>
+                  </td>
+                </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+              </tr>
+            </table>
+            <div class="no-records" *ngIf="resultsLength === 0 && buildFlag">
+              No Records Found!
+            </div>
+          </div>
+          <mat-paginator [length]="resultsLength" #paginator (page)="getUpdate($event)" [pageSize]="10"
+            [pageSizeOptions]="[10,20,50,100]">
+          </mat-paginator>
+
+
+        </div>
+        <div class="button-wrap mt-0 mr-3">
+            <div class="">
+              <button  class="button secondary-btn close_btn" [mat-dialog-close]="{
+                'buttonName': 'CANCEL'
+              }">CANCEL</button>
+              <button  class="button primary-btn close_btn" [mat-dialog-close]="{
+                'buttonName': 'SELECT',
+                'tableData': selection.selected,
+                'totalCount':resultsLength
+              }">SELECT</button>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>

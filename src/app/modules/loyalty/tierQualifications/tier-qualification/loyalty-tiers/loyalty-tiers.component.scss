@@ -1,0 +1,46 @@
+.tier-page {
+  padding: 1.5em;
+  max-width: 300px;
+  width: 100%;
+  margin: 0 auto;
+}
+.upload-btn-text {
+  cursor: pointer;
+}
+.img-container .placeholder-img {
+  width: 100px;
+  height: 85px;
+  background-color: #f2f2f2;
+  text-align: center;
+  border: 1px dashed #dbdbdb;
+  color: #a7a7a7;
+  font-size: 12px;
+  padding: 27px;
+}
+.remove-img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  img {
+    width: 15px;
+  }
+  label {
+    font-size: 13px;
+    color: grey;
+    padding-left: 5px;
+    margin-bottom: 0;
+  }
+}
+/deep/.cdk-overlay-pane {
+  max-width: 42vw !important;
+}
+/deep/.mat-dialog-container {
+  min-width: 20vw !important;
+}
+
+.tier-error-msg{
+  font-size: 11px;
+  position: absolute;
+  bottom: -45px;
+}

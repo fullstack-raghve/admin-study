@@ -1,0 +1,58 @@
+<div class="page-wrap">
+  <div class="page-top-section">
+    <div class="space-between close-dialog">
+      <h5>Select Products</h5>
+      <div class="close-icon text-right">
+        <img src="assets/images/icons/filter_close_ico.png" (click)="onCloseClick()" alt="close_icon">
+      </div>
+    </div>
+  </div>
+  <div class="pos-relative">
+    <div class="common-search">
+      <input #productInput type="text" (keydown.enter)="getSelectedDataBfrSearch();getSkuProducts()" placeholder="Search Products" />
+      <span class="search-btn" (click)="getSelectedDataBfrSearch();getSkuProducts()"></span>
+    </div>
+    <div class="filter-btn-wrap" (click)="clearSearch()">
+      <span class="filter-btn close"></span>
+    </div>
+  </div>
+  <form [formGroup]="skuProductFormGroup" #storeForm="ngForm">
+    <div class="messsage-info" *ngIf="totalCount == 0">
+      <p> No products available</p>
+    </div>
+    <div class="product-listing">
+      <div formArrayName="orders">
+        <div class="product-row"
+          *ngFor="let category of skuProductFormGroup['controls']['orders']['controls'];let i = index;"
+          [formGroupName]="i">
+          <div class="product-block">
+            <div class="category-heading">
+              <h6>{{prodGroupArr[i].categoryName}}</h6>
+            </div>
+            <div class="product-details" formArrayName="productDetails">
+              <div class="products"
+                *ngFor="let product of category['controls']['productDetails']['controls'];let j = index;"
+                [formGroupName]="j">
+                <div class="checkbox" *ngIf="prodGroupArr[i].groupItem[j].productName != ''">
+                  <mat-checkbox formControlName="productChecked" (change)="onChangeProduct($event)"></mat-checkbox>
+                </div>
+                <div class="details-blk" *ngIf="prodGroupArr[i].groupItem[j].productName != ''">
+                  <p>{{prodGroupArr[i].groupItem[j].productName}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="productError" class="error-msg">
+      <p> Please select products</p>
+    </div>
+    <div class="text-center" *ngIf="totalCount > 0">
+      <button class="button primary-btn" type="button" (click)="addProduct(skuProductFormGroup.value)">ADD</button>
+    </div>
+    <div *ngIf="loading" class="page-loader-block full-page-loader">
+      <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+    </div>
+  </form>
+</div>

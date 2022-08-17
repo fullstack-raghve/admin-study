@@ -1,0 +1,50 @@
+<div class="terms&conditions-block">
+  <!-- <form  [formGroup]="TNCFormGroup">
+  <mat-card>
+    <h3 class="card-title">Terms & Conditions *</h3>
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <editor apiKey="test" [init]="{plugins: 'link'}" formControlName="description"></editor>
+      </mat-expansion-panel> -->
+
+      <form  [formGroup]="TNCFormGroup">
+          <div class="terms&conditions-block">
+              <mat-card >
+                  <h3 class="card-title">Terms & Conditions </h3>
+                <div class="expansion-panel" formArrayName="conditionArray">
+                  <mat-accordion>
+                    <mat-expansion-panel class="mat-expansion-panel"
+                      *ngFor="let program of TNCFormGroup['controls']['conditionArray']['controls'];let i = index;"
+                      [formGroupName]="i" (opened)="panelOpenState = true;expandtermAndCondition()" (closed)="panelOpenState = false">
+                      <mat-expansion-panel-header>
+                        <mat-panel-title>
+                          {{TNCFormGroup['controls']['conditionArray']['controls'][i]['controls']['languageName'].value}}
+                        </mat-panel-title>
+                      </mat-expansion-panel-header> 
+                      <div class= "pt-20px" >
+                        <label>Content</label>
+                        <editor  apiKey="test" formControlName="terms" *ngIf="languageName[i]['controls']['languageName'].value!='Arabic'" ></editor>
+                        <editor  apiKey="test" id="arabicIDtac" formControlName="terms" *ngIf="languageName[i]['controls']['languageName'].value=='Arabic'" ></editor>
+      
+                        <!-- <editor apiKey="test" formControlName="terms"  ></editor>
+                        <editor apiKey="test"  formControlName="terms" *ngIf="languageName[i]['controls']['languageName'].value ==='Arabic'" ></editor> -->
+                      </div>
+                    </mat-expansion-panel>
+                  </mat-accordion>
+                </div>
+              </mat-card>
+            </div>
+    </form>
+
+  <div>
+      <button class="button secondary-btn" [mat-dialog-close]="{
+        'buttonName': 'CANCEL'
+       }">CANCEL</button>
+        </div>
+</div>

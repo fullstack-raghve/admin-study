@@ -1,0 +1,92 @@
+<div class="bredcrumb-title-wrap">
+  <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+  <div class="title flex-container">
+    <h1>
+     File Gallery
+    </h1>
+  </div>
+</div>
+<div class="page-wrap">
+  <form id="createFileGallery"  [formGroup]="createFileGalleryFormGroup">
+    <mat-card class="mb-20px">
+      <div class="store-wall-tab-wrapper">
+        <div class="row">
+          <div class="col-md-3">
+            <mat-card class="pad0">
+              <div formArrayName="galleryLocaleBean">
+                <div class="add-directory pad-em">
+                <div>
+                  Add Directory
+                </div>
+                <div class="add-btn">
+                  <div class=""
+                  (click)="openAddDirectoryDialog()"><img
+                      src="assets/images/icons/addimage_ico.png" alt="" style="width:25px;"></div>
+                </div>
+              </div>
+                <div class="created-directories">
+                   <!-- <div class="add-btn">
+                <span>Dine  <img
+                      src="assets/images/icons/upload_img_ico.png" alt="" style="width:18px;"></span>
+                    <div class="">
+                      <input type='file' (change)="onSelectFile($event)" multiple>
+                      </div>
+                  </div> -->
+                    <div class="banner-image">
+                      <div class="directory-container">
+                        <div>
+                        <div class="directory"
+                          *ngFor="let directory of directories;let j = index;"
+                          [formGroupName]="j" [class.active]="selectedIndex === j">
+                          <div class="lang-field" (click)="getFilesFromDirectories(directory);setIndex(j)">
+                            <!-- [ngClass]="{'active': directory.active}" -->
+                            <label>{{directories[j].directoryName}}</label>
+                          </div>
+                          <div class="grid img-block">
+                            <div class="avatar-zone" style="display: none;">
+                              <img *ngIf="imagePath.length!=0 && imagePath[j]!=''" class="upload-img"
+                                [class.uploaded-img]="imgUpload" [src]="filePathUrl+imagePath[j]">
+                            </div>
+                            <input style="display:none;" type="file" #uploadEl class="upload_btn"
+                              (change)="uploadImage($event.target.files,j,directory)" />
+                            <div class="text-center" style="width: 75%;">
+                              <span class="upload-btn-text" (click)='uploadEl.click()'>
+                                <span class="upload-icon">
+                                  <img src="assets/images/icons/flaticon1574315256-svg.png"  alt="Img">
+                                </span>
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                </div>
+            </mat-card>
+          </div>
+          <div class="col-md-9">
+            <mat-card style="height: 600px !important;">
+                  <div class="container-gallery">
+                  <div class="thumbnail">
+                    <div class="flex-container">
+                      <div style="width: 100%">
+                        <ng-image-slider #nav [images]="imagesTobeDisplayed" [infinite]="true"
+                          [imageSize]="{width: 180, height: 170}"></ng-image-slider>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+      <mat-paginator [length]="imagesTobeDisplayed.length"
+      [pageSize]="size"
+      [pageIndex]="page"
+      [pageSizeOptions]="[4, 8, 12]"
+      (page)="getData($event)">
+</mat-paginator>
+    </mat-card>
+  </form>
+</div>

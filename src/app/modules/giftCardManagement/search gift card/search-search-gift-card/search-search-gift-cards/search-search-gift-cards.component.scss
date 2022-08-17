@@ -1,0 +1,25 @@
+.btn-light{
+    border: 1px solid orange;
+    float: right;
+}
+.select-gift-block{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    img{
+        width: 5rem;
+    }
+    span{
+        padding-left: 5px;
+    }
+}
+.button-wrap{
+    display: flex;
+    .button{
+        height:30px;
+    }
+}
+.feild-search-inner{
+    font-size: 10px;;
+}
+.nodatafound table td { border:0; } 

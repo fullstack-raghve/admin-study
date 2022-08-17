@@ -1,0 +1,216 @@
+<div class="page-wrap">
+  <div class="bredcrumb-title-wrap">
+    <form class="search-wrap filter-wrap" [formGroup]="searchKioskForm" (submit)="getKioskList()">
+      <div class="row common-search">
+        <div class="col-md-2 store-title">
+          <h6>Select Kiosk</h6>
+        </div>
+        <div class="col-md-10">
+          <input type="text" formControlName="searchVal" placeholder="Search Kiosk" />
+          <span class="search-btn" (click)="getKioskList()"></span>
+          <div class="filter-btn-wrap">
+            <span class="filter-btn" (click)="openFilter();" [ngClass]="status ? 'open' : 'close'"></span>
+          </div>
+        </div>
+        <div class="close-icon text-right">
+          <img src="assets/images/icons/filter_close_ico.png" (click)="onCloseClick()" alt="">
+        </div>
+      </div>
+      <div class="feild-search" *ngIf="!status">
+        <div class="row feild-search-inner">
+          <div class="col-md-3">
+            <mat-form-field>
+              <mat-select placeholder="Store Name" formControlName="kioskstore">
+                <mat-option [value]="store.storeId" *ngFor="let store of storeList ">{{store?.storeName}}
+                </mat-option>
+
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-md-3">
+            <mat-form-field>
+              <mat-select placeholder="Last Online" formControlName="LastOnline">
+                <!-- <mat-option *ngFor="let brand of brandList" [value]="brand.brandId">
+            {{ brand.brandName }}
+            </mat-option> -->
+                <mat-option value="1">1 hour </mat-option>
+                <mat-option value="2">2 hour </mat-option>
+                <mat-option value="5">5 hour</mat-option>
+                <mat-option value="10">10 hour</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-md-3">
+            <mat-form-field>
+              <mat-select placeholder="Battery" formControlName="battery">
+                <!-- <mat-option *ngFor="let brand of brandList" [value]="brand.brandId">
+            {{ brand.brandName }}
+            </mat-option> -->
+                <mat-option value="20">Less Than 20%</mat-option>
+                <mat-option value="40">Less Than 40%</mat-option>
+                <mat-option value="60">Less Than 60%</mat-option>
+                <mat-option value="80">Less Than 80%</mat-option>
+                <mat-option value="100">Less Than 100%</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-md-3">
+            <mat-form-field>
+              <mat-select placeholder="Assigned Flow" formControlName="assignedflow">
+                <!-- <mat-option *ngFor="let brand of brandList" [value]="brand.brandId">
+            {{ brand.brandName }}
+            </mat-option> -->
+                <mat-option [value]="flow.flowId" *ngFor="let flow of flows ">{{flow?.flowName}} </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <!-- <div class="col-md-3">
+            <mat-form-field class="field-style field-width">
+              <mat-select matInput placeholder="country" formControlName="kioskCountry" #countryInput>
+                <mat-option *ngFor="let country of countries" [value]="country.countryId"
+                  (click)="selectCountry(country)">
+                  {{ country.countryName }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-md-3">
+            <mat-form-field class="field-style field-width">
+              <mat-select matInput placeholder="Brand" formControlName="kioskBrand">
+                <mat-option *ngFor="let brand of brandList" [value]="brand.brandOid" (click)="selectBrand(brand)">
+                  {{ brand.brandName }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div> -->
+          <div class="filter-btn-wrap">
+            <div class="">
+              <button class='button quaternary-btn' type="button" (click)="resetForm()">RESET</button>
+              <button class='button tertiary-btn' type="submit">APPLY</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="form-wrap">
+    <div class="table-wrap">
+      <div class="table-wrap-inner" malihu-scrollbar [scrollbarOptions]="scrollbarOptions">
+        <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)" *ngIf="dataSource">
+          <!-- <ng-container matColumnDef="select" *ngIf="!selectedCouponMultiple">
+              <th mat-header-cell *matHeaderCellDef>
+              </th>
+              <td mat-cell *matCellDef="let row">
+                  <mat-radio-button (click)="$event.stopPropagation()"
+                  (change)="$event ? selection.toggle(row) : null"
+                   [checked]='isSelected(row)'></mat-radio-button>
+                  
+              </td>
+
+            </ng-container> -->
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-checkbox (change)="$event ? masterToggle() : null"
+                [checked]="selection.hasValue() && isAllSelected()"
+                [indeterminate]="selection.hasValue() && !isAllSelected()">
+              </mat-checkbox> ALL
+            </th>
+            <td mat-cell *matCellDef="let row">
+              <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                [checked]="selection.isSelected(row)">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="deviceId">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+            <td mat-cell *matCellDef="let row"> {{row.deviceId}}</td>
+          </ng-container>
+          <ng-container matColumnDef="deviceName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>NAME</th>
+            <td mat-cell *matCellDef="let row">
+              {{row.deviceName}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="location">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> STORE NAME </th>
+            <td mat-cell *matCellDef="let row"> {{row.location}} </td>
+          </ng-container>
+          <ng-container matColumnDef="countryName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> COUNTRY NAME </th>
+            <td mat-cell *matCellDef="let row"> {{row.countryName}} </td>
+          </ng-container>
+          <ng-container matColumnDef="brandName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> BRAND NAME </th>
+            <td mat-cell *matCellDef="let row"> {{row.brandName}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="connections">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> CONNECTION </th>
+            <td mat-cell *matCellDef="let row"> {{row.connections}} </td>
+          </ng-container>
+          <ng-container matColumnDef="lastOnline">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> LAST ONLINE </th>
+            <td mat-cell *matCellDef="let row">{{row.lastOnline | date:'short'}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="batteryPercentage">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> BATTERY </th>
+            <td mat-cell *matCellDef="let row">
+              <!-- <p
+              [ngClass]="row.battery <= 20 ? 'text-danger': '' || row.battery > 20 && row.battery <= 50? 'text-warning': '' || row.battery > 50 ? 'text-success': ''">
+              {{row.battery}}%</p> -->
+              <p *ngIf="row.batteryPercentage">{{row.batteryPercentage }}%</p>
+              <p *ngIf="!row.batteryPercentage">0%</p>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> STATUS </th>
+            <td mat-cell *matCellDef="let row"> {{row.status}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="code">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> CODE </th>
+            <td mat-cell *matCellDef="let row"> {{row.code}}</td>
+          </ng-container>
+          <!-- <ng-container matColumnDef="assingedFlow">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> ASSIGNED FLOW </th>
+              <td mat-cell *matCellDef="let row"> {{row.assignedFlowName}}</td>
+              </ng-container> -->
+          <ng-container matColumnDef="preview">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> PREVIEW </th>
+            <td mat-cell *matCellDef="let row">
+              <p class="pointer">
+                <a href="{{flowURL}}/flow/?flowId={{row.assingedFlow}}&kioskId={{row.deviceId}}&ispreview=true&kiosk=true"
+                  target="_blank"> <img src="assets/images/svg-icons/preview_icon.svg" alt="preview_icon"
+                    width="20px;"></a>
+              </p>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+          </tr>
+        </table>
+        <div class="no-records" *ngIf="noRecords">
+          No Records Found!
+        </div>
+      </div>
+      <div class="loader-block" *ngIf="loadingResponse">
+        <span class="loading-img-hide">
+          <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="loader">
+        </span>
+      </div>
+    </div>
+    <div class="button-wrap">
+      <div class="">
+
+        <button class="button primary-btn" [mat-dialog-close]="{
+            'buttonName': 'SELECT',
+            'tableData': selection.selected,
+            'totalCount':resultsLength
+          }">SELECT</button>
+      </div>
+    </div>
+  </div>
+</div>

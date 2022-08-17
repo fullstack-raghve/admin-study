@@ -1,0 +1,32 @@
+<div class="page-wrap">
+  <div class="bredcrumb-title-wrap">
+    <div class="search-wrap filter-wrap">
+      <div class="row common-search">
+        <div class="col-md-10 store-title">
+          <h6>Selected Products</h6>
+        </div>
+        <div class="close-icon text-right">
+          <img src="assets/images/icons/filter_close_ico.png" (click)="onCloseClick()" alt="">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-wrap">
+    <div class="table-wrap selectall-table">
+      <div class="table-wrap-inner">
+          <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">SKU CODE</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let id of selectedProductIdVal ">
+                  <td>{{id}}</td>
+                </tr>
+              </tbody>
+            </table>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,45 @@
+.page-wrap {
+    padding: 1.5em;
+    .txn-details {
+        p{
+            color: #000;
+            font-size: 14px;
+        }
+        label{
+            color: #b5b5b5;
+            font-size: 14px;
+            margin-bottom: 0;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
+          }
+          th {
+              background-color: #f5f5f5;
+          }
+          td, th {
+            border: 1px solid #dddddd;
+            text-align: center;
+            padding: 8px;
+          }
+
+    }
+}
+
+/deep/.mat-dialog-container {
+    min-width: 34vw;
+}   
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    h3 {
+        font-size: 20px;
+        color: #736f6f;
+    }
+}
+.close-icon {
+    cursor: pointer;
+}

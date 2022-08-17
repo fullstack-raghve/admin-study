@@ -1,0 +1,23 @@
+
+// addons popup
+.page-wrap {
+    padding: 15px;
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            h5 {
+                font-size: 20px;
+                color: #FC7E30 !important;
+            }
+        }
+
+    .addOns-list {
+        .list {
+            height: 200px;
+        }
+    }
+}
+.close-icon{
+  cursor: pointer;
+}

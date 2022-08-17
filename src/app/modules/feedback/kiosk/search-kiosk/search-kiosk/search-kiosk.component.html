@@ -1,0 +1,321 @@
+<div class="page-wrap">
+  <div class="search-panel-block">
+    <div class="bredcrumb-title-wrap">
+      <div class="search-container-block">
+        <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+        <div class="search-list">
+          <form class="filter-wrap" [formGroup]="searchKioskForm" (submit)="searchVal()">
+            <div class="row title-search-row">
+              <div class="col-md-4 title-search-col">
+                <div class="title">
+                  <h1>Kiosk</h1>
+                </div>
+              </div>
+              <div class="col-md-5 title-search-col">
+                <div class="searchform-block">
+                  <div class="common-search">
+                    <input type="text" formControlName="searchVal" placeholder="Search Kiosk" />
+                    <span class="search-btn" (click)="searchVal()"></span>
+                    <div class="filter-btn-wrap">
+                      <span class="filter-btn" (click)="openFilter();" [ngClass]="status ? 'open' : 'close'"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3 title-search-col">
+                <button type="button" class="button primary-btn float-right" [routerLink]="['/add-kiosk']">ADD
+                </button>
+              </div>
+              <div class="feild-search" *ngIf="!status">
+                <div class="row feild-search-inner">
+                  <div class="col-md-3">
+
+                    <mat-select-autocomplete name="Country" ngDefaultControl [placeholder]="'COUNTRY'"
+                      [options]="countryList" [display]="'countryName'" [value]="'value'" [multiple]='true'
+                      [labelCount]="1" (selectionChange)="getAllCities($event) || getAllBrands($event)" 
+                      [selectedOptions]="selectedCountryOptions"
+                      [formControl]="searchKioskForm.controls['kioskCountry']" #countryInput>
+                    </mat-select-autocomplete>
+                  </div>
+                  <div class="col-md-3">
+                    <mat-select-autocomplete name="CITY" ngDefaultControl [placeholder]="'CITY'" [options]="cityList"
+                      [display]="'cityName'" [value]="'value'" [multiple]='true' [labelCount]="1"
+       
+                      (selectionChange)="getAllMallsCity($event,cityName)" [selectedOptions]="selectedCityOptions"
+                       [formControl]="searchKioskForm.controls['cityName']" #cityInput>
+                    </mat-select-autocomplete>
+                  </div>
+                  <div class="col-md-3">
+                    <mat-select-autocomplete name="BRAND" ngDefaultControl [placeholder]="'BRAND'" [options]="brandValueList"
+                      [display]="'brandName'" [value]="'value'" [multiple]='true' [labelCount]="1"
+                      (selectionChange)="getAllMalls($event,cityName,kioskBrand)" [selectedOptions]="selectedBrandOptions"
+                       [formControl]="searchKioskForm.controls['kioskBrand']" #brandInput>
+                    </mat-select-autocomplete>
+                  </div>
+                  <div class="col-md-3">
+                      <mat-select-autocomplete name="MALL" ngDefaultControl [placeholder]="'MALL'" [options]="mallList"
+                      [display]="'mallName'" [value]="'value'" [multiple]='true' [labelCount]="1"
+                      (selectionChange)="getAllStores($event,cityName,kioskBrand)" [selectedOptions]="selectedMallOptions"
+                       [formControl]="searchKioskForm.controls['mallOid']" #mallInput>
+                    </mat-select-autocomplete>
+                    <!-- <mat-form-field>
+                      <mat-select placeholder="MALL" formControlName="mallOid" [disabled]="disabledMall"
+                        (selectionChange)="getAllStores1($event.value)" #mallInput>
+                        <mat-option *ngFor="let mall of mallList" [value]="mall.mallId">
+                          {{ mall.mallName }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field> -->
+                  </div>
+                  <div class="col-md-3">
+                      <mat-select-autocomplete name="Store" ngDefaultControl [placeholder]="'Store'" [options]="storeList"
+                      [display]="'storeName'" [value]="'value'" [multiple]='true' [labelCount]="1" [selectedOptions]="selectedStoreOptions"
+                       [formControl]="searchKioskForm.controls['kioskstore']" #storeInput>
+                    </mat-select-autocomplete>
+                    <!-- <mat-form-field class="example-full-width">
+                      <input matInput placeholder="Store Name" aria-label="State" [matAutocomplete]="storeAutocomplete"
+                        [formControl]="stateCtrl" formControlName="kioskstore">
+                      <mat-autocomplete #storeAutocomplete="matAutocomplete">
+                        <mat-option *ngFor="let state of filteredStates | async" [value]="state.name"
+                          (click)="getstateVal(state)">
+                          <span>{{state.name}}</span>
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field> -->
+                  </div>
+                  <div class="col-md-3">
+                    <div class="select-tags">
+                      <mat-form-field>
+                        <mat-select placeholder="Last Online" formControlName="LastOnline">
+                          <!-- <mat-option *ngFor="let brand of brandList" [value]="brand.brandId">
+                                    {{ brand.brandName }}
+                                  </mat-option> -->
+                          <mat-option value="1">1 hour </mat-option>
+                          <mat-option value="2">2 hour </mat-option>
+                          <mat-option value="5">5 hour</mat-option>
+                          <mat-option value="10">10 hour</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    
+                  </div>
+                  <div class="col-md-3">
+                    <div class="select-tags">
+                      <mat-form-field>
+                        <mat-select placeholder="Battery" formControlName="battery">
+                          <!-- <mat-option *ngFor="let brand of brandList" [value]="brand.brandId">
+                                      {{ brand.brandName }}
+                                    </mat-option> -->
+                          <mat-option value="20">Less Than 20%</mat-option>
+                          <mat-option value="40">Less Than 40%</mat-option>
+                          <mat-option value="60">Less Than 60%</mat-option>
+                          <mat-option value="80">Less Than 80%</mat-option>
+                          <mat-option value="100">Less Than 100%</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+
+                    
+                  </div>
+                  <div class="col-md-3">
+                    <div class="select-tags">
+                    <mat-form-field class="example-full-width">
+                      <input matInput placeholder="Assigned Flow" aria-label="AssignFlow"
+                        [matAutocomplete]="flowAutoComplete" [formControl]="assignCtrl" formControlName="assignedflow">
+                      <mat-autocomplete #flowAutoComplete="matAutocomplete">
+                        <mat-option *ngFor="let flow of filteredFlows | async" [value]="flow.flowName"
+                          (click)="getFlowVal(flow)">
+                          <span>{{flow.flowName}}</span>
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field>
+                    </div>
+                  </div>
+
+                  <!-- <div class="col-md-3"> -->
+                  <!-- <mat-select-autocomplete name="City" ngDefaultControl [placeholder]="'City'" [options]="cities"
+                      [display]="'cityName'" [value]="'cityOid'" [multiple]='true' [labelCount]="1"
+                      [formControl]="searchKioskForm.controls['kioskCity']">
+                    </mat-select-autocomplete> -->
+
+                  <!-- <mat-form-field class="example-full-width">
+                      <input matInput
+                             placeholder="City"
+                             aria-label="City"
+                             [matAutocomplete]="cityAutoComplete"
+                             [formControl]="cityCtrl">
+                      <mat-autocomplete #cityAutoComplete="matAutocomplete">
+                        <mat-option *ngFor="let city of filteredcities | async" [value]="city.cityName" (click)="getcityVal(city)">
+                          <span>{{city.cityName}}</span>
+                        </mat-option>
+                      </mat-autocomplete>
+                    </mat-form-field> -->
+
+                  <!-- </div> -->
+                  <!-- <div class="col-md-3"> -->
+                  <!-- <mat-select-autocomplete name="Mall" ngDefaultControl [placeholder]="'Mall'" [options]="malls"
+                      [display]="'mallName'" [value]="'mallOid'" [multiple]='true' [labelCount]="1"
+                      [formControl]="searchKioskForm.controls['kioskmall']">
+                    </mat-select-autocomplete> -->
+
+                  <!-- <mat-form-field class="example-full-width">
+                        <input matInput
+                               placeholder="Mall"
+                               aria-label="Mall"
+                               [matAutocomplete]="mallAutoComplete"
+                               [formControl]="mallCtrl">
+                        <mat-autocomplete #mallAutoComplete="matAutocomplete">
+                          <mat-option *ngFor="let mall of filteredmalls | async" [value]="mall.mallName" (click)="getMallVal(mall)">
+                            <span>{{mall.mallName}}</span>
+                          </mat-option>
+                        </mat-autocomplete>
+                      </mat-form-field> -->
+
+                  <!-- </div> -->
+                  <!-- <div class="col-md-3">
+                    <mat-form-field class="field-style field-width">
+                      <mat-select matInput placeholder="Brand" formControlName="kioskBrand">
+                        <mat-option *ngFor="let brand of brandList" [value]="brand.brandId"
+                          (click)="selectBrand(brand)">
+                          {{ brand.brandName }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div> -->
+                  <div class="col-md-3">
+                    <mat-form-field>
+                      <mat-select placeholder="Connection" formControlName="connectionStatus">
+                        <mat-option value="ON">On</mat-option>
+                        <mat-option value="OFF">Off</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-3">
+                    <mat-form-field>
+                      <mat-select placeholder="Status" formControlName="status">
+                        <mat-option value="ONLINE">Online</mat-option>
+                        <mat-option value="OFFLINE">Offline</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="button-wrap">
+                    <div class="">
+                      <button class='button reset-btn' type="button" (click)="resetForm()">RESET</button>
+                      <button class='button apply-btn' type="submit">APPLY</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="form-wrap">
+      <div class="table-wrap">
+        <div class="table-wrap-inner">
+          <!-- <table mat-table [dataSource]="dataSource" matSort *ngIf="dataSource"> -->
+          <table mat-table [dataSource]="dataSource" matSort *ngIf="dataSource">
+            <ng-container matColumnDef="deviceId">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+              <td mat-cell *matCellDef="let row"> {{row.deviceId}}</td>
+            </ng-container>
+            <ng-container matColumnDef="deviceName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>NAME</th>
+              <td mat-cell *matCellDef="let row">
+                <u><a [routerLink]="['/view-kiosk/', row.deviceId]" class="text-blue">{{row.deviceName}}</a></u>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="storeId">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> STORE ID </th>
+              <td mat-cell *matCellDef="let row"> {{row.storeId}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="countryName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> COUNTRY</th>
+              <td mat-cell *matCellDef="let row"> {{row.countryName}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="cityName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> CITY</th>
+              <td mat-cell *matCellDef="let row"> {{row.cityName}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="brandName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> BRAND</th>
+              <td mat-cell *matCellDef="let row"> {{row.brandName}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="mallName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> MALL </th>
+              <td mat-cell *matCellDef="let row"> {{row.mallName}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="location">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> STORE NAME </th>
+              <td mat-cell *matCellDef="let row"> {{row.location}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="connections">
+              <th mat-header-cell *matHeaderCellDef> CONNECTION </th>
+              <td mat-cell *matCellDef="let row"> {{row.connections}} </td>
+            </ng-container>
+            <ng-container matColumnDef="lastOnline">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> LAST ONLINE </th>
+              <td mat-cell *matCellDef="let row">{{row.lastOnline | date:'short'}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="batteryPercentage">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> BATTERY </th>
+              <td mat-cell *matCellDef="let row">
+                <!-- <p
+                  [ngClass]="row.battery <= 20 ? 'text-danger': '' || row.battery > 20 &&  row.battery <= 50? 'text-warning': '' || row.battery > 50 ? 'text-success': ''">
+                  {{row.battery}}%</p> -->
+                <p *ngIf="row.batteryPercentage">{{row.batteryPercentage }}%</p>
+                <p *ngIf="!row.batteryPercentage">0%</p>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> STATUS </th>
+              <td mat-cell *matCellDef="let row"> {{row.status}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="code">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> CODE </th>
+              <td mat-cell *matCellDef="let row"> {{row.code}}</td>
+            </ng-container>
+            <!-- <ng-container matColumnDef="assingedFlow">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> ASSIGNED FLOW </th>
+              <td mat-cell *matCellDef="let row"> {{row.assignedFlowName}}</td>
+            </ng-container> -->
+            <ng-container matColumnDef="preview">
+              <th mat-header-cell *matHeaderCellDef class="top-border"> PREVIEW </th>
+              <td mat-cell *matCellDef="let row">
+                <p class="pointer">
+                  <a href="{{flowURL}}/flow/?flowId={{row.assingedFlow}}&kioskId={{row.deviceId}}&ispreview=true&kiosk=true&channelType=EMAIL"
+                    target="_blank"> <img src="assets/images/svg-icons/preview_icon.svg" alt="preview_icon"
+                      width="20px;"></a>
+                </p>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+            </tr>
+          </table>
+          <div *ngIf="searchResults" class="select-store-block">
+            <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+          </div>
+          <div class="no-records" *ngIf="resultsLength === 0">
+            No Records Found!
+          </div>
+        </div>
+        <mat-paginator [length]="resultsLength" #paginator
+          [pageSize]="10" [pageSizeOptions]="[10,20,50,100]"></mat-paginator>
+      </div>
+    </div>
+  </div>
+</div>

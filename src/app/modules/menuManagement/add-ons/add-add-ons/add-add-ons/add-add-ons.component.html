@@ -1,0 +1,248 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container">
+        <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          [routerLink]="['/search-add-ons']"></span>Add Add-ons</h1>
+        <div class="slider">
+            <mat-slide-toggle [(ngModel)]="toggleVal" (change)="toggleStatus($event)" class="mat-slide-toggle">{{statusValue}}
+            </mat-slide-toggle>
+        </div>
+    </div>
+</div>
+
+<div class="page-wrap">
+    <form id="addAddonForm" (submit)="createProductAddon(addonFormGroup.value)" [formGroup]="addonFormGroup" #createAddonForm="ngForm">
+        <div class="row">
+            <div class="col-md-12">
+                <mat-card class="mb-20px">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <!-- <mat-form-field>
+                  <mat-select placeholder="Category" formControlName="categories" multiple required>
+                    <mat-option *ngFor="let category of productCategories" [value]="category.categoryId"> {{ category.categoryName }}</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="addonFormGroup.get('categories').hasError('required')">Please select value</mat-error>
+                </mat-form-field> -->
+                            <mat-select-autocomplete [placeholder]="'Category*'" [options]="category1" [display]="'categoryName'" [value]="'value'" [multiple]='true' [labelCount]="1" [formControl]="addonFormGroup.controls['categories']" required>
+                            </mat-select-autocomplete>
+                            <mat-error *ngIf="createAddonForm.submitted && addonFormGroup.get('categories').hasError('required')" style="margin-top: -25px;font-size: 10px;">
+                                Please select value
+                            </mat-error>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field>
+                                <input matInput placeholder="Delivery Charges" OnlyNumber="true" formControlName="deliveryCharge" maxlength="4" required>
+                                <mat-error *ngIf="addonFormGroup.get('deliveryCharge').hasError('required')">Please enter value
+                                </mat-error>
+                                <mat-error *ngIf="addonFormGroup.get('deliveryCharge').hasError('pattern')">Decimals are not allowed
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <mat-form-field>
+                                <input matInput placeholder="Packing Charges" OnlyNumber="true" formControlName="packingCharge" maxlength="4" required>
+                                <mat-error *ngIf="addonFormGroup.get('packingCharge').hasError('required')">Please enter value
+                                </mat-error>
+                                <mat-error *ngIf="addonFormGroup.get('packingCharge').hasError('pattern')">Decimals are not allowed
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="master-fieldSet" formArrayName="addonLocaleArray">
+                                <fieldset class="language-fieldset" required>
+                                    <legend class="fieldset-heading">Add-on Name</legend>
+                                    <div *ngFor="let locale of addonFormGroup['controls']['addonLocaleArray']['controls'];let i = index;" [formGroupName]="i">
+                                        <div class="example-container">
+                                            <div class="{{languageDirection[i]}}">
+                                                <mat-form-field class="{{alignCss[i]}}">
+                                                    <input matInput placeholder="{{languageList[i].languageName}}" formControlName="addonName" maxlength="40" required>
+                                                    <mat-error *ngIf="locale.get('addonName').hasError('required')">Please enter value</mat-error>
+                                                    <mat-error *ngIf="locale.get('addonName').hasError('pattern')">Only alphanumerics are allowed
+                                                    </mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="master-fieldSet" formArrayName="addonRegionArray">
+                                <fieldset class="language-fieldset">
+                                    <legend class="fieldset-heading" required>Display Price </legend>
+                                    <div class="">
+                                        <div *ngFor="let amount of addonFormGroup['controls']['addonRegionArray']['controls'];let i = index;" [formGroupName]="i">
+                                            <mat-form-field class="field-style">
+                                                <input matInput #inputCurrency placeholder="{{rigionList[i].currencyCode}}" formControlName="displayPrice" OnlyNumber="true" required maxlength="5" (blur)="autoPopulateCurrencyValue(amount,i,inputCurrency.value)">
+                                                <mat-error *ngIf="amount.get('displayPrice').hasError('required')">Please enter value
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="add-on-type">
+                                <mat-form-field>
+                                    <mat-select placeholder="Add-on Type" formControlName="addonType" required>
+                                        <mat-option value="ADDON">Cross Sell</mat-option>
+                                        <mat-option value="CUSTOMISATION">Customize Add ons </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="addonFormGroup.get('addonType').hasError('required')">Please enter value</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="add-on-image">
+                                <!-- <label>Add-on Image</label> -->
+                                <div class="imgInfo">
+                                    <label class="">Add-on Image</label>
+
+                                    <p class="right">&nbsp;&nbsp;&nbsp; Image Size: 345 x 240</p>
+                                </div>
+                                <div class="grid img-block">
+                                    <div class="avatar-zone">
+                                        <label class="upload-text" *ngIf="imagePath ==''" [class.placeholder-img]="imgUpload">Add-on Image
+                    </label>
+                                        <img class="upload-img" *ngIf="imagePath!=''" [src]="filePathUrl+imagePath" [class.uploaded-img]="imgUpload" width="300px">
+                                    </div>
+                                    <div class="remove-img" *ngIf="imagePath!=''">
+                                        <span> <img src="assets/images/icons/filter_close_ico.png" alt=""
+                        (click)="removeImage()"><label>Remove</label></span>
+                                    </div>
+                                    <input style="display:none;" type="file" class="upload_btn" (change)="uploadImage($event.target.files)" #addOnsImgFile />
+                                    <span class="upload-btn-text" (click)='addOnsImgFile.click()'>
+                    <div class="text-center" *ngIf="imagePath==''">
+                      <span class="upload-icon">
+                        <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px" alt="Img">
+                      </span>Upload Image
+                                </div>
+                                </span>
+                            </div>
+                            <div class="image-error" style="color:red" *ngIf="showImageError">Please upload image</div>
+                            <!-- <div *ngIf="imageErrMsg != undefined" class="image-error">{{imageErrMsg[i]}}</div> -->
+                        </div>
+                    </div>
+            </div>
+            </mat-card>
+        </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <mat-card>
+            <div class="flex-center mb-10px">
+                <div>
+                    <h6>SKU Details</h6>
+                </div>
+            </div>
+            <div class="sku-table">
+                <div class="">
+                    <table class="GeneratedTable">
+                        <thead>
+                            <tr>
+                                <th>SKU CODE *</th>
+                                <th>COST PRICE</th>
+                                <th>INVENTORY</th>
+                                <th>MINIMUM INVENTORY</th>
+                                <th>TAX RATES</th>
+                                <th>WEIGHT</th>
+                                <th *ngFor="let i of columns; let ind=index">
+                                    <div class="table-input">
+                                        <span class="close" (click)="removeColumn(ind)"><img class="close-img"
+                            src="assets/images/icons/filter_close_ico.png" alt="close_icon"></span>
+                                        <mat-form-field>
+                                            <input matInput [(ngModel)]="columnHeadArr[ind]" [ngModelOptions]="{standalone: true}" />
+                                        </mat-form-field>
+                                    </div>
+                                </th>
+                                <!-- By using Form array -->
+                                <!-- <th formArrayName="addonCols" *ngFor="let locale of addonFormGroup['controls']['addonCols']['controls'];let i = index;" [formGroupName]="i">
+                        <div class="table-input" >
+                          <mat-form-field>
+                            <input matInput formControlName="addonColLabel"/>
+                          </mat-form-field>
+                        </div>
+                      </th> -->
+
+                                <th> <img class="text-center" src="assets/images/icons/create_ico.svg" width="25px" (click)="incrementColumn()" alt="plus_ico"> </th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="table-input">
+                                        <mat-form-field>
+                                            <input matInput formControlName="skuCode" maxlength="16">
+                                            <mat-error class="skuFont" *ngIf="addonFormGroup.get('skuCode').hasError('required')">Please enter value
+                                            </mat-error>
+                                            <mat-error class="skuFont" *ngIf="addonFormGroup.get('skuCode').hasError('pattern')">Please enter valid characters in SKU code
+                                            </mat-error>
+
+                                        </mat-form-field>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="table-input">
+                                        <mat-form-field>
+                                            <input matInput maxlength="5" formControlName="costPrice" OnlyNumber="true">
+                                            <mat-error class="skuFont" *ngIf="addonFormGroup.get('costPrice').hasError('pattern')"> Only 5 digits and decimal places not allowed
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="table-input">
+                                        <mat-form-field>
+                                            <input matInput maxlength="5" formControlName="inventory" OnlyNumber="true">
+                                        </mat-form-field>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="table-input">
+                                        <mat-form-field>
+                                            <input matInput maxlength="5" formControlName="minimumInventory" OnlyNumber="true">
+                                        </mat-form-field>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="table-input">
+                                        <mat-form-field>
+                                            <input matInput maxlength="5" formControlName="taxRates" OnlyNumber="true">
+                                        </mat-form-field>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="table-input">
+                                        <mat-form-field>
+                                            <input matInput maxlength="5" formControlName="weights" OnlyNumber="true">
+                                        </mat-form-field>
+                                    </div>
+                                </td>
+                                <td *ngFor="let i of columns; let ind=index">
+                                    <div class="table-input">
+                                        <mat-form-field>
+                                            <input matInput [(ngModel)]="columnArr[ind]" [ngModelOptions]="{standalone: true}" />
+                                        </mat-form-field>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- <td formArrayName="addonCols" *ngFor="let locale of addonFormGroup['controls']['addonCols']['controls'];let i = index;" [formGroupName]="i">
+                        <div class="table-input" >
+                          <mat-form-field>
+                            <input matInput formControlName="addonColValue"/>
+                          </mat-form-field>
+                        </div>
+                    </td> -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </mat-card>
+    </div>
+</div>
+<div class="btm-button-wrap">
+    <button type="button" class="button secondary-btn" [routerLink]="['/search-add-ons']">CANCEL</button>
+    <button class="button primary-btn" type="submit">ADD</button>
+</div>
+</form>
+</div>

@@ -1,0 +1,126 @@
+.note-text {
+    font-size: 9px !important;
+}
+
+.heading {
+    margin: 10px 10px 0px 10px;
+    height: 51px;
+    background: #E3E3E3 0% 0% no-repeat padding-box;
+    opacity: 1;
+    p {
+        text-align: center;
+        letter-spacing: 0.17px;
+        color: #2E2E2E;
+        opacity: 1;
+        display: flex;
+        align-items: center;
+    }
+}
+
+.heading1 {
+    margin: 0px 10px;
+    height: 51px;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    opacity: 1;
+    p {
+        text-align: center;
+        letter-spacing: 0.17px;
+        color: #646464;
+        opacity: 1;
+        display: flex;
+        align-items: center;
+    }
+}
+
+.heading2 {
+    margin: 0px 10px;
+    height: 51px;
+    background: #F5F5F5 0% 0% no-repeat padding-box;
+    opacity: 1;
+    p {
+        text-align: center;
+        letter-spacing: 0.17px;
+        color: #434343;
+        opacity: 1;
+        display: flex;
+        align-items: center;
+    }
+}
+
+.products-list {
+    ul {
+        max-height: 500px;
+        overflow-y: auto;
+    }
+}
+
+/deep/ .product-img-block {
+    width: 60px;
+    height: 60px;
+    // margin-right: 10px;
+    // margin-bottom: 10px;
+    margin: 5px 10px 0px 10px;
+    /deep/ img {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+/deep/ .mr-5px {
+    margin: 5px 5px 0px 0px;
+}
+
+.currency-label {
+    font-size: 10px;
+    color: #5d5d5d;
+}
+
+.price {
+    font-size: 15px;
+    color: #000;
+}
+
+.menuData {
+    margin-bottom: 20px;
+}
+
+.productList {
+    margin: 0px 10px 5px 10px;
+    //   height: 65px;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    opacity: 1;
+    p {
+        text-align: center;
+        letter-spacing: 0.17px;
+        color: #615858;
+        opacity: 1;
+        display: flex;
+        align-items: center;
+    }
+    .varient {
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+}
+
+.productList:nth-of-type(even) {
+    background: #F5F5F5;
+}
+
+.product_nav {
+    overflow: auto;
+    //   max-height: 360px;
+}
+
+.parent {
+    padding: 10px 20px;
+}
+
+.storeList {
+    background: whitesmoke;
+    margin: 10px 20px;
+}
+
+/deep/ .mat-select-panel-wrap {
+    margin-top: 30px;
+}

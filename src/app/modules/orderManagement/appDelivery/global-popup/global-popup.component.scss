@@ -1,0 +1,42 @@
+
+
+/* Add padding and center-align text to the container */
+.container {
+  padding: 10px;
+  text-align: center;
+  h3{
+      text-align: left;
+  }
+}
+
+.firstClass{
+  display: flex;
+    align-items: center;
+    justify-content: center;
+    p{
+      word-break: break-word;
+    }
+}
+
+
+
+ 
+
+/* Clear floats */
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+/deep/ .global-dialogue{
+  /deep/.mat-dialog-container {
+    min-width: 25vw !important;
+    min-height: 15vw !important;
+    max-width: 25vw !important;
+    max-height: 20vw !important;
+    overflow: hidden !important;
+    display: flex;
+    align-items: center;
+  }
+}

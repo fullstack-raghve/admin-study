@@ -1,0 +1,134 @@
+<div class="page-wrap-popup">
+  <div class="bredcrumb-title-wrap">
+    <form class="search-wrap filter-wrap" [formGroup]="searchCouponForm"
+      (submit)="getCouponList(searchCouponForm.value)">
+      <div class="row common-search">
+        <div class="col-md-2 store-title">
+          <!-- <h6>Select Coupon</h6> -->
+            <h3  class="card-title dark">Select Coupon</h3>
+
+        </div>
+        <div class="col-md-10">
+          <input type="text" formControlName="searchtxt" placeholder="Search Coupon" />
+          <span class="search-btn" (click)="getCouponList(searchCouponForm.value)"></span>
+          <div class="filter-btn-wrap">
+            <span class="filter-btn" (click)="openFilter();" [ngClass]="status ? 'open' : 'close'"></span>
+          </div>
+        </div>
+        <!-- <div class="close-icon text-right">
+          <img src="assets/images/icons/filter_close_ico.png" (click)="onCloseClick()" alt="">
+        </div> -->
+      </div>
+      <div class="feild-search" *ngIf="!status">
+        <div class="row feild-search-inner">
+          <div class="col-md-8">
+            <mat-form-field>
+              <mat-select placeholder="Discoun Type" formControlName="discountType">
+                <mat-option *ngFor="let type of discountTypes" [value]="type.value">{{type.viewValue}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="filter-btn-wrap">
+            <div class="">
+              <button class='button quaternary-btn' type="button" (click)="resetForm()">RESET</button>
+              <button class='button tertiary-btn' type="submit">APPLY</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="form-wrap">
+    <div class="table-wrap">
+      <div class="table-wrap-inner" malihu-scrollbar >
+        <table mat-table [dataSource]="dataSource" matSort class="custom-radius">
+          <!-- <ng-container matColumnDef="select" *ngIf="!selectedCouponMultiple">
+            <th mat-header-cell *matHeaderCellDef>
+            </th>
+            <td mat-cell *matCellDef="let row">
+              <mat-radio-button (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                [checked]='isSelected(row)'></mat-radio-button>
+            </td>
+          </ng-container> -->
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-checkbox (change)="$event ? masterToggle() : null"
+                [checked]="selection.hasValue() && isAllSelected()"
+                [indeterminate]="selection.hasValue() && !isAllSelected()">
+              </mat-checkbox> ALL
+            </th>
+            <td mat-cell *matCellDef="let row">
+              <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                [checked]="selection.isSelected(row)">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="couponId">
+            <th mat-header-cell *matHeaderCellDef>COUPON ID</th>
+            <td mat-cell *matCellDef="let row">{{ row.couponId }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="couponName">
+            <th mat-header-cell *matHeaderCellDef>COUPON NAME</th>
+            <td mat-cell *matCellDef="let row" class="pointer" [ngStyle]="{color: color.$primary}">
+              <u>{{ row.couponTitle }}</u>
+              
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="discountType">
+            <th mat-header-cell *matHeaderCellDef>DISCOUNT TYPE</th>
+            <td mat-cell *matCellDef="let row">
+              {{row.discountType == 'TRANSACTION_DISCOUNT_AMOUNT' ? 'Transaction Discount Amount':(row.discountType ==
+              'ITEM_DISCOUNT_AMOUNT' ? 'Item Discount Amount':(row.discountType == 'ITEM_DISCOUNT' ? 'Item Discount %' :
+              (row.discountType == 'TRANSACTION_DISCOUNT' ? 'Transaction Discount %':'')))}}
+
+              <span *ngIf="row.discountType == 'DEAL_TYPE'">{{row.discountType == 'DEAL_TYPE'? 'Deal Type':''}}</span>
+              <span *ngIf="row.discountType == 'BUY_X_GET_Y'">{{row.discountType}}</span>
+              <span *ngIf="row.discountType == 'BUY_X_GET_Z_DISCOUNT_ON_Y_PRODUCT'">{{row.discountType}}</span>
+              <span *ngIf="row.discountType == 'BUY_X_GET_Z_DISCOUNT_AMOUNT_ON_Y_PRODUCT'">{{row.discountType}}</span>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="value">
+            <th mat-header-cell *matHeaderCellDef>VALUE</th>
+            <td mat-cell *matCellDef="let row">{{ row.discountValue }}</td>
+          </ng-container>
+          <!-- <ng-container matColumnDef="startDate">
+            <th mat-header-cell *matHeaderCellDef>Start Date</th>
+            <td mat-cell *matCellDef="let row">{{ row.startDate }}</td>
+          </ng-container>
+          <ng-container matColumnDef="endDate">
+            <th mat-header-cell *matHeaderCellDef>End Date</th>
+            <td mat-cell *matCellDef="let row">{{ row.endDate }}</td>
+          </ng-container> -->
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+        <div class="no-records" *ngIf="resultsLength === 0">
+          No Records Found!
+        </div>
+      </div>
+      <div class="loader-block" *ngIf="tableDataLoader">
+        <span class="loading-img-hide">
+          <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="loader">
+          Loading
+        </span>
+      </div>
+      <mat-paginator *ngIf="!selectedCouponMultiple" (click)="getCouponList(searchCouponForm.value)"
+        [length]="resultsLength" (change)="getCouponList(searchCouponForm.value)" #paginator (page)="getUpdate($event)"
+        [pageSize]="10" [pageSizeOptions]="[10,20,50,100]"></mat-paginator>
+    </div>
+    <div class="button-wrap mar-10">
+      <div class="">
+        <button class="button secondary-btn" [mat-dialog-close]="{
+              'buttonName': 'CANCEL'
+            }">CANCEL</button>
+        <button class="button primary-btn" [disabled]="selection.selected.length === 0 ? true:false" [mat-dialog-close]="{
+              'buttonName': 'SELECT',
+              'tableData': selection.selected,
+              'totalCount':resultsLength
+            }">SELECT</button>
+      </div>
+    </div>
+  </div>
+</div>

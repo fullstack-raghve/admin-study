@@ -1,0 +1,179 @@
+<div class="bredcrumb-title-wrap">
+  <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+  <div class="title flex-container template-title">
+    <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          [routerLink]="['/search-corporate-account']"></span>Corporate Account</h1>
+          <mat-slide-toggle class="example-margin text-right" [(ngModel)]="toggleVal"   (change)="toggleStatus($event);statusCall();">
+            {{statusValue}}
+          </mat-slide-toggle>
+        </div>
+</div>
+<div *ngIf="loadingResponse" class="select-store-block">
+    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+  </div>
+  <div *ngIf="!loadingResponse" class="page-wrap">
+<div class="form-wrap">
+  <form [formGroup]="viewCorporateForm"> 
+  <div class="row row-eq-height ">
+    <div class="col-md-4">
+
+      <mat-card>
+        <div class="corporate-img-block">
+          <div>
+            <div class="grid img-block">
+              <div class="avatar-zone">
+                <label *ngIf="corporateData.logo==''" class="upload-text" [class.placeholder-img]="imgUpload">Logo</label>
+                <img class="upload-img" [src]="corporateData?.logo"
+                 style="width:100px; height:90px">
+              </div>
+              <!-- <input style="display:none;"  type="file" class="upload_btn"> -->
+
+              <!-- <div class="text-center">
+                <span class="upload-btn-text" (click)='uploadImgEl.click()'>
+                  <span class="upload-icon">
+                    <img src="{{corporateData.logo}}" width="12px" alt="Img">
+                  </span>Upload Logo
+                </span>
+              </div>-->
+           </div> 
+            <!-- <div class="image-error" style="color:red">Please upload image</div> -->
+          </div>
+          <div class="img-title view-label">
+            <label>Corporate name</label>
+            <p>{{corporateData.corporateName}}</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12 view-label">
+            <label> Balance Amount</label>
+            <p class="balance-amount">{{corporateData.balance}} {{corporateData.currencyCode}}</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <button type="button" style="border-color:#D88A38;color:#000000" class="btn btn-outline-warning" (click)="addHistory(rpOID)">History</button>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+    <div class="col-md-4 view-label" style="display: grid; left:4px">
+      <mat-card>
+        <h6>Contact Details</h6>
+        <div>
+          <label>Name</label>
+          <p>{{corporateData.contactName}}</p>
+        </div>
+        <div>
+          <label>Mobile number</label>
+          <p>{{corporateData.mobileNumber}}</p>
+        </div>
+        <div>
+          <label>Email Id</label>
+          <p>{{corporateData.email}}</p>
+        </div>
+      </mat-card>
+    </div>
+
+    <div class="col-md-4">
+      <mat-card>
+        <h6>Add Users</h6>
+
+        <div class="row-block">
+          <div class="col-md-5 row-block-col view-label " style="border-radius: 5px;background: #d3d3d36b;margin-right:10px;padding-top:10px" *ngFor="let users of corporateData.addUsers">
+            <div>
+              <label>Name</label>
+              <p>{{users.userName}}</p>
+            </div>
+            <div>
+              <label>Email Id</label>
+              <p>{{users.email}}</p>
+            </div>
+            <div>
+              <label>Mobile number</label>
+              <p>{{users.mobileNumber}}</p>
+            </div>
+            <div>
+              <label>User Name</label>
+              <p>{{users.userGivenID}}</p>
+            </div>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col">
+      <mat-card class="gift-card-block">
+         
+              <h6>Gift Cards</h6>
+          
+        <mat-card>
+       
+       
+          <div class="row-block">
+            <div class="col-md-3" *ngFor="let cardDetails of corporateData.giftCards">
+              <div style="margin-bottom: 10px;">
+                <div class="col-md-5 messageOverwrite">
+                  <div>
+                  <div class="avatar-zone1" [ngStyle]="{'background-color':cardDetails.backgroundColor}">
+                    <img *ngIf="cardDetails.backgroundImage!='#f1cdc4' && cardDetails.backgroundImage!=' '" [src]="cardDetails.backgroundImage" width="277px;" height="160px;" style="object-fit: fill">
+                  </div>
+                  <div class="ImgHead">
+                    <div class="avatar-zone_logo" *ngIf="cardDetails.logoImage!='#f7e732' && cardDetails.logoImage!=' '">
+                      <img [src]="cardDetails.logoImage" width="auto" height="30px;" style="object-fit: fill;">
+                    </div>
+                    <div class="messages" [ngStyle]="{'color':cardDetails.textColor}">
+                      <h6>{{cardDetails.headingMessage1}}</h6>
+                      <h3>{{cardDetails.headingMessage2}}</h3>
+                      <p>{{cardDetails.textMessage}}</p>
+                    </div>
+                  </div>
+                  </div>
+              </div>
+              </div>
+  
+            </div>
+          </div>
+  
+        </mat-card>
+      </mat-card>
+       
+    </div>
+  </div>
+  <div class="terms-conditions-block">
+    <mat-card class="description-card">
+      <h3 class="card-title">Terms & Conditions</h3>
+      <div class="expansion-panel" formArrayName="termConditionArray">
+        <mat-accordion>
+          <mat-expansion-panel *ngFor="let termConditions of termCondtn_By_new;let i =index"
+            class="mat-expansion-panel">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                {{termConditions.languageName}}
+              </mat-panel-title>
+
+            </mat-expansion-panel-header>
+            <div class="view-content" [class.araText]="termConditions.languageCode=='AR'">
+              <label>Content</label>
+              <!-- <p [innerHTML]="descriptionText[i]"></p> -->
+              <p [innerHTML]='termConditions.termCondtn'></p>
+            </div>
+          
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+    </mat-card>
+  </div>
+  <br>
+
+  <div class="row">
+    <div class="col align-self-end">
+      <button type="button" class="button primary-btn btn1"
+        [routerLink]="['/edit-corporate-account/'+rpOID]">EDIT</button>
+    </div>
+  </div>
+  </form>
+</div>
+</div>

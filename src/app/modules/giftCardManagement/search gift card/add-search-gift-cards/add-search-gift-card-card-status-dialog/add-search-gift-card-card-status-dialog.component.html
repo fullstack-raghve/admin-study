@@ -1,0 +1,79 @@
+<div class="page-wrap">
+    <div class="bredcrumb-title-wrap">
+      <div class="close-icon text-right">
+        <img src="assets/images/icons/filter_close_ico.png" (click)="onCloseClick()" alt="">
+      </div>
+      <h6>Card Status:&nbsp;<span>{{CardStatus}}</span></h6>
+   
+      <div class="bredcrumb-title-wrap">
+        <div class="store-title">
+  
+        </div>
+  
+      </div>
+    </div>
+   <div class="table-wrap selectall-table">
+      <div class="table-wrap-inner" >
+        <table style="width:100%" mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+            <ng-container matColumnDef="select">
+              <th mat-header-cell *matHeaderCellDef>
+                <mat-checkbox (change)="$event ? masterToggle() : null"
+                  [checked]="selection.hasValue() && isAllSelected()"
+                  [indeterminate]="selection.hasValue() && !isAllSelected()" disabled="{{isDisabled}}">
+                </mat-checkbox> ALL
+              </th>
+              <td mat-cell *matCellDef="let row">
+                <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                  [checked]="selection.isSelected(row)" disabled="{{isDisabled}}">
+                </mat-checkbox>
+              </td>
+            </ng-container>
+            <!-- Position Column -->
+            <!-- <ng-container matColumnDef="position">
+              <th mat-header-cell *matHeaderCellDef> No. </th>
+              <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+            </ng-container> -->
+          
+            <!-- Name Column -->
+            <ng-container matColumnDef="giftcardCodeId">
+              <th mat-header-cell *matHeaderCellDef> ID </th>
+              <td mat-cell *matCellDef="let element"> {{element.giftcardCodeId}} </td>
+            </ng-container>
+          
+            <!-- Weight Column -->
+            <ng-container matColumnDef="secretCode">
+              <th mat-header-cell *matHeaderCellDef> SECURITY CODE </th>
+              <td mat-cell *matCellDef="let element"> {{element.secretCode}} </td>
+            </ng-container>
+          
+            <!-- Symbol Column -->
+            <!-- <ng-container matColumnDef="symbol">
+              <th mat-header-cell *matHeaderCellDef> Symbol </th>
+              <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+            </ng-container> -->
+          
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                (click)="selection.toggle(row)">
+            </tr>
+          </table>
+          <div class="no-records" *ngIf="cardStatusArray.length==0">
+              No Records Found!
+            </div>
+             <div style="float: right;">
+           <p>
+                Total Count:&nbsp;<span>{{cardStatusArray.length}}</span>
+          </p> 
+             </div>
+    </div>
+    <div class="button-wrap">
+        <div class="">
+          <button class="button primary-btn" [mat-dialog-close]="{
+              'buttonName': 'SELECT',
+              'tableData': selection.selected,
+              'totalCount':resultsLength
+            }">SELECT</button>
+        </div>
+      </div>
+    </div>
+  </div>

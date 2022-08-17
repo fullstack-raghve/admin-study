@@ -1,0 +1,44 @@
+<div class="page-wrap">
+  <div class="segment-popup">
+    <div class="close-icon text-right">
+      <img src="assets/images/icons/filter_close_ico.png" (click)="onCloseClick()" alt="">
+    </div>
+    <form [formGroup]="predefinedFormGroup" #predefinedForm="ngForm">
+    <div class="row preDefinedsegments-row">
+      <div class="col-md-6">
+        <div class="text-center">
+          
+            <mat-form-field>
+              <mat-select (selectionChange)="segmentSelection($event.value)" formControlName="preDefinedsegmentsCtrl" placeholder="---- Pre-defined Segments ----">
+                <mat-option *ngFor="let segment of preDefinedsegments" [value]="segment.segmentId">
+                  {{segment.segmentName}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          
+        </div>
+      </div>
+      <div class="col-md-6">
+        <button  class='button quaternary-btn' type="button" (click)="reset()">Reset</button>
+        <button class="button primary-btn"  type="button" (click)="applyCustomRule()">Apply</button>
+      </div>
+    </div>
+  </form>
+  
+    <div id="builder">
+    </div>
+  
+    <div id="errorValidation" style="color: red;
+    text-align: center;
+    padding-top: 9px"></div>
+  
+  
+    <div class="button-wrap">
+      <div class="text-right">
+  
+        <button class='button quaternary-btn' type="reset" (click)="resetSql()">CANCEL</button>
+        <button class="button primary-btn" (click)="getSql()">ADD</button>
+      </div>
+    </div>
+  </div>
+</div>

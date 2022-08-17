@@ -1,0 +1,147 @@
+<div class="page-wrap">
+    <div class="search-panel-block">
+        <div class="bredcrumb-title-wrap">
+            <div class="search-container-block">
+                <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+                <div class="search-list">
+                    <form class="filter-wrap" [formGroup]="seearchLiveOrderFormGroup" (submit)="getGloablSearchResults()">
+                        <div class="row title-search-row">
+                            <div class="col-md-4 title-search-col">
+                                <div class="title">
+                                    <h1>Live Orders</h1>
+                                </div>
+                            </div>
+                            <div class="col-md-5 title-search-col">
+                                <div class="searchform-block">
+                                    <div class="common-search">
+                                        <input type="text" formControlName="searchVal" placeholder="Search Live Orders" />
+                                        <span class="search-btn" (click)="getGloablSearchResults()"></span>
+                                        <div class="filter-btn-wrap">
+                                            <span class="filter-btn" (click)="openFilter();" [ngClass]="fieldSerachFilter ? 'open' : 'close'"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 title-search-col text-right">
+                                <button class='button tertiary-btn' type="button" (click)="closeGlobalSearch()">CLOSE SEARCH</button>
+                            </div>
+                            <div class="feild-search" *ngIf="!fieldSerachFilter">
+                                <div class="row feild-search-inner">
+                                    <div class="col-md-3 brand-selection">
+                                        <mat-form-field>
+                                            <mat-select #brandID [(value)]="searchBrandId" placeholder="Select Brand" disabled]="true" required>
+                                                <mat-option *ngFor="let r of brandList" [value]="r.brandId">
+                                                    {{ r.brandName }}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <mat-select-autocomplete name="Store" ngDefaultControl [placeholder]="'Select Store'" [options]="storesList" [display]="'storeName'" [value]="'value'" [multiple]='true' [labelCount]="1" [selectedOptions]="selectedStoreOptions" [formControl]="seearchLiveOrderFormGroup.controls['storeId']"
+                                            #storeInput>
+                                        </mat-select-autocomplete>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <mat-form-field style="top: 10px;">
+                                            <mat-select placeholder="Order Type" formControlName="delivery_type">
+                                                <mat-option value="DELIVERY">Delivey </mat-option>
+                                                <mat-option value="PICKUP">Pickup</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <mat-form-field style="top: 10px;">
+                                            <mat-select placeholder="Order Status" formControlName="orderStatus">
+                                                <mat-option value="ORDER_PLACED">New </mat-option>
+                                                <mat-option value="ORDER_ACCEPTED">Food Preparing</mat-option>
+                                                <mat-option value="ORDER_READY">Ready For Pickup</mat-option>
+                                                <mat-option value="ORDER_PICKED">On the way</mat-option>
+                                                <mat-option value="ORDER_REJECTED">Rejected</mat-option>
+                                                <mat-option value="DELIVERY_DELAY">Delivery Delay</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <mat-form-field>
+                                            <input matInput placeholder="Phone Number" onlyNumber="true" formControlName="phoneNumber">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="button-wrap">
+                                        <button class='button reset-btn' type="button" (click)="resetForm()">RESET</button>
+                                        <button class='button apply-btn' type="submit">APPLY</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="form-wrap">
+            <div class="table-wrap">
+                <div class="table-wrap-inner">
+                    <table mat-table [dataSource]="globalSearchDataSource" matSort *ngIf="globalSearchDataSource">
+                        <ng-container matColumnDef="txnId">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> ORDER ID </th>
+                            <td mat-cell *matCellDef="let row"><u (click)="viewLiveOrder(row.orderId)"><a
+                    class="text-blue">
+                    {{ row.txnId }} </a></u></td>
+                        </ng-container>
+                        <ng-container matColumnDef="storeName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> STORE NAME </th>
+                            <td mat-cell *matCellDef="let row">{{row.storeName != null ? row.storeName : '-'}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="noOfItems">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> NO. OF ITEMS </th>
+                            <td mat-cell *matCellDef="let row">{{ row.noOfItems }}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="totalAmount">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> TOTAL AMOUNT </th>
+                            <td mat-cell *matCellDef="let row"> {{row.totalAmount}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="timeElapsed">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> TIME ELAPSED</th>
+                            <td mat-cell *matCellDef="let row">{{row.timeElapsed != null ? row.timeElapsed : '-'}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="orderType">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border">ORDER TYPE </th>
+                            <td mat-cell *matCellDef="let row">{{row.orderType}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="userFullName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> ASSIGNED TO </th>
+                            <td mat-cell *matCellDef="let row">
+                                {{row.userFullName != null && row.userFullName != "" ? row.userFullName : '-'}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="txnReqDate">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> DATE & TIME </th>
+                            <td mat-cell *matCellDef="let row">
+                                {{row.txnReqDate| date : "dd-MM-yyyy"}} {{row.txnReqDate | date:'shortTime'}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="customerPhNo">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> PHONE NUMBER </th>
+                            <td mat-cell *matCellDef="let row"> {{row.customerPhNo}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="status">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> STATUS </th>
+                            <td mat-cell *matCellDef="let row"> {{row.status}} </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedGlobalSearchColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedGlobalSearchColumns;">
+                        </tr>
+                    </table>
+                    <div *ngIf="searchGlobalLoader" class="page-loader-block full-page-loader">
+                        <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                    </div>
+                    <div class="no-records" *ngIf="globalSearchRecords">
+                        No Records Found!
+                    </div>
+                </div>
+                <mat-paginator [length]="globalSearchLength" #globalSearchPaginator (page)="getUpdate($event)" [pageSize]="10" [pageSizeOptions]="[10,20,50,100]"></mat-paginator>
+            </div>
+        </div>
+    </div>
+</div>

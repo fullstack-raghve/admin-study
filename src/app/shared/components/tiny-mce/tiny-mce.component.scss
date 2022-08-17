@@ -1,0 +1,46 @@
+.wrapper_tnymce {
+  padding: 1em 1em 3em;
+  position: relative;
+  h4 {
+    font-size: 20px;
+    color: #fc7e30;
+  }
+  img {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+  }
+  .other_error_show {
+    position: absolute !important;
+    bottom: 43px;
+    font-size: 13px;
+  }
+}
+/deep/ .mce-menu {
+  position: fixed !important;
+}
+// .slide-bottom {
+// 	-webkit-animation: slide-bottom 0.5s cubic-bezier(0.215, 0.610, 0.355, 1.000) both;
+// 	animation: slide-bottom 0.5s cubic-bezier(0.215, 0.610, 0.355, 1.000) both;
+// }
+
+//  @-webkit-keyframes slide-bottom {
+//   0% {
+//     -webkit-transform: translateY(0);
+//             transform: translateY(0);
+//   }
+//   100% {
+//     -webkit-transform: translateY(100px);
+//             transform: translateY(100px);
+//   }
+// }
+// @keyframes slide-bottom {
+//   0% {
+//     -webkit-transform: translateY(0);
+//             transform: translateY(0);
+//   }
+//   100% {
+//     -webkit-transform: translateY(9px);
+//             transform: translateY(9px);
+//   }
+// }

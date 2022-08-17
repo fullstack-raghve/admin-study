@@ -1,0 +1,174 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title">
+        <h1>Masters</h1>
+    </div>
+</div>
+<div class="page-wrap-masters">
+    <div class="row master-cards">
+        <div class="col-md-3 master-list master-left">
+            <mat-card>
+                <ul class="master_listing">
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-customer-type']">Customer Type</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-merchant']">Merchant</a></li> -->
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-brand']">Brand</a></li> -->
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-country']">Countries</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-cities']">Cities</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-malls']">Malls</a></li>
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-course']">Course</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-cuisine']">Cuisine</a></li> -->
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-currency']">Currency</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-currency-conversion']">Currency Conversion</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-brand-category']">Brand Category</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-language']">Language</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-faq-category']">FAQ Category</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-about-us-category']">About Us Category</a></li>
+                    <li class="master-list-selected"><a href="javascript:void(0)" [routerLink]="['/search-feedback']">Feedback</a>
+                    </li>
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-partner']">Partner</a></li> -->
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-enquiry-type']">Enquiry Type</a></li>
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/add-taxation']">Taxation</a></li> -->
+                    <li><a href="javascript:void(0)" [routerLink]="['/add-product-tag']">Product Tag</a></li>
+                </ul>
+            </mat-card>
+        </div>
+        <div class="col-md-9 master-right">
+            <mat-card class="master-content">
+                <div class="country-card">
+                    <div class="subtitle flex-center">
+                        <h3><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/left_arrow.png"
+                  alt="leftArrow" [routerLink]="['/search-feedback']"></span>Edit Feedback</h3>
+                        <div class="slider">
+                            <mat-slide-toggle (change)="toggleStatus($event)" class="mat-slide-toggle" [(ngModel)]="toggleVal">
+                                {{statusValue}}</mat-slide-toggle>
+                        </div>
+                    </div>
+                    <form [formGroup]="feedBackFormGroup" (submit)="updateFeedBack(feedBackFormGroup.value)" #feedBackForm="ngForm">
+                        <div class="row mb-20px">
+                            <div class="col-md-6">
+                                <div class="master-fieldSet">
+                                    <fieldset class="language-fieldset">
+                                        <legend class="fieldset-heading">Feedback Title*</legend>
+                                        <div formArrayName="feedBackLocale">
+                                            <div class="muti-fieldSet" *ngFor="let locale of feedBackFormGroup['controls']['feedBackLocale']['controls'];let i = index;" [formGroupName]="i">
+                                                <div>
+                                                    <mat-form-field class="{{languageDirection[i]}}">
+                                                        <input matInput placeholder="{{ languages[i].languageName}}" formControlName="feedBackTitle" maxlength="50" required>
+                                                        <mat-error *ngIf=" locale.hasError('required', 'feedBackTitle')">Please enter value
+                                                        </mat-error>
+                                                        <mat-error *ngIf="locale.hasError('pattern', 'feedBackTitle')">Invalid characters entered
+                                                        </mat-error>
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row mt-30px">
+                                    <div class="col-md-6">
+                                        <mat-form-field>
+                                            <mat-select placeholder="Feedback For" formControlName="feedBackFor" required (selectionChange)="checkFeedBackRating()">
+                                                <mat-option *ngFor="let for of forList" [value]="for.id" (click)="feedbackForData(for)">
+                                                    {{for.value}}</mat-option>
+                                            </mat-select>
+                                            <mat-error *ngIf="feedBackFormGroup.get('feedBackFor').hasError('required')">Please select value
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <mat-form-field>
+                                            <mat-select placeholder="Feedback Type" formControlName="feedBackType" required>
+                                                <mat-option value="MULTI_CHOICE">Multi Choice </mat-option>
+                                                <mat-option value="SINGLE_CHOICE">Single Choice</mat-option>
+                                            </mat-select>
+                                            <mat-error *ngIf="feedBackFormGroup.get('feedBackType').hasError('required')">Please select value
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-6" *ngIf="brandData">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput placeholder="BRAND" aria-label="Brand" [matAutocomplete]="brandAutoComplete" [formControl]="brandCtrl" (keyup)="keyupValueData($event)">
+                                            <mat-autocomplete #brandAutoComplete="matAutocomplete">
+                                                <mat-option *ngFor="let brand of filteredbrands | async" [value]="brand.brandName" (click)="getBrandValue(brand.brandId)" #brandInput>
+                                                    <span>{{brand.brandName}}</span>
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </mat-form-field>
+                                        <p style="    color: #f44336;
+                    font-size: 10px;
+                }">
+                                            {{brandValueerror}}
+                                        </p>
+                                    </div>
+                                    <!-- <div class="col-md-6">
+                    <mat-form-field>
+                      <mat-select placeholder="Feedback Rating" formControlName="feedBackRating" required
+                        (selectionChange)="checkFeedBackRating()">
+                        <mat-option [value]="5">5 Stars</mat-option>
+                        <mat-option [value]="4">4 Stars</mat-option>
+                        <mat-option [value]="3">3 Stars</mat-option>
+                        <mat-option [value]="2">2 Stars</mat-option>
+                        <mat-option [value]="1">1 Star</mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="feedBackFormGroup.get('feedBackRating').hasError('required')">Please select
+                        value</mat-error>
+                    </mat-form-field>
+                    <div style="margin-top: -2em;" *ngIf="ratingError" class="color-red">Feedback rating already exists
+                    </div>
+                  </div> -->
+                                </div>
+                                <div class="">
+                                    <mat-form-field>
+                                        <textarea matInput placeholder="Feedback Description" formControlName="feedBackDescription" maxlength="200" required></textarea>
+                                        <mat-error *ngIf="feedBackFormGroup.get('feedBackDescription').hasError('required')">Please select value
+                                        </mat-error>
+                                        <mat-error *ngIf="feedBackFormGroup.get('feedBackDescription').hasError('pattern')">Invalid characters entered</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="questions-block">
+                            <div class="master-fieldSet">
+                                <fieldset class="language-fieldset">
+                                    <legend class="fieldset-heading">Options*</legend>
+                                    <div formArrayName="feedBackLocale">
+                                        <div class="muti-fieldSet">
+                                            <div class="questions-list">
+                                                <div class="questions-list" *ngFor="let locale of feedBackFormGroup['controls']['feedBackLocale']['controls'];let i = index;" [formGroupName]="i">
+                                                    <mat-form-field class="{{languageDirection[i]}}">
+                                                        <input matInput formControlName="feedBackOption" maxlength="25" placeholder="{{ languages[i].languageName}}" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="add($event, i)">
+
+                                                        <mat-error *ngIf=" locale.hasError('required', 'feedBackOption')">Please enter value
+                                                        </mat-error>
+                                                        <mat-error *ngIf="locale.hasError('pattern', 'feedBackOption')">Invalid characters entered
+                                                        </mat-error>
+
+                                                        <mat-chip-list #chipList class="mb-5px">
+                                                        </mat-chip-list>
+                                                    </mat-form-field>
+                                                    <!-- <div class="{{languageDirection[i]}}">  -->
+                                                    <mat-chip *ngFor="let option of optionArray[i]['option']" [selectable]="selectable" [removable]="removable" (removed)="remove(option, i)">
+                                                        {{option}}
+                                                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                                                    </mat-chip>
+                                                    <!-- </div> -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <p *ngIf="optionError" class="error-msg">Please Enter same number of options for all the languages</p>
+                            </div>
+                        </div>
+                        <div class="btm-button-wrap">
+                            <button type="button" class="site_btn gray_btn" [routerLink]="['/search-feedback']">CANCEL</button>
+                            <button type="submit" class="button primary-btn">UPDATE</button>
+                        </div>
+                    </form>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+</div>

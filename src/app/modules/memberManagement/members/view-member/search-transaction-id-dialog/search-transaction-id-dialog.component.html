@@ -1,0 +1,52 @@
+<div class="page-wrap">
+    <div class="header">
+        <h3>Select Transaction ID</h3>
+        <div class="close-icon">
+          <img src="assets/images/icons/filter_close_ico.png" alt="" (click)="onCloseClick()">
+        </div>
+    </div>
+    <div class="search-transactions">
+        <div class="row">
+            <div class="col-md-4">
+                <mat-form-field>
+                  <input matInput placeholder="Transaction ID">
+                </mat-form-field>
+            </div>
+            <div class="col-md-4">
+                <mat-form-field>
+                  <input matInput [matDatepicker]="picker" #date  placeholder="Transaction Date" [min]="minDate" formControlName="date" required>
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                  <!-- <mat-error *ngIf="programFormGroup.get('startDate').hasError('required')">Please select value</mat-error> -->
+                </mat-form-field>
+            </div>
+            <div class="col-md-4">
+                <mat-form-field>
+                  <mat-select placeholder="Brands">
+                      <mat-option value="">Aldo</mat-option>
+                    <mat-option value="">Levis</mat-option>
+                  </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-md-4">
+                <mat-form-field>
+                  <mat-select placeholder="Transaction Type">
+                      <mat-option value="">Type 1</mat-option>
+                    <mat-option value="">Type 2</mat-option>
+                  </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-md-4">
+                <mat-form-field>
+                  <mat-select placeholder="Status">
+                      <mat-option value="">Active</mat-option>
+                  </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+    <div class="btm-button-wrap">
+        <button type="button" class="button secondary-btn">RESET</button>
+        <button type="button" class="button primary-btn">SUBMIT</button>
+    </div>
+</div>

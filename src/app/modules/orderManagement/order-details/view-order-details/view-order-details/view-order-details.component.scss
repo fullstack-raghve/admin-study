@@ -1,0 +1,184 @@
+.bredcrumb-title-wrap .title {
+    h1 {
+        margin-bottom: 0.4em !important;
+    }
+    p {
+        padding: 0 4px 0;
+    }
+}
+.page-wrap {
+    padding: 1em;
+    .heading {
+        h1 {
+            font-size: 25px;
+            color: #000;
+            margin-bottom: 1em;
+        }
+        p {
+            color: #000;
+            font-size: 18px;
+            span {
+                color: #525252;
+                font-size: 17px;
+            }
+        }
+    }
+    .grey-font-label {
+        font-size: 13px;
+        color: #5d5d5d;
+        margin-bottom: 0;
+    }
+}
+.order-details {
+    background-color: #fffaea;
+    padding: 1em;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+}
+.delivery-icon {
+    background: url("src/assets/images/order_management/delivery_active_ico.svg");
+    height: 23px;
+    width: 42px;
+    display: block;
+    background-repeat: no-repeat;
+}
+.pickup-icon {
+    background: url("src/assets/images/order_management/pickup_inactive_ico.svg");
+    height: 23px;
+    width: 42px;
+    display: block;
+    background-repeat: no-repeat;
+}
+.curbside-icon {
+    background: url("src/assets/images/order_management/Curbside_ico.png");
+    height: 23px;
+    width: 42px;
+    display: block;
+    background-repeat: no-repeat;
+}
+.customer-details-section {
+    .address {
+        font-size: 15px;
+        color: #000000;
+        margin-bottom: 5px;
+    }
+}
+.grey-font-label {
+    font-size: 10px;
+    color: #5d5d5d;
+    margin-bottom: 0;
+}
+
+.tertiary-btn {
+    padding: 1px 14px !important;
+    font-size: 10px !important;
+}
+.button {
+    font-size: 11px !important;
+    .secondary-btn {
+        padding: 1px 16px !important;
+    }
+    .primary-btn {
+        padding: 1px 16px !important;
+    }
+}
+.view-col {
+    padding-right: 1em;
+    label {
+        color: #525252;
+        font-size: 12px;
+        margin-bottom: 2px;
+    }
+    p {
+        color: #000;
+        font-size: 14px;
+        margin-bottom: 0;
+        padding: 0 !important;
+    }
+}
+.lable-value {
+    font-size: 14px;
+    color: #000000;
+}
+.previous-cart-items {
+    margin-bottom: 2em;
+    .listing-details-block {
+        border-bottom: 1px solid #f8f8f8;
+        padding: 1em 2em;
+        .left-col {
+            display: block;
+            .item-name {
+                align-items: center;
+                font-size: 18px;
+                color: #000;
+                margin-bottom: 0;
+            }
+        }
+        .right-col {
+            display: flex;
+        }
+    }
+    .veg-icon {
+        background: url("src/assets/images/order_management/veg_icon_1x.png");
+        height: 12px;
+        width: 20px;
+        // margin-bottom: -3px;
+        display: block;
+        background-repeat: no-repeat;
+    }
+    .nonVeg-icon {
+        background: url("src/assets/images/order_management/nonveg_icon_1x.png");
+        height: 12px;
+        width: 20px;
+        // margin-bottom: -3px;
+        display: block;
+        background-repeat: no-repeat;
+    }
+    /deep/.mat-expansion-panel-header {
+        background: #fffaea;
+        color: #000;
+    }
+    .label-font {
+        font-size: 10px;
+        color: #fd8e48;
+        margin-bottom: 0;
+    }
+    .currency-label {
+        font-size: 10px;
+        color: #5d5d5d;
+    }
+
+    .grey-font-label {
+        font-size: 10px;
+        color: #5d5d5d;
+        margin-bottom: 0;
+    }
+    .pad-l-4rem {
+        padding-left: 4rem;
+    }
+    .align-center {
+        align-items: center;
+    }
+    .item-price {
+        .price {
+            font-size: 22px;
+            color: #000;
+        }
+    }
+}
+.status-description{
+    padding: 1em;
+    background-color: #FFF4F4;
+    text-align: right;
+    p{
+        color: #000;
+        font-size: 15px;
+        margin-bottom: 0;
+    }
+    .currency-lable{
+        font-size: 10px;
+        color: #939393;
+        margin-bottom: 0;
+    }
+}
+

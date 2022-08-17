@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 26 26">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+      }
+
+      .cls-2 {
+        fill: url(#linear-gradient);
+      }
+    </style>
+    <linearGradient id="linear-gradient" x1="1.069" y1="0.178" x2="0.043" y2="0.81" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#f47da5"/>
+      <stop offset="1" stop-color="#fcaf7f"/>
+    </linearGradient>
+  </defs>
+  <g id="advisory_ico" transform="translate(-20 -144)">
+    <rect id="Rectangle_2901" data-name="Rectangle 2901" class="cls-1" width="26" height="26" transform="translate(20 144)"/>
+    <g id="flaticon1529997792-svg" transform="translate(24 147.999)">
+      <g id="Group_41855" data-name="Group 41855" transform="translate(0 0.001)">
+        <g id="Group_41854" data-name="Group 41854" transform="translate(0 0)">
+          <path id="Path_17873" data-name="Path 17873" class="cls-2" d="M9,0a9,9,0,1,0,9,9A9.009,9.009,0,0,0,9,0ZM9,16.947A7.947,7.947,0,1,1,16.946,9,7.956,7.956,0,0,1,9,16.947Z" transform="translate(0 -0.001)"/>
+          <path id="Path_17874" data-name="Path 17874" class="cls-2" d="M236.795,80.542a1.953,1.953,0,1,0-1.952-1.952A1.955,1.955,0,0,0,236.795,80.542Zm0-2.853a.9.9,0,1,1-.9.9A.9.9,0,0,1,236.795,77.689Z" transform="translate(-227.936 -74.383)"/>
+          <path id="Path_17875" data-name="Path 17875" class="cls-2" d="M188.709,232.076h-1.04v-5.522a.526.526,0,0,0-.526-.526h-4.679a.526.526,0,0,0-.526.526V228.2a.526.526,0,0,0,.526.526h1.3v3.35h-1.014a.526.526,0,0,0-.526.526v2a.526.526,0,0,0,.526.526h5.96a.526.526,0,0,0,.526-.526v-2A.526.526,0,0,0,188.709,232.076Zm-.526,2h-4.907v-.945h1.014a.526.526,0,0,0,.526-.526v-4.4a.526.526,0,0,0-.526-.526h-1.3v-.593h3.627V232.6a.526.526,0,0,0,.526.526h1.04v.945h0Z" transform="translate(-176.587 -219.381)"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

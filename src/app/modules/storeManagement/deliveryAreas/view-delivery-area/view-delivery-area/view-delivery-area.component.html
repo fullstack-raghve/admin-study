@@ -1,0 +1,100 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container">
+        <h1><span class="left-arrow"><img class="left-img"
+        src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+        [routerLink]="['/search-delivery-area']"></span>View Delivery Area</h1>
+        <mat-slide-toggle class="mat-slide-toggle" [checked]="checked" [disabled]='true'>{{deliveryAreaData?.status}}</mat-slide-toggle>
+    </div>
+</div>
+<div class="delivery-page-wrap">
+    <div class="row">
+        <div class="col-md-6">
+            <h3 class="card-title">Delivery Areas</h3>
+            <mat-card class="delivery-areas-card">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="view-label">
+                            <label>Country</label>
+                            <p>{{deliveryAreaData?.countryName}}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="view-label">
+                            <label>City</label>
+                            <p>{{deliveryAreaData?.cityName}}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="view-label">
+                            <label>Brand</label>
+                            <p>{{deliveryAreaData?.brandName}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="master-fieldSet">
+                    <fieldset class="language-fieldset">
+                        <legend class="fieldset-heading">Area Name*</legend>
+                        <div class="multi-fieldset">
+                            <div class="view-label" *ngFor="let deliveryArea of deliveryAreaData?.deliveryAreaLocales; let i=index">
+                                <div class="{{alignCss[i]}} {{languageDirection[i]}} view-label">
+                                    <label>{{deliveryArea?.languageName}}</label>
+                                    <p>{{deliveryArea?.areaName}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="addressField">
+                    <div class="view-label">
+                        <label>Delivery Area</label>
+                        <p>{{deliveryAreaData?.address}}</p>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+        <div class="col-md-6">
+            <h3 class="card-title">Stores</h3>
+            <mat-card class="store-access-card search-panel-block">
+                <div class="table-top-section flex-center">
+                    <p>Delivery Stores</p>
+                    <button class="button tertiary-btn disable" type="button">SELECT STORES</button>
+                </div>
+                <div class="form-wrap">
+                    <div class="table-wrap" *ngIf="dataSource.data.length>0">
+                        <div class="table-wrap-inner">
+                            <table mat-table [dataSource]="dataSource" matSort>
+                                <ng-container matColumnDef="storeId">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> STORE ID </th>
+                                    <td mat-cell *matCellDef="let row">{{row.storeId }}</td>
+                                </ng-container>
+                                <ng-container matColumnDef="storeName">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> STORE NAME </th>
+                                    <td mat-cell *matCellDef="let row">{{ row.storeName }}</td>
+                                </ng-container>
+                                <ng-container matColumnDef="address">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> ADDRESS </th>
+                                    <td mat-cell *matCellDef="let row">{{ row.storeAddress }}</td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="no-records" *ngIf="dataSource.data.length === 0">
+                            No Records Found!
+                        </div>
+                        <div>
+                            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" #paginator [pageSize]="5"></mat-paginator>
+                        </div>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+    <div class="btm-button-wrap">
+        <button type="button" class="button secondary-btn" [routerLink]="['/search-delivery-area']">CANCEL</button>
+        <button type="button" class="button primary-btn" (click)="MoveToEdit(deliveryAreaData.deliveryAreaOid)">EDIT</button>
+    </div>
+</div>

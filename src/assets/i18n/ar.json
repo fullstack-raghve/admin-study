@@ -1,0 +1,35 @@
+{
+    "demo": {
+        "title": "Translation demo!",
+        "text": "This is a simple demonstration app for ngx-translate"
+    },
+
+    "pressRelease" : {
+        "search":{
+            "title":"بيان صحفي",
+            "breadCrumb":{
+                "parent" : "تكوينات",
+                "child":"رئيس"
+            },
+            "tHead":{
+                "Pr_Id":"معرف العلاقات العامة",
+                "Release_Title":"عنوان الإصدار",
+                "Brand":"علامة تجارية",
+                "Start_Date":"تاريخ البدء",
+                "End_Date":"تاريخ الانتهاء",
+                "LModified":"آخر تعديل على",
+                "Status":"الحالة"
+            },
+            "filterPlaceholder":{
+                "searchHolder":"بحث صحفي",
+                "Release_Title":"عنوان الإصدار",
+                "From_Date":"من التاريخ",
+                "End_date": "تاريخ الانتهاء",
+                "Select_Brand":"اختر العلامة التجارية",
+                "Select_Country":"حدد الدولة",
+                "Status":"الحالة"
+            }
+        }
+
+    }
+}

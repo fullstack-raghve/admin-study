@@ -1,0 +1,11 @@
+<div class="bredcrumb-title-wrap">
+  <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+  <div class="title flex-container">
+    <h1>TH Reports</h1>
+  </div>
+</div>
+<div class="page-wrap">
+  <div class="reports-body">
+    <iframe width="100%" height="100%" [src]="reportsUrl | safe" target="_parent"></iframe>
+  </div>
+</div>

@@ -1,0 +1,121 @@
+<div class="bredcrumb-title-wrap">
+  <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+  <div class="title flex-container">
+    <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          [routerLink]="['/search-e-wallet']"></span>Add E-Wallet</h1>
+    <mat-slide-toggle class="example-margin" [checked]="checked" [disabled]="true">
+      {{toggleVal}}
+    </mat-slide-toggle>
+  </div>
+</div>
+<div class="page-wrap">
+  <div class="form-wrap">
+    <form [formGroup]="eWalletFormGroup" (submit)="addWallet(eWalletFormGroup.value)">
+      <div class="row">
+        <div class="col-md-5">
+          <h3 class="card-title">Basic Details</h3>
+          <mat-card>
+            <div class="row">
+              <div class="col-md-6">
+                <mat-form-field>
+                  <input formControlName="walletName" matInput placeholder="Wallet Name">
+                  <!-- <mat-error *ngIf="eWalletFormGroup.get('walletName').hasError('required')">
+                  Please enter value</mat-error>
+                <mat-error *ngIf="eWalletFormGroup.get('walletName').hasError('pattern')">
+                  Invalid character entered</mat-error> -->
+                </mat-form-field>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field>
+                  <mat-select placeholder="Currency Name" formControlName="currencyName">
+                    <mat-option *ngFor="let currency of currencyNames " [value]="currency">
+                      {{currency}}</mat-option>
+                  </mat-select>
+                  <!-- <mat-error *ngIf="eWalletFormGroup.get('currencyName').hasError('required')">
+                    Please select value</mat-error> -->
+                </mat-form-field>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field>
+                  <mat-select placeholder="Minimum Balance" formControlName="minBalance">
+                    <mat-option *ngFor="let currency of currencyNames " [value]="currency">
+                      {{currency}}</mat-option>
+                  </mat-select>
+                  <!-- <mat-error *ngIf="eWalletFormGroup.get('currencyName').hasError('required')">
+                    Please select value</mat-error> -->
+                </mat-form-field>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field>
+                  <mat-select placeholder="Maximum Balance" formControlName="maxBalance">
+                    <mat-option *ngFor="let currency of currencyNames " [value]="currency">
+                      {{currency}}</mat-option>
+                  </mat-select>
+                  <!-- <mat-error *ngIf="eWalletFormGroup.get('currencyName').hasError('required')">
+                    Please select value</mat-error> -->
+                </mat-form-field>
+              </div>
+            </div>
+          </mat-card>
+        </div>
+        <div class="col-md-7">
+          <h3 class="card-title">Limitation</h3>
+          <mat-card>
+            <div class="row">
+              <div class="col-md-6">
+                <mat-form-field>
+                  <input formControlName="maxSingleAmtLoading" matInput placeholder="Maximum Single Amount Loading">
+                </mat-form-field>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field>
+                  <input formControlName="maxTransactionDay" matInput placeholder="Maximum Transaction Volume (Day)">
+                </mat-form-field>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field>
+                  <input formControlName="maxTransactionMonth" matInput
+                    placeholder="Maximum Transaction Volume (Month)">
+                </mat-form-field>
+              </div>
+              <div class="col-md-6">
+                <div class="btm-button-wrap store-select-btn flex">
+                  <button class="button primary-btn" type="button" (click)="openStoresDialog()">SELECT POS STORES</button>
+                  <p  class="stores-selected">{{selectedStore.length}} stores selected</p>
+                </div>
+              </div>
+            </div>
+          </mat-card>
+        </div>
+      </div>
+      <div class="terms-conditions pt-20px">
+        <h3 class="card-title">Terms & Conditions *</h3>
+        <mat-card class="description-card">
+          <div class="expansion-panel">
+            <mat-accordion>
+              <mat-expansion-panel class="mat-expansion-panel" *ngFor="let lang of languageList;let i = index;">
+                <!-- (opened)="panelOpenState = true;expandtermAndCondition()" (closed)="panelOpenState = false"> -->
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    {{lang.languageName}}
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="pt-20px">
+                  <label>Content</label>
+                  <editor apiKey="test" formControlName="termAndCondition" *ngIf="lang.languageName!='Arabic'">
+                  </editor>
+                  <editor apiKey="test" id="arabicIDtac" formControlName="termAndCondition"
+                    *ngIf="lang.languageName=='Arabic'"></editor>
+                </div>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
+        </mat-card>
+      </div>
+      <div class="btm-button-wrap">
+        <button class="button secondary-btn" [routerLink]="['/search-e-wallet']">CANCEL</button>
+        <button class="button primary-btn" type="button">ADD</button>
+      </div>
+    </form>
+  </div>
+</div>

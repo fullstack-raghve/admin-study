@@ -1,0 +1,142 @@
+<!-- <div class="bredcrumb-title-wrap">
+  <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+  <div class="title">
+    <h1>Store Menu</h1>
+  </div>
+</div> -->
+<div class="bredcrumb-title-wrap">
+  <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+ 
+  <div class="title flex-container">
+    <div class="flex-end">
+      <h1>Store Menu</h1>
+    </div>
+    <div class="flex text-right">
+      <div class="col-md-4 p-r-1rem">
+        <mat-form-field>
+          <mat-select  (selectionChange)="brandChange()" placeholder="Select Brand">
+            <mat-option (click)="getStoresList(brand.brandId)" *ngFor="let brand of brandList" [value]="brand.brandId">
+              {{ brand.brandName }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-md-4 p-r-1rem">
+        <mat-form-field>
+          <mat-select  (selectionChange)="getStoreID(storeID.value)" #storeID placeholder="Select Store">
+            <mat-option *ngFor="let store of storeList" [value]="store.storeOid">
+              {{ store.storeName }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <!-- <div *ngIf="storeloader" class="select-store-block">
+          <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+        </div> -->
+      </div>
+      <div>
+        <button type="button" (click)="getAllProducts()" class="button primary-btn float-right">APPLY
+        </button>
+      </div>
+    </div>
+  </div>
+ 
+</div>
+<div class="page-wrap">
+  <!-- <div class="col-md-6 storeList">
+    <mat-form-field>
+        <mat-select (selectionChange)="getStoreID(storeID.value)" #storeID placeholder="Select Store"  required>
+          
+            <mat-option *ngFor="let p of storeList" [value]="p.storeOid">
+                {{ p.storeName}}
+            </mat-option>
+        </mat-select>
+      
+    </mat-form-field>
+</div> --> 
+<div class="parent" *ngFor="let category of categoryList;let i=index;">
+  <mat-card class="menuData">
+    <div class="row heading">
+
+        <p class="col-md-4">Category Name</p>
+        <p class="col-md-3">Varients</p>
+        <p class="col-md-3">Available From - To</p>
+        <p class="col-md-2">Status</p>
+       </div>
+       <div class="row heading1">
+
+          <p class="col-md-4">{{category.categoryName}}</p>
+          <p class="col-md-3">NA</p>
+          <p class="col-md-3"> {{category.availableFrom}} to {{category.availableTo}} </p>
+          <p class="col-md-2">
+           
+                 <mat-slide-toggle [checked]="toggleVal"  [disabled]="disabled"
+                 class="mat-slide-toggle">
+                {{category.status}}</mat-slide-toggle>
+           
+            </p>
+         </div>
+          <div  class="row heading2">
+
+            <p  class="col-md-4" >Product Name</p>
+            <p class="col-md-3">Varients</p>
+            <p class="col-md-3">Available From - To</p>
+            <p class="col-md-2">Menu Status</p>
+           </div>
+           <div class="product_nav">
+              <div  *ngFor="let product of category.products;let j=index" class="row productList ">
+                  <div class="products-list col-md-4">
+                           <div class="flex">
+                             <div *ngIf="product.productImage != ''" class="product-img-block">
+                               <img [src]="product.productImage" alt="item_ico"> 
+                             </div>
+                             <div *ngIf="product.productImage == ''" class="product-img-block">
+                                <img src="assets/images/icons/defaultProduct.png" alt="item_ico"> 
+                              </div>
+                            
+                             <div>
+                                 <span class="flex-center mr-5px mt-5px">
+                                   <img *ngIf="product.productType == 'VEG'" src="assets/images/svg-icons/veg_ico.svg" width="12px" alt="">
+                                   <img *ngIf="product.productType == 'NONVEG'" src="assets/images/svg-icons/nonveg_ico.svg" width="12px" alt=""> 
+                                   <img *ngIf="product.productType == 'EGG'" src="assets/images/icons/Egg_1x.png" width="12px" alt=""> &nbsp;&nbsp; {{ product.productName }}
+
+                                 </span>
+                                 <!-- <span class="currency-label">AED&nbsp;&nbsp;
+
+                                 </span> -->
+                                    </div>
+                             <div>
+                          
+                               
+                             </div>
+                           </div>
+                         </div>
+                   <div   class="col-md-3 varient">
+                        <div *ngFor="let varient of product.productVariant.productVariants">
+                            {{varient.variantName}} &nbsp; ( {{varient.currencyCode}}&nbsp;{{varient.storePrice}} ) &nbsp; ,
+                        </div>
+                     
+                     
+                   </div>
+                   <div class="col-md-3 varient"> 
+                       <p>{{product.availableFrom}} to {{product.availableTo}}</p>
+                     </div>
+                     <div class="col-md-2 varient">
+                        
+                         
+                           <mat-slide-toggle (change)="toggleStatus($event,i,j,product.productOid)" [checked]="toggleVal" *ngIf="product.menuStatus=='ONLINE'"
+                            class="mat-slide-toggle">
+                            {{product.menuStatus}}</mat-slide-toggle>
+                       <mat-slide-toggle [checked]="!toggleVal" (change)="toggleStatus($event,i,j,product.productOid)" *ngIf="product.menuStatus=='OFFLINE'"
+                            class="mat-slide-toggle">
+                            {{product.menuStatus}}</mat-slide-toggle>
+                     </div>
+                  </div>
+           </div> 
+         
+         
+</mat-card>
+</div>
+<div *ngIf="loading" class="page-loader-block full-page-loader">
+  <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+</div>
+</div>

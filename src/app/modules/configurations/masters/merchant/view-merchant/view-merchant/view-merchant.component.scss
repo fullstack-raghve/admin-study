@@ -1,0 +1,25 @@
+.master-fieldSet {
+    .language-fieldset{
+        padding: 0px 26px 10px;
+        border: 1px solid #dbdbdb;
+        border-radius: 5px;
+        .fieldset-heading {
+            font-size: 14px;
+            padding-inline-start: 7px;
+            max-width: 45% !important;
+        }
+    }
+}
+.arabic-alignment{
+    text-align: right;
+ }
+
+ .avatar-zone{
+    width:120px;
+    height:80px;
+    background-color:#CCCCCC;
+    img{
+        width:100%;
+        height: 100%;
+    }
+}

@@ -1,0 +1,16 @@
+<div class="page-wrap">
+    <div class="header flex-container">
+        <h3>Reset Password</h3>
+        <div class="close-icon">
+            <img src="assets/images/icons/filter_close_ico.png" alt="" (click)="onCloseClick()">
+        </div>
+    </div>
+    <div class="message">
+        <p>
+            {{resetErrorMes}}
+        </p>
+        <p *ngIf="resetPinErrorMessage == undefined || resetPinErrorMessage == null">
+            New password is sent to your registered mobile number and email address.
+        </p>
+    </div>
+</div>

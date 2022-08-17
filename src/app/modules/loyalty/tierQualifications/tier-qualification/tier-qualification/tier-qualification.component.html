@@ -1,0 +1,169 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="addtier-block justify-content-between">
+        <div class="title flex-container">
+            <p class="page-title">Loyalty Tiers </p>
+        </div>
+        <div class="bttn-block">
+            <button class="button primary-btn m-0px" (click)="addTier()" [ngClass]="{cssClass: BttnDisabled}">
+        <span class="add-plus">
+          <img class="plus-icon" src="assets/images/svg-icons/add_ico.svg" alt="add">
+        </span>ADD TIER
+      </button>
+        </div>
+    </div>
+</div>
+<div class="inner-page-spacing">
+    <div class="content-panel">
+        <form [formGroup]="addTierGroup" (submit)="updateOrSaveTier(addTierGroup.value)">
+            <div formArrayName="mainFormArray">
+                <div class="main-card" *ngFor="let region of tierData;let k = index" [formGroupName]="k">
+                    <input type="hidden" class="input-box" formControlName="regionId">
+                    <input type="hidden" class="input-box" formControlName="countryId">
+                    <input type="hidden" class="input-box" formControlName="activeEngagementDays">
+                    <div class="row d-flex label-info-block">
+                        <div class="col-md-3 stamp-details">
+                            <label>
+                Country
+              </label>
+                            <p>
+                                {{region.countryName}}
+                            </p>
+                        </div>
+                        <div class="col-md-3 stamp-details">
+                            <label>
+                Currency
+              </label>
+                            <p>
+                                {{region.currencyCode}}
+                            </p>
+                        </div>
+                        <div class="col-md-3 stamp-details">
+                            <label>
+                Active Engagement Days
+              </label>
+                            <p>
+                                {{region.tierEngagementDays}}
+                            </p>
+                        </div>
+                    </div>
+                    <!-- *ngIf="!tier?.editStatus" -->
+                    <div class="tier-row" formArrayName="tierFormArray">
+                        <div class="tier-card-col" *ngFor="let tier of region?.tierList; let j = index;" [formGroupName]="j">
+                            <mat-card class="view-tier-card">
+                                <input type="hidden" class="input-box" formControlName="tierId">
+                                <div class="tier-card-block editcard-block" *ngIf="tierData[k].tierList[j].editStatus == false">
+                                    <div class="edit-card" *ngIf="tierData[k].tierList[j].editableCard == false">
+                                        <div class="bttn-block divider-top">
+                                            <button class="button bttn-transparent" mat-button (click)="editTier(region, tier,k,j,region.tierList,tierData)">
+                        <img src="assets/images/icons/edit_ico.png" alt='..'>
+                      </button>
+                                        </div>
+                                        <div class="img-container">
+                                            <img alt="Tier Img" [src]="filePathUrl+tier.tierImage" width="80px">
+                                        </div>
+                                        <div class="stmap-details-block">
+                                            <div class="stamp-details">
+                                                <label>
+                          Tier Name
+                        </label>
+                                                <p>
+                                                    <!-- {{tier.tierName}} -->
+                                                    <input #tierName class="tier-name" formControlName="tierName" [readonly]="!editable" (blur)="autoPopulateName(tierName.value, region, tier,tierList,tierData)">
+                                                </p>
+                                            </div>
+                                            <div class="stamp-details mb-10px">
+                                                <div class="minmax-block">
+                                                    <div class="currency-section">
+                                                        <div class="min">
+                                                            <label>
+                                Min Value*
+                              </label>
+                                                            <input #inputCurrencyMin formControlName="minValue1" OnlyNumber="true" minlength="0" [readonly]="!editable" maxlength="10" (blur)="autoPopulateCurrencyValueMin(inputCurrencyMin.value, region, tier,tierList,tierData)">
+                                                        </div>
+                                                        <div class="max">
+                                                            <label>
+                                Max Value*
+                              </label>
+                                                            <input #inputCurrencyMax formControlName="maxValue1" OnlyNumber="true" minlength="0" [readonly]="!editable" maxlength="10" (blur)="autoPopulateCurrencyValueMax(inputCurrencyMax.value, region, tier,tierList,tierData)">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="stamp-details mb-10px">
+                                                <label>
+                          Level*
+                        </label>
+                                                <p>
+                                                    {{tier.tierLevel}}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tier-card-block createcard-block" *ngIf="tierData[k].tierList[j].editableCard == true">
+                                    <div class="card-creation">
+                                        <div class="img-container">
+                                            <label class="upload-text" [class.placeholder-img]="imgUpload" *ngIf="tier?.tierImage ==''">Logo</label>
+                                            <img class="upload-img" *ngIf="tierData[k].tierList[j].tierImage !=''" [src]="filePathUrl+tierData[k].tierList[j].tierImage" [class.uploaded-img]="imgUpload" width="80px">
+                                        </div>
+                                        <div *ngIf="tier.imageErr" style="color:red; font-size: 10px;">
+                                            {{tierData[k].tierList[j].imageErrMsg}}</div>
+                                        <div class="stamp-details-block">
+                                            <div class="uploaded-img">
+                                                <input style='display: none;' type='file' (change)="uploadTierImage($event.target.files, tierData[k].tierList[j], j)" #selectFile>
+                                                <span class="upload-btn-text" (click)='selectFile.click()'>
+                          <span>
+                            <img src="assets/images/svg-icons/uploadgray_ico.svg" width="15px" alt="Tier Img">
+                          </span>
+                                                <span class="uploaded-link">Upload Image Y</span>
+                                                </span>
+                                            </div>
+                                            <div class="stamp-details">
+                                                <div class="form-group">
+                                                    <mat-form-field>
+                                                        <input matInput placeholder="Tier Name" formControlName="name" required (blur)="prePopulateName($event.target.value, k ,j)" maxlength="25" />
+                                                        <!-- <mat-error *ngIf="tier?.get('name').hasError('required')">Please enter value</mat-error> -->
+                                                        <!-- <mat-error *ngIf="tier.get('name').hasError('pattern')">Only AlpaNumeric are allowed</mat-error> -->
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+                                            <div class="stamp-details">
+                                                <div class="row minmax-block">
+                                                    <div class="col-md-6 minmax-block-col">
+                                                        <div class="form-group">
+                                                            <mat-form-field>
+                                                                <input matInput OnlyNumber="true" placeholder="Min Value" formControlName="minValue" (blur)="validateMin($event.target.value, k ,j);" [readonly]="j==0 ? false : true" OnlyNumber="true" required maxlength="10" minlength="0" />
+                                                                <!-- <mat-error *ngIf="j==0 && tier.get('minValue').hasError('required')">Please enter value</mat-error>
+                              <mat-error *ngIf="tier.get('minValue').hasError('max')">Min Value should be lesser than
+                                Max Value</mat-error> -->
+                                                            </mat-form-field>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 minmax-block-col">
+                                                        <div class="form-group">
+                                                            <mat-form-field>
+                                                                <input matInput OnlyNumber="true" placeholder="Max Value" formControlName="maxValue" (blur)="prePopulateMin($event.target.value, k ,j)" OnlyNumber="true" maxlength="10" minlength="0" />
+                                                                <!-- <mat-error *ngIf="tier.get('maxValue').hasError('required')">Please enter value</mat-error>
+                              <mat-error *ngIf="tier.get('maxValue').hasError('min')">Max Value should be greater
+                                than Min Value</mat-error> -->
+                                                            </mat-form-field>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </mat-card>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bttn-block-bottom">
+                <button class="button secondary-btn" (click)="reload()" type="button" style="cursor:pointer"> CANCEL </button>
+                <button class="button primary-btn" type="submit" style="cursor: pointer;"> SAVE </button>
+            </div>
+        </form>
+    </div>
+</div>

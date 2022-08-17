@@ -1,0 +1,255 @@
+<div class="bredcrumb-title-wrap">
+  <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+  <div class="title flex-container template-title">
+    <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          [routerLink]="['/search-corporate-account']"></span>Corporate Account</h1>
+    <mat-slide-toggle class="example-margin text-right" [(ngModel)]="toggleVal" (change)="toggleStatus($event)">
+      {{statusValue}}
+    </mat-slide-toggle>
+  </div>
+</div>
+<form [formGroup]="corporateFormGroup" (submit)="addcorporateForm(corporateFormGroup.value)">
+  <div class="form-wrap">
+    <!-- <form [formGroup]="giftFormGroup" (submit)="addCard(giftFormGroup.value)"> -->
+    <div class="row">
+      <div class="col-md-4" style="display: grid;">
+        <mat-card>
+          <div class="corporate-img-block">
+            <div>
+              <div class="grid img-block">
+                <div class="avatar-zone">
+                  <label *ngIf="imagePath==''" class="upload-text" [class.placeholder-img]="imgUpload">Logo</label>
+                  <img *ngIf="imagePath!=''" class="upload-img" [src]="imagePath" [class.uploaded-img]="imgUpload"
+                    style="width:100px; height:90px">
+                </div>
+                <div class="remove-img" *ngIf="imagePath!=''">
+                  <span> <img src="assets/images/icons/filter_close_ico.png" alt=""
+                      (click)="removeImage()"><label>Remove</label></span>
+                </div>
+                <input style="display:none;" formControlName="corporateImage" #uploadImgEl type="file"
+                  class="upload_btn" (change)="uploadImage($event.target.files)" />
+
+                <div class="text-center" *ngIf="imagePath==''">
+                  <span class="upload-btn-text" (click)='uploadImgEl.click()'>
+                    <span class="upload-icon">
+                      <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px" alt="Img"
+                        style="color:#217FEB">
+                    </span>Upload Logo
+                  </span>
+                </div>
+              </div>
+              <div class="image-error" style="color:red" *ngIf="showImageError">Please upload image</div>
+            </div>
+            <div class="img-title">
+              <mat-form-field class="example-full-width">
+                <input matInput placeholder="Corporate Name*" formControlName="corporateName" maxlength="100">
+                <mat-error *ngIf="corporateFormGroup.get('corporateName').hasError('required')">Please enter value
+                </mat-error>
+                <mat-error *ngIf="corporateFormGroup.get('corporateName').hasError('pattern')">Invalid charecters
+                  entered</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+
+          <div class="row">
+            <div class="col-md-8 view-label">
+              <label>
+                Balance Amount*
+              </label>
+
+              <p *ngIf="currencyValue==null && currencyAmount==null">-</p>
+              <p>{{currencyAmount}}<span> {{currencyValue}}</span></p>
+              <div class="">
+                <p *ngIf="balanceErrorMsg==true" style="color:red">Please Add Balance</p>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <button type="button" class="button primary-btn" (click)="addDecuctDialog()">Add</button>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+      <div class="col-md-4" style="display: grid;">
+        <mat-card>
+          <h6>Contact Details</h6>
+          <mat-form-field class="example-full-width">
+            <input matInput placeholder="Name*" formControlName="contactName" maxlength="30">
+            <mat-error *ngIf="corporateFormGroup.get('contactName').hasError('required')">Please enter value
+            </mat-error>
+            <mat-error *ngIf="corporateFormGroup.get('contactName').hasError('pattern')">Invalid character entered
+            </mat-error>
+          </mat-form-field>
+          <div class="row">
+            <div class="col-md-4">
+              <mat-form-field>
+                <mat-select placeholder="Country Code*" #Input formControlName="CountryCode"
+                  (selectionChange)="codeData(Input.value)">
+                  <mat-option value="">select</mat-option>
+                  <mat-option *ngFor="let country of CountryCodeList, let i = index;" [value]="i">
+                    {{ country.name }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="corporateFormGroup.get('CountryCode').hasError('required')">
+                    Please select country code</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-8">
+              <div class="row">
+                <div class="col-md-4" style="padding-right: 1px;max-width: 56px;" *ngIf="corporateFormGroup.get('cc').value!=''">
+                  <mat-form-field class="example-full-width">
+                    <input matInput placeholder="" formControlName="cc" readonly>
+                    <mat-error *ngIf="corporateFormGroup.get('cc').hasError('required')">
+                    </mat-error>
+                  </mat-form-field>
+
+                </div>
+                <div class="col-md-6" style="padding-left: 0px;">
+                  <mat-form-field class="example-full-width">
+                    <input matInput placeholder="Mobile Number*" formControlName="ContactNumber" maxlength="15" minlength="8" OnlyNumber=true>
+                    <mat-error *ngIf="corporateFormGroup.get('ContactNumber').hasError('required')">Please enter value
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+
+          <mat-form-field class="example-full-width">
+            <input matInput placeholder="Email ID*" formControlName="emailid" maxlength="50" minlength="7">
+            <mat-error *ngIf="corporateFormGroup.get('emailid').hasError('required')">Please enter value
+            </mat-error>
+            <mat-error *ngIf="corporateFormGroup.get('emailid').hasError('pattern')">Invalid Email Id entered
+            </mat-error>
+          </mat-form-field>
+        </mat-card>
+      </div>
+
+      <div class="col-md-4" style="display: grid; left:4px">
+        <mat-card>
+          <h6>Add Users<span><button type="button" class="button primary-btn"
+                (click)="addUserDialog()">ADD</button></span></h6>
+          <div class="row-block">
+            <div class="col-md-5 view-label" style="border-radius: 5px;background: #d3d3d36b;margin-right: 10px;"
+              *ngFor="let ddata of addUserDialogData">
+              <div class="close-icon text-right">
+                <img class="closeTag" src="assets/images/icons/filter_close_ico.png" (click)="onCloseClick()" alt="">
+              </div>
+              <div class="addUser">
+                <div>
+                  <label>Name*</label>
+                  <p>{{ddata.userName}}</p>
+                </div>
+                <div>
+                  <label>Email Id*</label>
+                  <p>{{ddata.email}}</p>
+                </div>
+                <div>
+                  <label>Mobile mobile*</label>
+                  <p>{{ddata.mobileNumber}}</p>
+                </div>
+                <div>
+                  <label>User Name*</label>
+                  <p>{{ddata.userGivenID}}</p>
+                </div>
+
+
+              </div>
+            </div>
+            <div class="">
+              <p *ngIf="contactsErrorMsg==true" style="color:red">Please Add User</p>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col">
+
+        <mat-card class="gift-card-block">
+          <h6>Assign Gift Card*<span><button type="button" class="button primary-btn float-right"
+                (click)="addGiftCard()">ADD</button></span></h6>
+          <div class="row-block" style="margin-top:20px;">
+
+            <div class="col-md-3" *ngFor="let giftcard of giftCardDetails" style="margin-top:25px">
+              <div style="margin-bottom:10px;">
+                <div class="col-md-5 messageOverwrite">
+                  <div>
+                    <div class="avatar-zone1" [ngStyle]="{'background-color':giftcard.backgroundColor}">
+                      <img *ngIf="giftcard.backgroundImage!='#f1cdc4' && giftcard.backgroundImage!=''" [src]="giftcard.backgroundImage" width="277px;"
+                        height="160px;" style="object-fit: fill">
+                    </div>
+                    <div class="ImgHead">
+                      <div class="avatar-zone_logo" *ngIf="giftcard.logoImage!='#f7e732' && giftcard.logoImage!=''">
+                        <img [src]="giftcard.logoImage" width="auto" height="30px;" style="object-fit: fill;">
+                      </div>
+                      <div class="messages" [ngStyle]="{'color':giftcard.textColor}">
+                        <h6>{{giftcard.headingMessage1}}</h6>
+                        <h3>{{giftcard.headingMessage2}}</h3>
+                        <p>{{giftcard.textMessage}}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="">
+              <p *ngIf="giftCardDetails.length===0 && giftErrorMsg==true" style="color:red">Please Assign Gift Card</p>
+            </div>
+          </div>
+
+        </mat-card>
+      </div>
+    </div>
+    <!-- Term condition -->
+    <div class="terms-conditions-block">
+
+      <mat-card class="terms-conditions-card" style="height:auto">
+        <h3 class="card-title">Terms & Conditions</h3>
+        <div class="expansion-panel" formArrayName="termsConditionArray">
+          <mat-accordion>
+            <mat-expansion-panel
+              *ngFor="let program of corporateFormGroup['controls']['termsConditionArray']['controls'];let i = index;"
+              [formGroupName]="i" class="mat-expansion-panel {{rightPanel[i]}}"
+              (opened)="panelOpenState = true;expandtermAndCondition()" (closed)="panelOpenState = false">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  {{languageList[i].languageName}}
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="pt-20px" class="{{alignCss[i]}}">
+                <label>Content</label>
+                <editor *ngIf="languageList[i].languageName!='Arabic'" apiKey="test" [init]="{
+                plugins: 'code, preview ,print,fullpage, searchreplace, directionality, visualblocks, visualchars, fullscreen, image, link, media, template, codesample, table, charmap, hr, pagebreak, nonbreaking, anchor, toc, insertdatetime, advlist, lists, wordcount, imagetools, textpattern, help',
+                toolbar:'code preview',
+                height : '480'
+                      }" formControlName="termsAndCondition" (onSelectionChange)="removeTermsCondErrorMsg(i)">
+                </editor>
+                <editor *ngIf="languageList[i].languageName=='Arabic'" id="arabicIDtac" apiKey="test" [init]="{
+                plugins: 'code, preview ,print,fullpage, searchreplace, directionality, visualblocks, visualchars, fullscreen, image, link, media, template, codesample, table, charmap, hr, pagebreak, nonbreaking, anchor, toc, insertdatetime, advlist, lists, wordcount, imagetools, textpattern, help',
+                toolbar:'code preview',
+                height : '480'
+                      }" formControlName="termsAndCondition" (onSelectionChange)="removeTermsCondErrorMsg(i)">
+                </editor>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+          <div *ngIf="termsConditionError" style="color:red">Please enter value</div>
+        </div>
+      </mat-card>
+    </div>
+    <br>
+
+    <div class="row">
+      <div class="col align-self-end">
+        <button type="button" class="button primary-btn btn1" type="submit">ADD</button>
+        <button type="button" class="button secondary-btn btn1" [disabled]="!corporateFormGroup.valid">CANCEL</button>
+      </div>
+    </div>
+  </div>
+</form>

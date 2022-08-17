@@ -1,0 +1,22 @@
+<section class="wrapper_tnymce">
+  <div class="container">
+    <div class="d-flex justify-content-between mt-2 mb-2">
+      <h4>Enter Description</h4>
+      <img alt="close icon" src="assets/images/icons/filter_close_ico.png" (click)=onCloseClick()>
+    </div>
+   <form #tinyForm="ngForm" class="position-relative">
+    <editor [init]="{ plugins: 'code, preview ,print,fullpage, searchreplace, directionality, visualblocks, visualchars, fullscreen, image, link, media, template, codesample, table, charmap, hr, pagebreak, nonbreaking, anchor, toc, insertdatetime, advlist, lists, wordcount, imagetools, textpattern, help',
+    toolbar:'code preview',
+    height : '200'
+          }" #tinyMce="ngModel" name="tiny" ngModel required [(ngModel)]="ngModelValue"></editor>
+    <mat-error >
+        <div  class="other_error_show slide-bottom">
+          <div *ngIf="tinyForm.invalid  && (tinyMce.dirty || tinyMce.touched || showerrors)">
+            Required..
+          </div>
+        </div>
+      </mat-error>
+    <button type="button" class="button primary-btn mr-auto ml-auto d-block mt-4" (click)="addDes(ngModelValue, tinyForm)">Add Content</button>
+   </form>
+  </div>
+</section>

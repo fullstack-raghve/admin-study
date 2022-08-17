@@ -1,0 +1,174 @@
+<div class="page-wrap">
+  <div class="search-panel-block">
+    <div class="bredcrumb-title-wrap">
+      <div class="search-container-block">
+        <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+        <div class="search-list">
+          <form class="filter-wrap" [formGroup]="searchProductsFormGroup" (submit)="searchVal()"
+            #searchProductsForm="ngForm">
+            <div class="row title-search-row">
+              <div class="col-md-4 title-search-col">
+                <div class="title">
+                  <h1>Search Products</h1>
+                </div>
+              </div>
+              <div class="col-md-5 title-search-col">
+                <div class="searchform-block">
+                  <div class="common-search">
+                    <input type="text" formControlName="searchVal" maxlength="200" placeholder="Search by Products" />
+                    <span class="search-btn" (click)="searchVal();"></span>
+                    <div class="filter-btn-wrap">
+                      <span class="filter-btn" (click)="openFilter();" [ngClass]="status ? 'open' : 'close'"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3 title-search-col">
+                <div class="add-btn text-right">
+                  <button type="button" class="button primary-btn m-0px" [routerLink]="['/add-products']">
+                    <span class="add-plus">
+                      <img src="assets/images/svg-icons/add_ico.svg" alt="add" class="plus-icon">
+                    </span>ADD
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="feild-search" *ngIf="!status">
+              <div class="row feild-search-inner">
+                <div class="col-md-3">
+                  <!-- <mat-form-field>
+                    <mat-select placeholder="Category" multiple formControlName="categoryIds">
+                      <mat-option *ngFor="let id of parentList" [value]="id.categoryId">
+                        {{ id.categoryName }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field> -->
+                   <mat-select-autocomplete ngDefaultControl [placeholder]="'Category'" [options]="categories1" [display]="'categoryName'"
+                    [value]="'value'" [multiple]='true' [labelCount]="1" [selectedOptions]="selectedCategoryOptions"
+                    [formControl]="searchProductsFormGroup.controls['categoryIds']" #categoryInput>
+                  </mat-select-autocomplete>
+
+                  
+                </div>
+                <div class="col-md-2">
+                  
+                    <mat-checkbox formControlName="isExclusive">Exclusive</mat-checkbox>
+                
+                </div>
+                <div class="col-md-3">
+                  <div class="select-tags">
+                    <mat-form-field>
+                      <mat-select placeholder="Select Product Type" formControlName="productType">
+                        <mat-option value="VEG">Vegetarian</mat-option>
+                        <mat-option value="NONVEG">Non-Vegetarian</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <!-- <div class="col-md-3">
+                  <mat-radio-group (change)="onChange($event)" name="productType">
+                    <mat-radio-button value="VEG" style="margin-right:8px;">Veg</mat-radio-button>
+                    <mat-radio-button value="NONVEG">Non-Veg</mat-radio-button>
+                  </mat-radio-group>
+                </div> -->
+                <!-- <div class="col-md-3">
+                  <mat-form-field>
+                    <mat-select placeholder="Addon" formControlName="addons">
+                      <mat-option *ngFor="let id of addOnarray" value="{{id.value}}">
+                        {{ id.name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div> -->
+                <div class="col-md-4">
+                  <!-- <mat-form-field>
+                    <mat-select id="addon" matInput placeholder="Addon" formControlName="addonIds">
+                      <mat-option *ngFor="let addon of addOnarray" value="{{addon.addonOid}}">
+                        {{ addon.addonName  }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field> -->
+                  <mat-select-autocomplete ngDefaultControl [placeholder]="'Addons'" [options]="addons1" [display]="'addonName'"
+                    [value]="'value'" [multiple]='true' [labelCount]="1" 
+                    [formControl]="searchProductsFormGroup.controls['addonIds']" [selectedOptions]="selectedAddonOptions" #addonInput>
+                  </mat-select-autocomplete>
+                </div>
+                <div class="col-md-3">
+                  <mat-form-field>
+                    <mat-select placeholder="Status" formControlName="status">
+                      <mat-option value="ONLINE">ONLINE</mat-option>
+                      <mat-option value="OFFLINE">OFFLINE</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="button-wrap">
+                  <div class="">
+                    <button class='button quaternary-btn' type="button" (click)="reset()">RESET</button>
+                    <button class='button tertiary-btn' type="submit">APPLY</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="form-wrap">
+      <div class="table-wrap">
+        <div class="table-wrap-inner">
+          <table mat-table [dataSource]="dataSource" matSort>
+            <ng-container matColumnDef="sortOrder">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> SORT </th>
+              <td mat-cell *matCellDef="let row"> {{ row.sortOrder }} </td>
+            </ng-container>
+            <ng-container matColumnDef="productImage">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> IMAGE </th>
+              <td mat-cell *matCellDef="let row">
+                <!-- <img class="upload-img"
+                  [src]="row.imgPath=='' || row.imgPath == null ? 'assets/images/no-image.png' : imgPathUrl+row.imgPath"
+                  alt="" width="50px" [class.uploaded-img]="imgUpload"> -->
+                <img class="upload-img"
+                  [src]="filePathUrl+row.imgPath=='' || filePathUrl+row.imgPath == null ? 'assets/images/no-image.png' : filePathUrl+row.imgPath"
+                  alt="" width="50px" [class.uploaded-img]="imgUpload">
+              </td>
+            </ng-container>
+            <!-- <ng-container matColumnDef="skuCode">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> SKU </th>
+              <td mat-cell *matCellDef="let row"> {{row.skuCode}} </td>
+            </ng-container> -->
+            <ng-container matColumnDef="productName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> PRODUCT NAME </th>
+              <td mat-cell *matCellDef="let row"><u><a [routerLink]="['/view-products/'+row.productOid]"
+                    class="text-blue">
+                    {{row.productName}}</a></u></td>
+            </ng-container>
+            <ng-container matColumnDef="categories">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> CATEGORY </th>
+              <td mat-cell *matCellDef="let row"> {{row.categories}} </td>
+            </ng-container>
+            <!-- <ng-container matColumnDef="displayPrice">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> PRICE </th>
+              <td mat-cell *matCellDef="let row"> {{row.displayPrice}} </td>
+            </ng-container> -->
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> STATUS </th>
+              <td mat-cell *matCellDef="let row"> {{row.status}} </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+            </tr>
+          </table>
+          <div *ngIf="searchStoreVal" class="select-store-block">
+            <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+          </div>
+          <div class="no-records" *ngIf="noRecords">
+            No Records Found!
+          </div>
+        </div>
+        <mat-paginator (click)="searchVal()" [length]="resultsLength" (change)="searchVal()" #paginator
+          (page)="getUpdate($event)" [pageSize]="10" [pageSizeOptions]="[10,20,50,100]">
+        </mat-paginator>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,218 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container">
+        <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg"
+                    alt="leftArrow" [routerLink]="['/search-customer-segments']"></span>Add Customer Segments</h1>
+        <mat-slide-toggle class="example-margin text-right" [(ngModel)]="toggleVal" (change)="toggleStatus($event)">
+            {{statusValue}}
+        </mat-slide-toggle>
+    </div>
+</div>
+<div class="page-wrap">
+    <form [formGroup]="customerSegmentsFormGroup" #createCustomerSegmentsForm="ngForm">
+        <div class="row">
+            <div class="col-md-5">
+                <h3 class="card-title">Basic Details</h3>
+                <mat-card class="segment-card">
+                    <div class="row segment-details">
+                        <div class="col-md-12">
+                            <mat-form-field class="field-width">
+                                <input matInput placeholder="Segment Name" formControlName="segmentName" required maxLength="25" (focusout)="checkSegmentName()">
+                                <mat-error *ngIf="customerSegmentsFormGroup.get('segmentName').hasError('required')">
+                                    Please enter value
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-12">
+                            <mat-form-field class="field-width">
+                                <textarea matInput placeholder="Description" formControlName="description" required maxLength="500"></textarea>
+                                <mat-error *ngIf="customerSegmentsFormGroup.get('description').hasError('required')">
+                                    Please enter value
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+            <div class="col-md-7">
+                <h3 class="card-title">Segmentation Rules</h3>
+                <mat-card class="segment-card">
+                    <div class="segment-rules">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <div *ngIf="customerSegmentsFormGroup.get('segmentType').value == 'SEGMENT_RULE'">
+                                            <h1>{{customerSelectedCount}}</h1>
+                                            <div class="getdetailswithcount">
+                                                <label>Customers Selected</label>
+                                            </div>
+                                            <div class="getdetails-cus">
+                                                <div class="getcustomer-download">
+                                                    <div>
+                                                        <a class="getdetails" (click)="getCustomerList()" *ngIf="getCustomerBtnEnbale" [class.disable-cusbtn]="disableData"><span
+                                                                class="download-info">
+                                                                <img class="downoad-icon"
+                                                                    src="assets/images/svg-icons/uploadgray_ico.svg"
+                                                                    alt=""><span class="download-info">Download
+                                                                    Customer Data</span>
+                                                            </span></a>
+                                                    </div>
+                                                    <div class="download-loader" *ngIf="downloadQuery">
+                                                        <div class="segment-loader  download-loader">
+                                                            <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                                                        </div>
+                                                        <span>Downloading</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7 select-segment">
+                                        <div [class.disableSegmentOptions]="disableSegmentOptions">
+                                            <mat-radio-group formControlName="segmentType" (change)="segmentTypeChange($event)">
+                                                <mat-radio-button value="SEGMENT_MEMBER" class="mr-5px" [checked]="SEGMENT_MEMBER_TYPE" [class.enableRadio]="customerSegmentsFormGroup.get('segmentType').value == 'SEGMENT_MEMBER'">
+                                                    <div class="custom-field" [class.segmentMem]="customerSegmentsFormGroup.get('segmentType').value == 'SEGMENT_MEMBER'">
+                                                        <div class="product_sku">
+                                                            <input class="display-none" type="file" accept=".csv" (change)="uploadMemFileSku($event.target.files)" #uploadMemSku />
+                                                            <div class="upload-btn-text">
+                                                                <span class="upload-icon">
+                                                                    <img src="assets/images/svg-icons/uploadgray_ico.svg"
+                                                                        width="12px" alt="Img">
+                                                                    <label class="text"
+                                                                        (click)='uploadMemSku.click()'>Upload Member CSV
+                                                                        file</label>
+                                                                </span>
+                                                            </div>
+
+                                                            <img src="assets/images/icons/filter_close_ico.png" *ngIf="skuMemFileName != '' || skuMemErrorFileName != ''" (click)="skuMemUpload($event.value)" width="12px" alt="Img">
+                                                            <u class="uploaded-file" *ngIf="skuMemFileName != ''">
+                                                                {{skuMemFileName}}</u>
+                                                            <u> <a class="err-msg"
+                                                                    *ngIf="skuMemErrorFileName != ''"
+                                                                    href="{{skuMemErrorFile}}"
+                                                                    download="{{skuMemErrorFileName}}">{{skuMemErrorFileName}}</a></u>
+                                                            <u *ngIf=skuMemRequiredError class="err-msg"> csv file is
+                                                                required</u>
+                                                            <u *ngIf=validateMemSkuFile class="err-msg"> Please
+                                                                validate csv</u>
+                                                        </div>
+                                                        <div class="button_wrap">
+                                                            <button class="button tertiary-btn" *ngIf="skuMemFileName != '' && !validMemSkuFile" (click)="validateMemSKUs()" type="button">VALIDATE</button>
+                                                        </div>
+                                                    </div>
+                                                </mat-radio-button>
+                                                <mat-radio-button value="SEGMENT_NON_MEMBER" [checked]="SEGMENT_NON_MEMBER_TYPE" class="mr-5px" [class.enableRadio]="customerSegmentsFormGroup.get('segmentType').value == 'SEGMENT_NON_MEMBER'">
+                                                    <div class="custom-field" [class.segmentNonMem]="customerSegmentsFormGroup.get('segmentType').value == 'SEGMENT_NON_MEMBER'">
+                                                        <div class="product_sku">
+                                                            <input class="display-none" type="file" accept=".csv" (change)="uploadFileSku($event.target.files)" #uploadSku />
+                                                            <div class="upload-btn-text" (click)='uploadSku.click()'>
+                                                                <span class="upload-icon">
+                                                                    <img src="assets/images/svg-icons/uploadgray_ico.svg"
+                                                                        width="12px" alt="Img">
+                                                                    <label class="text">Upload Non Member CSV
+                                                                        file</label>
+                                                                </span>
+                                                            </div>
+
+                                                            <img src="assets/images/icons/filter_close_ico.png" *ngIf="skuFileName != '' || skuErrorFileName != ''" (click)="skuUpload($event.value)" width="12px" alt="Img">
+                                                            <u class="uploaded-file" *ngIf="skuFileName != ''">
+                                                                {{skuFileName}}</u>
+                                                            <u> <a class="err-msg"
+                                                                    *ngIf="skuErrorFileName != ''" href="{{skuErrorFile}}"
+                                                                    download="{{skuErrorFileName}}">{{skuErrorFileName}}</a></u>
+                                                            <u *ngIf=skuRequiredError class="err-msg"> csv file is
+                                                                required</u>
+                                                            <u *ngIf=validateSkuFile class="err-msg"> Please
+                                                                validate csv</u>
+                                                        </div>
+                                                        <div class="button_wrap">
+                                                            <button class="button tertiary-btn" *ngIf="skuFileName != '' && !validSkuFile" (click)="validateSKUs()" type="button">VALIDATE</button>
+                                                        </div>
+                                                    </div>
+                                                </mat-radio-button>
+                                                <!-- <mat-radio-button value="SEGMENT_MEMBER_AND_NON_MEMBER" [checked]="SEGMENT_MEMBER_AND_NON_MEMBER_TYPE" class="mr-5px" [class.enableRadio]="customerSegmentsFormGroup.get('segmentType').value == 'SEGMENT_MEMBER_AND_NON_MEMBER'">
+                                                    <div class="custom-field" [class.segment_Mem_andNon]="customerSegmentsFormGroup.get('segmentType').value == 'SEGMENT_MEMBER_AND_NON_MEMBER'">
+                                                        <div class="product_sku">
+                                                            <input class="display-none" type="file" accept=".csv" (change)="uploadNonMemFileSku($event.target.files)" #uploadNonMemSku />
+                                                            <div class="upload-btn-text" (click)='uploadNonMemSku.click()'>
+                                                                <span class="upload-icon">
+                                                                    <img src="assets/images/svg-icons/uploadgray_ico.svg"
+                                                                        width="12px" alt="Img">
+                                                                    <label class="text">Upload Member / Non Member CSV
+                                                                        file</label>
+                                                                </span>
+                                                            </div>
+
+                                                            <img src="assets/images/icons/filter_close_ico.png" *ngIf="skuNonMemFileName != '' || skuNonMemErrorFileName != ''" (click)="skuNonMemUpload($event.value)" width="12px" alt="Img">
+                                                            <u class="uploaded-file" *ngIf="skuNonMemFileName != ''">
+                                                                {{skuNonMemFileName}}</u>
+                                                            <u> <a class="err-msg"
+                                                                    *ngIf="skuNonMemErrorFileName != ''"
+                                                                    href="{{skuNonMemErrorFile}}"
+                                                                    download="{{skuNonMemErrorFileName}}">{{skuNonMemErrorFileName}}</a></u>
+                                                            <u *ngIf=skuNonMemRequiredError class="err-msg"> csv file is
+                                                                required</u>
+                                                            <u *ngIf=validateNonMemSkuFile class="err-msg"> Please
+                                                                validate csv</u>
+                                                        </div>
+                                                        <div class="button_wrap">
+                                                            <button class="button tertiary-btn" *ngIf="skuNonMemFileName != '' && !validNonMemSkuFile" (click)="validateNonMemSKUs()" type="button">VALIDATE</button>
+                                                        </div>
+                                                    </div>
+                                                </mat-radio-button> -->
+                                                <mat-radio-button value="SEGMENT_RULE" [checked]="SEGMENT_RULE_MEMBER_TYPE" (click)="selectSegmentDialog()" [class.enableRadio]="customerSegmentsFormGroup.get('segmentType').value == 'SEGMENT_RULE'">
+                                                    <div class="segment-info segemnt_ruleInfo" [class.segmentMem_Rule]="customerSegmentsFormGroup.get('segmentType').value == 'SEGMENT_RULE'">
+                                                        <a type="button" [class.segment-btndisable]="selectfinalQuery" class="button tertiary-btn">SEGMENT RULE</a>
+
+                                                    </div>
+                                                    <p class="segment_label">List of customers based on below segmentation
+                                                    </p>
+                                                </mat-radio-button>
+                                            </mat-radio-group>
+                                            <mat-error *ngIf="createCustomerSegmentsForm.submitted && customerSegmentsFormGroup.get('segmentType').hasError('required')">
+                                                Please select any field
+                                            </mat-error>
+
+                                        </div>
+                                        <div *ngIf="customerSegmentsFormGroup.get('segmentType').value == 'SEGMENT_RULE'">
+                                            <div class="removesegment_block" [class.removesegmentDisplay]="removeSegmentBool">
+                                                <div class="removesegment" *ngIf="finalQuery != ''">
+                                                    <button class="button tertiary-btn" type="button" (click)="removeSegment()">
+                                                        <img src="assets/images/icons/filter_close_ico.png" width="12px"
+                                                            alt="Img">Remove Segment</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <hr>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="segment-info">
+                                    <p class="segment-title">Segmentation</p>
+                                    <div *ngIf="selectfinalQuery" class="segment-loader">
+                                        <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                                    </div>
+                                    <p *ngIf="!selectfinalQuery">{{finalQuery}}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div *ngIf="err" class="err-msg">Segmentation Missing</div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+        </div> <br>
+        <div class="btm-button-wrap">
+            <button type="button" class="button secondary-btn" [routerLink]="['/search-customer-segments']">CANCEL</button>
+            <button type="submit" class="button primary-btn" (click)="createCustomerSegments()" [class.disablebtn]="loadingResponse">
+                <span class="loading-img-hide" *ngIf="loadingResponse">
+                    <img src="assets/images/loader-icons/White-loading-200px.svg" alt="loader">
+                </span>ADD</button>
+        </div>
+    </form>
+</div>

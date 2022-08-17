@@ -1,0 +1,167 @@
+<div class="page-wrap">
+    <div class="search-panel-block">
+        <div class="bredcrumb-title-wrap">
+            <div class="search-container-block">
+                <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+                <div class="search-list">
+                    <form class="filter-wrap" (submit)="searchVal()" [formGroup]="searchMemberFormGroup">
+                        <div class="row title-search-row">
+                            <div class="col-md-4 title-search-col">
+                                <div class="title">
+                                    <h1>Search Member</h1>
+                                </div>
+                            </div>
+                            <div class="col-md-5 title-search-col">
+                                <div class="searchform-block">
+                                    <div class="common-search">
+                                        <input type="text" formControlName="searchVal" placeholder="Search Member" />
+                                        <span class="search-btn" (click)="searchVal()"></span>
+                                        <div class="filter-btn-wrap">
+                                            <span class="filter-btn" (click)="openFilter();" [ngClass]="status ? 'open' : 'close'"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 title-search-col">
+
+                            </div>
+                        </div>
+                        <div class="feild-search" *ngIf="!status">
+                            <div class="row feild-search-inner">
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-select placeholder="Country" formControlName="country" (optionSelected)="onSelectionChanged($event)">
+                                            <mat-option *ngFor="let country of countryNameList" [value]="country.dial_code ">
+                                                {{ country.name }}-{{country.code}}-{{country.dial_code}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput formControlName="memberPhoneNumber" autocomplete="off" OnlyNumber="true" maxlength="15" placeholder="Member Phone Number">
+                                        <span style="transition: 5s;position: absolute; width: 100%;left: 0;top: 39px;font-size: 10px;" *ngIf="searchMemberFormGroup.get('memberPhoneNumber').hasError('pattern') && this.searchMemberFormGroup.get('memberPhoneNumber').invalid">
+                      <mat-error>Please enter valid mobile number.</mat-error>
+                    </span>
+                                        <mat-error *ngIf="searchMemberFormGroup.get('memberPhoneNumber').hasError('minlength')">Minimum 8 digit required.</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput formControlName="memberId" OnlyNumber="true" placeholder="Member Id">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput formControlName="memberFirstName" placeholder="Member First Name" maxlength="25">
+                                        <mat-error *ngIf="searchMemberFormGroup.get('memberFirstName').hasError('pattern')">Please enter valid first name.</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput formControlName="memberLastName" placeholder="Member Last Name" maxlength="25">
+                                        <mat-error *ngIf="searchMemberFormGroup.get('memberLastName').hasError('pattern')">Please enter valid last name.</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput formControlName="memberEmail" placeholder="Member Email">
+                                        <mat-error *ngIf="searchMemberFormGroup.get('memberEmail').hasError('pattern')">Please enter valid email Id.</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput formControlName="transactionId" placeholder="Transaction Id">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput [matDatepicker]="picker" [max]="maxDOB" readonly formControlName="dateOfBirth" placeholder="Date of Birth">
+                                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="text-right mar-auto">
+                                <button class='button quaternary-btn' (click)="resetForm()" type="reset">RESET</button>
+                                <button class='button tertiary-btn' [disabled]="searchMemberFormGroup.invalid" type="submit">APPLY</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="form-wrap">
+            <div class="table-wrap">
+                <div class="table-wrap-inner">
+                    <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
+                        <ng-container matColumnDef="customerId">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="oid" class="top-border"> MEMBER ID </th>
+                            <!-- <td mat-cell *matCellDef="let row"><u><a [routerLink]="['/view-member/'+row.customerId]"
+                    class="text-blue word-wrap"> {{
+                    row.customerId }} </a></u></td> -->
+                            <td mat-cell (click)="viewMember(row.customerId)" *matCellDef="let row"> <u><a 
+                      class="text-blue">{{ row.customerId }}</a></u>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="firstName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="firstName" class="top-border"> FIRST NAME </th>
+                            <td mat-cell *matCellDef="let row" class="word-wrap">{{ row.firstName }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="lastName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="lastName" class="top-border"> LAST NAME </th>
+                            <td mat-cell *matCellDef="let row" class="word-wrap">{{ row.lastName === null ? '-' : row.lastName}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="phoneNo">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="phoneNumber" class="top-border"> PHONE NUMBER </th>
+                            <td mat-cell *matCellDef="let row" class="word-wrap">{{row.phoneNo === null ? '-' : row.phoneNo}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="emailId">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="emailId" class="top-border"> EMAIL ID </th>
+                            <td mat-cell *matCellDef="let row" class="word-wrap">{{row.emailId === null ? '-' : row.emailId}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="tierName">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="tierId" class="top-border"> TIER </th>
+                            <td mat-cell *matCellDef="let row" class="word-wrap">{{row.tierName === null ? '-' : row.tierName}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="gender">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="gender" class="top-border"> GENDER </th>
+                            <td mat-cell *matCellDef="let row"> {{row.gender === null ? ' -' : row.gender}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="dateOfBirth" class="word-wrap">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="dateOfBirth" class="top-border"> DOB </th>
+                            <td mat-cell *matCellDef="let row">
+                                {{row.dateOfBirth === null ? '-' : row.dateOfBirth | date:'dd/MM/yyyy'}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="nationality" class="word-wrap">
+                            <th mat-header-cell *matHeaderCellDef class="top-border"> NATIONALITY </th>
+                            <td mat-cell *matCellDef="let row"> {{row.nationality === null ? '-' : row.nationality}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="lastActiveTime">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="lastActiveTime" class="top-border"> LAST ACTIVITY ON </th>
+                            <td mat-cell *matCellDef="let row" class="word-wrap">
+                                {{row.lastActiveTime === null ? '-' : row.lastActiveTime | date:'dd/MM/yyyy'}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="status">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header="customerStatus" class="top-border"> STATUS </th>
+                            <td mat-cell *matCellDef="let row" class="word-wrap"> {{row.customerStatus}} </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                        </tr>
+                    </table>
+                    <div *ngIf="searchStoreVal" class="select-store-block">
+                        <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                    </div>
+                    <div class="no-records" *ngIf="noRecords">
+                        No Records Found!
+                    </div>
+                </div>
+                <div>
+                    <mat-paginator [length]="resultsLength" #paginator (page)="getUpdate($event)" [pageSize]="10" [pageSizeOptions]="[10,20,50,100]">
+                    </mat-paginator>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

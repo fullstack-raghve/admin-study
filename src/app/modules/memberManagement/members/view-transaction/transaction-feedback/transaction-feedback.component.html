@@ -1,0 +1,46 @@
+<div class="page-wrap">
+  <div class="header">
+    <div class="emoj-block-panel">
+      <div class="emoj-block" *ngIf="feedbackdata?.feedBackForTitle!='' || feedbackdata?.feedBackForTitle!= undefined">
+        <p></p>
+        <div class="view-details feedbackimg">
+          <img src="assets/images/transaction-sentiments/Good.png" alt="Good"
+            *ngIf="feedbackdata?.feedBackForTitle=='TransactionFeedback_Good'">
+          <img src="assets/images/transaction-sentiments/Moderate.png" alt="Moderate"
+            *ngIf="feedbackdata?.feedBackForTitle=='TransactionFeedback_Moderate'">
+          <img src="assets/images/transaction-sentiments/Bad.png" alt="Bad"
+            *ngIf="feedbackdata?.feedBackForTitle=='TransactionFeedback_Bad'">
+        </div>
+      </div>
+      <h3>{{feedbackdata?.feedBackForTitle}}</h3>
+    </div>
+    <div class="close-icon">
+      <img src="assets/images/icons/filter_close_ico.png" alt="close-icon" (click)="onCloseClick()">
+    </div>
+  </div>
+  <!-- <div class="feedback-options" *ngFor="let question of questions">
+    <p>{{question.questionsVal}}</p>
+    <div class="comment-block">
+      <div class="question-block" *ngFor="let comment of question.comment">
+        <span>{{comment.commentText}}</span>
+        <img src="assets/images/icons/filter_close_ico.png" alt="close-icon" (click)="removeComment(comment)">
+      </div>
+    </div>
+  </div> -->
+
+  <div class="nps-rating">
+    <label>NPS Rating</label>
+    <p>{{feedbackdata?.npsRating}}</p>
+  </div>
+  
+  <p>{{feedbackdata?.feedBackQuestion}}</p>
+  <div class="feedback-options">
+    <!-- <p>{{question.questionsVal}}</p> -->
+    <div class="comment-block">
+      <div class="question-block">
+        <span>{{feedbackdata?.feedbackAnswers}}</span>
+        <!-- <img src="assets/images/icons/filter_close_ico.png" alt="close-icon" (click)="removeComment(comment)"> -->
+      </div>
+    </div>
+  </div>
+</div>

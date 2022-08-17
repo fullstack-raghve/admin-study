@@ -1,0 +1,808 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-center">
+        <h1>Add Earn Rule</h1>
+        <div class="slider">
+            <mat-slide-toggle [(ngModel)]="toggleVal" (change)="toggleStatus($event)" class="mat-slide-toggle">
+                {{statusValue}}</mat-slide-toggle>
+        </div>
+    </div>
+</div>
+<div class="page-wrap">
+    <div class="earn-rule">
+        <form (submit)="createEarnRule(earnRuleFormGroup.value)" [formGroup]="earnRuleFormGroup" #earnRuleForm="ngForm">
+            <mat-card class="summary-card">
+                <div class="summary">
+                    <div class="row">
+                        <div class="col-md-3" *ngIf="selProgramId===0">
+                            <mat-form-field class="example-full-width">
+                                <input matInput placeholder="Select Segment" aria-label="Program" [matAutocomplete]="programAutoComplete" [formControl]="programCtrl">
+                                <mat-autocomplete #programAutoComplete="matAutocomplete">
+                                    <mat-option *ngFor="let program of filteredprograms | async" [value]="program.programName" (click)="getAllPrograms(program.programId)" #programInput>
+                                        <span>{{program.programName}}</span>
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3" *ngIf="selProgramId!=0 && programDetails.length!=0">
+                            <label>Program</label>
+                            <p class="word-wrap">{{programDetails?.programLocales[0].programName}}</p>
+                        </div>
+                        <div class="col-md-3" *ngIf="programDetails.length!=0">
+                            <p>{{programDetails?.programId}}, {{programDetails?.programType}}, <span *ngIf="programBrand!=undefined">{{programBrand}}</span></p>
+                            <p class="word-wrap">{{programDetails?.programLocales[0].programName}}</p>
+                        </div>
+                        <div class="col-md-2" *ngIf="programDetails.length!=0">
+                            <label>Reward Type</label>
+                            <p>{{programDetails?.rewardType}}</p>
+                        </div>
+                        <div class="col-md-2" *ngIf="programDetails.length!=0">
+                            <label>Start Date & Time</label>
+                            <p>{{programDetails.startDate | date:'dd/MM/yyyy'}}<span *ngIf="programStartDateTime!==undefined"> & {{programStartDateTime | date:'hh:mm a'}} </span></p>
+                        </div>
+                        <div class="col-md-2" *ngIf="programDetails.length!=0 && programDetails['endDate']!=null">
+                            <label>End Date & Time</label>
+                            <p>{{programDetails.endDate | date:'dd/MM/yyyy'}}<span *ngIf="programEndDateTime!==undefined"> & {{programEndDateTime | date:'hh:mm a'}}</span></p>
+                        </div>
+                    </div>
+                </div>
+            </mat-card>
+            <div class="earn-rule-info">
+                <mat-card class="rule-info-card">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="flex">
+                                <mat-checkbox class="mr-5px" formControlName="displayOnHomeScreen">Display on Screen Home
+                                </mat-checkbox>
+                                <mat-checkbox formControlName="isExclusive">Exclusive</mat-checkbox>
+                            </div>
+                            <div class="grid img-block">
+                                <div class="avatar-zone">
+                                    <span *ngIf="ruleImagePath==''" class="upload-text" [class.placeholder-img]="imgUpload"><span class="pgm-img-title">Rule Image</span>
+                                    <span class="pgm-img-size">Image Size W-375 * H-290</span>
+                                    </span>
+                                    <img *ngIf="ruleImagePath!=''" class="upload-img" [src]="imgBaseUrl+ruleImagePath" [class.uploaded-img]="imgUpload" width="252px" height="150px">
+                                </div>
+                                <div class="remove-img" *ngIf="ruleImagePath!=''">
+                                    <span> <img src="assets/images/icons/filter_close_ico.png" alt="" (click)="removeImage()"><label>Remove</label></span>
+                                </div>
+                                <input #uploadImgEl type="file" class="upload_btn display-none" (change)="uploadImage($event.target.files)" />
+                                <div class="text-center wid-72" *ngIf="ruleImagePath==''">
+                                    <span class="upload-btn-text" (click)='uploadImgEl.click()'><span class="upload-icon"><img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px" alt="Img"></span>Upload Image
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="image-error clr-red pl-5em" *ngIf="showImageError">Please upload image</div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="master-fieldSet">
+                                        <fieldset class="language-fieldset">
+                                            <legend class="fieldset-heading">Rule Name</legend>
+                                            <div class="" formArrayName="earnRuleLocales">
+                                                <div class="" *ngFor="let ruleLocales of earnRuleFormGroup['controls']['earnRuleLocales']['controls'];let i = index;" [formGroupName]="i">
+                                                    <mat-form-field class="{{alignCss[i]}}">
+                                                        <input matInput placeholder="{{languageList[i].languageName}}" required formControlName="ruleName" maxlength="100" minlength="4">
+                                                        <mat-error *ngIf="ruleLocales.get('ruleName').hasError('required')">
+                                                            Please enter value</mat-error>
+                                                        <mat-error *ngIf="ruleLocales.get('ruleName').hasError('minlength')">
+                                                            Minimum 4 characters required</mat-error>
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="row">
+                                        <div class="col-md-3 mar-10">
+                                            <mat-form-field>
+                                                <input matInput [matDatepicker]="picker" placeholder="Start Date" readonly [min]="minDate" formControlName="startDate" required>
+                                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                                <mat-datepicker #picker></mat-datepicker>
+                                                <mat-error *ngIf="earnRuleFormGroup.get('startDate').hasError('required')">
+                                                    Please select date</mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-md-3 mar-10">
+                                            <div class="relative end-date">
+                                                <mat-form-field>
+                                                    <input matInput [matDatepicker]="endDate" readonly placeholder="End Date" [min]="earnRuleFormGroup.get('startDate').value=='' ? minDate : earnRuleFormGroup.get('startDate').value" [max]="maxEndDate" formControlName="endDate" (dateChange)="setExpiryDate($event.value)">
+                                                    <mat-datepicker-toggle matSuffix [for]="endDate" [disabled]="disabled">
+                                                    </mat-datepicker-toggle>
+                                                    <mat-datepicker #endDate></mat-datepicker>
+                                                    <mat-error *ngIf="earnRuleFormGroup.get('endDate').hasError('required')">
+                                                        Please select date</mat-error>
+                                                </mat-form-field>
+                                                <div class="absolute btm-4px">
+                                                    <mat-checkbox formControlName="perpectual" (change)="endDateAction(earnRuleFormGroup.get('perpectual').value)">
+                                                        <small>Perpetual</small></mat-checkbox>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="example-input-wrapper label-color">
+                                            Start Time 
+                                              <img src="assets/images/icons/time_ico.svg" width="20px" alt="">
+                                              <input [owlDateTimeTrigger]="dt2" readonly [owlDateTime]="dt2" class="time-picker" formControlName="startTime">
+                                              <owl-date-time [pickerType]="'timer'" #dt2></owl-date-time>
+                                            </label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="example-input-wrapper label-color">
+                                              End Time 
+                                              <img src="assets/images/icons/time_ico.svg" width="20px" alt="">
+                                              <input [owlDateTimeTrigger]="dt" readonly [owlDateTime]="dt" class="time-picker" formControlName="endTime" [min]="earnRuleFormGroup.get('startTime').value==''?'':earnRuleFormGroup.get('startTime').value">
+                                              <owl-date-time [pickerType]="'timer'" #dt></owl-date-time>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <mat-form-field>
+                                                <mat-select placeholder="Point Expiry in" formControlName="pointExpiryIn" #pointExpiry (selectionChange)="checkPointExpiryValidation(pointExpiry.value)">
+                                                    <mat-option value="NOOFDAYS">Number of Days</mat-option>
+                                                    <mat-option value="FIXEDDATE" *ngIf="earnRuleFormGroup.get('perpectual').value==false">Fixed Date
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-md-6" *ngIf="pointExpiry.value == 'FIXEDDATE'">
+                                            <mat-form-field>
+                                                <input matInput [matDatepicker]="expiryDate" placeholder="Expiry Date" formControlName="expiryDate" [min]="minExpiryDate" readonly>
+                                                <mat-datepicker-toggle matSuffix [for]="expiryDate"></mat-datepicker-toggle>
+                                                <mat-datepicker #expiryDate></mat-datepicker>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-md-6" *ngIf="pointExpiry.value == 'NOOFDAYS'">
+                                            <mat-form-field>
+                                                <input matInput type="text" maxlength="3" formControlName="numberOfDays" OnlyNumber="true" placeholder="Number of Days" />
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+            <div class="multi-lang-btn display-none">
+                <mat-card class="btn-lang-card">
+                    <div class="row align-center">
+                        <div class="col-md-2">
+                            <mat-checkbox formControlName="showButton" (change)="checkButtonValidation(earnRuleFormGroup.get('showButton').value)">Enable Button
+                            </mat-checkbox>
+                        </div>
+                        <div class="col-md-3">
+                            <mat-form-field>
+                                <mat-select placeholder="Navigate To" formControlName="navigateTo">
+                                    <mat-option name="freeProduct" value="Free Product">Free Product</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="earnRuleFormGroup.get('navigateTo').hasError('required')">Please select value</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3">
+                            <mat-form-field>
+                                <input matInput placeholder="Navigation Value" maxlength="30" formControlName="navigationValue">
+                                <mat-error *ngIf="earnRuleFormGroup.get('navigationValue').hasError('pattern')">This special character(s) is not allowed</mat-error>
+                                <mat-error *ngIf="earnRuleFormGroup.get('navigationValue').hasError('required')">Please select value</mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="master-fieldSet">
+                        <fieldset class="language-fieldset">
+                            <legend class="fieldset-heading">Button Display Text</legend>
+                            <div class="row flex" formArrayName="buttonDisplayArr">
+                                <div class="col-md-3" *ngFor="let ruleLocales of earnRuleFormGroup['controls']['buttonDisplayArr']['controls'];let i = index;" [formGroupName]="i">
+                                    <mat-form-field class="field-style {{alignCss[i]}}">
+                                        <input matInput placeholder="{{languageList[i].languageName}}" maxlength="15" formControlName="buttonName">
+                                        <mat-error *ngIf="ruleLocales.get('buttonName').hasError('required')">Please enter value</mat-error>
+                                        <mat-error *ngIf="ruleLocales.get('buttonName').hasError('pattern')">This special character(s) is not allowed</mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+                        </fieldset>
+                    </div>
+                </mat-card>
+            </div>
+            <div class="action-type">
+                <mat-card class="action-type-card">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <mat-form-field>
+                                <mat-select placeholder="Action Type" required formControlName="actionType" #actionTypeInput (selectionChange)="populateActionValues(actionTypeInput.value)">
+                                    <mat-option value="PURCHASE">Purchase</mat-option>
+                                    <mat-option value="TRANSACTION">Transaction</mat-option>
+                                    <mat-option value="PROGRAM_REFERRAL" *ngIf="null!=programDetails && programType=='BASE'">Program Referral
+                                    </mat-option>
+                                    <mat-option value="PROFILE_ACTIVITY" *ngIf="null!=programDetails && programType=='BASE'">Profile Activity
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="earnRuleFormGroup.get('actionType').hasError('required')">Please select value</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3">
+                            <mat-form-field>
+                                <mat-select placeholder="Action" required formControlName="action" #actionInput (selectionChange)="checkFormArrayValidation(actionInput.value)">
+                                    <mat-option *ngFor="let action of selectAction" [value]="action.value">
+                                        {{action.name}}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="earnRuleFormGroup.get('action').hasError('required')">Please select value
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3" *ngIf="countryData">
+                            <mat-form-field class="example-full-width">
+                                <input matInput placeholder="Select Country" aria-label="Country" [matAutocomplete]="countryAutoComplete" [formControl]="countryCtrl">
+                                <mat-autocomplete #countryAutoComplete="matAutocomplete">
+                                    <mat-option *ngFor="let country of filteredcountries | async" [value]="country.countryName" (click)="getAllcountry(country.countryId)" #programInput>
+                                        <span>{{country.countryName}}</span>
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3" *ngIf="this.earnRuleFormGroup.get('action').value == 'PRODUCT_PURCHASE'">
+                            <mat-form-field>
+                                <mat-select placeholder="Select Free Product" formControlName="freeProductType">
+                                    <mat-option *ngFor="let freeproductvalue of freeproductvalues" value="{{freeproductvalue.freeProductCode}}" (click)="getfreeproductvalue(freeproductvalue.freeProductCode)">
+                                        {{ freeproductvalue.freeProductCode }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="earnRuleFormGroup.get('freeProductType').hasError('required')">Please select value</mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-md-3" *ngIf="this.earnRuleFormGroup.get('action').value == 'INVITE_XX_FRIENDS'">
+                            <mat-form-field>
+                                <input matInput placeholder="No. of Invite Sent" maxlength="3" OnlyNumber="true" formControlName="noOfInviteSent">
+                                <mat-error *ngIf="earnRuleFormGroup.get('noOfInviteSent').hasError('required')">Please enter value</mat-error>
+                                <mat-error *ngIf="earnRuleFormGroup.get('noOfInviteSent').hasError('pattern')">Decimals are not allowed</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3" *ngIf="this.earnRuleFormGroup.get('action').value == 'REFERRAL_REGISTERED'">
+                            <mat-form-field>
+                                <input matInput placeholder="Number of Registration" maxlength="3" OnlyNumber="true" formControlName="noOfRegistration">
+                                <mat-error *ngIf="earnRuleFormGroup.get('noOfRegistration').hasError('required')">Please enter value</mat-error>
+                                <mat-error *ngIf="earnRuleFormGroup.get('noOfRegistration').hasError('pattern')">
+                                    Decimals are not allowed</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3" *ngIf="this.earnRuleFormGroup.get('action').value == 'ACTIVE_AFTER_XX_DAYS'">
+                            <mat-form-field>
+                                <input matInput placeholder="Number of Days" formControlName="noOfDays" maxlength="3" OnlyNumber="true">
+                                <mat-error *ngIf="earnRuleFormGroup.get('noOfDays').hasError('required')">Please enter value
+                                </mat-error>
+                                <mat-error *ngIf="earnRuleFormGroup.get('noOfDays').hasError('pattern')">Decimals are not allowed</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3" *ngIf="this.earnRuleFormGroup.get('action').value == 'XX_TRANSACTIONS_AFTER_REGISTRATION'">
+                            <mat-form-field>
+                                <input matInput placeholder="Number of Days" formControlName="noOfTxnAfterRegistration" maxlength="3" OnlyNumber="true">
+                                <mat-error *ngIf="earnRuleFormGroup.get('noOfTxnAfterRegistration').hasError('required')">
+                                    Please enter value</mat-error>
+                                <mat-error *ngIf="earnRuleFormGroup.get('noOfTxnAfterRegistration').hasError('pattern')">
+                                    Decimals are not allowed</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3" *ngIf="this.earnRuleFormGroup.get('action').value == 'TRANSACTION_DISCOUNT'">
+                            <mat-form-field>
+                                <input matInput placeholder="Maximum Discount" formControlName="maxDiscount" maxlength="3" OnlyNumber="true">
+                                <mat-error *ngIf="earnRuleFormGroup.get('noOfDays').hasError('required')">Please enter value
+                                </mat-error>
+                                <mat-error *ngIf="earnRuleFormGroup.get('noOfDays').hasError('pattern')">Decimals are not allowed</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-3" *ngIf="this.earnRuleFormGroup.get('action').value == 'TRANSACTION_DISCOUNT'">
+                            <mat-form-field>
+                                <input matInput placeholder="Minimum Discount" formControlName="minDiscount" maxlength="3" OnlyNumber="true">
+                                <mat-error *ngIf="earnRuleFormGroup.get('noOfDays').hasError('required')">Please enter value
+                                </mat-error>
+                                <mat-error *ngIf="earnRuleFormGroup.get('noOfDays').hasError('pattern')">Decimals are not allowed</mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+            <div class="transaction-value" *ngIf="this.earnRuleFormGroup.get('action').value === 'TRANSACTION_VALUE' || this.earnRuleFormGroup.get('action').value === 'BILL_AMOUNT' || this.earnRuleFormGroup.get('action').value === 'BONUS'">
+                <mat-card class="transaction-value-card">
+                    <div class="row pb-20px">
+                        <div class="col-md-6">
+                            <div class="table-heading">
+                                <h6>{{rewardType}}</h6>
+                                <p>How many {{showRewardType}} customer will earn</p>
+                            </div>
+                            <div class="program-table">
+                                <div class="header">
+                                    <div class="table-cell">
+                                        <label class="common-tex">Products in</label>
+                                    </div>
+                                    <div class="table-cell">
+                                        <label class="head-text">Sale</label>
+                                    </div>
+                                    <div class="table-cell">
+                                        <label class="head-text">Non Sale</label>
+                                    </div>
+                                </div>
+                                <div class="content" formArrayName="productSaleArray">
+                                    <div class="content-column" *ngFor="let tier of earnRuleFormGroup['controls']['productSaleArray']['controls'];let i = index;" [formGroupName]="i">
+                                        <div class="table-cell">
+                                            <label class="tier-list">{{tierList[i].tierName}}</label>
+                                            <input type="hidden" class="input-box" formControlName="tierId">
+                                        </div>
+                                        <div class="table-cell">
+                                            <input type="text" class="input-box" formControlName="sale" OnlyNumber="true" maxlength="3">
+                                            <mat-error class="x-small" *ngIf="earnRuleForm.submitted && tier.get('sale').hasError('required')">
+                                                Please enter value</mat-error>
+                                            <mat-error *ngIf="tier.get('sale').hasError('pattern')">Decimals are not allowed
+                                            </mat-error>
+                                        </div>
+                                        <div class="table-cell">
+                                            <input type="text" class="input-box" formControlName="noSale" OnlyNumber="true" maxlength="3">
+                                            <mat-error class="x-small" *ngIf="earnRuleForm.submitted && tier.get('noSale').hasError('required')">
+                                                Please enter value</mat-error>
+                                            <mat-error *ngIf="tier.get('noSale').hasError('pattern')">Decimals are not allowed
+                                            </mat-error>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="flex">
+                                <mat-checkbox class="mr-5px" formControlName="excludeDeliveryCost">Exclude Delivery Cost
+                                </mat-checkbox>
+                                <mat-checkbox formControlName="excludeTax">Exclude Tax</mat-checkbox>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div *ngIf="this.programDetails['rewardType']=='STAMPS'">
+                                <mat-checkbox class="ft-12" formControlName="allowMultipleStamps">Allow multiple stamps per transaction</mat-checkbox>
+                            </div>
+                            <div class="table-heading">
+                                <h6>Amount</h6>
+                                <p>How much customer has to spend to earn above {{showRewardType}}</p>
+                            </div>
+                            <div class="program-table">
+                                <div class="header">
+                                    <div class="table-cell">
+                                        <label class="common-tex">&nbsp;</label>
+                                    </div>
+                                    <div class="table-cell" *ngFor="let r of regionCurrencies; let i=index">
+                                        <label class="head-text">{{r.currencyCode}}</label>
+                                    </div>
+                                </div>
+
+                                <div class="content-column col-min" formArrayName="regionMinAmountArray">
+                                    <div class="table-cell">
+                                        <label>Min Order Amount</label>
+                                    </div>
+                                    <div>
+                                        <div class="table-cell" *ngFor="let rc of regionCurrencies; let i=index" [formGroupName]="i">
+                                            <input type="text" class="input-box" #inputCurrency [formControlName]="regionCurrencies[i].regionId" maxlength="23" OnlyNumber="true" (blur)="autoPopulateCurrencyValue(tier, i, inputCurrency.value)">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="content" formArrayName="regionTierArray" *ngIf="tierFlag">
+                                    <div class="content-column" *ngFor="let tier of earnRuleFormGroup['controls']['regionTierArray']['controls'];let i = index;" [formGroupName]="i">
+                                        <div class="table-cell">
+                                            <label class="tier-list">{{tierList[i].tierName}}</label>
+                                            <input type="hidden" class="input-box" formControlName="tierId">
+                                        </div>
+                                        <div formArrayName="regionCurrencyArr">
+                                            <div class="table-cell" *ngFor="let currencyControl of tier['controls']['regionCurrencyArr']['controls'];let j = index;" [formGroupName]="j">
+                                                <input type="text" class="input-box" [formControlName]="regionCurrencies[j].regionId" maxlength="23" #inputCurrency OnlyNumber="true" (blur)="autoPopulateCurrencyValue(tier, j, inputCurrency.value)">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="regionCurrencyError clr-red">Please enter value
+                            </div>
+                            <div *ngIf="rewardErrMsg clr-red">Maximum 19 character and 3 decimal places allowed
+                            </div>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+            <div class="transaction-value" *ngIf="this.earnRuleFormGroup.get('action').value === 'TRANSACTION_DISCOUNT'">
+                <mat-card class="transaction-value-card">
+                    <div class="row pb-20px">
+                        <div class="col-md-6">
+                            <div class="table-heading">
+                                <h6>{{rewardType}}</h6>
+                                <p>How many {{showRewardType}} customer will earn</p>
+                            </div>
+                            <div class="program-table">
+                                <div class="header">
+                                    <div class="table-cell">
+                                        <label class="common-tex">Products in</label>
+                                    </div>
+                                    <div class="table-cell">
+                                        <label class="head-text">Transaction</label>
+                                    </div>
+                                </div>
+                                <div class="content" formArrayName="productSaleArray">
+                                    <div class="content-column" *ngFor="let tier of earnRuleFormGroup['controls']['productSaleArray']['controls'];let i = index;" [formGroupName]="i">
+                                        <div class="table-cell">
+                                            <label class="tier-list">{{tierList[i].tierName}}</label>
+                                            <input type="hidden" class="input-box" formControlName="tierId">
+                                        </div>
+                                        <div class="table-cell">
+                                            <input type="text" class="input-box" formControlName="sale" OnlyNumber="true" maxlength="3">
+                                            <mat-error class="x-small" *ngIf="earnRuleForm.submitted && tier.get('sale').hasError('required')">
+                                                Please enter value</mat-error>
+                                            <mat-error *ngIf="tier.get('sale').hasError('pattern')">Decimals are not allowed
+                                            </mat-error>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-10">
+                            <div *ngIf="this.programDetails['rewardType']=='STAMPS'">
+                                <mat-checkbox class="ft-12" formControlName="allowMultipleStamps">Allow multiple stamps per transaction</mat-checkbox>
+                            </div>
+                            <div class="table-heading">
+                                <h6>Amount</h6>
+                                <p>How much customer has to spend to earn above {{showRewardType}}</p>
+                            </div>
+                            <div class="program-table">
+                                <div class="header">
+                                    <div class="table-cell">
+                                        <label class="common-tex">&nbsp;</label>
+                                    </div>
+                                    <div *ngFor="let r of regionCurrencies; let i=index">
+                                        <div class="table-cell" *ngIf="i == 0">
+                                            <label class="head-text">{{r.currencyCode}}</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="content-column col-min" formArrayName="regionMinAmountArray">
+                                    <div class="table-cell">
+                                        <label>Min Order Amount</label>
+                                    </div>
+                                    <div *ngFor="let rc of regionCurrencies; let i=index">
+                                        <div class="table-cell" *ngIf=" i==0 " [formGroupName]="i">
+                                            <input type="text" class="input-box" [formControlName]="regionCurrencies[i].regionId" maxlength="6" OnlyNumber="true" id='text'>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="content" formArrayName="regionTierArray" *ngIf="tierFlag">
+
+                                    <div class="content-column" *ngFor="let tier of earnRuleFormGroup['controls']['regionTierArray']['controls'];let i = index;" [formGroupName]="i">
+
+                                        <div class="table-cell">
+                                            <label class="tier-list">{{tierList[i].tierName}}</label>
+                                            <input type="hidden" class="input-box" formControlName="tierId">
+                                        </div>
+                                        <div formArrayName="regionCurrencyArr" *ngFor="let currencyControl of tier['controls']['regionCurrencyArr']['controls'];let j = index;">
+                                            <div class="table-cell" *ngIf="j == 0" [formGroupName]="j">
+                                                <input type="text" class="input-box" [formControlName]="regionCurrencies[j].regionId" maxlength="6" #inputCurrency OnlyNumber="true" (blur)="autoPopulateCurrencyValue(tier, j, inputCurrency.value)">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="regionCurrencyError clr-red">Please enter value
+                            </div>
+                            <div *ngIf="rewardErrMsg clr-red">Decimals values till 3 precision are allowed
+                            </div>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+            <div class="transaction-value" *ngIf="this.earnRuleFormGroup.get('action').value == 'PRODUCT_PURCHASE'">
+                <mat-card class="transaction-value-card">
+                    <div class="pb-20px">
+                        <div class="table-heading">
+                            <h6>{{rewardType}}</h6>
+                            <p>How many {{showRewardType}} customer will earn</p>
+                        </div>
+                        <div class="program-table">
+                            <div class="header">
+                                <div class="table-cell">
+                                    <label class="common-tex">No. Of</label>
+                                </div>
+                                <div class="table-cell">
+                                    <label class="head-text">Products to be Purchased</label>
+                                </div>
+                                <div class="table-cell">
+                                    <label class="head-text">{{rewardType}} Rewarded</label>
+                                </div>
+                            </div>
+                            <div class="content" formArrayName="productPurchaseArray">
+                                <div class="content-column" *ngFor="let tier of earnRuleFormGroup['controls']['productPurchaseArray']['controls'];let i = index;" [formGroupName]="i">
+                                    <div class="table-cell">
+                                        <label class="tier-list">{{tierList[i].tierName}}</label>
+                                        <input type="hidden" class="input-box" formControlName="tierId">
+                                    </div>
+                                    <div class="table-cell">
+                                        <input type="text" class="input-box" formControlName="noOfPurchased" OnlyNumber="true" maxlength="3">
+                                        <mat-error class="x-small" *ngIf="earnRuleForm.submitted && tier.get('noOfPurchased').hasError('required')">
+                                            Please enter value</mat-error>
+                                        <mat-error *ngIf="tier.get('noOfPurchased').hasError('pattern')">Decimals are not allowed</mat-error>
+                                    </div>
+                                    <div class="table-cell">
+                                        <input type="text" class="input-box" formControlName="noOfPoints" OnlyNumber="true" maxlength="3">
+                                        <mat-error class="x-small" *ngIf="earnRuleForm.submitted && tier.get('noOfPoints').hasError('required')">
+                                            Please enter value</mat-error>
+                                        <mat-error *ngIf="tier.get('noOfPoints').hasError('pattern')">Decimals are not allowed
+                                        </mat-error>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="flex align-center">
+                                <mat-form-field class="width-50">
+                                    <input matInput placeholder="Minimum Order Value" OnlyNumber="true" formControlName="purchaseMinValue" maxlength="6">
+                                    <mat-error *ngIf="earnRuleFormGroup.get('purchaseMinValue').hasError('value')">
+                                        Invalid value</mat-error>
+                                </mat-form-field>
+                                <small>(Minimum amount to be spent for earning {{showRewardType}})</small>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+            <div class="row pb-20px" *ngIf="this.earnRuleFormGroup.get('action').value !== 'PRODUCT_PURCHASE'">
+                <div class="col-md-3">
+                    <mat-card>
+                        <div class="">
+                            <mat-form-field>
+                                <input matInput type="text" formControlName="overallAccurals" OnlyNumber="true" maxlength="8" placeholder="Maximum Overall Accruals" #overAllAccurals (blur)="checkLimitPerCustomer(overAllAccurals.value,limitPerCust.value, '')" />
+                                <mat-error *ngIf="earnRuleFormGroup.get('overallAccurals').hasError('required')">Please enter value</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="">
+                            <mat-form-field>
+                                <input matInput type="text" formControlName="overAllLimit" OnlyNumber="true" maxlength="8" placeholder="Overall Limit per Customer" #limitPerCust (blur)="checkLimitPerCustomer(overAllAccurals.value, $event.target.value, dailyLimit.value)" />
+                                <mat-error *ngIf="earnRuleFormGroup.get('overAllLimit').hasError('required')">Please enter value</mat-error>
+                            </mat-form-field>
+                            <div class="clr-red" *ngIf="limitPerCustFlag">Invalid Value</div>
+                        </div>
+                        <div class="">
+                            <mat-form-field>
+                                <input matInput type="text" formControlName="dailyLimit" OnlyNumber="true" maxlength="8" placeholder="Daily Limit Per Customer" #dailyLimit (blur)="checkLimitPerCustomer(overAllAccurals.value, limitPerCust.value, $event.target.value)" />
+                                <mat-error *ngIf="earnRuleFormGroup.get('dailyLimit').hasError('required')">Please enter value
+                                </mat-error>
+                            </mat-form-field>
+                            <div class="clr-red" *ngIf="dailyLimitFlag">Invalid Value</div>
+                        </div>
+                    </mat-card>
+                </div>
+            </div>
+            <div class="exclude-store" *ngIf="this.earnRuleFormGroup.get('action').value == 'PRODUCT_PURCHASE'">
+                <mat-card class="exclude-store-card">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="">
+                                <p>Include SKU </p>
+                                <small>Attach list of products if any to be include from this rule</small>
+                                <p>
+                                    <span class="upload-btn-text" (click)="openSkuDialog(false)"><span class="upload-icon"><img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px" alt="Img"></span>Upload SKU
+                                    </span>
+                                </p>
+                                <label class="text-blue" for="skuFile">{{skuFileName}}</label>
+                                <div class="remove-img" *ngIf="skuFile!=''">
+                                    <span> <img src=" assets/images/icons/filter_close_ico.png" alt="" (click)="removeSku()"><label class="ft-12">Remove</label></span>
+                                </div>
+                                <p class="clr-blue" *ngIf="selectedProduct.length!=0">{{selectedProduct.length}} product selected</p>
+                            </div>
+                            <div class="image-error clr-red pl-5em" *ngIf="showSkuFileError">
+                                Please upload SKU file</div>
+                        </div>
+                        <div class="col-md-5" *ngIf="this.earnRuleFormGroup.get('action').value === 'PRODUCT_PURCHASE'">
+                            <div class="toggle-block">
+                                <div class="toggle-panel">
+                                    <span><mat-slide-toggle formControlName="ruleType" (change)="toggleIncludeExclude($event)" class="example-margin" [checked]="checked"></mat-slide-toggle></span>
+                                    <span *ngIf="includeExclude=='Include'">Include Stores</span>
+                                    <span *ngIf="includeExclude=='Exclude'">Exclude Stores</span>
+                                </div>
+                                <small>Attach list of stores if any to be {{includeExclude}} from this rule</small>
+                                <p>
+                                    <span class="upload-btn-text" (click)="openStoresDialog()">
+                                     Select Store
+                                    </span>
+                                </p>
+                                <div class="select-store-block">
+                                    <div *ngIf="selectStoreVal">
+                                        <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                                    </div>
+                                    <p *ngIf="dataStore">{{selectedStore.length}}</p><span>Stores Selected</span>
+                                </div>
+                                <p class="clr-red" *ngIf="storeRequired">{{storeErrorMsg}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+            <div class="invite-sent" *ngIf="this.earnRuleFormGroup.get('action').value != 'BILL_AMOUNT' && this.earnRuleFormGroup.get('action').value != 'PRODUCT_PURCHASE' && this.earnRuleFormGroup.get('action').value != 'TRANSACTION_VALUE' && this.earnRuleFormGroup.get('action').value != 'TRANSACTION_DISCOUNT' && this.earnRuleFormGroup.get('action').value != 'BONUS'">
+                <mat-card class="invite-sent-card">
+                    <div class="info">
+                        <div class="table-heading">
+                            <h6>{{rewardType}}</h6>
+                            <p>How many {{showRewardType}} customer will earn</p>
+                        </div>
+                        <div class="program-table">
+                            <div class="header">
+                                <div class="table-cell">
+                                    <label class="common-tex">No. Of</label>
+                                </div>
+                                <div class="table-cell">
+                                    <label class="head-text">{{rewardType}} Rewarded</label>
+                                </div>
+                            </div>
+                            <div class="content" formArrayName="pointsRewaredArray">
+                                <div class="content-column" *ngFor="let tier of earnRuleFormGroup['controls']['pointsRewaredArray']['controls'];let i = index;" [formGroupName]="i">
+                                    <div class="table-cell">
+                                        <label class="tier-list">{{tierList[i].tierName}}</label>
+                                        <input type="hidden" class="input-box" formControlName="tierId">
+                                    </div>
+                                    <div class="table-cell">
+                                        <input type="text" class="input-box" formControlName="points" OnlyNumber="true" maxlength="3">
+                                        <mat-error class="x-small" *ngIf="earnRuleForm.submitted && tier.get('points').hasError('required')">
+                                            Please enter value</mat-error>
+                                        <mat-error *ngIf="tier.get('points').hasError('pattern')">Decimals are not allowed
+                                        </mat-error>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </mat-card>
+                <div class="row flex align-center" *ngIf="this.earnRuleFormGroup.get('action').value == 'FIRST_TRANSACTION'">
+                    <div class="col-md-6">
+                        <div class="flex align-center">
+                            <mat-form-field class="width-50">
+                                <input matInput placeholder="Minimum Order Value" OnlyNumber="true" formControlName="minimumOrder" maxlength="6">
+                                <mat-error *ngIf="earnRuleFormGroup.get('minimumOrder').hasError('pattern')">Decimals are not allowed</mat-error>
+                            </mat-form-field>
+                            <small>(Minimum amount to be spent for earning {{showRewardType}})</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="exclude-store" *ngIf="this.earnRuleFormGroup.get('action').value === 'BILL_AMOUNT' || this.earnRuleFormGroup.get('action').value === 'TRANSACTION_VALUE' || this.earnRuleFormGroup.get('action').value === 'BONUS'">
+                <mat-card class="exclude-store-card">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="">
+                                <p>{{skuLabel}} SKU </p>
+                                <small>Attach list of products if any to be {{skuLabel}} from this rule</small>
+                                <p>
+                                    <span class="upload-btn-text" (click)="openSkuDialog(true)" *ngIf="skuFile==''">
+                                      <span class="upload-icon">
+                                        <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px" alt="Img">
+                                      </span>Upload SKU
+                                    </span>
+                                </p>
+                                <label class="text-blue" for="skuFile">{{skuFileName}}</label>
+                                <div class="remove-img" *ngIf="skuFile!=''">
+                                    <span> <img src=" assets/images/icons/filter_close_ico.png" alt="" (click)="removeSku()"><label claass="ft-12">Remove</label></span>
+                                </div>
+                                <p class="clr-blue" *ngIf="selectedProduct.length!=0">{{selectedProduct.length}} product selected</p>
+                            </div>
+                        </div>
+                        <div class="col-md-5" *ngIf="this.earnRuleFormGroup.get('action').value === 'TRANSACTION_VALUE' || this.earnRuleFormGroup.get('action').value === 'BILL_AMOUNT' || this.earnRuleFormGroup.get('action').value === 'BONUS' ">
+                            <div class="toggle-block">
+                                <div class="toggle-panel">
+                                    <span><mat-slide-toggle formControlName="ruleType" (change)="toggleIncludeExclude($event)" class="example-margin" [checked]="checked"></mat-slide-toggle></span>
+                                    <span *ngIf="includeExclude=='Include'">Include Stores</span>
+                                    <span *ngIf="includeExclude=='Exclude'">Exclude Stores</span>
+                                </div>
+                                <small>Attach list of stores if any to be {{includeExclude}} from this rule</small>
+                                <p>
+                                    <span class="upload-btn-text" (click)="openStoresDialog()">
+                                        Select Store
+                                    </span>
+                                </p>
+                                <div class="select-store-block">
+                                    <div *ngIf="selectStoreVal">
+                                        <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                                    </div>
+                                    <p *ngIf="dataStore">{{selectedStore.length}}</p><span>Stores Selected</span>
+                                </div>
+                                <p class="clr-red" *ngIf="storeRequired">{{storeErrorMsg}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+            <div class="exclude-store" *ngIf="this.earnRuleFormGroup.get('action').value === 'TRANSACTION_DISCOUNT'">
+                <mat-card class="exclude-store-card">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="">
+                                <p>{{skuLabel}} Stores
+                                    <span><mat-slide-toggle formControlName="ruleType" (change)="toggleIncludeExclude($event)" class="example-margin" [checked]="checked"></mat-slide-toggle></span>
+                                </p>
+                                <small>Attach list of products if any to be {{skuLabel}} from this rule</small>
+                                <p>
+                                    <span class="upload-btn-text" (click)="openSkuDialog(true)">
+                                      <span class="upload-icon">
+                                          <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px" alt="Img">
+                                      </span>Upload SKU
+                                    </span>
+                                </p>
+                                <label class="text-blue" for="skuFile">{{skuFile}}</label>
+                                <div class="" *ngIf="skuFile!=''">
+                                    <span> <img src=" assets/images/icons/filter_close_ico.png" alt="" (click)="removeSku()">
+                                      <label class="ft-12">Remove</label></span>
+                                </div>
+                                <p class="clr-blue" *ngIf="selectedProduct.length!=0">{{selectedProduct.length}} product selected</p>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+            <div class="description">
+                <h3 class="card-title">Description</h3>
+                <mat-card class="description">
+                    <div class="expansion-panel" formArrayName="descriptionArray">
+                        <mat-accordion>
+                            <mat-expansion-panel *ngFor="let program of earnRuleFormGroup['controls']['descriptionArray']['controls'];let i = index;" [formGroupName]="i" class="mat-expansion-panel {{rightPanel[i]}}" (opened)="panelOpenState = true;" (closed)="panelOpenState = false">
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        {{languageList[i].languageName}}
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <div class="pt-20px" class="{{alignCss[i]}}">
+                                    <label>Content</label>
+                                    <editor *ngIf="languageList[i].languageName != 'Arabic'" apiKey="test" [init]="{plugins: 'code, preview ,print,fullpage, searchreplace, directionality, visualblocks, visualchars, fullscreen, image, link, media, template, codesample, table, charmap, hr, pagebreak, nonbreaking, anchor, toc, insertdatetime, advlist, lists, wordcount, imagetools, textpattern, help',toolbar:'code preview',height : '480'}"
+                                        formControlName="description" (onSelectionChange)="removeErrorMsg(i)">
+                                    </editor>
+                                    <editor *ngIf="languageList[i].languageName == 'Arabic'" id="arabicID" apiKey="test" [init]="{plugins: 'code, preview ,print,fullpage, searchreplace, directionality, visualblocks, visualchars, fullscreen, image, link, media, template, codesample, table, charmap, hr, pagebreak, nonbreaking, anchor, toc, insertdatetime, advlist, lists, wordcount, imagetools, textpattern, help', toolbar:'code preview',height : '480'}"
+                                        formControlName="description" (onSelectionChange)="removeErrorMsg(i)">
+                                    </editor>
+                                </div>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                        <div *ngIf="descriptionError clr-red">Please enter value</div>
+                    </div>
+                </mat-card>
+            </div>
+            <div class="terms-conditions">
+                <h3 class="card-title">Terms & Conditions</h3>
+                <mat-card class="terms-conditions-card">
+                    <div class="expansion-panel" formArrayName="termsConditionArray">
+                        <mat-accordion>
+                            <mat-expansion-panel *ngFor="let program of earnRuleFormGroup['controls']['termsConditionArray']['controls'];let i = index;" [formGroupName]="i" class="mat-expansion-panel {{rightPanel[i]}}" (opened)="panelOpenState = true;" (closed)="panelOpenState = false">
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        {{languageList[i].languageName}}
+                                    </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <div class="pt-20px" class="{{alignCss[i]}}">
+                                    <label>Content</label>
+                                    <editor *ngIf="languageList[i].languageName != 'Arabic'" apiKey="test" [init]="{plugins: 'code, preview ,print,fullpage, searchreplace, directionality, visualblocks, visualchars, fullscreen, image, link, media, template, codesample, table, charmap, hr, pagebreak, nonbreaking, anchor, toc, insertdatetime, advlist, lists, wordcount, imagetools, textpattern, help',toolbar:'code preview', height : '480'}"
+                                        formControlName="termsCondition" (onSelectionChange)="removeTermsCondErrorMsg(i)">
+                                    </editor>
+                                    <editor *ngIf="languageList[i].languageName == 'Arabic'" id="arabicIDtac" apiKey="test" [init]="{plugins: 'code, preview ,print,fullpage, searchreplace, directionality, visualblocks, visualchars, fullscreen, image, link, media, template, codesample, table, charmap, hr, pagebreak, nonbreaking, anchor, toc, insertdatetime, advlist, lists, wordcount, imagetools, textpattern, help',toolbar:'code preview',height : '480'}"
+                                        formControlName="termsCondition" (onSelectionChange)="removeTermsCondErrorMsg(i)">
+                                    </editor>
+                                </div>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                        <div *ngIf="termsConditionError clr-red">Please enter value</div>
+                    </div>
+                </mat-card>
+            </div>
+            <div class="btm-button-wrap">
+                <button class="button secondary-btn" type="button" [routerLink]="['/search-programs/']">CANCEL</button>
+                <button class="button primary-btn" type="submit" [disabled]="buttonDisable">ADD</button>
+            </div>
+        </form>
+    </div>
+</div>

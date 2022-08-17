@@ -1,0 +1,431 @@
+<div class="bredcrumb-title-wrap">
+  <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+  <div class="title flex justify-content">
+    <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          [routerLink]="['/search-programs']"></span>Edit Burn Rule</h1>
+  </div>
+</div>
+<div class="page-wrap" *ngIf="buildFlag">
+  <form [formGroup]="burnRuleFormGroup" #editBurnRuleForm="ngForm">
+    <div class="burn-rule">
+      <mat-card class="summary-card">
+        <div class="summary">
+          <div class="row">
+            <div class="col-md-4">
+              <p>{{programDetails?.programId}}, {{programDetails?.programType}}, {{brand}}</p>
+              <p class="word-wrap">{{programDetails?.programLocales[0].programName}}</p>
+            </div>
+            <div class="col-md-2">
+              <label>Reward Type</label>
+              <p>{{programDetails?.rewardType}}</p>
+            </div>
+            <div class="col-md-3">
+              <label>Start Date & Time</label>
+              <p>{{startDateTime | date:'dd/MM/yyyy hh:mm a'}} </p>
+            </div>
+            <div class="col-md-3">
+              <label>End Date & Time</label>
+              <p>{{endDateTime | date:'dd/MM/yyyy hh:mm a'}}</p>
+            </div>
+          </div>
+        </div>
+      </mat-card>
+      <div class="burn-rule-info">
+
+        <mat-card class="rule-info-card">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="flex justify-content">
+                <mat-checkbox class="check-box-text" formControlName="displayScreen">Display on Screen
+                  Home</mat-checkbox>
+                <mat-checkbox class="check-box-text" formControlName="exclusive">Exclusive
+                </mat-checkbox>
+              </div>
+              <div class="grid img-block">
+                <div class="avatar-zone">
+                  <label class="upload-text" *ngIf="rulePath==''" [class.placeholder-img]="imgUpload">Rule Image</label>
+                  <img class="upload-img" *ngIf="rulePath!=''" [src]="filePathUrl+rulePath"
+                    [class.uploaded-img]="imgUpload" width="235px">
+                </div>
+                <div class="remove-img" *ngIf="rulePath!=''">
+                  <span> <img src="assets/images/icons/filter_close_ico.png" alt=""
+                      (click)="removeRuleImage()"><label>Remove</label></span>
+                </div>
+                <input style="display:none;" type="file" class="upload_btn" (change)="burnRule($event.target.files)"
+                  #burnRuleImg />
+                <span class="upload-btn-text" (click)='burnRuleImg.click()'>
+
+                  <div class="text-center" *ngIf="rulePath==''">
+                    <span class="upload-icon">
+                      <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px" alt="Img">
+                    </span>Upload Image
+                  </div>
+                </span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="master-fieldSet">
+                <fieldset class="language-fieldset">
+                  <legend class="fieldset-heading">Rule Name</legend>
+                  <div class="" formArrayName="burnRuleNameArray">
+                    <div class=""
+                      *ngFor="let burnRule of burnRuleFormGroup['controls']['burnRuleNameArray']['controls'];let i = index;"
+                      [formGroupName]="i">
+                      <mat-form-field class="{{alignCss[i]}}">
+                        <input matInput placeholder="{{burnRuleDetails.ruleLocaleList[i].languageName}}" maxlength="100"
+                          required formControlName="burnRule">
+                        <mat-error *ngIf="burnRule.get('burnRule').hasError('required')">Please
+                          enter value</mat-error>
+                        <mat-error *ngIf="burnRule.get('burnRule').hasError('pattern')">Please
+                          valid name</mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <mat-form-field>
+                <mat-select placeholder="Redeem Type" formControlName="freeProduct">
+                  <mat-option name="freeProduct" value="FREE_PRODUCT">Free Product</mat-option>
+                  <mat-option name="points" value="POINTS">Points</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-md-3 disabled-val" *ngIf="burnRuleFormGroup.get('freeProduct').value=='FREE_PRODUCT'">
+              <mat-form-field>
+                <mat-select placeholder="Select Free Product" formControlName="freeProductType" required>
+                  <mat-option *ngFor="let freeProduct of freeproductArry" [value]="freeProduct.value">
+                    {{freeProduct.name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="burnRuleFormGroup.get('freeProductType').hasError('required')">Please
+                  select
+                  value</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+      <div class="reward-stams-section" *ngIf="burnRuleDetails['rewardType']!='POINTS'">
+        <mat-card class="rewardStamps-card">
+          <div class="row pb-20px">
+            <div class="col-lg-6 col-md-12">
+              <div class="table-heading">
+                <h6>Reward</h6>
+                <p>What the customer will get</p>
+              </div>
+              <div class="reward-details">
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="grid img-block">
+                      <div class="avatar-zone">
+                        <label class="upload-text" *ngIf="rewardPath==''" [class.placeholder-img]="imgUpload">Reward
+                          Image</label>
+                        <img class="upload-img" *ngIf="rewardPath!=''" [src]="filePathUrl+rewardPath"
+                          [class.uploaded-img]="imgUpload" width="100px">
+                      </div>
+                      <div class="remove-img" *ngIf="rewardPath!=''">
+                        <span> <img src="assets/images/icons/filter_close_ico.png" alt=""
+                            (click)="removeRewardImage()"><label>Remove</label></span>
+                      </div>
+                      <input style="display:none;" type="file" class="upload_btn"
+                        (change)="rewardImg($event.target.files)" #rewardImgFile />
+                      <div class="text-center" *ngIf="rewardPath==''">
+                        <span class="upload-btn-text" (click)='rewardImgFile.click()'>
+                          <span class="upload-icon">
+                            <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px" alt="Img">
+                          </span>Upload Image
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="">
+                      <mat-form-field class="field-style">
+                        <input matInput placeholder="Redeem Qty" formControlName="rewardQuantity" maxlength="1"
+                          OnlyNumber="true">
+                      </mat-form-field>
+                    </div>
+                    <div class="redeem-info flex">
+                      <div class="">
+                        <p>Upload Product</p>
+                        <label>Upload the product to be provide as free</label>
+                        <p class="product-err-msg" style="color: #f44336;">
+                          {{productErrorMsg}}</p>
+                      </div>
+                      <div>
+                        <span class="upload-icon" (click)="productsDialog()" *ngIf="skuFile ==''">
+                          <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px" alt="Img">
+                          <label class="text">Upload</label>
+                        </span>
+                        <p *ngIf="selectedProduct?.length!=0">{{selectedProduct?.length}} Products
+                          Selected</p>
+                        <label *ngIf="skuFile!=''" style="color:black;max-width: 150px;word-wrap: break-word;"
+                          for="skuFile">{{skuFile}}</label>
+                        <div class="remove-img" *ngIf="skuFile!=''">
+                          <span> <img src=" assets/images/icons/filter_close_ico.png" alt="" (click)="removeSku()">
+                            <label style="font-size:12px;">Remove</label></span>
+                        </div>
+                        <div class="" *ngIf="skuFile!=''">
+                          <a href="{{fileUrl}}{{skuFile}}"><img class="downoad-icon"
+                              src="assets/images/svg-icons/download_xl.svg" alt=""><span class="download-info">Download
+                              SKU uploaded</span></a>
+                          <!-- <a href="http://3.210.192.55:8080/file{{filePath}}"><img class="downoad-icon" src="assets/images/svg-icons/uploadgray_ico.svg" alt=""><span class="download-info">Download Customers List</span></a> -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-12">
+              <div class="table-heading">
+                <h6>Stamps</h6>
+                <p>How many stamps required to get this reward</p>
+              </div>
+              <div class="program-table">
+                <div class="header">
+                  <div class="table-cell">
+                    <label class="common-tex"></label>
+                  </div>
+                  <div class="table-cell">
+                    <label class="head-text">No. of stamps required</label>
+                  </div>
+                </div>
+                <div class="content" formArrayName="tierArray">
+                  <div class="content-column"
+                    *ngFor="let locale of burnRuleFormGroup['controls']['tierArray']['controls']; let i=index"
+                    [formGroupName]="i">
+                    <div class="table-cell">
+                      <label class="tier-list">{{ locale.get('tierName').value}}</label>
+                    </div>
+                    <div class="table-cell">
+                      <mat-form-field>
+                        <input matInput type="text" maxlength="3" OnlyNumber="true" formControlName="tierCount">
+                        <mat-error *ngIf="locale.get('tierCount').hasError('required')">Please
+                          enter value</mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="attach-store">
+            <div class="toggle-block">
+              <div class="toggle-panel">
+                <span>
+                  <mat-slide-toggle formControlName="ruleType" (change)="toggleIncludeExclude($event)"
+                    class="example-margin" [checked]="checked"></mat-slide-toggle>
+                </span>
+                <span *ngIf="includeExclude=='Include'">
+                  Include Stores
+                </span>
+                <span *ngIf="includeExclude=='Exclude'">
+                  Exclude Stores
+                </span>
+              </div>
+            </div>
+            <label>Attach list of stores is any to be {{includeExclude}} from this rule</label>
+            <div class="">
+              <span class="upload-icon">
+                <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px" alt="Img">
+                <label class="text" (click)="openDialog()"><u>Select Store</u></label>
+              </span>
+              <p *ngIf="selectedStore!=null">{{selectedStore.length}} Stores Selected</p>
+              <p style="color:red" *ngIf="storeRequired">{{storeErrorMsg}}</p>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+      <div class="" *ngIf="burnRuleDetails['rewardType']=='POINTS'">
+        <mat-card class="rule-info-card">
+          <div class="col-md-9">
+            <h3 class="card-title">Value/ Worth of 1 Point</h3>
+            <mat-card class="p-0px">
+              <div class="program-table">
+                <div class="header">
+                  <div class="table-cell">
+                    <label class="common-text">Region</label>
+                  </div>
+                  <div class="table-cell" *ngFor="let r of regionCurrencies">
+                    <label class="head-text">{{r.currencyCode}}</label>
+                  </div>
+
+                </div>
+                <div class="content" formArrayName="rewardArray" *ngIf="tierFlag">
+
+                  <div class="content-column"
+                    *ngFor="let tier of burnRuleFormGroup['controls']['rewardArray']['controls'];let i = index;"
+                    [formGroupName]="i">
+                    <div class="table-cell">
+                      <label class="tier-list">{{tierList[i].tierName}} {{tier.tierName}}</label>
+                      <input type="hidden" class="input-box change-align" formControlName="tierId">
+                    </div>
+                    <div>
+                      <div formArrayName="currencyArr">
+                        <div class="table-cell"
+                          *ngFor="let currencyControl of tier['controls']['currencyArr']['controls'];let j = index;"
+                          [formGroupName]="j">
+                          <input type="text" class="input-box" #inputCurrency maxlength="23"
+                            [formControlName]="regionCurrencies[j].regionId" OnlyNumber="true"
+                            (blur)="autoPopulateCurrencyValue(tier, j, inputCurrency.value)">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </mat-card>
+            <div *ngIf="regionError" style="color: red; padding:.5em 0 0 9em">Please enter value</div>
+            <div *ngIf="rewardErrMsg" style="color: red; padding:.5em 0 0 9em">Decimals values till 3
+              precision are allowed
+            </div>
+          </div>
+          <div class="exclude-store">
+
+            <div class="row">
+              <div class="col-md-4">
+                                <div class="">
+                                    <p>Excluded SKU</p>
+                                    <small>Attach list of products if any to be excluded from this rule</small>
+                                    <p>
+                                        <span class="upload-btn-text" (click)="productsDialog()">
+                                            <span class="upload-icon">
+                                                <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px"
+                                                    alt="Img">
+                                            </span>Upload SKU
+                                        </span>
+
+                                    </p>
+                                    <img src="assets/images/icons/filter_close_ico.png"
+                                        *ngIf="skuFile!=''" (click)="removeSkuFile($event.value)" width="12px"
+                                        alt="Img">
+                                    <label style="color:black" for="skuFile">{{skuFile}}</label>
+                                    <p>{{selectedProduct?.length}} Products Selected</p>
+                                     <!-- <p> <u class="text-blue" *ngIf="selectedSkuCount!=0">{{selectedSkuCount}} sku's are listed</u> </p>  -->
+                                </div>
+                            </div>
+              <div class="col-md-4">
+                <div class="toggle-block">
+                  <div class="toggle-panel">
+                    <span>
+                      <mat-slide-toggle formControlName="ruleType" (change)="toggleIncludeExclude($event)"
+                        class="example-margin" [checked]="checked"></mat-slide-toggle>
+                    </span>
+                    <span *ngIf="includeExclude=='Include'">
+                      Include Stores
+                    </span>
+                    <span *ngIf="includeExclude=='Exclude'">
+                      Exclude Stores
+                    </span>
+                  </div>
+
+                  <!-- <mat-slide-toggle formControlName="excludedProductStore"></mat-slide-toggle></p> -->
+                  <small>Attach list of stores if any to be {{includeExclude}} from this rule</small>
+                  <p>
+                    <span class="upload-btn-text" (click)="openDialog()">
+                      <span class="upload-icon">
+                        <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px" alt="Img">
+                      </span>Select Store
+                    </span>
+                  </p>
+                  <p *ngIf="selectedStore!=null">{{selectedStore.length}} Stores Selected</p>
+                  <p style="color:red" *ngIf="storeRequired">{{storeErrorMsg}}</p>
+                  <!-- <p> <u class="text-blue" *ngIf="selectedStoreCount!=0">{{selectedStoreCount}} stores selected</u> </p> -->
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="flex align-center">
+                  <mat-form-field class="width-50">
+                    <input matInput type="text" placeholder="Minimum Points" formControlName="minimumPoints" />
+                  </mat-form-field>
+                  <small>(Minimum points required to burn)</small>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </mat-card>
+      </div>
+      <div class="description-block">
+        <h3 class="card-title">Description</h3>
+        <mat-card class="description-card">
+          <div class="expansion-panel" formArrayName="descriptionArray">
+            <mat-accordion>
+              <mat-expansion-panel
+                *ngFor="let description of burnRuleFormGroup['controls']['descriptionArray']['controls'];let i = index;"
+                [formGroupName]="i" class="mat-expansion-panel {{rightPanel[i]}}"
+                (opened)="panelOpenState = true;expandDataEmail()" (closed)="panelOpenState = false">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    {{burnRuleDetails.ruleLocaleList[i].languageName}}
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="pt-20px" class="{{alignCss[i]}}">
+                  <label>Content</label>
+                  <editor *ngIf="burnRuleDetails.ruleLocaleList[i].languageName!='Arabic'" apiKey="test" [init]="{
+                    plugins: 'code, preview ,print,fullpage, searchreplace, directionality, visualblocks, visualchars, fullscreen, image, link, media, template, codesample, table, charmap, hr, pagebreak, nonbreaking, anchor, toc, insertdatetime, advlist, lists, wordcount, imagetools, textpattern, help',
+                    toolbar:'code preview',
+                    height : '480'
+                          }" formControlName="description" required></editor>
+                  <editor *ngIf="burnRuleDetails.ruleLocaleList[i].languageName=='Arabic'" id="arabicID" apiKey="test"
+                    [init]="{
+                    plugins: 'code, preview ,print,fullpage, searchreplace, directionality, visualblocks, visualchars, fullscreen, image, link, media, template, codesample, table, charmap, hr, pagebreak, nonbreaking, anchor, toc, insertdatetime, advlist, lists, wordcount, imagetools, textpattern, help',
+                    toolbar:'code preview',
+                    height : '480'
+                          }" formControlName="description" required></editor>
+                </div>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
+        </mat-card>
+      </div>
+      <div class="terms-block">
+        <h3 class="card-title">Terms & Conditions</h3>
+        <mat-card class="terms-card">
+          <div class="expansion-panel" formArrayName="termAndConditionArray">
+            <mat-accordion>
+              <mat-expansion-panel
+                *ngFor="let termAndCondition of burnRuleFormGroup['controls']['termAndConditionArray']['controls'];let i = index;"
+                [formGroupName]="i" class="mat-expansion-panel {{rightPanel[i]}}"
+                (opened)="panelOpenState = true;expandtermAndCondition()" (closed)="panelOpenState = false">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    {{burnRuleDetails.ruleLocaleList[i].languageName}}
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="pt-20px" class="{{alignCss[i]}}">
+                  <label>Content</label>
+                  <editor apiKey="test" *ngIf="burnRuleDetails.ruleLocaleList[i].languageName!='Arabic'" [init]="{
+                    plugins: 'code, preview ,print,fullpage, searchreplace, directionality, visualblocks, visualchars, fullscreen, image, link, media, template, codesample, table, charmap, hr, pagebreak, nonbreaking, anchor, toc, insertdatetime, advlist, lists, wordcount, imagetools, textpattern, help',
+                    toolbar:'code preview',
+                    height : '480'
+                          }" formControlName="termAndCondition" required></editor>
+                  <editor apiKey="test" id="arabicIDtac"
+                    *ngIf="burnRuleDetails.ruleLocaleList[i].languageName=='Arabic'" [init]="{
+                    plugins: 'code, preview ,print,fullpage, searchreplace, directionality, visualblocks, visualchars, fullscreen, image, link, media, template, codesample, table, charmap, hr, pagebreak, nonbreaking, anchor, toc, insertdatetime, advlist, lists, wordcount, imagetools, textpattern, help',
+                    toolbar:'code preview',
+                    height : '480'
+                          }" formControlName="termAndCondition" required></editor>
+                </div>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
+        </mat-card>
+      </div>
+      <!-- </mat-card> -->
+      <div class="text-right">
+        <!-- <button class="button secondary-btn" type="button"
+          [routerLink]="['/view-burn-rule/'+burnRuleId]">CANCEL</button> -->
+          <button class="button secondary-btn" type="button"
+      (click)="ViewBurnRule(burnRuleId)">CANCEL</button>
+        <button class="button primary-btn" type="submit" (click)="updateBurnRule(burnRuleFormGroup.value)"
+          [disabled]="disableButton">UPDATE</button>
+      </div>
+    </div>
+    <!-- </mat-card> -->
+    <!-- </div> -->
+  </form>
+</div>

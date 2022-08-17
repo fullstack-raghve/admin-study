@@ -1,0 +1,184 @@
+<div class="page-wrap">
+  <div class="search-panel-block">
+    <div class="bredcrumb-title-wrap">
+      <div class="search-container-block">
+        <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+        <div class="search-list ">
+          <form class="filter-wrap" [formGroup]="searchSearchGiftCardForm" (submit)="searchVal()">
+            <div class="row title-search-row">
+              <div class="col-md-3 title-search-col">
+                <div class="title">
+                  <h1>Search Gift Cards</h1>
+                </div>
+              </div>
+              <div class="col-md-6 title-search-col">
+                <div class="searchform-block">
+                  <div class="common-search">
+                    <input type="text" (keyup)="applyFilter($event.target.value)"  formControlName="searchcardOid" placeholder="Search by Card ID" />
+                    <span class="search-btn" (click)="searchVal()"></span>
+                    <div class="filter-btn-wrap">
+                      <span class="filter-btn" (click)="openFilter();" [ngClass]="status ? 'open' : 'close'"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3 title-search-col " [routerLink]="['/add-search-gift-cards']">
+                <div class="text-center">
+                  <span class="upload-btn-text"><button class="btn btn-light">
+                      <span class="upload-icon">
+                        <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px" alt="Img">&nbsp;
+                      </span>Bulk Upload</button>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="feild-search ng-star-inserted" *ngIf="!status">
+              <div class="row feild-search-inner">
+                <div class="row">
+               <div class="col-md-4">
+                  <mat-form-field>
+                    <mat-select placeholder="Type" formControlName="type">
+                      <mat-option value="Digital"> Digital </mat-option>
+                      <mat-option value="Physical">Physical</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                  <mat-form-field>
+                    <mat-select formControlName="corporateId" placeholder="Corporate">
+                      <mat-option *ngFor="let corporateDetail of corporateDetails" value="{{corporateDetail.rpOID}}">{{corporateDetail.corporateName}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                  <mat-form-field>
+                    <mat-select formControlName="storeOid" placeholder="Store Name">
+                      <mat-option *ngFor="let storeDetail of storeIdDetails" value="{{storeDetail.STORE_OID}}">{{storeDetail.STORE_NAME}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                
+              </div>
+              <div class="row">
+                  <div class="col-md-2">
+                      <mat-form-field>
+                        <mat-select formControlName="cardType" placeholder="Card type" >
+                          <mat-option *ngFor="let cardDetail of cardDetails" value="{{cardDetail.cardName}}" >{{cardDetail.cardName}}</mat-option> 
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  <div class="col-md-4">
+                    <div class="row">
+                      <div class="col-md-6">
+                          <mat-form-field>
+                              <mat-label>Modified From</mat-label>
+                              <input matInput [matDatepicker]="picker" formControlName="modifiedFrom" readonly>
+                              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                              <mat-datepicker #picker></mat-datepicker>
+                            </mat-form-field>
+                      </div>
+                        <div class="col-md-6">
+                          <mat-form-field>
+                              <mat-label>Modified To</mat-label>
+                              <input matInput [matDatepicker]="modifiedTo" formControlName="modifiedTo"   [min]="searchSearchGiftCardForm.get('modifiedFrom').value=='' ? 'minDate' : searchSearchGiftCardForm.get('modifiedFrom').value"  readonly>
+                              <mat-datepicker-toggle matSuffix [for]="modifiedTo"></mat-datepicker-toggle>
+                              <mat-datepicker #modifiedTo></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                     
+                   
+                    
+                   
+                    
+                    </div>
+                    <div class="col-md-2">
+                        <mat-form-field>
+                          <mat-select formControlName="status" placeholder="Status">
+                           <mat-option value="Available">Available</mat-option>
+                            <mat-option value="Assigned">Assigned</mat-option>
+                            <mat-option value="Blocked">Blocked</mat-option>
+                            <mat-option value="Damaged">Damaged</mat-option>
+                            <mat-option value="Expired">Expired</mat-option>
+                            <mat-option value="Gifted">Gifted</mat-option>
+                            <mat-option value="Generated">Generated</mat-option>
+                            <mat-option value="Missing">Missing</mat-option>
+                            <mat-option value="Printing">Printing</mat-option>
+                            <mat-option value="Sold">Sold</mat-option>
+                            <mat-option value="Active-Physical">Active-Physical</mat-option>
+                            <mat-option value="Active-Digitized">Active-Digitized</mat-option>
+                             </mat-select>
+                        </mat-form-field>
+                      </div>
+                      <div class=" col-md-2 button-wrap">
+                          <button class='button quaternary-btn' (click)="resetForm()">RESET</button>
+                          <button class='button tertiary-btn' type="submit">APPLY</button>
+                        </div>
+              </div>
+               
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="form-wrap">
+      <div class="table-wrap">
+        <div class="table-wrap-inner" [class.nodatafound]="noRecords">
+
+          <table mat-table [dataSource]="dataSource" matSort *ngIf="dataSource">
+            <ng-container matColumnDef="SLNO">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>SL NO. </th>
+              <td mat-cell *matCellDef="let row"> {{row.SLNO}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="type">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>TYPE</th>
+              <td mat-cell *matCellDef="let row">{{row.type}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="cardType">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> CARD TYPE </th>
+              <td mat-cell *matCellDef="let row"> {{row.cardType}}</td>
+            </ng-container>
+            <ng-container matColumnDef="barcode">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+              <td mat-cell *matCellDef="let row"><u><a [routerLink]="['/view-search-gift-cards/'+row.cardOid]"
+                    class="text-blue">{{row.barcode}}</a></u></td>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>STATUS</th>
+              <td mat-cell *matCellDef="let row">{{row.status}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="lastModifieddate">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> LAST MODIFIED DATE </th>
+              <td mat-cell *matCellDef="let row">{{row.lastModifieddate  |date:"dd/MM/yyyy"}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="CorporteORstoreName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> CORPORATE/STORE NAME</th>
+              <td mat-cell *matCellDef="let row">{{row.CorporteORstoreName}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="storeId">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> STORE ID </th>
+              <td mat-cell *matCellDef="let row">{{row.storeId}}</td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+            </tr>
+          </table>
+          <div *ngIf="searchGiftVal" class="select-gift-block">
+              <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+            </div>
+            <div class="no-records" *ngIf="noRecords" >
+                No Records Found!
+            </div>
+        </div>
+        <mat-paginator [pageSizeOptions]="[10,20,50,100]"></mat-paginator>
+      </div>
+    </div>
+  </div>
+</div>

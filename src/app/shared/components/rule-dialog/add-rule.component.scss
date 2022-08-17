@@ -1,0 +1,110 @@
+.page-wrap{
+  .bredcrumb-title-wrap{
+    padding: 0.5em 1em;
+    background :#D3D3D3;
+    .title{
+      padding: 0.1em 1em;
+      h1{
+        font-size: 1.5em;
+      }
+    }
+  }
+  .form-wrap{
+    background: #fff;
+    width: 96%;
+    position: relative;
+    top: -48px;
+    left: 15px;
+    .card-title{
+      color: #5F5C5C;
+      font-size: 16px;
+    }
+  }
+}
+
+table{
+  width: 100%;
+  border: 1px solid #ddd;
+}
+thead{
+  border-bottom: 1px solid #000;
+}
+.flex-container{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.mat-form-field{width:100%;}
+.mat-select-panel{
+  position: relative !important;
+  top:35px !important;
+}
+.mat-table{
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+p{margin: 0;}
+.button-wrap{
+  text-align: right;
+  width: 100%;
+  position: absolute;
+}
+
+.mat-dialog-container {
+     padding: 0!important;
+}
+.form-wrap {
+    .table-wrap-inner{
+        max-height: 350px;
+        overflow-y: scroll;
+        th.mat-header-cell {
+           padding: 3px 20px;
+        }
+        td.mat-cell, td.mat-footer-cell, th.mat-header-cell {
+        padding: 3px 20px;
+       }
+        tr.mat-header-row {
+        height: 56px;
+        }
+        td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type, th.mat-header-cell:first-of-type {
+            // padding-left: 50px;
+        }
+    }
+}
+.filter-btn-wrap {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+.common-search{
+    display: flex;
+    justify-content: space-between;
+    padding: 0 0 3em;
+
+  .store-title {
+      display: flex;
+      align-items: center;
+      h6 {
+          font-size: 1.4em;
+          padding-right: 20px;
+      }
+  }
+}
+.close-icon {
+    // position: absolute;
+    // top: 0;
+    // right: 0;
+    cursor: pointer;
+}
+/deep/ .mat-tab-body.mat-tab-body-active .mat-tab-body-content {
+    padding: 0;
+}
+/deep/ .mat-autocomplete-panel{
+  /deep/ .mat-option{
+      /deep/ .mat-option-text{
+          span{
+              font-size: 12px;
+          }
+      }
+  }
+}

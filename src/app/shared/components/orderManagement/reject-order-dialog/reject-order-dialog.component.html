@@ -1,0 +1,46 @@
+<div class="page-wrap">
+  <div class="flex-container">
+    <div class="header">
+      <h3 *ngIf="popUpType == 'reject'">Please mention reason of Rejection</h3>
+      <h3 *ngIf="popUpType == 'cancelled'">Are you sure you want to Cancel Order? Please mention reason</h3>
+    </div>
+    <div class="close-icon text-right">
+      <img src="assets/images/icons/filter_close_ico.png" alt="close_icon" (click)="onCloseClick()">
+    </div>
+  </div>
+  <form [formGroup]="rejectOrderFormGroup" #rejectOrderForm="ngForm" (submit)="rejectOrder(rejectOrderFormGroup.value)">
+    <div class="row">
+      <div class="col-md-8 content">
+        <mat-form-field *ngIf="popUpType == 'reject'">
+          <mat-select placeholder="Reason for Rejecting" formControlName="reasonForReject" required>
+            <mat-option value="Item not available">Item not available</mat-option>
+            <mat-option value="Bulk Order">Bulk Order</mat-option>
+          </mat-select>
+          <mat-error *ngIf="rejectOrderFormGroup.get('reasonForReject').hasError('required')">Please Select Reason
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field *ngIf="popUpType == 'cancelled'">
+          <mat-select placeholder="Reason of cancel" formControlName="reasonForReject" required>
+            <mat-option value="Customer does not want replaced Item">Customer does not want replaced Item</mat-option>
+            <mat-option value="Order taking too long">Order taking too long</mat-option>
+          </mat-select>
+          <mat-error *ngIf="rejectOrderFormGroup.get('reasonForReject').hasError('required')">Please Select Reason
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Write a Reason</mat-label>
+          <textarea matInput formControlName="reasonDescription" maxlength="250" required></textarea>
+          <mat-error *ngIf="rejectOrderFormGroup.get('reasonDescription').hasError('required')">Please write a reason
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-md-4 btm-button-wrap">
+        <button class="button secondary-btn mb-1em" type="button" (click)="onCloseClick()">CANCEL</button>
+        <button class="button primary-btn" type="submit">CONFIRM</button>
+      </div>
+    </div>
+  </form>
+</div>
+<div *ngIf="pageLoader" class="page-loader-block full-page-loader">
+  <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+</div>

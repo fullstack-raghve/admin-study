@@ -1,0 +1,281 @@
+<div class="page-wrap">
+    <div class="header-section" *ngIf="itemDetails">
+        <div class="flex">
+            <div class="order-time">
+                <label>Ordered Time</label>
+                <p>{{ itemDetails.txnTime | date : 'shortTime'}}</p>
+            </div>
+
+            <div class="input-block" *ngIf="!isInvoice">
+                <mat-form-field class="field-width">
+                    <input name="invoiceNumber" [(ngModel)]="itemDetails.invoiceNumber" #invoice="ngModel" matInput #InvoiceNo placeholder="Invoice Number" maxlength="30">
+                </mat-form-field>
+                <div class="error" *ngIf="status === 'ready' && showInvoiceErrorMsg && itemDetails.invoiceNumber == ''" style="padding-bottom: 5px; margin-top: -2em;">
+                    Please enter invoice number
+                </div>
+            </div>
+            <div class="input-block" *ngIf="isInvoice">
+                <mat-form-field class="field-width">
+                    <input name="invoiceNumber" [(ngModel)]="itemDetails.invoiceNumber" #invoice="ngModel" matInput #InvoiceNo placeholder="Invoice Number" maxlength="30">
+                </mat-form-field>
+            </div>
+            <div *ngIf="(status === 'ready' || status === 'accepted') && itemDetails.orderType === 'DELIVERY'">
+                <div *ngIf="itemDetails.deliveryPersonAssigned === false">
+                    <mat-form-field class="field-width">
+                        <mat-select placeholder="Assign Delivery Boy" [(value)]="deliveryBoy">
+                            <mat-option *ngFor="let user of DeliveryBoyList" value="{{user.oid}}">{{user.fullName}} </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <div class="assign-boy-btn">
+                        <button class='button primary-btn' type="button" (click)="assignDeliveryBoy(deliveryBoy)">ASSIGN</button>
+                        <div class="error" *ngIf="status === 'ready' && showDeliveryBoyErrorMsg" style="padding-bottom: 5px;">
+                            Please enter value
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- <div class="cod-block form_view_block" *ngIf="itemDetails.isCodOrder">
+                <label>Payment Mode</label>
+                <p>Cash On Delivery</p>
+            </div> -->
+            <div class="btn-section button-wrap">
+                <button class='button secondary-btn' *ngIf="status === 'new'" type="button" (click)="openRejectDialog(itemDetails.txnId)">Reject</button>
+                <button class='button primary-btn' *ngIf="status === 'new'" type="button" (click)="changeOrderStatus('new','accepted')">Accept</button>
+                <div *ngIf="status === 'accepted'" class="print-class">
+                    <a [routerLink]="['/print-invoice/'+ itemDetails.orderId]" class="text-blue" target="_blank"> <img src="assets/images/icons/printing.png" alt="print_icon"></a>
+                </div>
+                <!-- <button class='button primary-btn' *ngIf="status === 'accepted'" type="button" (click)="changeOrderStatus('accepted','shipped')">Shipped</button> -->
+                <button class='button primary-btn' *ngIf="status === 'accepted'" type="button" (click)="changeOrderStatus('accepted','ready')">Food is Ready</button>
+                <button class='button primary-btn' *ngIf="status === 'ready' && itemDetails.orderPlacedToERP == false" type="button" (click)="orderPlaceToPos(itemDetails?.orderId)">Place Order to POS</button>
+                <span *ngIf="status === 'ready' && itemDetails.orderPlacedToERP == true" class="pos-label">Order placed to POS</span>
+                <button class='button success-btn' *ngIf="status === 'ready' && (itemDetails.orderType === 'DELIVERY'|| itemDetails.orderType === 'PICKUP' || itemDetails.orderType === 'CURBSIDE')" type="button" (click)="changeOrderStatus('ready','completed')">Complete</button>
+            </div>
+        </div>
+
+    </div>
+    <div class="order-description" *ngIf="itemDetails">
+        <div class="order-detail-section">
+            <ul>
+                <li class="listing-details-block" *ngFor="let item of itemDetails.productDetail">
+                    <div class="item-detail">
+                        <!-- <div class="col-md-9"> -->
+                            <div class="image-col">
+                                <div class="no-img" *ngIf="item.imgPath==='' || item.imgPath===null">
+                                    No Image
+                                </div>
+                                <img [src]="fileImgPathUrl + item.imgPath" width="70px" height="70px" *ngIf="item.imgPath!='' && item.imgPath!=null" /> 
+                                <div class="left-col">
+                                    <label class="label-font">{{item.productSku}}</label>
+                                    <div class="flex item-name">
+                                        <div class="veg-nonveg-details">
+                                            <span>{{item.productQuantity}}X</span>
+                                            <span [ngClass]="{'veg-icon': item.productType === 'VEG'}" style="margin-bottom: -3px;margin-left: 5px;"></span>
+                                            <span [ngClass]="{'nonVeg-icon': item.productType === 'NONVEG'}" style="margin-bottom: -3px;margin-left: 5px;"></span>
+                                            <span [ngClass]="{'egg-icon': item.productType === 'EGG'}" style="margin-bottom: -3px;margin-left: 5px;"></span>
+                                        </div>
+                                        <div class="product-details">
+                                            {{item.productName}} (<label class="small-text" *ngIf="item.variantName">{{item.variantName}} &nbsp;&nbsp;</label>
+                                            <label class="currency-font">{{itemDetails?.currency}}</label> {{item.productUnitPrice}})
+                                            <!-- <label *ngIf="item.isFreeProduct != false" class="freeproduct-details">({{item.productQuantity}} Free DB Product)</label> -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <!-- </div> -->
+                        <!-- <div class="col-md-3"> -->
+                            <div class="right-col">
+                                <div class="rate-col mt-15px">
+                                    <div class="price"><span class="currency-label">{{ itemDetails.currency }}</span> {{item.price}}
+                                    </div>
+                                </div>
+                            </div>
+                        <!-- </div> -->
+                    </div>
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div class="row pad-l-3rem" *ngIf="item.productAddonDetails.length != 0">
+                                <mat-card class="col-md-4 addon-block" *ngFor="let repeat of repeatAddonBasedOnProductCount(item.productQuantity); let i = index;">
+                                    <p class="addon-name" *ngFor="let addon of item.productAddonDetails; let isLast=last">{{addon.addOnproductQuantity}} X {{addon.addOnProductName}} ({{ itemDetails.currency }} {{addon.unitPrice}})</p>
+                                </mat-card>
+                            </div>
+                            <div *ngIf="item.isFreeProduct == false">
+                                <div class="item-discount-details" *ngIf="itemDetails.couponDiscount == 0 && item.couponDiscount != 0">Discount {{item.couponUsed}} (<span class="currency-text">{{ itemDetails.currency }}</span>-{{item.couponDiscount}})</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-right">
+                            <div class="grey-font-label" *ngIf="item.productAddonDetails.length != 0">
+                                {{ itemDetails.currency }} <span class="addon-price"> {{item.totalAddonPrice ? item.totalAddonPrice : 0}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <div class="order-charge-details">
+                <div class="charge-summary">
+                    <h6><span>{{itemDetails.noOfItems}}  Total Items</span> </h6>
+                    <p class="sub-heading">Special Instructions </p>
+                    <p> {{itemDetails.specialInstruction}} </p>
+                </div>
+                <div class="price-col">
+                    <div class="price">
+                        <div class="currency-left">
+                            <span class="price-label">Tax</span>
+                            <span class="currency-label">{{ itemDetails.currency }}</span>
+                        </div>
+                        <div class="currency-right">
+                            {{itemDetails.totalTax | number : '1.2-2' }}
+                        </div>
+                    </div>
+                    <div class="price" *ngIf="itemDetails?.orderType === 'DELIVERY'">
+                        <div class="currency-left">
+                            <span class="price-label">Delivery Charges </span>
+                            <span class="currency-label">{{ itemDetails.currency }}</span>
+                        </div>
+                        <div class="currency-right">
+                            {{itemDetails.totalDeliveryCharge | number : '1.2-2'}}
+                        </div>
+                    </div>
+                    <div class="price" *ngIf="itemDetails.totalPackageCharge != 0">
+                        <div class="currency-left">
+                            <span class="price-label">Packing Charges </span>
+                            <span class="currency-label">{{ itemDetails.currency }}</span>
+                        </div>
+                        <div class="currency-right">
+                            {{itemDetails.totalPackageCharge | number : '1.2-2'}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="order-discount-details text-right" *ngIf="itemDetails.couponDiscount != 0 && itemDetails.couponDiscountAmount != 0">Discount <span class="currency-text">{{ itemDetails.currency }}</span>&nbsp;-{{itemDetails.couponDiscountAmount}}</div>
+            <div class="order-discount-details text-right" *ngIf="itemDetails.couponUsed != '' && itemDetails.couponDiscount > 0">Discount({{itemDetails.couponUsed}}) <span class="currency-text">{{ itemDetails.currency }}</span>&nbsp;-{{itemDetails.couponDiscount}}</div>
+            <div class="order-total-amount text-right">
+                <p class="amount"> Total Amount <span class="grey-font-label"> {{ itemDetails.currency }} </span> {{itemDetails.totalAmount}} </p>
+                <div *ngFor="let i of itemDetails.tenderDetails">
+                    <p class="amount" *ngIf="i.tenderType == 'COD'"> <span class="payed-source"> Cash On Delivery</span> <span class="grey-font-label">
+              {{ itemDetails.currency }} </span> {{i.tenderValue}} </p>
+                    <p class="amount" *ngIf="i.tenderType == 'Cards'"> <span class="payed-source">DB Online Payment</span> <span class="grey-font-label">
+                {{ itemDetails.currency }} </span> {{i.tenderValue}} </p>
+                    <p class="amount" *ngIf="i.tenderType == 'Points'"><span class="payed-source"> Points Worth Payment </span><span class="grey-font-label">
+                {{ itemDetails.currency }} </span> {{i.tenderValue}} </p>
+                    <p class="payed-source" *ngIf="i.tenderCode == 'Free Product'">{{i.tenderValue}} Free DB Product</p>
+                    <p class="amount" *ngIf="i.tenderType == 'E-Wallet'"><span class="payed-source"> DB Wallet Payment </span><span class="grey-font-label">
+                        {{ itemDetails.currency }} </span> {{i.tenderValue}} </p>
+                </div>
+            </div>
+        </div>
+        <div class="row m-0px customer-details-section">
+            <div class="col-md-6">
+                <mat-card class="mb-1em">
+                    <p class="grey-font-label mb-5px"> {{itemDetails.customerName}} </p>
+                    <p> {{itemDetails?.customerPhNo}} </p>
+                    <div *ngIf="itemDetails.orderType === 'DELIVERY'">
+                        <p class="grey-font-label mb-5px">Delivery Address</p>
+                        <p class="address"> <strong> {{itemDetails.deliveryAddress.tag}}, </strong> {{itemDetails.deliveryAddress.houseNo}} {{itemDetails.deliveryAddress.landmark}} {{itemDetails.deliveryAddress.city}} {{itemDetails.deliveryAddress.delivery_location}} {{itemDetails.deliveryAddress.pin}}
+                        </p>
+                    </div>
+                    <div>
+                        <p class="grey-font-label mb-5px"><strong>Scheduled Date & Time</strong></p>
+                        <p class="address" *ngIf="itemDetails.scheduledTime === null || itemDetails.scheduledTime === ''"><span>-</span></p>
+                        <p class="address" *ngIf="itemDetails.scheduledTime !== null && itemDetails.scheduledTime !== ''">
+                            <span> {{itemDetails.scheduledStartTime === null ? '-' : itemDetails.scheduledStartTime | date:'dd/MM/yyyy'}} 
+                                {{itemDetails.scheduledStartTime | date:'shortTime'}}&nbsp;to&nbsp;
+                                {{itemDetails.scheduledEndTime === null ? '-' : itemDetails.scheduledEndTime | date:'shortTime'}}</span>
+                        </p>
+                    </div>
+                </mat-card>
+                <mat-card class="mb-1em" *ngIf="itemDetails.orderType === 'CURBSIDE'">
+                    <div class="curbside-details">
+                        <div class="car-icon">
+                            <img src="assets/images/order_management/new_order_icons/car_black_ico.png" alt="car_icon">
+                        </div>
+                        <div class="car-details" style="margin-left: 2em;">
+                            <label> Car Plate Number</label>
+                            <p>{{itemDetails.carPlateNumber != '' ? itemDetails.carPlateNumber : 'NA'}}</p>
+                        </div>
+                    </div>
+                </mat-card>
+                <mat-card class="mb-1em">
+                    <p class="grey-font-label mb-5px"> {{itemDetails.storeName}} </p>
+                    <p> {{itemDetails.storeMobile}} </p>
+                    <p class="grey-font-label mb-5px">Store Address</p>
+                    <p class="address"> {{itemDetails.storeAddress}} </p>
+                </mat-card>
+                <mat-card class="mb-1em" *ngIf="itemDetails.orderType === 'DELIVERY'">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p class="grey-font-label mb-5px">Delivery Details</p>
+                            <p> <strong> {{itemDetails.deliverypersonName}} </strong></p>
+                            <p> {{itemDetails.deliverypersonPhNo}} </p>
+                        </div>
+                        <div class="col-md-6" *ngIf="itemDetails.orderStatus =='DELIVERY_PERSON_ASSIGNED' || itemDetails.orderStatus =='DELIVERY_PERSON_ACCEPTED' || itemDetails.orderStatus =='ORDER_READY' || itemDetails.orderStatus =='ORDER_PICKED' || itemDetails.orderStatus =='ORDER_NOT_DELIVERED'">
+                            <mat-form-field class="field-width">
+                                <mat-select placeholder="Reassign Delivery Boy" [(value)]="delBoy">
+                                    <mat-option value="{{user.oid}}" *ngFor="let user of reassignDeliveryBoyList">{{user.fullname}} </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <div>
+                                <button class='button primary-btn' type="button" (click)="assignDeliveryBoy(delBoy)">REASSIGN</button>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+            <div class="col-md-6 bg-white border-rad-10">
+                <div class="timelineHeader">Order tracking</div>
+                <div class="main-container">
+                    <section id="timeline" class="timeline-outer">
+                        <div class="container" id="content">
+                            <div class="row">
+                                <div class="col s12 m12 l12">
+                                    <ul class="timeline">
+                                        <li class="event" [attr.data-date]="itemDetails.orderTrackingDetails.orderPlaceTime.includes('PM') ||
+                        itemDetails.orderTrackingDetails.orderPlaceTime.includes('AM') ? itemDetails.orderTrackingDetails.orderPlaceTime :
+                        itemDetails.orderTrackingDetails.orderPlaceTime | date : 'shortTime'">
+                                            <h3 [ngClass]="itemDetails.orderTrackingDetails.orderPlaceTime === '' ? '': 'bold'">
+                                                Order Placed</h3>
+                                        </li>
+                                        <li class="lapse-time" [attr.data-date]="itemDetails.orderTrackingDetails.timePlaceAccept">
+                                        </li>
+                                        <li class="event" [attr.data-date]="itemDetails.orderTrackingDetails.orderAcceptTime.includes('PM') ||
+                        itemDetails.orderTrackingDetails.orderAcceptTime.includes('AM') ? itemDetails.orderTrackingDetails.orderAcceptTime :
+                        itemDetails.orderTrackingDetails.orderAcceptTime | date : 'shortTime'">
+                                            <h3 [ngClass]="itemDetails.orderTrackingDetails.orderAcceptTime === '' ? '': 'bold'">
+                                                Accept</h3>
+                                        </li>
+                                        <li class="lapse-time" [attr.data-date]="itemDetails.orderTrackingDetails.timeAcceptReady">
+                                        </li>
+                                        <li class="event" [attr.data-date]="itemDetails.orderTrackingDetails.orderReadyTime.includes('PM') ||
+                        itemDetails.orderTrackingDetails.orderReadyTime.includes('AM') ? itemDetails.orderTrackingDetails.orderReadyTime :
+                        itemDetails.orderTrackingDetails.orderReadyTime | date : 'shortTime'">
+                                            <h3 [ngClass]="itemDetails.orderTrackingDetails.orderReadyTime === '' ? '': 'bold'">
+                                                Food Ready</h3>
+                                        </li>
+                                        <li class="lapse-time" [attr.data-date]="itemDetails.orderTrackingDetails.timeReadyComplete">
+                                        </li>
+                                        <li class="event" [attr.data-date]="itemDetails.orderTrackingDetails.orderOnTheWayTime.includes('PM') ||
+                    itemDetails.orderTrackingDetails.orderOnTheWayTime.includes('AM') ? itemDetails.orderTrackingDetails.orderOnTheWayTime :
+                    itemDetails.orderTrackingDetails.orderOnTheWayTime | date : 'shortTime'">
+                                            <h3 [ngClass]="itemDetails.orderTrackingDetails.orderOnTheWayTime === '' ? '': 'bold'">
+                                                {{itemDetails.orderType === 'DELIVERY' ? 'On The Way' : 'Ready for Pickup'}}</h3>
+                                        </li>
+                                        <li class="event" [attr.data-date]="itemDetails.orderTrackingDetails.orderCompletedTime.includes('PM') ||
+                        itemDetails.orderTrackingDetails.orderCompletedTime.includes('AM') ? itemDetails.orderTrackingDetails.orderCompletedTime :
+                        itemDetails.orderTrackingDetails.orderCompletedTime | date : 'shortTime'">
+                                            <h3 [ngClass]="itemDetails.orderTrackingDetails.orderCompletedTime === '' ? '': 'bold'">
+                                                Completed</h3>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <br />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div *ngIf="statusLoader" class="page-loader-block full-page-loader">
+    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+</div>

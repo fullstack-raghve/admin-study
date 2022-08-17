@@ -1,0 +1,61 @@
+.page-wrap {
+    padding: 25px;
+    label {
+        color: #7C7B7B;
+        font-size: 13px;
+    }
+    p {
+        font-size: 14px;
+        color: #171717;
+    }
+}
+
+.lang-bg {
+    background-color: grey;
+}
+
+.faq-card {
+    background-color: #F8F8F8;
+    position: relative;
+    .lang-field {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        background-color: #c3c3c3;
+        p {
+            margin-bottom: 0px;
+            margin: 10px;
+        }
+    }
+    .text-fields {
+        left: 40px;
+        top: 40px;
+        padding-bottom: 30px;
+        .field-container {
+            font-size: 14px;
+            .mat-form-field {
+                display: block;
+            }
+            p{
+                word-break: break-word;
+            }
+        }
+    }
+}
+
+.flex-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.button-wrap {
+    margin-bottom: 50px;
+    text-align: right;
+    margin-right: 20px;
+}
+
+.lang-field-right {
+    left: auto!important;
+    right: 0;
+}

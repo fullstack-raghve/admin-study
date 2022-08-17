@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 28 28">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: url(#linear-gradient);
+      }
+
+      .cls-2 {
+        fill: none;
+      }
+    </style>
+    <linearGradient id="linear-gradient" x1="1" x2="0" y2="8.474" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#f47da5"/>
+      <stop offset="1" stop-color="#fcaf7f"/>
+    </linearGradient>
+  </defs>
+  <g id="menu_ico" transform="translate(-3660 -2936)">
+    <g id="Symbol_16_1" data-name="Symbol 16 – 1">
+      <g id="Group_44096" data-name="Group 44096" transform="translate(0 0)">
+        <path id="Path_18003" data-name="Path 18003" class="cls-1" d="M.943,55.719H21.057a.943.943,0,1,0,0-1.886H.943a.943.943,0,1,0,0,1.886Z" transform="translate(3663 2888.167)"/>
+        <path id="Path_18004" data-name="Path 18004" class="cls-1" d="M.943,183.219H21.057a.943.943,0,0,0,0-1.886H.943a.943.943,0,0,0,0,1.886Z" transform="translate(3663 2767.739)"/>
+        <path id="Path_18005" data-name="Path 18005" class="cls-1" d="M.943,310.719H21.057a.943.943,0,0,0,0-1.886H.943a.943.943,0,0,0,0,1.886Z" transform="translate(3663 2647.31)"/>
+      </g>
+      <rect id="Rectangle_3765" data-name="Rectangle 3765" class="cls-2" width="28" height="28" transform="translate(3660 2936)"/>
+    </g>
+  </g>
+</svg>

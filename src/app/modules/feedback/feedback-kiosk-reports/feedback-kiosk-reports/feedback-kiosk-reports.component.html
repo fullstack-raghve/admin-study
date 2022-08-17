@@ -1,0 +1,15 @@
+<div class="bredcrumb-title-wrap">
+  <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+  <div class="title flex-container">
+    <h1>Reports</h1>
+  </div>
+</div>
+<div class="page-wrap">
+  <div class="reports-body">
+    <iframe width="100%" height="300" [src]="reportsUrl | safe" target="_parent"></iframe>
+    <!-- <iframe [src]="reportsUrl | safe" frameborder="0"></iframe> -->
+  </div>
+  <div *ngIf="pageLoader" class="page-loader-block full-page-loader">
+    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+  </div>
+</div>

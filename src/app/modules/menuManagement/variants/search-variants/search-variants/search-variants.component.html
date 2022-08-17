@@ -1,0 +1,105 @@
+<div class="page-wrap">
+  <div class="search-panel-block">
+    <div class="bredcrumb-title-wrap">
+      <div class="search-container-block">
+        <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+        <div class="search-list">
+          <form class="filter-wrap" [formGroup]="searchVariantsFormGroup" #searchVariantsForm="ngForm"
+            (submit)="searchVal()">
+            <div class="row title-search-row">
+              <div class="col-md-4 title-search-col">
+                <div class="title">
+                  <h1>Search Variants</h1>
+                </div>
+              </div>
+              <div class="col-md-5 title-search-col">
+                <div class="searchform-block">
+                  <div class="common-search">
+                    <input type="text" formControlName="searchVal" maxlength="40" placeholder="Search Variants" />
+                    <span class="search-btn" (click)="searchVal()"></span>
+                    <div class="filter-btn-wrap">
+                      <span class="filter-btn" (click)="openFilter();" [ngClass]="status ? 'open' : 'close'"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3 title-search-col">
+                <div class="add-btn text-right">
+                  <button type="button" class="button primary-btn m-0px" [routerLink]="['/add-variants']">
+                    <span class="add-plus">
+                      <img src="assets/images/svg-icons/add_ico.svg" alt="add" class="plus-icon">
+                    </span>ADD VARIANT
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="feild-search" *ngIf="!status">
+              <div class="row feild-search-inner">
+                <div class="col-md-3">
+                  <mat-form-field>
+                    <input matInput type="text" formControlName="variantName" maxlength="40"
+                      placeholder="Variant Name" />
+                    <mat-error *ngIf="searchVariantsFormGroup.get('variantName').hasError('pattern')">Only alphanumerics
+                      are allowed</mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-3">
+                  <mat-form-field>
+                    <mat-select formControlName="status" placeholder="Status">
+                      <mat-option value="ONLINE">ONLINE</mat-option>
+                      <mat-option value="OFFLINE">OFFLINE</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="">
+                  <button class='button quaternary-btn' type="button" (click)="resetForm()">RESET</button>
+                  <button class='button tertiary-btn' type="submit">APPLY</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="form-wrap">
+      <div class="table-wrap">
+        <div class="table-wrap-inner">
+          <table mat-table [dataSource]="dataSource" matSort *ngIf="dataSource">
+            <ng-container matColumnDef="variantOid">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> VARIANT ID </th>
+              <td mat-cell *matCellDef="let row">{{ row.variantOid }}</td>
+            </ng-container>
+            <ng-container matColumnDef="variantName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> VARIANT NAME </th>
+              <td mat-cell *matCellDef="let row"><u><a [routerLink]="['/view-variants/'+row.variantOid]"
+                    class="text-blue"> {{
+                    row.variantName }} </a></u></td>
+            </ng-container>
+            <ng-container matColumnDef="modifiedTime">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> LAST MODIFIED ON </th>
+              <td mat-cell *matCellDef="let row"> {{ row.modifiedTime | date:'dd/MM/yyyy'}} </td>
+            </ng-container>
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> STATUS </th>
+              <td mat-cell *matCellDef="let row"> {{row.status}} </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+            </tr>
+          </table>
+          <div *ngIf="searchStoreVal" class="select-store-block">
+            <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+          </div>
+          <div class="no-records" *ngIf="noRecords">
+            No Records Found!
+          </div>
+        </div>
+        <div>
+          <mat-paginator (click)="searchVal()" [length]="resultsLength" (change)="searchVal()" #paginator
+            (page)="getUpdate($event)" [pageSize]="10" [pageSizeOptions]="[10,20,50,100]">
+          </mat-paginator>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

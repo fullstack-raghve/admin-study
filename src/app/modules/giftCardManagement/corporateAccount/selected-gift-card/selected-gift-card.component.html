@@ -1,0 +1,109 @@
+<div class="page-wrap">
+  <div class="col bredcrumb-title-wrap">
+    <div class="store-title">
+      <br>
+      <h6>Select Giftcard</h6>
+      <br>
+    </div>
+    <div class="form-wrap">
+
+      <div class="table-wrap">
+        <div class="table-wrap-inner" style="height: 250px;overflow-y: auto;" malihu-scrollbar  [scrollbarOptions]="scrollbarOptions">
+          <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+            <!-- Checkbox Column -->
+            <ng-container matColumnDef="giftcardId">
+              <!-- <th mat-header-cell *matHeaderCellDef>
+              </th>
+              <td mat-header-cell *matHeaderCellDef>
+                <mat-checkbox (change)="$event ? masterToggle() : null"
+                  [checked]="selection.hasValue() && isAllSelected()"
+                  [indeterminate]="selection.hasValue() && !isAllSelected()">
+                </mat-checkbox> ALL
+              </td>
+              <td mat-row *matCellDef="let row">
+                <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                  [checked]="selection.isSelected(row)">
+                </mat-checkbox>
+              </td> -->
+              <th mat-header-cell *matHeaderCellDef>
+                <mat-checkbox (change)="$event ? masterToggle() : null"
+                              [checked]="selection.hasValue() && isAllSelected()"
+                              [indeterminate]="selection.hasValue() && !isAllSelected()"
+                              [aria-label]="checkboxLabel()">
+                </mat-checkbox> ALL
+              </th>
+              <td mat-cell *matCellDef="let row">
+                <mat-checkbox (click)="$event.stopPropagation()"
+                              (change)="$event ? selection.toggle(row) : null"
+                              [checked]="selection.isSelected(row)"
+                              [aria-label]="checkboxLabel(row)">
+                </mat-checkbox>
+              </td>
+            </ng-container>
+
+            <!-- Position Column -->
+            <ng-container matColumnDef="cardName">
+              <th class="mat-tab" mat-header-cell *matHeaderCellDef> CARD NAME </th>
+              <td mat-row *matCellDef="let element">
+                <img src="{{element.backgroundImage}}" alt="" class="gift-card">
+                {{element.cardName}}
+              </td>
+            </ng-container>
+            
+            <!-- <ng-container matColumnDef="backgroundImage">
+              <th class="mat-tab" mat-header-cell *matHeaderCellDef> CARD NAME </th>
+              <td mat-row *matCellDef="let element">
+                <img src="{{element.backgroundImage}}" alt="" class="gift-card">
+              </td>
+            </ng-container>
+          
+            <ng-container matColumnDef="cardName">
+              <th mat-header-cell *matHeaderCellDef>  </th>
+              <td mat-row *matCellDef="let element"> {{element.cardName}} </td>
+            </ng-container> -->
+            <!-- Name Column -->
+            <ng-container matColumnDef="Corporate">
+              <th mat-header-cell *matHeaderCellDef> TEMPLATE FOR </th>
+              <td mat-row *matCellDef="let element">Corporate</td>
+            </ng-container>
+
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
+            </tr>
+          </table>
+          <div class="no-records" *ngIf="resultsLength === 0">
+            No Records Found!
+        </div>
+  
+        </div>
+       
+       
+      </div>
+      <div class="button-wrap">
+        <div class="">
+          <button class="button secondary-btn" [mat-dialog-close]="{
+              'buttonName': 'CANCEL'
+            }">CANCEL</button>
+
+        </div>
+
+      </div>
+      <div class="button-wrap">
+        <div class="">
+          <button class="button primary-btn" [mat-dialog-close]="{
+            'buttonName': 'SELECT',
+            'tableData': selection.selected,
+            'totalCount':resultsLength
+               }">SELECT</button>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+  <br>
+</div>
+

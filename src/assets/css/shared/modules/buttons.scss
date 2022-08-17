@@ -1,0 +1,119 @@
+.site_btn {
+    display: inline-block;
+    padding: 6px 15px;
+    font-size: 13px;
+    background-color: #ddd;
+    border: 0;
+    cursor: pointer;
+    // box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+    color: #000;
+    border-radius: 5px;
+    .loader {
+        display: inline-block;
+        width: 16px;
+        margin-left: 8px;
+    }
+    &.orange_btn {
+        background-color: #FF8E48;
+        color: #fff;
+    }
+    &.gray_btn {
+        background-color: #E2E2E2;
+        color: rgb(0, 0, 0);
+        margin-right: 5px;
+    }
+    &.semi_black_btn {
+        background-color: #585858;
+        color: #fff;
+    }
+    &.orange_btn,
+    &.gray_btn {
+        &[disabled] {
+            background-color: #ddd;
+            color: #909090;
+        }
+    }
+    &.bordered_btn {
+        background-color: #fff;
+        color: #767676;
+        border: solid 1px #FCAF17;
+        padding-top: 7px;
+        padding-bottom: 7px;
+    }
+    &:hover {
+        // box-shadow: 0 4px 6px 0 rgba(0, 0, 0, .12);
+    }
+}
+
+
+.button {
+  color: #fff;
+  padding: 5px 15px;
+  box-shadow: none;
+  border-radius: 3px;
+  margin: 0 5px;
+  font-size: 13px;
+  outline: none;
+  cursor: pointer;
+  line-height: 28px;
+
+  &.primary-btn {
+    background-color: #FF8E48;
+    border: 1px solid #FF8E48;
+    outline: none;
+    font-family: 'muliregular';
+    padding: 1px 10px;
+    color: #fff;
+    line-height: 28px;
+    // margin: 5px;
+  }
+
+  &.secondary-btn {
+    background-color: #838383;
+    border: 1px solid #838383;
+    outline: none;
+    font-family: 'muliregular';
+    padding: 1px 10px;
+    color: #fff;
+    // margin: 0 10px;
+    line-height: 28px;
+  }
+
+  &.tertiary-btn {
+    border: 1px solid #FF8E48;
+    background: #FDFDFD;
+    padding: 1px 10px;
+    border-radius: 5px;
+    box-shadow: none;
+    color: #000 !important;
+    font-size: 11px;
+    outline: none;
+    margin: 5px;
+    font-family: 'muliregular';
+    line-height: 28px;
+  }
+
+  &.quaternary-btn {
+    border: 1px solid #838383;
+    background-color: #fff;
+    color: #000 !important;
+    padding: 1px 10px;
+    border-radius: 5px;
+    box-shadow: none;
+    font-size: 12px;
+    outline: none;
+    margin: 5px;
+    font-family: 'muliregular';
+    line-height: 28px;
+  }
+  &.success-btn {
+    background-color: #63b85b;
+    border: 1px solid #63b85b;
+    outline: none;
+    font-family: 'muliregular';
+    padding: 1px 10px;
+    color: #fff;
+    line-height: 28px;
+    // margin: 5px;
+  }
+}

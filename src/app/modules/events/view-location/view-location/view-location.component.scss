@@ -1,0 +1,23 @@
+.page-wrap{
+    label{
+        color: #828282;
+       // color: #828282;
+      }
+      .create-fieldSet{
+        .language-fieldset{
+          padding: 0px 26px 30px;
+          border: 1px solid #dbdbdb;
+          border-radius: 5px;
+          .fieldset-heading {
+              font-size: 10px;
+              padding-inline-start: 7px;
+              max-width: 40% !important;
+          }
+      }
+      .lng{
+        color: #828282;
+        margin: 0px;
+      }
+      
+      }
+}

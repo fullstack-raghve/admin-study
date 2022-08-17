@@ -1,0 +1,73 @@
+
+<form [formGroup]="corporateAddUserDialog" (submit)="createCorporateAddUserDialog(corporateAddUserDialog.value)">
+    
+<mat-card>
+    <div class="close-icon text-right">
+        <img src="assets/images/icons/filter_close_ico.png" (click)="onCloseClick()" alt="">
+      </div>
+  <h6>Add User</h6>
+  <mat-form-field>
+    <input matInput placeholder="Name*" formControlName="userName" maxlength="30">
+    <mat-error *ngIf="corporateAddUserDialog.get('userName').hasError('required')">Please enter value</mat-error>
+    <mat-error *ngIf="corporateAddUserDialog.get('userName').hasError('pattern')">Invalid charecters entered</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="Email ID*" formControlName="email" maxlength="50" minlength="7">
+    <mat-error *ngIf="corporateAddUserDialog.get('email').hasError('required')">Please enter value</mat-error>
+    <mat-error *ngIf="corporateAddUserDialog.get('email').hasError('pattern') || corporateAddUserDialog.get('email').hasError('minlength')">Invalid Email id entered</mat-error>
+  </mat-form-field>
+
+
+  <div class="row">
+    <div class="col-md-4">
+        <mat-form-field>
+            <mat-select  placeholder="Country Code*" #Input
+              formControlName="country_Code"  (selectionChange)="codeData(Input.value)">
+              <mat-option value="">select</mat-option>
+              <mat-option *ngFor="let country of CountryCodeList, let i = index;" [value]="i" >
+                {{ country.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="corporateAddUserDialog.get('country_Code').hasError('required')">
+                Please select country code</mat-error>
+          </mat-form-field>
+    </div>
+      <div class="col-md-8">
+        <div class="row">
+          <div class="col-md-4" style="padding-right: 1px;max-width: 56px;" *ngIf="corporateAddUserDialog.get('cc').value!=''">
+              <mat-form-field class="example-full-width">
+                  <input matInput placeholder=""  formControlName="cc" readonly>
+                </mat-form-field>
+          </div>
+          <div class="col-md-7"  style="padding-left: 0px;">
+              <mat-form-field >
+                  <input matInput placeholder="Mobile Number*" formControlName="mobileNu" maxlength="15" minlength="8" OnlyNumber=true>
+                  <mat-error *ngIf="corporateAddUserDialog.get('mobileNu').hasError('required')">Please enter value
+                  </mat-error>
+                  <mat-error *ngIf="corporateAddUserDialog.get('mobileNu').hasError('minlength')">Invalid mobile Number
+                    </mat-error>
+                  <mat-error *ngIf="corporateAddUserDialog.get('mobileNu').hasError('pattern')">Invalid mobile Number
+                  </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+        
+         
+      </div>
+    </div>
+
+  
+
+  <mat-form-field>
+    <input matInput placeholder="User Name*" formControlName="userGivenID" maxlength="30">
+   <mat-error *ngIf="corporateAddUserDialog.get('userGivenID').hasError('required')">Please enter value</mat-error> 
+  </mat-form-field>
+
+  <button type="button" class="button primary-btn" type="submit" *ngIf="!editUserUpdate" style="margin-bottom: 8px;">ADD</button>
+  <button type="button" class="button primary-btn" type="submit" *ngIf="editUserUpdate">UPDATE</button>
+  <button type="button" class="button secondary-btn btn1" (click)="onCloseClick()">CANCEL</button>
+</mat-card>
+</form>
+<!-- [mat-dialog-close]="corporateAddUserDialog" -->
+

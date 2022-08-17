@@ -1,0 +1,552 @@
+<div class="page-wrap" *ngIf="earnRuleDetails != null && earnRuleDetails != undefined" class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-center">
+        <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          [routerLink]="['/search-programs']"></span>View Earn Rule</h1>
+        <div class="slider">
+            <mat-slide-toggle [(ngModel)]="toggleVal" (change)="toggleStatus($event)" [disabled]="updatePermission" class="mat-slide-toggle">{{statusValue}}</mat-slide-toggle>
+        </div>
+    </div>
+</div>
+
+<div class="page-wrap" *ngIf="earnRuleDetails != null && earnRuleDetails != undefined">
+    <div class="earn-rule">
+        <mat-card class="summary-card">
+            <div class="summary">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label>Segment</label>
+                        <p class="word-wrap">{{earnRuleDetails.programName}}</p>
+                    </div>
+                    <div class="col-md-3">
+                        <p>{{earnRuleDetails.programId}}, {{earnRuleDetails.programType}}, <span *ngIf="programBrand != undefined">{{programBrand}}</span></p>
+                        <p class="word-wrap">{{earnRuleDetails.programName}}</p>
+                    </div>
+                    <div class="col-md-2">
+                        <label>Reward Type</label>
+                        <p>{{earnRuleDetails.rewardType}}</p>
+                    </div>
+                    <div class="col-md-2" *ngIf="programDetails.length != 0">
+                        <label>Start Date & Time</label>
+                        <p>{{programDetails.startDate | date:'dd/MM/yyyy'}}<span *ngIf="programStartDateTime !== undefined"> &
+                {{programStartDateTime | date:'hh:mm a'}}
+              </span></p>
+                    </div>
+                    <div class="col-md-2" *ngIf="programDetails.length != 0 && programDetails['endDate'] != null">
+                        <label>End Date & Time</label>
+                        <p>{{programDetails.endDate | date:'dd/MM/yyyy'}}<span *ngIf="programEndDateTime !== undefined"> &
+                {{programEndDateTime | date:'hh:mm a'}} </span></p>
+                    </div>
+                </div>
+            </div>
+        </mat-card>
+        <div class="earn-rule-info">
+            <mat-card class="rule-info-card">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="flex">
+                            <mat-checkbox class="mr-5px" disabled [checked]="earnRuleDetails.displayOnHomeScreen">
+                                Display on Screen Home</mat-checkbox>
+                            <mat-checkbox disabled [checked]="earnRuleDetails.isExclusiveRule">Exclusive</mat-checkbox>
+                        </div>
+                        <div class="grid img-block">
+                            <div class="avatar-zone">
+                                <img class="upload-img" [src]="imgUrl+earnRuleDetails.ruleImgPath" [class.uploaded-img]="imgUpload" width="250px" height="100px">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="master-fieldSet">
+                                    <fieldset class="language-fieldset">
+                                        <legend class="fieldset-heading">Rule Name</legend>
+                                        <div class="">
+                                            <div class="view-mode" *ngFor="let e of earnRuleDetails['earnRuleLocales']; let i=index">
+                                                <div class="{{alignCss[i]}}">
+                                                    <label>{{e.languageName}}</label>
+                                                    <p>{{e.ruleName}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row" *ngIf="earnRuleDetails['startDate'] != null">
+                                    <div class="col-md-3">
+                                        <div class="view-mode">
+                                            <label>Start Date</label>
+                                            <p>{{earnRuleDetails.startDate | date:'dd/MM/yyyy'}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="view-mode">
+                                            <div *ngIf="earnRuleDetails['endDate'] != null">
+                                                <label>End Date</label>
+                                                <p>{{earnRuleDetails.endDate | date:'dd/MM/yyyy'}}</p>
+                                            </div>
+                                            <mat-checkbox disabled [checked]="earnRuleDetails?.isPerpectual">
+                                                <small>Perpetual</small></mat-checkbox>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3" *ngIf="startTime != undefined">
+                                        <div class="view-mode">
+                                            <label>Start Time</label>
+                                            <p>{{startTime | date:'hh:mm a'}} </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3" *ngIf="endTime != undefined">
+                                        <div class="view-mode">
+                                            <label>End Time</label>
+                                            <p>{{endTime | date:'hh:mm a'}} </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="view-mode">
+                                            <label>Point Expiry in</label>
+                                            <p *ngIf="earnRuleDetails.pointExpiryIn == 'NOOFDAYS'">Number of Days</p>
+                                            <p *ngIf="earnRuleDetails.pointExpiryIn == 'FIXEDDATE'">Fixed Date</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6" *ngIf="earnRuleDetails.expiryDate != null">
+                                        <div class="view-mode">
+                                            <label>Expiry Date</label>
+                                            <p>{{earnRuleDetails.expiryDate}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6" *ngIf="earnRuleDetails.expiryDays  != null">
+                                        <div class="view-mode">
+                                            <label>Expiry Days</label>
+                                            <p>{{earnRuleDetails.expiryDays}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+        <div class="multi-lang-btn" *ngIf="earnRuleDetails.showButton == true">
+            <mat-card class="btn-lang-card">
+                <div class="row align-center">
+                    <div class="col-md-2">
+                        <mat-checkbox disabled [checked]="earnRuleDetails.showButton">Enable Button</mat-checkbox>
+                    </div>
+                    <div class="col-md-3" *ngIf="earnRuleDetails?.buttonLinkTo != '' && earnRuleDetails?.buttonLinkTo != null">
+                        <div class="view-mode">
+                            <label>Navigate To</label>
+                            <p>{{earnRuleDetails?.buttonLinkTo}}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3" *ngIf="earnRuleDetails.buttonLinkToRefer != '' && earnRuleDetails.buttonLinkToRefer != null">
+                        <div class="view-mode">
+                            <label>Navigation Value</label>
+                            <p>{{earnRuleDetails.buttonLinkToRefer}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="master-fieldSet" *ngIf="earnRuleDetails.earnRuleLocales[0].buttonLabel != ''">
+                    <fieldset class="language-fieldset">
+                        <legend class="fieldset-heading">Button Display Text</legend>
+                        <div class="row flex">
+                            <div class="col-md-3">
+                                <div class="view-mode" *ngFor="let e of earnRuleDetails.earnRuleLocales; let i=index">
+                                    <div class="{{alignCss[i]}}">
+                                        <label>{{e.languageName}}</label>
+                                        <p>{{e.buttonLabel}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </mat-card>
+        </div>
+        <div class="action-type">
+            <mat-card class="action-type-card">
+                <div class="row">
+                    <div class="col-md-3" *ngIf="earnRuleDetails.actionType != null">
+                        <div class="view-mode">
+                            <label>Action Type</label>
+                            <p>{{earnRuleDetails.actionType}}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3" *ngIf="earnRuleDetails.action != null">
+                        <div class="view-mode">
+                            <label>Action</label>
+                            <p>{{earnRuleDetails.action}}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3" *ngIf="earnRuleDetails.countryName != null">
+                        <div class="view-mode">
+                            <label>Country</label>
+                            <p>{{earnRuleDetails?.countryName}}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3" *ngIf="earnRuleDetails.action != null && earnRuleDetails?.action == 'PRODUCT_PURCHASE'">
+                        <div class="view-mode">
+                            <label>Free Product</label>
+                            <p>{{earnRuleDetails.freeProductType}}</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3" *ngIf="earnRuleDetails.action == 'INVITE_XX_FRIENDS'">
+                        <div class="view-mode">
+                            <label>No. of Invite Sent</label>
+                            <p>{{earnRuleDetails.earnRuleOtherDefs[0].activityCount}}</p>
+                        </div>
+
+                    </div>
+                    <div class="col-md-3" *ngIf="earnRuleDetails.action == 'REFERRAL_REGISTERED'">
+                        <div class="view-mode">
+                            <label>Number of Registration</label>
+                            <p>{{earnRuleDetails.earnRuleOtherDefs[0].activityCount}}</p>
+                        </div>
+
+                    </div>
+                    <div class="col-md-3" *ngIf="earnRuleDetails.action == 'ACTIVE_AFTER_XX_DAYS'">
+                        <div class="view-mode">
+                            <label>Number of Days</label>
+                            <p>{{earnRuleDetails.earnRuleOtherDefs[0].activityCount}}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3" *ngIf="earnRuleDetails.action == 'XX_TRANSACTIONS_AFTER_REGISTRATION'">
+                        <div class="view-mode">
+                            <label>Number of Days</label>
+                            <p>{{earnRuleDetails.earnRuleOtherDefs[0].activityCount}}</p>
+                        </div>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+        <div class="transaction-value" *ngIf="earnRuleDetails.action === 'TRANSACTION_VALUE' || earnRuleDetails.action === 'BONUS' || earnRuleDetails.action === 'BILL_AMOUNT'">
+            <mat-card class="transaction-value-card">
+                <div class="row pb-20px">
+                    <div class="col-md-6">
+                        <div class="table-heading">
+                            <h6>Point</h6>
+                            <p>How many points customer will earn</p>
+                        </div>
+                        <div class="program-table">
+                            <div class="header">
+                                <div class="table-cell">
+                                    <label class="common-tex">Products in</label>
+                                </div>
+                                <div class="table-cell">
+                                    <label class="head-text">Sale</label>
+                                </div>
+                                <div class="table-cell">
+                                    <label class="head-text">Non Sale</label>
+                                </div>
+                            </div>
+                            <!-- *ngFor="let salePoints of earnRuleDetails.earnRuleTransactionPointDefs" -->
+                            <div class="content">
+                                <div class="content-column" *ngFor="let en of earnRuleDetails.earnRuleTransactionPointDefs;let i=index">
+                                    <div class="table-cell">
+                                        <label class="tier-list">{{en.tierName}}</label>
+                                    </div>
+                                    <div class="table-cell">
+                                        <label>{{en.transactionPointDefs[0].markupType == 'SALE'?en.transactionPointDefs[0].noOfRewards:en.transactionPointDefs[1].noOfRewards}}</label>
+                                    </div>
+                                    <div class="table-cell">
+                                        <label>{{en.transactionPointDefs[1].markupType == 'NON_SALE'?en.transactionPointDefs[1].noOfRewards:en.transactionPointDefs[0].noOfRewards}}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="flex">
+                            <mat-checkbox class="mr-5px" disabled [checked]="earnRuleDetails?.excludeDeliveryCost">
+                                Exclude Delivery Cost</mat-checkbox>
+                            <mat-checkbox disabled [checked]="earnRuleDetails?.excludeTax">Exclude Tax</mat-checkbox>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-9">
+                        <div *ngIf="programDetails['rewardType'] == 'STAMPS'">
+                            <mat-checkbox class="ft-12" [checked]="allowMultipleStamps">Allow multiple stamps per transaction</mat-checkbox>
+                        </div>
+                        <div class="table-heading">
+                            <h6>Amount</h6>
+                            <p>How much customer has to spend to earn above point</p>
+                        </div>
+                        <div class="program-table">
+                            <div class="header">
+                                <div class="table-cell">
+                                    <label class="common-tex">&nbsp;</label>
+                                </div>
+                                <div class="table-cell" *ngFor="let currency of regionCurrencies; let i=index ">
+                                    <label class="head-text">{{currency.currencyCode}}</label>
+                                </div>
+
+                            </div>
+                            <div class="content">
+                                <div class="content-column">
+                                    <div class="table-cell">
+                                        <label class="tier-list">Min Order Amount</label>
+                                    </div>
+                                    <div class="table-cell" *ngFor="let currency of regionCurrencies; let i=index ">
+                                        <label>{{minimumTxnAmounts[i]}}</label>
+                                    </div>
+                                </div>
+                                <div class="content-column" *ngFor="let regionTierAmount of regionTierAmounts; let i=index">
+                                    <div class="table-cell">
+                                        <label class="tier-list">{{tierList[i].tierName}}</label>
+                                    </div>
+                                    <div class="table-cell" *ngFor="let spendAmount of regionTierAmount.regionCurrencyArray">
+                                        <label>{{spendAmount}}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="row flex align-center">
+                <div class="col-md-6">
+                    <div class="view-mode">
+                        <label>Minimum Order Value</label>
+                        <p>{{earnRuleDetails?.minimumOrderValue}}<small> ( Minimum amount to be spent for earning points)</small></p>
+                    </div>
+                </div>
+         
+            </div> -->
+            </mat-card>
+        </div>
+        <div class="row">
+            <div class="col-md-3 pb-20px" *ngIf="earnRuleDetails?.action !== 'PRODUCT_PURCHASE'">
+                <h3 class="card-title">Limits for Accruals</h3>
+                <mat-card>
+                    <div class="view-mode">
+                        <label>Maximum Overall Accruals</label>
+                        <p>{{earnRuleDetails.maxOverallAccrual}}</p>
+                    </div>
+                    <div class="view-mode">
+                        <label>Overall Limit per Customer</label>
+                        <p>{{earnRuleDetails.overallLimitPerCustomer}}</p>
+                    </div>
+                    <div class="view-mode">
+                        <label>Daily Limit Per Customer</label>
+                        <p>{{earnRuleDetails.dailyCustomerLimit}}</p>
+                    </div>
+                    <div class="view-mode" *ngIf="earnRuleDetails.remainingPoints != null">
+                        <label>Remaining Points</label>
+                        <p>{{earnRuleDetails.remainingPoints}}</p>
+                    </div>
+                </mat-card>
+            </div>
+        </div>
+        <div class="transaction-value" *ngIf="earnRuleDetails?.action == 'PRODUCT_PURCHASE'">
+            <mat-card class="transaction-value-card">
+                <div class="pb-20px">
+                    <div class="table-heading">
+                        <h6>{{rewardType}}</h6>
+                        <p>How many {{showRewardType}} customer will earn</p>
+                    </div>
+                    <div class="program-table">
+                        <div class="header">
+                            <div class="table-cell">
+                                <label class="common-tex">No. Of</label>
+                            </div>
+                            <div class="table-cell">
+                                <label class="head-text">Products to be Purchased</label>
+                            </div>
+                            <div class="table-cell">
+                                <label class="head-text">{{rewardType2}} Rewarded</label>
+                            </div>
+                        </div>
+                        <div class="content">
+                            <div class="content-column" *ngFor="let purchaseProd of earnRuleDetails.earnRulePurchaseProductDefs">
+                                <div class="table-cell">
+                                    <label class="tier-list">{{purchaseProd.tierName}}</label>
+                                    <input type="hidden" class="input-box">
+                                </div>
+                                <div class="table-cell">
+                                    <label>{{purchaseProd.noOfPurchase}}</label>
+                                </div>
+                                <div class="table-cell">
+                                    <label>{{purchaseProd.noOfRewards}}</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="flex align-center">
+                            <!-- <mat-form-field class="width-50">
+                <input matInput placeholder="Minimum Order Value">
+              </mat-form-field> -->
+                            <div class="view-mode">
+                                <label>Minimum Order Value</label>
+                                <p>{{earnRuleDetails?.minimumOrderValue}}</p>
+                            </div>
+                            <small>(Minimum amount to be spent for earning {{showRewardType}})</small>
+                        </div>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+
+        <div class="invite-sent" *ngIf="earnRuleDetails?.action != 'PRODUCT_PURCHASE' && earnRuleDetails?.action != 'TRANSACTION_VALUE' && earnRuleDetails?.action != 'BONUS' && earnRuleDetails?.action != 'BILL_AMOUNT'">
+            <mat-card class="invite-sent-card">
+                <div class="info">
+                    <div class="table-heading">
+                        <h6>{{rewardType}}</h6>
+                        <p>How many {{showRewardType}} customer will earn</p>
+                    </div>
+                    <div class="program-table">
+                        <div class="header">
+                            <div class="table-cell">
+                                <label class="common-tex">No. Of</label>
+                            </div>
+                            <div class="table-cell">
+                                <label class="head-text">{{rewardType2}} Rewarded</label>
+                            </div>
+                        </div>
+                        <div class="content">
+                            <div class="content-column" *ngFor="let rewardPoint of earnRuleDetails.earnRuleOtherDefs">
+                                <div class="table-cell">
+                                    <label class="tier-list">{{rewardPoint.tierName}}</label>
+                                </div>
+                                <div class="table-cell">
+                                    <label>{{rewardPoint.noOfRewards}}</label>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </mat-card>
+            <div class="row flex align-center" *ngIf="earnRuleDetails?.action == 'FIRST_TRANSACTION'">
+                <div class="col-md-6">
+                    <div class="flex align-center">
+                        <!-- <mat-form-field class="width-50">
+              <input matInput placeholder="Minimum Order Value" OnlyNumber="true">
+            </mat-form-field> -->
+                        <div class="view-mode">
+                            <label>Minimum Order Value</label>
+                            <p>{{earnRuleDetails?.minimumOrderValue}}</p>
+                        </div>
+                        <small>(Minimum amount to be spent for earning {{showRewardType}})</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="exclude-store" *ngIf="earnRuleDetails?.action === 'TRANSACTION_VALUE'  || earnRuleDetails?.action != 'BONUS' || earnRuleDetails?.action === 'BILL_AMOUNT' || earnRuleDetails?.action == 'PRODUCT_PURCHASE' || earnRuleDetails?.action == 'FIRST_TRANSACTION'">
+            <mat-card class="exclude-store-card">
+                <div class="row">
+                    <div class="col-md-6" *ngIf="earnRuleDetails?.action === 'PRODUCT_PURCHASE'">
+                        <div class="">
+                            <p>Include SKU </p>
+                            <p><span class="text-blue" *ngIf="selectedSkuFilePath == ''">{{selectedSkus}} skus
+                  selected</span></p>
+                            <a class="text-blue word-wrap" *ngIf="selectedSkuFilePath != ''" href="{{skuFilePathUrl}}{{selectedSkuFilePath}}" download="{{selectedSkuFilePath}}">{{skuFileName}}</a>
+
+                            <p class="" *ngIf="selectedSkuFilePath != ''">
+                                <a href="{{fileUrl}}{{selectedSkuFilePath}}"><img class="downoad-icon" src="assets/images/svg-icons/download_xl.svg" alt=""><span class="download-info">Download
+                    SKU uploaded</span></a>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6" *ngIf="earnRuleDetails?.action !== 'PRODUCT_PURCHASE'">
+                        <div class="">
+                            <p>{{skuIncludeExclude}} SKU</p>
+                            <p>
+                                <span class="text-blue" *ngIf="selectedSkuFilePath == '' && selectedSkus >'0'">{{selectedSkus}} skus
+                  selected</span>
+                                <span class="text-blue" *ngIf="selectedSkuFilePath == '' && selectedSkus == '0'"> No SKUs uploaded </span>
+                                <a class="text-blue word-wrap" *ngIf="selectedSkuFilePath != ''" href="{{skuFilePathUrl}}{{selectedSkuFilePath}}" download="{{selectedSkuFilePath}}">{{skuFileName}}</a>
+                            </p>
+                            <p class="" *ngIf="selectedSkuFilePath != ''">
+                                <a href="{{fileUrl}}{{selectedSkuFilePath}}"><img class="downoad-icon" src="assets/images/svg-icons/download_xl.svg" alt=""><span class="download-info">Download
+                    SKU uploaded</span></a>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6" *ngIf="earnRuleDetails?.action !== 'FIRST_TRANSACTION'">
+                        <div class="">
+                            <p>{{includeExcludeStore}} Stores </p>
+                            <!-- <mat-slide-toggle formControlName="excludedStore"></mat-slide-toggle> -->
+
+                            <span class="text-blue" (click)="openStoresDialog()">
+                selected</span>
+                            <div class="select-store-block">
+                                <div *ngIf="selectStoreVal">
+                                    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                                </div>
+                                <!-- <p>{{selectedStore.length}}</p> <span>Stores Selected</span> -->
+                                <p *ngIf="dataStore">{{selectedStores}}</p><span>Stores Selected</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+        <div class="description-block">
+            <h3 class="card-title">Description</h3>
+            <mat-card class="description-card">
+                <div class="expansion-panel">
+                    <mat-accordion>
+                        <mat-expansion-panel *ngFor="let description of earnRuleDetails?.earnRuleLocales; let i=index" class="mat-expansion-panel {{rightPanel[i]}}">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    {{description?.languageName}}
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div class="view-content" class="{{alignCss[i]}}">
+                                <label>Content</label>
+                                <p [innerHTML]="descriptionText[i]"></p>
+                            </div>
+                        </mat-expansion-panel>
+                        <!-- <mat-expansion-panel (opened)="panelOpenState = true"
+                                           (closed)="panelOpenState = false">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title>
+                            Arabic
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <div class="view-content">
+                            <label>Content</label>
+                            <div class="content-block">
+                                This Coupon is valid only on selected stores. It is valid only for 5 days
+                            </div>
+                        </div>
+                      </mat-expansion-panel> -->
+                    </mat-accordion>
+                </div>
+            </mat-card>
+        </div>
+        <div class="terms-block">
+            <h3 class="card-title">Terms & Conditions</h3>
+            <mat-card class="terms-card">
+                <div class="expansion-panel">
+                    <mat-accordion>
+                        <mat-expansion-panel *ngFor="let termAndCondition of earnRuleDetails?.earnRuleLocales; let i=index" class="mat-expansion-panel {{rightPanel[i]}}">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    {{termAndCondition?.languageName}}
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div class="view-content" class="{{alignCss[i]}}">
+                                <label>Content</label>
+                                <p [innerHTML]="termAndConditionText[i]"></p>
+                            </div>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </div>
+            </mat-card>
+        </div>
+        <div class="btm-button-wrap">
+            <button class="button secondary-btn" type="button" (click)="moveToViewProgram(earnRuleDetails['programId'])">CANCEL</button>
+            <button *ngIf="programDetails['publishStatus'] == 'UPCOMING' && programDetails['approvedStatus'] != 'APPROVED'" class="button primary-btn" type="button" (click)="MoveToEditEarnRule(earnRuleId)">EDIT</button>
+        </div>
+    </div>
+</div>

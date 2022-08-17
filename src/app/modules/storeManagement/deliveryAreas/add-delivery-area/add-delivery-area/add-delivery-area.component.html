@@ -1,0 +1,125 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container">
+        <h1><span class="left-arrow"><img class="left-img"
+            src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+            [routerLink]="['/search-delivery-area']"></span>Add Delivery Area</h1>
+        <mat-slide-toggle class="text-right" (change)="toggleStatus($event)" [checked]="checked" [disabled]="disabled">
+            {{statusValue}}
+        </mat-slide-toggle>
+    </div>
+</div>
+<form id="addDeliveryAreaForm" [formGroup]="deliveryAreaFormGroup" #createDeliveryAreaForm="ngForm" (submit)="createDeliveryArea(deliveryAreaFormGroup.value)">
+    <div class="delivery-page-wrap">
+        <div class="row">
+            <div class="col-md-6">
+                <h3 class="card-title">Delivery Areas</h3>
+                <mat-card class="delivery-areas-card">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <mat-form-field class="field-style field-width" *ngIf="countries.length!=0">
+                                <mat-select placeholder="Country Name" #countryInput formControlName="country" (selectionChange)="getAllCities(countryInput.value)" required>
+                                    <mat-option value="">Select</mat-option>
+                                    <mat-option *ngFor="let country of countries" [value]="country.countryId" (click)="getCountryName(country.countryName)">
+                                        {{ country.countryName }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="deliveryAreaFormGroup.get('country').hasError('required')">Please select value</mat-error>
+                            </mat-form-field>
+                            <div *ngIf="showCountryError" style="color:red;margin-top:-1em">
+                                <small>Please select country</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <mat-form-field class="field-style field-width">
+                                <mat-select placeholder="City" formControlName="city" required (click)="checkCountryId()">
+                                    <mat-option value="">Select</mat-option>
+                                    <mat-option *ngFor="let city of cities" [value]="city.cityId" (click)="getCityName(city.cityName)">
+                                        {{ city.cityName }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="deliveryAreaFormGroup.get('city').hasError('required')">Please select value</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-6">
+                            <mat-form-field>
+                                <mat-select formControlName="brand" placeholder="Brand">
+                                    <mat-option *ngFor="let brands of BrandList" value="{{brands.brandId}}">
+                                        {{ brands.brandName }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="deliveryAreaFormGroup.get('brand').hasError('required')">Please select value</mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="master-fieldSet mb-15px">
+                        <fieldset class="language-fieldset" formArrayName="deliveryAreaArray">
+                            <legend class="fieldset-heading">Area Name*</legend>
+                            <div *ngFor="let locale of deliveryAreaFormGroup['controls']['deliveryAreaArray']['controls'];let i = index;" [formGroupName]="i">
+                                <div class="example-container {{languageDirection[i]}}">
+                                    <mat-form-field [class.direction-right]="languageList[i].languageName == 'Arabic'">
+                                        <input matInput placeholder="{{languageList[i].languageName}}" maxlength="50" formControlName="areaName" required (blur)="getAreaName(deliveryAreaFormGroup.value)">
+                                        <mat-error *ngIf="locale.get('areaName').hasError('required')">Please enter value</mat-error>
+                                        <mat-error *ngIf="locale.get('areaName').hasError('pattern')">Invalid characters entered</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div>
+                        <mat-form-field>
+                            <textarea matInput placeholder="Delivery Area" rows="6" maxlength="2500" formControlName="address" required></textarea>
+                            <mat-error *ngIf="deliveryAreaFormGroup.get('address').hasError('required')">Please enter value</mat-error>
+                        </mat-form-field>
+                    </div>
+                </mat-card>
+            </div>
+            <div class="col-md-6">
+                <h3 class="card-title">Store Access</h3>
+                <mat-card class="store-access-card search-panel-block">
+                    <div class="table-top-section flex-center">
+                        <p>Delivery Stores</p>
+                        <button class="button tertiary-btn" type="button" (click)="openDialog()">SELECT STORES</button>
+                    </div>
+                    <div class="form-wrap" *ngIf="dataSource.data.length>0">
+                        <div class="table-wrap">
+                            <div class="table-wrap-inner">
+                                <table mat-table [dataSource]="dataSource" matSort>
+                                    <ng-container matColumnDef="storeId">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> STORE ID </th>
+                                        <td mat-cell *matCellDef="let row">{{row.storeId }}</td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="storeName">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> STORE NAME </th>
+                                        <td mat-cell *matCellDef="let row">{{ row.storeName }}</td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="address">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="top-border"> ADDRESS </th>
+                                        <td mat-cell *matCellDef="let row">{{ row.storeAddress }}</td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                                    </tr>
+                                </table>
+                            </div>
+                            <div>
+                                <mat-paginator [pageSize]="10" [pageSizeOptions]="[10,20,50,100]">
+                                </mat-paginator>
+                            </div>
+                            <div class="no-records" *ngIf="dataSource.data.length === 0">
+                                No Records Found!
+                            </div>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+        </div>
+        <div class="btm-button-wrap">
+            <button type="button" class="button secondary-btn" [routerLink]="['/search-delivery-area']">CANCEL</button>
+            <button type="submit" class="button primary-btn">ADD</button>
+        </div>
+        <div *ngIf="loading" class="page-loader-block full-page-loader">
+            <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+        </div>
+    </div>
+</form>

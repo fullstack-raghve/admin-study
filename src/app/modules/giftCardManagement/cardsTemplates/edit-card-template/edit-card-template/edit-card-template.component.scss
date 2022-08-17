@@ -1,0 +1,296 @@
+.template-title{
+    margin-top: 1.5rem;
+}
+.form-wrap{
+    padding:2rem;
+}
+.master-fieldSet {
+    .language-fieldset{
+        .gift-template{
+            position: relative;
+        }
+        padding: 0px 26px 10px;
+        border: 1px solid #dbdbdb;
+        border-radius: 5px;
+        .fieldset-heading {
+            font-size: 12px;
+            -webkit-padding-start: 7px;
+            padding-inline-start: 7px;
+            max-width: 30% !important;
+            font-weight: 600;  
+        }
+        .fieldset-language{
+            font-size: 12px;
+            -webkit-padding-start: 7px;
+            padding-inline-start: 7px;
+            padding-inline-end: 7px;
+            max-width: 6% !important;
+            font-weight: 600;  
+        }
+        .card-message-heading{
+            font-size: 10px;
+            padding-inline-start: 7px;
+            max-width: 7% !important;  
+        }
+    }
+}
+.primary-btn{
+    img{
+        width:9px;
+    }
+}
+.template_for{
+    margin-top: 1rem;
+}
+.keyword_for{
+    position: relative;
+    .add-button{
+        position: absolute;
+        right: 0.1rem;
+    }
+}
+
+//uploading image
+.img-block{
+    // margin-bottom: 55px;
+     position: relative;
+    width: 100%;
+ .overlay-layer{
+     width:100%;
+     left: 15px !important;
+     // height:40px;
+     position:absolute;
+     // margin-top:120px;
+     opacity:0.5;
+     z-index:0;
+     font-size:12px;
+     color:#095bd0;
+     text-align:center;
+     line-height:40px;
+    font-weight: 500;
+ }
+ .upload_btn{
+    position:absolute;
+    width: 100%;
+    // height:40px;
+    // margin-top:130px;
+    z-index:10;
+    opacity: 0;
+    cursor: pointer;
+}
+.avatar-zone{
+    width: 223px;
+    height: 160px;
+    background-color: #F2F2F2;
+    text-align: center;
+    border: 1px dashed #dbdbdb;
+    margin: 0 auto;
+    img{
+        width:100%;
+        height:100%;
+    }
+}
+// .avatar-zone{
+//     width: 270px;
+//     height: 160px;
+//     background-color: #F2F2F2;
+//     text-align: center;
+//     border: 1px dashed #dbdbdb;
+//     margin: 0 auto;
+//     .upload-img {
+//       width: 250px;
+//       object-fit: contain!important;
+//     }
+// }
+.upload-icon {
+    width: 12px;
+    height: 12px;
+    margin-right: 5px;
+}
+}
+
+//uploading logo
+.avatar-zone1{
+    position: relative;
+    width: 100%;
+    height: 160px;
+    background-color: #F2F2F2;
+    text-align: center;
+    border: 1px dashed #dbdbdb;
+    margin: 0 auto;
+    .upload-img {
+      width: 250px;
+      object-fit: contain!important;
+    }
+    img{
+        width: 100% !important;
+    }
+}
+
+.avatar-zone_logo{
+    width: 120px;
+    height: 35px;
+    // position: absolute;
+    top: 0rem;
+    margin: 0.5rem 0.6rem;
+}
+
+.addCardKeywords{
+    padding: 0 1em;
+    p{
+        margin-right: 1em;
+        background-color: #F2F2F2;
+        border-radius: 2px;
+        padding: 1px 5px;
+        img{
+            padding: 0 5px;
+        }
+    }
+}
+.messageOverwrite{
+    position: relative;
+    .messages{
+        color: #000000;
+        margin: 0.5rem 0.6rem;
+        width: 190px;
+        word-wrap: break-word;
+        height: 100px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+     
+         h6{
+            // font-family: 'Great Vibes';
+            font-size: 1rem;
+            line-height: 15px;
+        }
+        h3{
+            // font-family: 'Great Vibes';
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            line-height: 20px;
+        }
+        p{
+            font-size: 11px;
+            line-height: 13px;
+        }
+    }
+ 
+}
+.ImgHead{
+    position: absolute;
+    top: 0;
+    img{
+        width: 100%;
+    }
+  }
+
+.checkbox-block{
+    margin-top: 1rem;
+    img{
+        width:10px;
+        height:20px;
+        margin-right: 5px;
+    }
+    display: flex;
+    
+}
+.textColor{
+    // width: 183px !important;
+    //  padding-left: 10px !important;
+    text-align: center;
+    label{
+        font-size: 10px;
+    }
+  }
+  .backgroundColor{
+    // width: 183px !important;
+    // background-color: white;
+    text-align: center;
+    label{
+        font-size: 10px;
+    }
+  }
+  
+  .select-color{
+    border: 1px dashed lightgray;
+    height: 45px;
+    .form-field{
+        text-align: center;
+    }
+  }
+  .color-code-block{
+      height: 50px;
+    // p{
+    //     margin-bottom: 0rem !important;
+    // }
+    border: 1px dashed lightgray;
+    padding: 5px;
+    .VCblock{
+        display: inline-block;
+        // padding-left: 30px ;
+    }
+    mat-form-field{
+        text-align: center !important;
+    }
+}
+  .gift-card-logo,.gift-card-image{
+    display: flex;
+    justify-content: left;
+    border: 1px dashed lightgray;
+    margin-bottom: 15px;
+    padding: 0.90rem;
+    // width: 150px;
+    align-items: center;
+    .overlay-layer{
+        display: flex;
+    padding-left: 55px;
+    font-size: 10px;
+    }
+}
+.chip-list {
+    .mat-form-field {
+        margin-bottom: 0;
+        width: 100%;
+    }
+    .mat-standard-chip {
+        border-radius: 5px;
+        min-height: 25px;
+    }
+    .mat-chip.mat-standard-chip {
+        background-color: #F5F5F5;
+        color: #5F5C5C;
+    }
+    .mat-chip {
+        font-size: 13px;
+        font-weight: 400;
+    }
+    .mat-standard-chip.mat-chip-with-trailing-icon {
+        margin-right: 5px;
+        margin-bottom: 5px;
+    }
+}
+
+.imgnot-empty{
+    display: none;
+}
+.imgnot-empty1{
+    display: none;
+}
+.blockCol{
+    padding-left: 0px;
+  }
+  @media only screen and (max-width: 1250px) {
+    .img-block{
+    .gift-card-logo{
+    img{
+    position: relative;
+    right: 15px;
+    }
+    }
+    }
+    .overlay-layer{
+    top: 6px;
+    }
+    }

@@ -1,0 +1,202 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title">
+        <h1>Masters</h1>
+    </div>
+</div>
+<div class="page-wrap-masters">
+    <div class="row master-cards">
+        <div class="col-md-3 master-list master-left">
+            <mat-card>
+                <ul class="master_listing">
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-customer-type']">Customer Type</a></li>
+            <li><a href="javascript:void(0)" [routerLink]="['/search-merchant']">Merchant</a></li> -->
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-brand']">Brand</a></li> -->
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-country']">Countries</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-cities']">Cities</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-malls']">Malls</a></li>
+                    <!-- <li class="master-list-selected"><a href="javascript:void(0)" [routerLink]="['/search-course']">Course</a>
+            </li> -->
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-currency']">Currency</a></li>
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-cities']">Cuisine</a></li> -->
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-currency-conversion']">Currency Conversion</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-brand-category']">Brand Category</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-language']">Language</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-faq-category']">FAQ Category</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-about-us-category']">About Us Category</a></li>
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-feedback']">Feedback</a></li>
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/search-partner']">Partner</a></li> -->
+                    <li><a href="javascript:void(0)" [routerLink]="['/search-enquiry-type']">Enquiry Type</a></li>
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/add-taxation']">Taxation</a></li> -->
+                    <!-- <li><a href="javascript:void(0)" [routerLink]="['/add-product-tag']">Product Tag</a></li> -->
+
+
+                </ul>
+            </mat-card>
+        </div>
+        <div class="col-md-9 master-right">
+            <mat-card class="master-content">
+                <div class="country-card">
+                    <div class="subtitle flex-center">
+                        <h3><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/left_arrow.png"
+                    alt="leftArrow" [routerLink]="['/search-course']"></span>
+                            <span class="edit-text">Edit -</span>
+                            <span>The Majlis</span></h3>
+                        <div class="slider">
+                            <mat-slide-toggle [(ngModel)]="toggleVal" (change)="toggleStatus($event)" class="mat-slide-toggle">
+                                {{statusValue}}</mat-slide-toggle>
+                        </div>
+                    </div>
+                    <form id="addCountryForm" (submit)="createCourse(courseFormGroup.value)" [formGroup]="courseFormGroup" #createCourseForm="ngForm">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="master-fieldSet" formArrayName="courseLocale">
+                                    <fieldset class="language-fieldset">
+                                        <legend class="fieldset-heading">Course Name</legend>
+                                        <div *ngFor="let locale of courseFormGroup['controls']['courseLocale']['controls'];let i = index;" [formGroupName]="i">
+                                            <div class="example-container">
+                                                <mat-form-field class="{{alignCss[i]}}">
+                                                    <input matInput placeholder="{{languageList[i].languageName}}" [matAutocomplete]="auto" maxlength="50" formControlName="courseName" required (input)="onChangeCourseName($event.target.value)">
+                                                    <mat-error *ngIf="locale.get('courseName').hasError('required')">Please enter value
+                                                    </mat-error>
+                                                    <mat-error *ngIf="locale.get('courseName').hasError('minlength')">Minimum 2 characters required
+                                                    </mat-error>
+                                                    <mat-error *ngIf="locale.get('courseName').hasError('pattern')">Invalid characters entered
+                                                    </mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="row mt-30px">
+                                    <div class="col-md-6">
+                                        <div class="example-container">
+                                            <mat-form-field class="field-style">
+                                                <input matInput placeholder="Course Code" formControlName="courseCode" maxlength="2" required>
+                                                <mat-error *ngIf="courseFormGroup.get('courseCode').hasError('required')">Please enter value
+                                                </mat-error>
+                                                <mat-error *ngIf="courseFormGroup.get('courseCode').hasError('pattern')">Only alphabets are allowed
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="example-container">
+                                            <mat-form-field class="field-style">
+                                                <input matInput placeholder="Status" formControlName="statusVal" maxlength="2" required>
+                                                <mat-error *ngIf="courseFormGroup.get('statusVal').hasError('required')">Please enter value
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-30px">
+                                    <div class="col-md-6">
+                                        <div class="example-container">
+                                            <mat-form-field class="field-style field-width">
+                                                <mat-select placeholder="Merchant" formControlName="merchant" required>
+                                                    <!-- <mat-option *ngFor="let currency of currencies" [value]="currency.currencyId">
+                            {{ currency.currencyCode }}
+                          </mat-option> -->
+                                                    <mat-option value="merchant1">Merchant-1</mat-option>
+                                                    <mat-option value="merchant2">Merchant-2</mat-option>
+                                                    <mat-option value="merchant3">Merchant-3</mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="courseFormGroup.get('merchant').hasError('required')">Please select value
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <mat-form-field class="field-style field-width">
+                                            <mat-select id="country" matInput placeholder="Country" #countryInput formControlName="country" (selectionChange)="getAllCities(countryInput.value)" required>
+                                                <mat-option *ngFor="let country of countries" value="{{country.countryId}}">
+                                                    {{ country.countryName }}
+                                                </mat-option>
+                                            </mat-select>
+                                            <mat-error *ngIf="courseFormGroup.get('country').hasError('required')">Please select value
+                                            </mat-error>
+                                        </mat-form-field>
+                                        <div *ngIf="showCountryError" style="color:red;margin-top:-1em">
+                                            <small>Please select country</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-30px">
+                                    <div class="col-md-6">
+                                        <mat-form-field class="field-style field-width">
+                                            <mat-select placeholder="City" formControlName="city" required (click)="checkCountryId()">
+                                                <mat-option *ngFor="let city of cities" [value]="city.cityId">
+                                                    {{ city.cityName }}
+                                                </mat-option>
+                                            </mat-select>
+                                            <mat-error *ngIf="courseFormGroup.get('city').hasError('required')">Please select value</mat-error>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <mat-form-field class="field-width">
+                                            <input matInput placeholder="Latitude" formControlName="latitude" maxlength="15" required>
+                                            <mat-error *ngIf="courseFormGroup.get('latitude').hasError('required')">Please enter value
+                                            </mat-error>
+                                            <mat-error *ngIf="courseFormGroup.get('latitude').hasError('pattern')">Only Numbers along with .(dot) and -(hyphen) characters are allowed</mat-error>
+                                            <mat-error *ngIf="courseFormGroup.get('latitude').hasError('minlength')">Minimum 2 digits required
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <mat-form-field class="field-width">
+                                            <input matInput placeholder="Longitude" formControlName="longitude" maxlength="15" required>
+                                            <mat-error *ngIf="courseFormGroup.get('longitude').hasError('required')">Please enter value
+                                            </mat-error>
+                                            <mat-error *ngIf="courseFormGroup.get('longitude').hasError('pattern')">Only Numbers along with .(dot) and -(hyphen) characters are allowed</mat-error>
+                                            <mat-error *ngIf="courseFormGroup.get('longitude').hasError('minlength')">Minimum 2 digits required
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p class="image-text">Course Image*</p>
+                                        <div class="grid img-block">
+                                            <div class="avatar-zone" *ngIf="showImage">
+                                                <label *ngIf="imagePath==''" class="image-uploadText" [class.placeholder-img]="imgUpload">Image</label>
+                                                <img *ngIf="imagePath!=''" [src]="filePathUrl+imagePath" width="120px" height="80px">
+                                            </div>
+                                            <div class="remove-image" *ngIf="imagePath!=''" [class.imgbg]="imagePath!=''">
+                                                <div class="remove-image-icon">
+                                                    <img src="assets/images/icons/close_img_ico.png" alt="" (click)="removeImage()">
+                                                </div>
+                                                <div class="remove-image-text">
+                                                    <label>Remove</label>
+                                                </div>
+                                            </div>
+                                            <input style="display:none;" type="file" #uploadEl class="upload_btn" (change)="uploadImage($event.target.files)" />
+                                            <div class="text-center" style="width: 50%; " *ngIf="imagePath==''">
+                                                <span class="upload-text" (click)='uploadEl.click()'>
+                          <span class="upload-icon">
+                            <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px" alt="Img">
+                          </span>Upload Image
+                                                </span>
+                                            </div>
+                                            <div *ngIf="imageErrStatus" style="color:#f44336;font-size:75%">Please upload image</div>
+                                        </div>
+                                        <div class="image-error" *ngIf="showImageError">Please upload image</div>
+                                        <div *ngIf="imageErrMsg != undefined" class="image-error">{{imageErrMsg[i]}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="btm-button-wrap">
+                            <button type="button" class="site_btn gray_btn" [routerLink]="['/search-course']">CANCEL</button>
+                            <button type="submit" class="button primary-btn" [disabled]="loading == true" (click)="formImageStatus()">UPDATE</button>
+                        </div>
+                    </form>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+</div>

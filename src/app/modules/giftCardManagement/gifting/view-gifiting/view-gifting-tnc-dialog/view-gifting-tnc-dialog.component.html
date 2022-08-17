@@ -1,0 +1,40 @@
+<div class="bredcrumb-title-wrap">
+    <div class="close-icon text-right">
+      <img src="assets/images/icons/filter_close_ico.png" (click)="onCloseClick()" alt="">
+    </div>
+    <h6 style="padding-left: 15px;">Terms & Conditions *</h6>
+    <div class="bredcrumb-title-wrap">
+      <div class="store-title">
+
+      </div>
+
+    </div>
+  </div>
+<div class="form-wrap">
+  <form [formGroup]="viewGiftingTncDialog">
+  <div class="description-block">
+    <h3 class="card-title"></h3>
+    <mat-card class="description-card">
+      <div class="expansion-panel" formArrayName="termConditionArray">
+        <mat-accordion>
+          <mat-expansion-panel *ngFor="let termConditions of tncData;let i =index"
+            class="mat-expansion-panel">
+            <mat-expansion-panel-header style="background-color: #E6E6E6!important;">
+              <mat-panel-title style="color:#000000!important;">
+                {{termConditions.languageName}}
+              </mat-panel-title>
+  
+            </mat-expansion-panel-header>
+            <div class="view-content" [class.araText]="termConditions.languageCode=='AR'">
+              <label>Content</label>
+              <!-- <p [innerHTML]="descriptionText[i]"></p> -->
+              <p [innerHTML]='termConditions.terms'></p>
+            </div>
+          
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+    </mat-card>
+  </div>
+</form>
+</div>

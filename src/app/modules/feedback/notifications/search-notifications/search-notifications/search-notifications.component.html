@@ -1,0 +1,255 @@
+<div class="page-wrap">
+  <div class="search-panel-block">
+    <div class="bredcrumb-title-wrap">
+      <div class="search-container-block">
+        <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+        <div class="search-list">
+          <form class="filter-wrap" [formGroup]="searchNotificationForm" (submit)="searchVal()">
+            <div class="row title-search-row">
+              <div class="col-md-4 title-search-col">
+                <div class="title">
+                  <h1>Notifications</h1>
+                </div>
+              </div>
+              <div class="col-md-5 title-search-col">
+                <div class="searchform-block">
+                  <div class="common-search">
+                    <input type="text" formControlName="searchVal" placeholder="Search Notifications" />
+                    <span class="search-btn" (click)="searchVal()"></span>
+                    <div class="filter-btn-wrap">
+                      <span class="filter-btn" (click)="openFilter();" [ngClass]="status ? 'open' : 'close'"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3 title-search-col"></div>
+              <div class="feild-search" *ngIf="!status">
+                <div class="row feild-search-inner">
+
+
+                  <div class="col-md-3">
+                    <mat-select-autocomplete name="Country" ngDefaultControl [placeholder]="'COUNTRY'"
+                      [options]="countryList" [display]="'countryName'" [value]="'value'" [multiple]='true'
+                      [labelCount]="1" (selectionChange)="getAllCities($event) || getAllBrands($event)"
+                      [selectedOptions]="selectedCountryOptions"
+                      [formControl]="searchNotificationForm.controls['notificationCountry']" #countryInput>
+                    </mat-select-autocomplete>
+                  </div>
+
+                  <div class="col-md-3">
+                    <mat-select-autocomplete name="CITY" ngDefaultControl [placeholder]="'CITY'" [options]="cityList"
+                      [display]="'cityName'" [value]="'value'" [multiple]='true' [labelCount]="1"
+                      (selectionChange)="getAllMallsCity($event,notificationcity)"
+                      [selectedOptions]="selectedCityOptions"
+                      [formControl]="searchNotificationForm.controls['notificationcity']" #cityInput>
+                    </mat-select-autocomplete>
+                  </div>
+
+                  <div class="col-md-3">
+                    <mat-select-autocomplete name="BRAND" ngDefaultControl [placeholder]="'BRAND'"
+                      [options]="brandValueList" [display]="'brandName'" [value]="'value'" [multiple]='true'
+                      [labelCount]="1" (selectionChange)="getAllMalls($event,notificationcity,notificationBrand)"
+                      [selectedOptions]="selectedBrandOptions"
+                      [formControl]="searchNotificationForm.controls['notificationBrand']" #brandInput>
+                    </mat-select-autocomplete>
+                  </div>
+
+                  <div class="col-md-3">
+                    <mat-select-autocomplete name="MALL" ngDefaultControl [placeholder]="'MALL'" [options]="mallList"
+                      [display]="'mallName'" [value]="'value'" [multiple]='true' [labelCount]="1"
+                      (selectionChange)="getAllStores($event, countryId, brandId, cityId)"
+                      [selectedOptions]="selectedMallOptions"
+                      [formControl]="searchNotificationForm.controls['notificationmall']" #mallInput>
+                    </mat-select-autocomplete>
+                  </div>
+                  <div class="col-md-3">
+                    <mat-select-autocomplete name="store" ngDefaultControl [placeholder]="'Store Name'"
+                      [options]="storesArr" [display]="'storeName'" [value]="'value'" [multiple]='true' [labelCount]="1"
+                      [formControl]="searchNotificationForm.controls['store']" [selectedOptions]="selectedStoreOptions" (selectionChange)="getFlowTag($event)" #storeInput>
+                    </mat-select-autocomplete>
+                  </div>
+                  <div class="col-md-3">
+                    <!-- <mat-form-field>
+                      <mat-select placeholder="Flow Name" formControlName="flowname">
+                        <mat-option [value]="flow.flowId" *ngFor="let flow of flows | sortBy:'asc':'flowName'">{{flow?.flowName}} </mat-option>
+                      </mat-select>
+                    </mat-form-field> -->
+                    <mat-select-autocomplete name="Flows" ngDefaultControl [placeholder]="'Flow Name'" [options]="flows"
+                      [display]="'flowName'" [value]="'value'" [multiple]='true' [labelCount]="1"
+                      [selectedOptions]="selectedFlowOptions"
+                      [formControl]="searchNotificationForm.controls['flowname']" #flowInput>
+                    </mat-select-autocomplete>
+
+
+                  </div>
+                  <div class="col-md-3">
+                    <div class="select-tags">
+                      <mat-form-field>
+                        <mat-select placeholder="Read Status" formControlName="readstatus">
+                          <mat-option value="YES">Read </mat-option>
+                          <mat-option value="NO">Unread</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="select-tags">
+                      <mat-form-field>
+                        <mat-select placeholder="Status" formControlName="status">
+                          <mat-option value="IN_PROGRESS">Inprogress </mat-option>
+                          <mat-option value="PENDING">Pending</mat-option>
+                          <mat-option value="CLOSED">Closed</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <mat-form-field>
+                      <input matInput [matDatepicker]="picker1" [OnlyNumber]="true" placeholder="Start Date"
+                        formControlName="fromDate">
+                      <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                      <mat-datepicker #picker1></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-3">
+                    <mat-form-field>
+                      <input matInput [matDatepicker]="picker2" [OnlyNumber]="true" placeholder="End date"
+                        formControlName="endDate">
+                      <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                      <mat-datepicker #picker2></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-md-3">
+                    <!-- <mat-form-field>
+                      <mat-select placeholder="Select Tags" formControlName="notificationTag">
+                        <mat-option *ngFor="let tag of tagList | sortBy:'asc':'notificationTag' " [value]="tag.oid">
+                          {{ tag.notificationTag }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field> -->
+                    <div class="select-tags">
+                      <mat-select-autocomplete ngDefaultControl [placeholder]="'Select Tags'" [options]="tagList"
+                        [display]="'notificationTag'" [value]="'value'" [multiple]='true' [labelCount]="1"
+                        [selectedOptions]="selectedTagOptions"
+                        [formControl]="searchNotificationForm.controls['notificationTag']"
+                        (selectionChange)="getSelectedOptionsTag($event)" #tagInput>
+                      </mat-select-autocomplete>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <mat-form-field>
+                      <mat-select placeholder="Is Complete" formControlName="isComplete">
+                        <mat-option value="1">Yes</mat-option>
+                        <mat-option value="0">No</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="button-wrap">
+                    <button class='button reset-btn' type="button" (click)="resetForm()">RESET</button>
+                    <button class='button apply-btn' type="submit">APPLY</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="form-wrap">
+      <div class="table-wrap">
+        <div class="table-wrap-inner">
+          <table mat-table [dataSource]="dataSource" matSort *ngIf="dataSource">
+            <ng-container matColumnDef="referenceId">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>ID </th>
+              <td mat-cell *matCellDef="let row"> {{row.referenceId}}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="isRead">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> READ </th>
+              <td mat-cell *matCellDef="let row">{{row.isRead ==='YES'?'Read':'Unread'}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="kioskName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>CHANNEL TYPE</th>
+              <td mat-cell *matCellDef="let row">
+                <u><a [routerLink]="['/feedback-view-notifications/', row.referenceId]"
+                    class="text-blue">{{row.channelType}}</a></u></td>
+            </ng-container>
+
+            <ng-container matColumnDef="flowName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> FLOW NAME </th>
+              <td mat-cell *matCellDef="let row"> {{row.flowName}} </td>
+            </ng-container>
+            <ng-container matColumnDef="typeOfFeedback">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> NPS </th>
+              <td mat-cell *matCellDef="let row">
+                <span>{{row.typeOfFeedback != '' ? row.typeOfFeedback : 'NA' }}</span>
+                <!-- <span class="emoji-section" *ngIf="row.isEmoji"><img [src]="row.typeOfFeedback" alt=""></span> -->
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="customerOrVisitor">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> CUSTOMER VISITOR </th>
+              <td mat-cell *matCellDef="let row">{{row.customerOrVisitor != '' && row.customerOrVisitor != null ? row.customerOrVisitor : 'NA'}}</td>
+            </ng-container>
+            <ng-container matColumnDef="dateAndtime">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> DATE & TIME </th>
+              <td mat-cell *matCellDef="let row">{{row.dateAndtime  | date:'dd/MM/yyyy, hh:mm'}}</td>
+            </ng-container>
+            <ng-container matColumnDef="country">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> COUNTRY </th>
+              <td mat-cell *matCellDef="let row">
+                <small> {{row.country != null ? row.country : 'NA' }}</small>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="cityName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> CITY </th>
+              <td mat-cell *matCellDef="let row">
+                <small> {{row.cityName != null ? row.cityName : 'NA'}}</small>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="brandName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> BRAND </th>
+              <td mat-cell *matCellDef="let row">
+                <small> {{row.brandName != null ? row.brandName : 'NA'}}</small>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="mallName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> MALL </th>
+              <td mat-cell *matCellDef="let row">
+                <small> {{row.mallName != null ? row.mallName : 'NA'}}</small>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="storeName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> STORE NAME</th>
+              <td mat-cell *matCellDef="let row">
+                <small>{{row.storeName != null ? row.storeName : 'NA'}}</small></td>
+            </ng-container>
+            <ng-container matColumnDef="feedbackStatus">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> STATUS </th>
+              <td mat-cell *matCellDef="let row">
+                <small>{{row.feedbackStatus}}</small></td>
+            </ng-container>
+            <ng-container matColumnDef="isComplete">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> IS COMPLETE </th>
+              <td mat-cell *matCellDef="let row"><small> {{row.isComplete == true ? 'YES' : 'NO'}}</small></td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" [class.isread]="row.isRead=='YES'">
+            </tr>
+          </table>
+          <div *ngIf="searchResults" class="select-store-block">
+            <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+          </div>
+          <div class="no-records" *ngIf="resultsLength === 0 && buildFlag">
+            No Records Found!
+          </div>
+        </div>
+        <mat-paginator [length]="resultsLength" #paginator (page)="getUpdate($event)" [pageSize]="10"
+          [pageSizeOptions]="[10,20,50,100]">
+        </mat-paginator>
+      </div>
+    </div>
+  </div>
+</div>

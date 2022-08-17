@@ -1,0 +1,26 @@
+.master-fieldSet {
+    .language-fieldset{
+        padding: 0px 26px 21px;
+        border: 1px solid #dbdbdb;
+        border-radius: 5px;
+        .fieldset-heading-country {
+            font-size: 14px;
+            padding-inline-start: 7px;
+            max-width: 65% !important;
+        }
+        .fieldset-heading-nationality {
+            font-size: 14px;
+            padding-inline-start: 7px;
+            max-width: 78% !important;
+        }
+    }
+}
+/deep/ .mat-autocomplete-panel{
+    /deep/ .mat-option{
+        /deep/ .mat-option-text{
+            span{
+                font-size: 12px;
+            }
+        }
+    }
+  }

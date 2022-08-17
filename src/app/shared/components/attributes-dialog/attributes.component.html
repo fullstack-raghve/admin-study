@@ -1,0 +1,50 @@
+<div class="page-wrap">
+    <div class="title">
+        <div class="header">
+            <h5>Personalize</h5>
+            <div class="close-icon">
+                <img src="assets/images/icons/filter_close_ico.png" alt="" (click)=onCloseClick()>
+            </div>
+        </div>
+    </div>
+    <div class="attribute-container" malihu-scrollbar [scrollbarOptions]="scrollbarOptions">
+        <div class="row">
+            <div class="col-md-3">
+                <mat-form-field>
+                    <mat-select placeholder="Select Attribute For" name="attrName" [(ngModel)]="attrName" (ngModelChange)="dataChanged(attrName)">
+                        <mat-option *ngFor="let i of personalizeData" value="{{i | json}}">{{i.attributeGroupName}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="personalize-block" *ngIf="selected">
+            <mat-card class="attribute-list">
+                <div class="">
+                    <h5>{{selected.attributeGroupName}}</h5>
+                </div>
+                <div class="row">
+                    <div class="col-md-4" *ngFor="let x of selected.attributeTitleList">
+                        <mat-checkbox #selectedAttribute (change)="toggleVisibility(x,$event)" [(ngModel)]="x.checked">{{x.name}}</mat-checkbox>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+
+        <div class="col-md-3" *ngIf="brandDisplay == true">
+            <mat-form-field>
+                <mat-select placeholder="Select Brand" required [(ngModel)]="selectedBrand" (ngModelChange)="selectChange($event)">
+                    <mat-option *ngFor="let specificBrand of specificBrands" [value]="specificBrand.brandId">
+                        {{specificBrand.brandName}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <div *ngIf="showErrorMessage == true" style="color: #f44336;
+            margin-top: -25px;
+            font-size: 10px;">
+                Please select value</div>
+        </div>
+        <div class="text-center">
+            <button class="button primary-btn text-center" [disabled]="showErrorMessage == true" (click)="createList()">ADD ATTRIBUTE</button>
+        </div>
+    </div>
+</div>

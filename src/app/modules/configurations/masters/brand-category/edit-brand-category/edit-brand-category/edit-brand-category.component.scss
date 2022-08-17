@@ -1,0 +1,51 @@
+.master-fieldSet {
+    .language-fieldset{
+        padding: 0px 26px 21px;
+        border: 1px solid #dbdbdb;
+        border-radius: 5px;
+        .fieldset-heading {
+            font-size: 14px;
+            padding-inline-start: 7px;
+            max-width: 44% !important;
+        }
+    }
+}
+.img-block{
+    .avatar-zone{
+        width:160px;
+        height:140px;
+        background-color: #F2F2F2;
+        text-align: center;
+        border: 1px dashed #dbdbdb;
+    }
+    .upload-icon {
+        width: 12px;
+        height: 12px;
+        margin-right: 5px;
+        cursor: pointer;
+    }
+    .remove-img {
+       display: flex;
+       justify-content: center;
+        padding-top: 10px;
+        width: 85%;
+       img {
+           width: 20px;
+       }
+       label {
+           font-size: 15px;
+           color: grey;
+           padding-left: 5px;
+       }
+    }
+}
+.image-error{
+    color: red;
+    padding-top: 1em;
+    padding-left: 1em;
+}
+.upload-text {
+    font-size: 11px;
+    color: #095bd0;
+    cursor: pointer;
+}

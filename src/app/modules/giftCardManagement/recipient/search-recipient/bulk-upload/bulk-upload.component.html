@@ -1,0 +1,48 @@
+<div class="page-wrap">
+  <form [formGroup]="bulkUploadForm" (submit)="createbulkUploadForm(bulkUploadForm.value)">
+    <mat-card>
+      <h5>Bulk Upload<span>
+          <div class="close-icon text-right">
+            <img src="assets/images/icons/filter_close_ico.png" (click)="onCloseClick()" alt="">
+          </div>
+        </span></h5>
+      <div class="row">
+
+        <div class="col-md-12">
+          <mat-form-field>
+            <mat-select formControlName="corporateName" placeholder="Corporate*">
+              <mat-option [value]="corporateIds.rpOID" *ngFor="let corporateIds of corporateDetails">
+                {{corporateIds.corporateName}}</mat-option>
+              </mat-select>
+            <mat-error *ngIf="bulkUploadForm.get('corporateName').hasError('required')">Please select value
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-6">
+          <input style="display:none;"   #uploadImgEl type="file" class="upload_btn"
+            (change)="uploadImage($event.target.files)" />
+
+          <div class="text-center">
+            <span class="upload-btn-text" (click)='uploadImgEl.click()'>
+              <span class="upload-icon">
+                <img src="assets/images/svg-icons/uploadgray_ico.svg" width="12px" alt="Img">
+              </span>Upload File
+            </span>
+          </div>
+        </div>
+
+        <div class="col-md-6  downloadTemplate">
+          <p class="upload-btn-text" >{{filePathName}}</p>
+        </div>
+        <div style="padding-left: 16px;font-size: 9px;" >
+            <u> <a href="https://gc-static-media-content.s3.ap-south-1.amazonaws.com/Uploaded_templates/recipients/download Templates.xlsx" download>Download  Sample Template.xls/xlsx</a></u>
+        </div>
+      </div>
+    <div>
+        <button type="button" class="button primary-btn" type="submit">UPLOAD</button>
+        <button type="button" class="button secondary-btn" (click)="onCloseClick()">CANCEL</button>
+      </div>
+    </mat-card>
+  </form>
+</div>

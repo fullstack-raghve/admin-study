@@ -1,0 +1,233 @@
+<div class="page-wrap">
+  <div class="bredcrumb-title-wrap">
+    <div class="close-icon text-right">
+      <img src="assets/images/icons/filter_close_ico.png" (click)="onCloseClick()" alt="">
+    </div>
+    <div class="heading flex-center">
+      <div class="store-title">
+        <h6>Select Products</h6>
+      </div>
+      <div class="slider">
+        <mat-slide-toggle (change)="toggleStatus($event)" *ngIf="!excludeToggle" [(ngModel)]="toggleVal" >{{statusValue}}</mat-slide-toggle>
+      </div>
+    </div>
+  </div>
+  <div class="form-wrap">
+    <mat-tab-group [selectedIndex]=seletedTabIndex>
+      <mat-tab label="SELECT PRODUCTS" >
+        <div>
+          <div class="">
+            <form class="search-wrap filter-wrap" [formGroup]="searchProductForm" (submit)="searchVal()">
+              <div class="common-search">
+                <input type="text" formControlName="searchVal" placeholder="Search Products" />
+                <span class="search-btn" (click)="searchVal()"></span>
+                <div class="filter-btn-wrap">
+                  <span class="filter-btn" (click)="openFilter();" [ngClass]="status ? 'open' : 'close'"></span>
+                </div>
+              </div>
+              <div class="feild-search" *ngIf="!status">
+                <div class="row field-search-inner">
+                  <div class="col-md-3">
+                    <mat-form-field>
+                      <input matInput placeholder="SKU" formControlName="sku">
+                    </mat-form-field>
+                  </div>
+                  <!-- <div class="col-md-3">
+                    <mat-form-field>
+                      <input matInput placeholder="Product Name" formControlName="productName" readonly>
+                    </mat-form-field>
+                  </div> -->
+                  <!-- <div class="col-md-3">
+                    <mat-form-field>
+                      <mat-select placeholder="Category" formControlName="CategoryName" disabled>
+                        <mat-option [value]="category.categoryId" *ngFor="let category of CategoriesList">{{category?.categoryName}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div> -->
+                  <div class="filter-btn-wrap">
+                    <div class="">
+                      <button class='button quaternary-btn' (click)="reset()">RESET</button>
+                      <button class='button tertiary-btn' type="submit">APPLY</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="table-wrap">
+            <div>
+              <div class="table-wrap-inner">
+                <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                  <ng-container matColumnDef="select">
+                    <th mat-header-cell *matHeaderCellDef>
+                      <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()">ALL
+                      </mat-checkbox>
+                    </th>
+                    <td mat-cell *matCellDef="let row">
+                      <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                        [checked]="selection.isSelected(row)">
+                      </mat-checkbox>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="sku">
+                    <th mat-header-cell *matHeaderCellDef> SKU </th>
+                    <td mat-cell *matCellDef="let element"> {{element.skuCode}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="productName">
+                    <th mat-header-cell *matHeaderCellDef> PRODUCT NAME </th>
+                    <td mat-cell *matCellDef="let element"> {{null!=element.productName?element.productName:"-"}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="category">
+                    <th mat-header-cell *matHeaderCellDef> CATEGORY </th>
+                    <td mat-cell *matCellDef="let element"> {{null!=element.category?element.category:"-"}} </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="price">
+                    <th mat-header-cell *matHeaderCellDef> PRICE </th>
+                    <td mat-cell *matCellDef="let element"> {{null!=element.displayPrice?element.displayPrice:"-"}} </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
+                  </tr>
+                </table>
+                <div class="no-records" *ngIf="resultsLength === 0 && buildFlag">
+                  No Records Found!
+                </div>
+
+                <mat-paginator (click)="searchVal()" [length]="resultsLength" (change)="searchVal()" #paginator (page)="getUpdate($event)"
+                [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+              <div class="button-wrap" style="position: relative;">
+                <div class="">
+                  <!-- <button class="button secondary-btn">CANCEL</button> -->
+                  <button class="button primary-btn" [mat-dialog-close]="{
+                                    'buttonName': 'SELECT',
+                                    'tableData': selection.selected,
+                                    'totalCount':resultsLength,
+                                    'skuToggleVal':toggleVal
+                                  }">SELECT</button>
+                </div>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="UPLOAD">
+        <div class="upload-sku">
+          <div class="">
+            <span class="upload-icon" (click)='uploadSku.click()'>
+              <img src="assets/images/svg-icons/uploadgray_ico.svg" width="24px" alt="Img">
+              <label class="text">Upload SKU</label>
+            </span>
+            <label for="skuFile" *ngIf="skuFile!=''">{{skuFile}}</label>
+            <a style="color:red; font-size: 10px;" *ngIf="errorFilePath!=''" href="{{errorFilePath}}" download="{{errorFileName}}">{{errorFileName}}</a>
+            <input style="display:none;" type="file" class="upload_btn" (change)="uploadSkuFile($event.target.files)"
+              #uploadSku />
+          </div>
+          <div class="btn">
+            <button [disabled]="validateSkuFile" class="button primary-btn" [mat-dialog-close]="{
+                              'buttonName': 'UPLOAD',
+                              'skuFileName':skuFile,
+                              'skuToggleVal':skuIncExc
+                            }">UPLOAD</button>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+  <div class="form-wrap">
+      <mat-tab-group>
+        <mat-tab label="Select Products">
+            <div class="table-wrap">
+              <div class="table-wrap-inner">
+                  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+                          <ng-container matColumnDef="select">
+                            <th mat-header-cell *matHeaderCellDef>
+                              <mat-checkbox (change)="$event ? masterToggle() : null"
+                                            [checked]="selection.hasValue() && isAllSelected()"
+                                            [indeterminate]="selection.hasValue() && !isAllSelected()">
+                              </mat-checkbox>
+                            </th>
+                            <td mat-cell *matCellDef="let row">
+                              <mat-checkbox (click)="$event.stopPropagation()"
+                                            (change)="$event ? selection.toggle(row) : null"
+                                            [checked]="selection.isSelected(row)">
+                              </mat-checkbox>
+                            </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="sku">
+                            <th mat-header-cell *matHeaderCellDef> SKU </th>
+                            <td mat-cell *matCellDef="let element"> {{element.sku}} </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="productName">
+                            <th mat-header-cell *matHeaderCellDef> PRODUCT NAME </th>
+                            <td mat-cell *matCellDef="let element"> {{element.productName}} </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="category">
+                            <th mat-header-cell *matHeaderCellDef> CATEGORY </th>
+                            <td mat-cell *matCellDef="let element"> {{element.category}} </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="price">
+                            <th mat-header-cell *matHeaderCellDef> PRICE </th>
+                            <td mat-cell *matCellDef="let element"> {{element.price}} </td>
+                          </ng-container>
+
+                          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                          <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                              (click)="selection.toggle(row)">
+                          </tr>
+                        </table>
+              </div>
+                  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+            </div>
+            <div class="button-wrap">
+              <div class="">
+                <button class="button secondary-btn">CANCEL</button>
+                <button class="button primary-btn" [mat-dialog-close]="{
+                }">SELECT</button>
+              </div>
+            </div>
+             </mat-tab>
+            <mat-tab label="UPLOAD">
+                <div class="upload-sku">
+                    <div class="">
+                        <span class="upload-icon" (click)='uploadSku.click()'>
+                            <img src="assets/images/svg-icons/uploadgray_ico.svg" width="24px" alt="Img">
+                            <label class="text">Upload SKU</label>
+                        </span>
+                        <input style="display:none;" type="file" class="upload_btn" (change)="uploadSku($event.target.files)" #uploadSku/>
+                    </div>
+                    <div class="btn">
+                        <button class="button primary-btn">UPLOAD</button>
+                    </div>
+                </div>
+            </mat-tab>
+          </mat-tab-group>
+
+  </div> -->

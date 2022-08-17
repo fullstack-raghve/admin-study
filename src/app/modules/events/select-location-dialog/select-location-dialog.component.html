@@ -1,0 +1,190 @@
+<div class="page-wrap-popup2">
+  <div class="search-panel-block">
+
+  <div class="bredcrumb-title-wrap">
+      <!-- <form class="filter-wrap" [formGroup]="searchUserForm" (submit)="searchVal(searchUserForm.value)"> -->
+        <div class="search-container-block">
+          <div class="search-list">
+
+        <form class="filter-wrap"  [formGroup]="searchLocationForm" (submit)= "searchVal(searchLocationForm.value)">
+
+    
+          <div class="row title-search-row">
+            <div class="col-md-3 title-search-col">
+              <!-- <h6>Select Locations</h6> -->
+                    <h3   class="card-title dark">Select Locations</h3>
+
+              </div>
+              <div class="col-md-6 title-search-col">
+                <!--                  <input type="text" placeholder="Search Location" (keyup)="applyFilter($event.target.value)" formControlName="searchLocationField" />-->
+                  <!-- <input type="text" placeholder="Search Location"  formControlName="searchLocationField" />
+                    <span class="search-btn"  (click)= "fetchAllLOcation(searchLocationForm.controls['searchLocationField'].value)"></span>
+                  <div class="filter-btn-wrap">
+                      <span class="filter-btn" (click) = "openFilter();" [ngClass]="status ? 'close' : 'open'"></span>
+                  </div> -->
+
+
+                  <div class="searchform-block">
+                    <div class="common-search">
+                        <input type="text"  formControlName="searchLocationField" placeholder="Search Location" />
+                        <span class="search-btn" (click)= "fetchAllLOcation()"></span>
+                        <div class="filter-btn-wrap">
+                            <span class="filter-btn" (click)="openFilter();" [ngClass]="status ? 'close' : 'open'"></span>
+                        </div>
+                    </div>
+                </div>
+              </div>
+              <!-- <div class="close-icon text-right">
+                  <img src="assets/images/icons/filter_close_ico.png" (click)= "onCloseClick()" alt="">
+              </div> -->
+          </div>
+
+          <div class="feild-search" *ngIf="status">
+            <div class="row mt-15" style="padding-top: 20px;">
+              <div class="col-md-2">
+
+              </div>
+                <div  class="col-md-4">
+                    <mat-form-field class="field-style field-width">
+                        <mat-select id="country" matInput placeholder="Country Name" #countryInput formControlName="country" (selectionChange)="filterCity(countryInput.value)">
+                            <mat-option value="" style="color: #7d7d7d;">Select</mat-option>
+                            <mat-option *ngFor="let country of countries" value="{{country.countryId}}">
+                                {{ country.countryName }}
+                            </mat-option>
+                        </mat-select>
+                        <!-- <mat-error *ngIf="searcheventLocationForm.get('country').hasError('required')">Please select country</mat-error> -->
+                    </mat-form-field>
+                </div>
+              
+                <div class="col-md-4">
+                    <mat-form-field>
+                        <mat-select placeholder="City Name" [formControl]="cityy" [(value)]="selectedmulticity" multiple>
+                          <mat-option *ngFor="let city of cities" [value]="city.cityId">{{city.cityName}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                </div>
+            <div class="col-md-2">
+                
+              </div>
+            </div> 
+            <div class="row">
+              <div class="col-md-8"></div>
+              <div class="col-md-4">
+                   <!-- <p>{{selectedmulticity}}</p> -->
+                <button class='button quaternary-btn' (click)="resetForm()">RESET</button>
+                 
+
+                <button class='button tertiary-btn' type="button" (click)="fetchAllLOcation()">APPLY</button>
+            
+              </div>
+
+            
+            </div>
+             
+            </div>
+       
+        </form>
+
+          </div>
+        </div>
+  </div>
+        <div class="form-wrap">
+          <div class="table-wrap">
+            <!-- <div *ngIf="loader" class="select-store-block">
+              <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+            </div> -->
+              <div class="table-wrap-inner ht-scroll">
+                <div *ngIf="loader" class="select-store-block">
+                  <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                </div>
+
+                <!-- <div *ngIf="loader" class="page-loader-block full-page-loader">
+                  <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+                </div> -->
+
+
+                    <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)" class="table-wrap-inner ">
+
+        
+            <!-- <div class="mat-elevation-z8x table-wrap-inner" *ngIf="!noRecords"> -->
+                <!-- <table mat-table [dataSource]="dataSource" class="custom-rad"> -->
+                
+                  <!-- Checkbox Column -->
+                  <ng-container matColumnDef="select">
+                    <th mat-header-cell *matHeaderCellDef>
+                      <mat-checkbox (change)="$event ? masterToggle() : null"
+                                    [checked]="selection.hasValue() && isAllSelected()"
+                                    [indeterminate]="selection.hasValue() && !isAllSelected()">
+                      </mat-checkbox>
+                    </th>
+                    <td mat-cell *matCellDef="let row">
+                      <mat-checkbox (click)="$event.stopPropagation()"
+                                    (change)="$event ? selection.toggle(row) : null"
+                                    [checked]="selection.isSelected(row)">
+                      </mat-checkbox>
+                    </td>
+                  </ng-container>
+                
+                  <!-- sku Column -->
+                  <ng-container matColumnDef="locationName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> LOCATION NAME </th>
+                    <td mat-cell *matCellDef="let element"> {{element.locationName}} </td>
+                  </ng-container>
+                
+                  <!-- Name product -->
+                  <ng-container matColumnDef="countryName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> COUNTRY </th>
+                    <td mat-cell *matCellDef="let element"> {{element.countryName}} </td>
+                  </ng-container>
+                
+                  <!-- Weight Column -->
+                  <ng-container matColumnDef="cityName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> CITY </th>
+                    <td mat-cell *matCellDef="let element"> {{element.cityName}} </td>
+                  </ng-container>
+                
+                
+                
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                      (click)="selection.toggle(row)">
+                  </tr>
+                </table>
+                <div *ngIf="noRecords">
+                  <p class="tc">No results found!</p>
+                  </div>
+                  </div>
+                  <!-- <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator> -->
+                  <mat-paginator [length]="resultsLength" (change)="fetchAllLOcation()" #paginator (page)="getUpdate($event)" [pageSize]="paginationData.pageSize" 
+                  [pageSizeOptions]="[10,20,50,100]">
+                  </mat-paginator>
+               
+                
+                  <div class="container">
+              <!-- <p>{{selection.selected | json}}</p> -->
+              
+                
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="button-wrap-section">
+                                <div class="device-specific-mar align-btn">
+                                    <button class="button secondary-btn" [mat-dialog-close]="{
+                                'buttonName': 'CANCEL'}">CANCEL</button>
+                                
+                                    <button class="button primary-btn" [mat-dialog-close]="{
+                                'buttonName': 'SELECT',
+                                'tableData': selection.selected,
+                                'totalCount':resultsLength
+                              }">SELECT</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+  
+        </div>
+        <div class="bg-white-set">
+        </div>
+    </div>
+</div>

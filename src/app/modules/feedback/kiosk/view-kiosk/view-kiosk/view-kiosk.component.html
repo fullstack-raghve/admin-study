@@ -1,0 +1,326 @@
+<div class="page-wrap">
+  <div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container">
+      <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg"
+            alt="leftArrow" [routerLink]="['/search-kiosk']"></span>View Kiosk</h1>
+      <div class="slider">
+        {{kioskData?.status}} <mat-slide-toggle disabled [checked]="checked" class="mat-slide-toggle">
+        </mat-slide-toggle>
+      </div>
+    </div>
+  </div>
+  <div class="form-wrap">
+    <div class="row">
+      <div class="col-4">
+        <mat-card class="store-card">
+          <h3 class="card-title text-dark">Device</h3>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="view-label">
+                <label>Name</label>
+                <p>{{kioskData?.deviceName}}</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="view-label">
+                <label>Device Make</label>
+                <p>{{kioskData?.deviceMake}}</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="view-label">
+                <label>Device Tracking ID</label>
+                <p>{{kioskData?.deviceTrackingID}}</p>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="view-label">
+                <label>Model Number</label>
+                <p>{{kioskData?.modelNumber}}</p>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="view-label">
+                <label>Device IMEI</label>
+                <p>{{kioskData?.deviceIMEI}}</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="view-label">
+                <label>Verification Code</label>
+                <p>{{verificationCode}} <img class="pointer" src="assets/images/refresh.png" width="25px" alt=""
+                    (click)="getVerificationCode()"> </p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="view-label">
+                <label>Battery Status</label>
+                <p>{{kioskData?.batteryStatus}}%</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="view-label">
+                <label>Device Status</label>
+                <p>{{kioskData?.deviceStatus}}</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="view-label">
+                <label>Wifi</label>
+                <p>{{kioskData?.wifiName ? kioskData?.wifiName : '-'}}</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="view-label">
+                <label>App Version</label>
+                <p>{{kioskData?.appVersion}}</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="view-label">
+                <label>App Updated Time</label>
+                <p>{{kioskData?.lastUpdatedTime}}</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="view-label">
+                <label>Kiosk Updated By</label>
+                <p>{{kioskData?.lastUpdatedUser}}</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="view-label">
+                <label>Kiosk Type</label>
+                <p>{{kioskData?.kiosktype}}</p>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+      <div class="col-4">
+        <mat-card class="store-card">
+          <h3 class="card-title text-dark">Allocation</h3>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="view-label">
+                <label>Country</label>
+                <p>{{kioskData?.countryName}}</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="view-label">
+                <label>City</label>
+                <p>{{kioskData?.cityName}}</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="view-label">
+                <label>Brand</label>
+                <p>{{kioskData?.brandName}}</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="view-label">
+                <label>Mall</label>
+                <p>{{kioskData?.mallName}}</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="view-label">
+                <label>Store</label>
+                <p style="margin-bottom: 0;">{{kioskData?.storeName}}</p>
+                <p>StoreId: {{kioskData?.storeSpecId}}</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="view-label">
+                <label>Assigned To</label>
+                <p>{{kioskData?.storeuserName}}</p>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="view-label">
+                <label>Created By</label>
+                <p>{{kioskData?.createdBy}}</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="view-label">
+                <label>Latitude </label>
+                <p>{{kioskData?.latitude}}</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="view-label">
+                <label>Longitude</label>
+                <p>{{kioskData?.longitude}}</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="view-label">
+                <label>Mobile Number</label>
+                <p>{{kioskData?.mobileNUmber}}</p>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <h3 class="card-title text-dark">Branding</h3>
+            </div>
+            <div class="col-md-6">
+              <div class="view-label">
+                <label>Header Color</label>
+                <p>{{kioskData?.headerColor}}</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="view-label">
+                <label>Footer Color</label>
+                <p>{{kioskData?.footerColor}}</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="view-label">
+                <label>Background Color</label>
+                <p>#{{kioskData?.backgroundColor}}</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="view-label">
+                <label>Language</label>
+                <p>{{kioskData?.language}}</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="grid img-block">
+                <div class="avatar-zone">
+                  <img class="upload-img" [src]="imgUrl+kioskData?.headerImage" [class.uploaded-img]="imgUpload"
+                    width="250px" height="100px">
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+      <div class="col-4">
+        <mat-card class="store-card">
+          <h3 class="card-title text-dark">Feedback Flow</h3>
+          <div class="row">
+            <!-- <div class="col-md-6">
+                  <div class="view-label">
+                    <label>Select Flow</label>
+                    <p>{{ kioskData?.assignedFlowName}}</p>
+                  </div>
+                </div> -->
+            <div class="col-md-12 pb-10px">
+              <div class="chip-list d-flex flex-wrap ">
+                <div *ngIf="kioskData?.assignedFlows.length != 0">
+                  <mat-chip-list *ngFor="let i of kioskData?.assignedFlows">
+                    <mat-chip> {{i.flowName}}, {{i.startDate}}, {{i.endDate}}, {{i.startTime}}, {{i.endTime}}</mat-chip>
+                  </mat-chip-list>
+                </div>
+                <div class="pb-3" *ngIf="kioskData?.assignedFlows.length == 0">
+                  <mat-chip-list>
+                    <mat-chip> no assign flow found</mat-chip>
+                  </mat-chip-list>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="view-label">
+                <label>Idle Time Out</label>
+                <p>{{kioskData?.idleTimeOut}} sec</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="view-label">
+                <label>Final Stage Duration</label>
+                <p>{{kioskData?.finalPageDuration}} sec</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <mat-checkbox disabled [checked]="kioskData?.sendEmailToCustomer">Send Email to Customer</mat-checkbox>
+            </div>
+            <div class="col-md-6">
+              <mat-checkbox disabled [checked]="kioskData?.sendSMSToCustomer">Send SMS to Customer</mat-checkbox>
+            </div>
+            <div class="col-md-12">
+              <h4 class="card-title text-dark">Notify Users</h4>
+            </div>
+            <div class="col-md-12">
+              <div class="chip-list d-flex flex-wrap ">
+                <mat-chip-list *ngFor="let i of kioskData?.notifyUsers">
+                  <mat-chip> {{i.userName}}</mat-chip>
+                </mat-chip-list>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+        <mat-card class="store-card">
+          <div class="update-img-panel">
+            <div class="update-img-block" (click)="viewImgDialog()" *ngIf="KioskScreenShotImg != '' && KioskScreenShotImg != null">
+              <img [src]="imgUrl+KioskScreenShotImg" alt="screenshot">
+            </div>
+            <div class="getupdate-img">
+              <a class="text-blue" (click)="viewImgDialog()">Get Update</a>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+      <div class="button-wrap text-right pt-20px col-md-12">
+        <button class='button secondary-btn' type="button" [routerLink]="['/search-kiosk']">CANCEL</button>
+        <button class='button primary-btn ' type="submit" [routerLink]="['/edit-kiosk/'+kioskId]">EDIT</button>
+      </div>
+    </div>
+  </div>
+  <div class="form-wrap kiosk-alerts">
+    <div class="table-wrap">
+      <div class="table-wrap-inner">
+        <table mat-table [dataSource]="dataSource" matSort *ngIf="dataSource">
+
+          <ng-container matColumnDef="alertId">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> ALERT ID </th>
+            <td mat-cell *matCellDef="let row">
+              {{row.alertId}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="isEmail">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> IS EMAIL </th>
+            <td mat-cell *matCellDef="let row">
+              {{row.isEmail}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="isSMS">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> IS SMS </th>
+            <td mat-cell *matCellDef="let row">
+              {{row.isSMS}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="alert">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> ALERT </th>
+            <td mat-cell *matCellDef="let row">
+              <small [innerHtml]="row.alert"> </small></td>
+          </ng-container>
+
+          <ng-container matColumnDef="creationTime">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> CREATED DATE & TIME </th>
+            <td mat-cell *matCellDef="let row">{{row.creationTime | date:'dd/MM/yyyy, hh:mm a'}}</td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" [class.isread]="row.isRead=='YES'">
+          </tr>
+        </table>
+        <div *ngIf="searchResults" class="select-store-block">
+          <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+        </div>
+        <div class="no-records" *ngIf="resultsLength === 0 && buildFlag">
+          No Records Found!
+        </div>
+      </div>
+      <mat-paginator [length]="resultsLength" #paginator (page)="getUpdate($event)" [pageSize]="10"
+        [pageSizeOptions]="[10,20,50,100]">
+      </mat-paginator>
+    </div>
+  </div>
+</div>

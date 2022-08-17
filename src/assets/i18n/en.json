@@ -1,0 +1,32 @@
+{
+    "demo": {
+        "title": "Translation demo!",
+        "text": "This is a simple demonstration app for ngx-translate"
+    },
+
+    "pressRelease" : {
+        "search":{
+            "title":"Press Release",
+            "searchBreadCrumb":"Search Press Release",
+            "tHead":{
+                "Pr_Id":"PR ID",
+                "Release_Title":"RELEASE TITLE",
+                "Brand":"BRAND",
+                "Start_Date":"Publish From Date",
+                "End_Date":"Publish To Date",
+                "LModified":"LAST MODIFIED ON",
+                "Status":"STATUS"
+            },
+            "filterPlaceholder":{
+                "searchHolder":"Search Press Release",
+                "Release_Title":"Release Title",
+                "From_Date":"Publish From Date",
+                "End_date": "Publish To Date",
+                "Select_Brand":"Select Brand",
+                "Select_Country":"Select Country",
+                "Status":"Status"
+            }
+        }
+
+    }
+}

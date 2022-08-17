@@ -1,0 +1,214 @@
+.page-wrap {
+    padding-bottom: 1em;
+    .enquiry-details {
+        padding: 0 0 15px 0;
+        .enquiry-details-card {
+            padding: 0;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            .header {
+                background-color: #3c3c3c;
+                padding: 0.5em 1.5em 0 1.5em;
+                border-top-left-radius: 10px;
+                border-top-right-radius: 10px;
+                .left-side {
+                    .title {
+                        color: #c7c7c7;
+                        .ref-id {
+                            font-size: 18px;
+                            color: #fff;
+                        }
+                    }
+                }
+            }
+            .details {
+                padding: 2em;
+                h1 {
+                    font-size: 22px;
+                    margin-bottom: 15px;
+                }
+                .mat-form-field {
+                    width: 100%;
+                }
+            }
+        }
+    }
+}
+.card-title {
+    color: #5f5c5c;
+    font-size: 16px;
+}
+.representative-response {
+    padding: 0 0 15px 0;
+}
+.previous-response {
+    padding: 0 0 15px 0;
+}
+.new-line-wrap {
+    white-space: pre-wrap;
+}
+.view-mode {
+    // margin-bottom: 35px;
+    .text-blue:hover {
+        text-decoration: underline;
+    }
+    label {
+        color: #7c7b7b;
+        font-size: 13px;
+        width: 100%;
+    }
+    p {
+        font-size: 14px;
+        color: #171717;
+        word-break: break-all;
+        //   margin-bottom: 0;
+    }
+}
+.button-wrap {
+    width: 100%;
+    text-align: right;
+}
+.enquiry-details {
+    .right-side {
+        /deep/.mat-form-field {
+            /deep/ .mat-select-value-text {
+                span {
+                    color: #fff;
+                }
+            }
+        }
+        /deep/.mat-select-arrow,
+        /deep/label {
+            color: #fff !important;
+        }
+        /deep/.mat-form-field-appearance-legacy .mat-form-field-underline {
+            background-color: #fff !important;
+        }
+    }
+}
+.vl {
+    border-left: 1px solid #d2cfcfd1;
+    height: 45px;
+    margin: 0 30px;
+}
+.preview {
+    p {
+        color: #000;
+        font-size: 10px;
+        margin-bottom: 0;
+        padding: 0 5px;
+    }
+    label {
+        color: #a0a0a0;
+        font-size: 10px;
+        margin-bottom: 0;
+        padding: 0 5px;
+    }
+}
+.previous-card {
+    margin-bottom: 1rem;
+    padding: 0;
+    box-shadow: none;
+    background-color: transparent;
+}
+.langeng {
+    display: none;
+}
+.communication-types {
+    /deep/ .mat-checkbox {
+        margin-right: 10px;
+    }
+}
+.mat-err {
+    font-size: 10px;
+    color: #f44336;
+}
+
+.enq-card {
+    .ng-valid {
+        display: block;
+    }
+}
+.enq-card-col {
+    display: none;
+}
+.respone-block {
+    position: absolute;
+    left: 6vw;
+    .userreply {
+        color: #23a1cc;
+        font-weight: bold;
+    }
+    .internalreply {
+        color: #dd5111;
+        font-weight: bold;
+    }
+}
+.selectTabInternal {
+    .internalreplyCard {
+        display: block;
+    }
+}
+/deep/ .mat-tab-body-active {
+    .userreplyCard {
+        display: block !important;
+    }
+}
+.previous-card {
+    display: none;
+}
+/deep/.mat-tab-body.mat-tab-body-active .mat-tab-body-content {
+    background-color: #fff !important;
+}
+/deep/.mat-tab-label-container {
+    background-color: #f8f8f8 !important;
+}
+.comment_section {
+    padding: 1em;
+    .input-comment-block {
+        background-color: #f5f5f5;
+        padding: 1em;
+        border-radius: 5px;
+    }
+}
+.previous-comments {
+    padding-bottom: 1em;
+    p {
+        font-size: 12px;
+        color: #000;
+        margin-bottom: 0;
+        span{
+            font-size: 10px;
+            color: #939393;
+            margin-bottom: 0;
+        }
+    }
+    .channel {
+        label{
+            font-size: 10px;
+            color: #939393;
+            margin-bottom: 0;
+        }
+    }
+    .comment {
+        background-color: #f5f5f5;
+        padding: 1em;
+        border-radius: 5px;
+        font-size: 14px;
+        color: #383838;
+    }
+}
+.communication-types {
+    /deep/ .mat-checkbox {
+        margin-right: 10px;
+    }
+}
+.flex {
+    display: flex;
+    align-items: flex-start;
+}
+.enquiry-component {
+    /deep/.mat-tab-label {
+        height: 47px !important;
+    }
+}

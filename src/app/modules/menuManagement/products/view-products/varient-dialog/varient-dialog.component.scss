@@ -1,0 +1,79 @@
+table.GeneratedTable {
+    width: 100%;
+    background-color: #ffffff;
+    border-collapse: collapse;
+    border-width: 1px;
+    border-color: #dedede;
+    border-style: solid;
+    color: #000000;
+  }
+  
+  table.GeneratedTable td,
+  table.GeneratedTable th {
+    border-width: 1px;
+    border-color: #dedede;
+    border-style: solid;
+    padding: 5px;
+    color: #4e4e4e;
+    font-size: 10px;
+    text-align: center;
+  }
+  
+  table.GeneratedTable thead {
+    background-color: #f8f8f8;
+  }
+  .input-box {
+    width: 42%;
+    border-bottom: 1px solid #dbdbdb;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    outline: none;
+    border-radius: 0px;
+    padding: 10px 7px;
+    font-size: 12px;
+    background-color: transparent;
+  }
+  .button-wrap {
+    text-align: right;
+    width: 100%;
+  }
+  .common-search{
+    background: white;
+  }
+  .Combination-title{
+    text-align: center !important;
+    h6{
+        color: #FC7E30;
+    }
+  }
+  .form-wrap{
+      margin: 15px;
+  }
+  .first-col{
+    border-right-color: transparent !important;
+  }
+
+  .close-icon {
+    cursor: pointer;
+    float: right;
+  }
+  .page-wrap {
+    padding: 15px;
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      h5 {
+        font-size: 20px;
+        color: #fc7e30 !important;
+      }
+    }
+  }
+  /deep/.dialogVariantStyleChange{
+    max-width: 40vw!important;
+    /deep/ .mat-dialog-container{
+    min-width: 40vw!important;
+    }
+    }

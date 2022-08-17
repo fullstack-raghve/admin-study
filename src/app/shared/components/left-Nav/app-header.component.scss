@@ -1,0 +1,108 @@
+@import '../../../../assets/css/shared/breakpoints';
+@import '../../../../assets/css/shared/theme';
+.mat-sidenav {
+    width: 360px;
+}
+
+.menu-button{
+  background-color:#000!important;
+  padding: 8px 0;
+}
+.mat-sidenav-container {
+    background-color: white !important;
+    height: 100vh;
+    .mat-drawer{
+        // background-color: #212020;
+    }
+}
+mat-sidenav{ background-color:#212020 !important;}
+.sidenav-toolbar {
+    height: 64px;
+    background-color: mat-color($app-primary);
+    display: flex;
+    flex-direction: row;
+    @media (max-width: 600px) {
+        height: 56px;
+    }
+}
+
+.mat-nav-list {
+    padding-top: 0;
+}
+
+@include breakpoint-max(600px) {
+    .fixed-topnav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 2;
+        width: 100% !important;
+    }
+    .mat-drawer-container,
+    .mat-drawer {
+        padding-top: 56px;
+    }
+}
+
+.version-info {
+    font-size: 8pt;
+    float: right;
+    padding: 8px;
+}
+
+@include angular-material-theme($app-theme);
+body {
+    margin: 0;
+    height: 100vh;
+    font-family: Roboto, Arial, sans-serif;
+    font-size: 16px;
+    color: #292a1d;
+}
+
+a {
+    text-decoration-color: mat-color($app-primary);
+    color: mat-color($app-primary);
+}
+
+.mat-drawer[_ngcontent-c2] {
+    background-color: #212020;
+}
+
+.menu-button {
+    background-color: #000000;
+}
+.main-menu-btn{
+    background-color: #000000;
+    border: none;
+    outline:none;
+    margin:2px;
+    cursor: pointer;
+    .menu-button {
+        color: #ffff;
+    }
+}
+
+
+.left-sideNav {
+    width: 100%;
+}
+
+
+
+/deep/ .mat-drawer-container {
+    height:calc(100vh - 58px)!important;
+}
+
+#nav-icon{
+  margin-top: 11px;
+  margin-left: 3px;
+  span{
+  width: 16px;
+  height: 2px;
+  background: #fff;
+  margin-bottom: 4px;
+  display: block;
+  border-radius: 10px;
+}
+}
+

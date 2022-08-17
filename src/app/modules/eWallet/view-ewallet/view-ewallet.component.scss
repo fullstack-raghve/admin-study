@@ -1,0 +1,65 @@
+.page-wrap {
+    padding: 1.3rem;
+  
+    label {
+      color: #7C7B7B;
+      font-size: 13px;
+    }
+  
+    p {
+      font-size: 14px;
+      color: #171717;
+    }
+    
+  .stores-selected{
+    color:#2EBCE6
+  }
+  }
+
+  .terms-conditions{
+    /deep/ .expansion-panel .mat-expansion-panel-header {
+        background-color: #eaeaea !important;
+    }
+    /deep/.expansion-panel .mat-expansion-panel-header-title {
+        color: #000 !important;
+    }
+    /deep/.expansion-panel .mat-expansion-indicator::after {
+        color: #000 !important;
+    }
+}
+.right-panel {
+  p {
+      width: 100%;
+      text-align: right;
+  }
+}
+.added_denominations{
+  position: relative;
+  li {
+      display: inline-block;
+      font-family: Arial;
+      color: #000;
+      font-size: 13px;
+      padding: 3px 9px;
+      background-color: #F2F2F2;
+      margin: 0px 5px 5px 0;
+      border-radius: 5px;
+      a {
+          display: inline-block;
+          vertical-align: middle;
+          width: 10px;
+          height: 10px;
+          margin-left: 4px;
+          position: relative;
+          top: -1px;
+          padding: 1px;
+          opacity: 0.6;
+          &:hover {
+              opacity: 1;
+          }
+          img {
+              display: block;
+          }
+      }
+  }
+}

@@ -1,0 +1,47 @@
+.custom{
+
+    text-align: right;
+    padding-right: 40px;
+    padding-bottom: 20px;
+
+}
+.gift-head{
+    th{
+    color: #2f2f2f;
+    font-family: "muliregular" !important;
+    font-size: 12px;
+    font-weight: 600;
+
+    }
+}
+
+.page-wrap-editt{
+    .pd-14{
+       padding: 14px;
+    } 
+    .mb-45{
+       margin-bottom: 45px;
+    }
+    .cross{
+       float: right;
+       padding: 14px;
+       cursor: pointer;
+   }
+   .table-block{
+       padding: 15px!important;
+       margin-top: -60px;
+       td{
+           font-size: 12px;
+       }
+       .gift-head{
+           background: #ffffff;
+           font-family: "muliregular" !important;
+           font-size: 10px;
+           color: #313131;
+       }
+   }
+    }
+    .nonEditableInEditMode4{
+        pointer-events: none;
+        opacity: 0.9;
+      }

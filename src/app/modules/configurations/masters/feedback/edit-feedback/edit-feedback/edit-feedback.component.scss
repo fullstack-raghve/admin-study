@@ -1,0 +1,66 @@
+.page-wrap-masters {
+    padding: 1.5em;
+}
+.master-fieldSet {
+    .language-fieldset{
+        padding: 0px 26px 10px;
+        border: 1px solid #dbdbdb;
+        border-radius: 5px;
+        .fieldset-heading {
+            font-size: 14px;
+            padding-inline-start: 7px;
+            max-width: 43% !important;
+        }
+    }
+}
+
+.error-msg{
+    color: red;
+    // padding-top: 1em;
+    // padding-left: 1em;
+  }
+.questions-block {
+    .master-fieldSet {
+        .language-fieldset{
+            padding: 0px 26px 10px;
+            border: 1px solid #dbdbdb;
+            border-radius: 5px;
+            .fieldset-heading {
+                font-size: 14px;
+                padding-inline-start: 7px;
+                max-width: 12% !important;
+            }
+        }
+    }
+}
+.questions-list {
+    .mat-form-field {
+        margin-bottom: 0;
+    }
+    .mat-standard-chip {
+        border-radius: 5px;
+        min-height: 25px;
+    }
+    .mat-chip.mat-standard-chip {
+        background-color: #F5F5F5;
+        color: #5F5C5C;
+    }
+    .mat-chip {
+        font-size: 13px;
+        font-weight: 400;
+    }
+    .mat-standard-chip.mat-chip-with-trailing-icon {
+        margin-right: 5px;
+        margin-bottom: 5px;
+    }
+}
+
+/deep/ .mat-autocomplete-panel{
+    /deep/ .mat-option{
+        /deep/ .mat-option-text{
+            span{
+                font-size: 12px;
+            }
+        }
+    }
+  }

@@ -1,0 +1,189 @@
+<div class="bredcrumb-title-wrap">
+    <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+    <div class="title flex-container">
+        <div class="heading">
+            <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg"
+            alt="leftArrow" (click)="gotoPreviousPage(previousTabIndex)"></span>Order Details</h1>
+            <p> <span> Brand:</span> {{viewData?.brandName != '' ? viewData?.brandName : '-'}}</p>
+        </div>
+        <div class="flex-container">
+            <div *ngIf="showAssigne || showLogedUser">
+                <div class="view-col">
+                    <label>Assigned To</label>
+                    <p>{{userName}}</p>
+                </div>
+                <button *ngIf="showCloseTktBtn" class='button primary-btn' type="button" (click)="closeTicket()">CLOSE
+          TICKET</button>
+            </div>
+            <div *ngIf="!viewData?.isCodOrder">
+                <button class='button primary-btn' type="button" *ngIf="refundBtnPermission == true && showIntiateFundBtn == true  && boolRefund == false" (click)="updateOrderStatusOnInitiateRefund(viewData?.txnId)"><strong>INITIATE
+          REFUND</strong></button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- {{orderDetailsData | json}} -->
+<div class="page-wrap">
+    <div class="row m-0px">
+        <div class="col-md-9">
+            <mat-card class="pad-0">
+                <div class="order-details">
+                    <div class="row">
+                        <div class="col-md-3 form_view_block">
+                            <label>Order ID</label>
+                            <p>{{viewData?.txnId}}</p>
+                        </div>
+                        <div class="col-md-2 form_view_block">
+                            <label>Time</label>
+                            <p>{{viewData?.txnTime}}</p>
+                        </div>
+                        <div class="col-md-2 form_view_block" *ngIf="viewData?.orderStatus != 'ORDER_PLACED'">
+                            <label>Invoice Number</label>
+                            <p>{{viewData?.invoiceNumber != '' && viewData?.invoiceNumber ? viewData?.invoiceNumber : '-'}}</p>
+                        </div>
+                        <div class="col-md-2" *ngIf="viewData?.orderStatus == 'ORDER_PLACED'">
+                            <mat-form-field class="field-width">
+                                <input name="invoiceNumber" [(ngModel)]="inputInvoice" [pattern]="invoicePattern" #invoice="ngModel" matInput #InvoiceNo placeholder="Invoice Number" maxlength="30">
+                            </mat-form-field>
+                            <div class="error" *ngIf="invoice.errors?.pattern" style="padding-bottom: 7px; margin-top: -1em;">
+                                Invalid Invoice number
+                            </div>
+                            <div class="error" *ngIf="showInvoiceErrorMsg && inputInvoice == ''" style="padding-bottom: 5px; margin-top: -2em;">
+                                Please enter invoice number
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="flex-end">
+                                <div class="delivery-icon-block" *ngIf="showDeliveryIcon && viewData.orderType == 'DELIVERY'">
+                                    <span class='delivery-icon'></span>
+                                    <p class="label">Delivery</p>
+                                </div>
+                                <div class="delivery-icon-block" *ngIf="showDeliveryIcon && viewData.orderType == 'PICKUP'">
+                                    <span class='pickup-icon'></span>
+                                    <p class="label">Pickup</p>
+                                </div>
+                                <div class="delivery-icon-block" *ngIf="showDeliveryIcon && viewData.orderType == 'CURBSIDE'">
+                                    <span class='curbside-icon'></span>
+                                    <p class="label">Curb Side</p>
+                                </div>
+
+                                <div class="btn-section button-wrap" *ngIf="showRejectedStatusBtn">
+                                    <button class='button secondary-btn' type="button" (click)="openStatusUpdateDialog(viewData?.txnId, 'cancelled')" *ngIf="cancelButton"><strong>CANCEL ORDER</strong></button>
+                                    <button class='button primary-btn' type="button" (click)="modifyOrder('modify')"><strong>MODIFY</strong></button>
+                                </div>
+
+                                <div class="btn-section button-wrap" *ngIf="showModifyOrderBtns">
+                                    <button class='button tertiary-btn' type="button" (click)="openProductListDialog(viewData?.txnId)"><strong>ADD</strong></button>
+                                    <button (click)="saveAndAssignToStore()" class='button primary-btn' type="button"><strong>SAVE & ASSIGN TO STORE</strong></button>
+                                </div>
+                                <div class="btn-section button-wrap" *ngIf="!showRejectedStatusBtn">
+                                    <button class='button secondary-btn' *ngIf="newOrderStatus && rejectButton" type="button" (click)="openStatusUpdateDialog(viewData?.txnId, 'reject')"><strong>REJECT</strong></button>
+                                    <button class='button primary-btn' *ngIf="foodPreparingBtn" type="button" (click)="orderStatusChange(viewData?.txnId, 'food_is_ready')"><strong>Food is
+                      Ready</strong></button>
+                                    <button class='button primary-btn' *ngIf="newOrderStatus && acceptButton" type="button" (click)="orderStatusChange(viewData?.txnId, 'accept')"><strong>ACCEPT</strong></button>
+                                    <!-- <button class='button primary-btn' *ngIf="orderToPos" type="button" (click)="orderPlaceToPos(viewData?.orderId)"><strong>Place Order to POS</strong></button> -->
+                                    <button class='button success-btn' *ngIf="completeStatusBtn" type="button" (click)="orderStatusChange(viewData?.txnId, 'completed')"><strong>COMPLETED</strong></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="status-description" *ngIf="viewData?.orderCancellReason != '' || viewData?.orderRejectReason != ''">
+                    <p *ngIf="viewData?.orderCancellReason != ''">Cancel Reason: {{viewData?.orderCancellReason}}.</p>
+                    <p *ngIf="viewData?.orderRejectReason != ''">Reject Reason: {{viewData?.orderRejectReason}}.</p>
+                </div>
+                <div class="status-description" *ngIf="showRedeemedCash || showRedeemedPoints">
+                    <div class="text-right" *ngFor="let r of paymentDetails">
+                        <p *ngIf="r.tenderType == 'Cards'">Refund to card <span class="currency-lable">{{viewData?.currency}}</span> {{r.tenderValue}},</p>
+                        <p *ngIf="r.tenderType == 'Points'">Refund of Points worth <span class="currency-lable">{{viewData?.currency}}</span> {{r.tenderValue}}</p>
+                    </div>
+                </div>
+                <order-description-details [orderDetails]='viewData' [newProductSku]='newProductSku' (updateViewData)="viewDataFromChild($event)" [productDetails]='ItemDetails' [changeOrderQtyBtns]='showChangeQtyBtn' [showStarRating]='false' [paymentModeDetails]='paymentDetails'
+                    [billingDetails]='billingData'></order-description-details>
+            </mat-card>
+            <div class="previous-cart-items" *ngIf="false">
+                <mat-accordion>
+                    <mat-expansion-panel>
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                Previous Order Items
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <div>
+                            <!-- {{viewData?.pastTransactions | json}} -->
+                            <div class="row listing-details-block" *ngFor="let item of viewData?.pastTransactions; let i=index;">
+                                <div class="col-md-10 item-list left-col">
+                                    <label class="label-font">{{item.productSku}}</label>
+                                    <p class="flex align-center item-name"><span class="p-r-1rem">{{item.quantity}} X</span><span *ngIf="item?.productType == 'VEG'" class="veg-icon"></span><span *ngIf="item?.productType == 'NONVEG'" class="nonVeg-icon"></span> {{item.productName}}
+                                    </p>
+                                    <label class="grey-font-label pad-l-4rem" *ngFor="let i of item.addOnBean">{{i.addOnproductQuantity}} X
+                    {{i.addOnProductName}}</label>
+                                </div>
+                                <div class="col-md-2 item-price">
+                                    <p class="price"><span class="currency-label">{{viewData?.currency}}</span> {{item.netPrice}}
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </div>
+            <div *ngIf="showAddNotesBtn">
+                <button class='button primary-btn' type="button" (click)="createEnquiry()">ADD NOTES</button>
+            </div>
+            <mat-card class="pad-0">
+                <app-order-enquiry *ngIf="enquirySection" [viewEnqId]='enquiryID'></app-order-enquiry>
+            </mat-card>
+        </div>
+        <div class="col-md-3 pad-0">
+            <div class="customer-details-section">
+                <mat-card class="mb-1em">
+                    <p class="grey-font-label mb-5px">
+                        {{viewData?.customerName == '' && viewData?.customerName == null ? '-' : viewData?.customerName}}</p>
+                    <p class="lable-value">{{viewData?.customerPhNo != null ? viewData?.customerPhNo : '-'}}</p>
+                    <div *ngIf="viewData?.orderType === 'CURBSIDE'">
+                        <p class="grey-font-lable mb-5px">Car Plate Number </p>
+                        <p class="address">{{viewData?.carPlateNumber !='' ? viewData?.carPlateNumber : 'NA'}}</p>
+                    </div>
+                    <p class="lable-value" *ngIf="viewData?.deliveryAddress?.orderFor != '' && viewData?.deliveryAddress?.orderFor != null"> <strong> Ordering for </strong>{{viewData?.deliveryAddress?.orderFor}}, {{viewData?.deliveryAddress?.orderForPhoneNumber}}</p>
+                    <div *ngIf="viewData?.orderType === 'DELIVERY'">
+                        <p class="grey-font-label mb-5px">Delivery Address</p>
+                        <p class="address" *ngIf="viewData?.deliveryAddress != '' && viewData?.deliveryAddress != null">
+                            <strong>{{viewData?.deliveryAddress?.tag != null ? viewData?.deliveryAddress?.tag : '-' + ','}} </strong>{{viewData?.deliveryAddress?.houseNo != null ? viewData?.deliveryAddress?.houseNo : '-' + ','}} {{viewData?.deliveryAddress?.landmark
+                            != null ? viewData?.deliveryAddress?.landmark : '-' + ','}} {{viewData?.deliveryAddress?.delivery_location != null ? viewData?.deliveryAddress?.delivery_location : '-'}} {{ '-' + viewData?.deliveryAddress?.pin != null ? viewData?.deliveryAddress?.pin
+                            : viewData?.deliveryAddress?.pin}}</p>
+                    </div>
+                    <div>
+                        <p class="grey-font-label mb-5px"><strong>Scheduled Date & Time</strong></p>
+                        <p class="address" *ngIf="viewData.scheduledTime === '' || viewData.scheduledTime === null"><span>-</span></p>
+                        <p class="address" *ngIf="viewData.scheduledTime !== '' && viewData.scheduledTime !== null">
+                            <span> {{viewData?.scheduledStartTime == '' ? '-' : viewData?.scheduledStartTime | date:'dd/MM/yyyy'}} 
+                            {{viewData?.scheduledStartTime | date:'shortTime'}}
+                            &nbsp;to&nbsp;
+                            {{viewData?.scheduledEndTime == '' ? '-' : viewData?.scheduledEndTime | date:'shortTime'}}</span>
+                        </p>
+                    </div>
+                </mat-card>
+                <mat-card class="mb-1em">
+                    <p class="grey-font-label mb-5px">{{viewData?.storeName != null ? viewData?.storeName : '-'}}</p>
+                    <p>{{viewData?.storeMobile != null ? viewData?.storeMobile : '-'}}</p>
+                    <p class="grey-font-label mb-5px">Store Address</p>
+                    <p class="address">{{viewData?.storeAddress != null && viewData?.storeAddress != '' ? viewData?.storeAddress : '-'}}</p>
+                </mat-card>
+                <mat-card class="mb-1em" *ngIf="viewData.orderType === 'DELIVERY'">
+                    <p class="grey-font-label mb-5px">Delivery Details</p>
+                    <p> <strong>{{viewData?.deliverypersonName != null && viewData?.deliverypersonName != '' ? viewData?.deliverypersonName : '-'}} </strong></p>
+                    <p>{{viewData?.deliverypersonPhNo != null && viewData?.deliverypersonPhNo != '' ? viewData?.deliverypersonPhNo : '-'}}</p>
+                </mat-card>
+                <mat-card>
+                    <app-order-tracking [trackingDetails]='viewData?.orderTrackingDetails' [orderType]='viewData?.orderType'></app-order-tracking>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>
+<div *ngIf="statusLoader" class="page-loader-block full-page-loader">
+    <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+</div>

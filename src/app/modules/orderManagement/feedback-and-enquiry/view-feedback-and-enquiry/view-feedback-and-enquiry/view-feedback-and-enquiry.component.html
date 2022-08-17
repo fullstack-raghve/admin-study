@@ -1,0 +1,550 @@
+<div class="bredcrumb-title-wrap">
+  <app-breadcrumb [breadCrumbData]="breadCrumbData"></app-breadcrumb>
+  <div class="title">
+    <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          [routerLink]="['/search-feedback-and-enquiry']"></span>Feedback & Enquiry Details</h1>
+  </div>
+</div>
+<div class="page-wrap">
+
+  <div class="enquiry-details">
+    <mat-card class="enquiry-details-card">
+      <form class="filter-wrap" [formGroup]="viewEnquiryFormGroup" *ngIf="buildFlag">
+        <div class="header flex-center">
+          <div class="left-side">
+            <span class="title">
+              Reference ID
+              <span class="ref-id">{{viewValue?.referenceId}}</span>
+            </span>
+            <!-- <span class="vl">
+            </span>-->
+          </div>
+          <div class="ml-auto mr-4 white_label pt-10px">
+            <label class="mb-0">Is Complete</label>
+            <p style="color: #FFF;">{{viewValue?.isComplete == true ? 'YES' : 'NO'}}</p>
+          </div>
+          <div class="ml-auto mr-4 white_label">
+            <mat-form-field class="field-width">
+              <mat-select matInput placeholder="Select Assignee" formControlName="selectassigne" required> 
+                <mat-option [value]="user.userId" *ngFor="let user of users">
+                  {{user?.fullName}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="viewEnquiryFormGroup.get('selectassigne').hasError('required')">Please select value</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="mr-4 white_label">
+            <mat-form-field>
+              <mat-select placeholder="Change Status" formControlName="notificationStatus">
+                <mat-option value="PENDING">Pending</mat-option>
+                <mat-option value="IN_PROGRESS">In Progress</mat-option>
+                <mat-option value="CLOSED">Closed</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="update-bttn-block">
+            <button class="button tertiary-btn" type="button"
+              (click)="updateStatus(viewEnquiryFormGroup.value)">UPDATE</button>
+          </div>
+        </div>
+      </form>
+      <div class="details">
+        <h1>Feedback & Enquiry Details</h1>
+        <div class="row">
+          <div class="col-md-3" *ngIf="viewValue?.tranUserName !='' && viewValue?.tranUserName != null">
+            <div class="view-mode">
+              <label>Customer Name</label>
+              <p>{{viewValue?.tranUserName}}</p>
+            </div>
+          </div>
+          <div class="col-md-3" *ngIf="viewValue?.tranUserEmailId !='' && viewValue?.tranUserEmailId != null">
+            <div class="view-mode">
+              <label>Email Details</label>
+              <p>{{viewValue?.tranUserEmailId}}</p>
+            </div>
+          </div>
+          <div class="col-md-3" *ngIf="viewValue?.tranUserMobileNo !='' && viewValue?.tranUserMobileNo != null">
+            <div class="view-mode">
+              <label>Mobile Number</label>
+              <p>{{viewValue?.tranUserMobileNo != null ? viewValue?.tranUserMobileNo : '-'}}</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="view-mode">
+              <label>Age</label>
+              <p>{{viewValue?.tranUserAge != null ? viewValue?.tranUserAge : '-'}}</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="view-mode">
+              <label>Gender</label>
+              <p>{{viewValue?.tranUserGender != null ? viewValue?.tranUserGender : '-'}}</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="view-mode">
+              <label>DOB</label>
+              <p>{{viewValue?.tranUserDob != null ? viewValue?.tranUserDob : '-' }}</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="view-mode">
+              <label>Country</label>
+              <p>{{viewValue?.tranUserCountry != null ? viewValue?.tranUserCountry : '-'}}</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="view-mode">
+              <label>City</label>
+              <p>{{viewValue?.tranUserCity != null ? viewValue?.tranUserCity : '-'}}</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="view-mode">
+              <label>Address</label>
+              <p>{{viewValue?.tranUserAddress != null ? viewValue?.tranUserAddress : '-'}}</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="view-mode">
+              <label>Date & Time</label>
+              <p>{{viewValue?.dateAndtime != null ? viewValue?.dateAndtime : '-'}}</p>
+            </div>
+          </div>
+
+
+          <div class="col-md-3">
+            <div class="view-mode">
+              <label>Flow</label>
+              <p>{{viewValue?.flowName != null ? viewValue?.flowName : '-'}}</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="view-mode">
+              <label>Channel</label>
+              <p>{{viewValue?.source != null ? viewValue?.source : '-'}}</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="view-mode">
+              <label>Store</label>
+              <p>{{viewValue?.tranStoreName != null ? viewValue?.tranStoreName : '-'}}</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="view-mode">
+              <label>Duration for Feedback</label>
+              <p>{{convertMiliToSecond(viewValue?.duration)}}
+                <span>{{viewValue?.duration >= 59500 ? 'min' : 'sec'}}</span> </p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="view-mode">
+              <label>Transaction Id</label>
+              <p>{{viewValue?.txnId != null ? viewValue?.txnId : '-'}}</p>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <mat-form-field class="example-chip-list">
+              <mat-chip-list #chipList>
+                <input placeholder="Notification Tags" [matChipInputFor]="chipList"
+                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+                  (matChipInputTokenEnd)="addTag($event)">
+              </mat-chip-list>
+            </mat-form-field>
+            <!-- <div *ngIf="keywordErrorMsg[i]" style="color:red;font-size:12px;margin-top: -1em;" class="{{alignCss[i]}}">
+              only alphanumeric are allowed</div> -->
+            <mat-chip *ngFor="let tag of tagsList" [selectable]="selectable" [removable]="removable"
+              (removed)="deleteTag(tag.oid)">
+              {{tag.tag}}
+              <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+            </mat-chip>
+          </div>
+          <div class="col-md-6 pad-2em" *ngIf="viewValue?.starRating != null && viewValue?.starRating != ''">
+            <div class="star-section">
+              <div class="stars flex" *ngIf="viewValue?.starRating == '5'">
+                <span class="star_icon"></span>
+                <span class="star_icon"></span>
+                <span class="star_icon"></span>
+                <span class="star_icon"></span>
+                <span class="star_icon"></span>
+              </div>
+              <div class="stars flex" *ngIf="viewValue?.starRating == '4'">
+                <span class="star_icon"></span>
+                <span class="star_icon"></span>
+                <span class="star_icon"></span>
+                <span class="star_icon"></span>
+              </div>
+              <div class="stars flex" *ngIf="viewValue?.starRating == '3'">
+                <span class="star_icon"></span>
+                <span class="star_icon"></span>
+                <span class="star_icon"></span>
+              </div>
+              <div class="stars flex" *ngIf="viewValue?.starRating == '2'">
+                <span class="star_icon"></span>
+                <span class="star_icon"></span>
+              </div>
+              <div class="stars flex" *ngIf="viewValue?.starRating == '1'">
+                <span class="star_icon"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+  <div class="representative-response">
+    <h3 class="card-title">Feedback Q&A</h3>
+    <mat-card class="representative-card">
+      <div *ngIf="!questions">
+        <p>No Answers found</p>
+      </div>
+      <div class="row">
+        <!-- <div class="col-md-6">
+            <div class="feedback_QA d-flex align-items-center mb-3">
+              <p class="pt-3 pl-4">Please Provide Your Shoping experience</p>
+              <p class="ml-auto grey_right_bg ">emoji</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feedback_QA d-flex align-items-center mb-3">
+              <p class="pt-3 pl-4">Please rate store service experience</p>
+              <h5 class="ml-auto grey_right_bg ">3.5/5</h5>
+            </div>
+          </div> -->
+
+        <div class="col-md-6" *ngFor="let question of questions" let i=index>
+          <div class="feedback_QA d-flex align-items-center mb-3"
+            [ngClass]="{'height': question.questionType == 'popup'  || question.questionType == 'textarea' }">
+
+            <div class=" pl-4 feedback-radio" *ngIf="question.questionType == 'radio'">
+              <p class="m-0" [innerHTML]='question.question | safeHTML'></p>
+              <p class="m-0" [innerHTML]='question.answer | safeHTML'></p>
+            </div>
+
+            <div class=" pl-4 feedback-radio" *ngIf="question.questionType == 'customer_text'">
+              <p class="m-0" [innerHTML]='question.question | safeHTML'></p>
+              <p class="m-0" [innerHTML]='question.answer | safeHTML'></p>
+            </div>
+
+            <div class=" pl-4 feedback-radio" *ngIf="question.questionType == 'customer_email'">
+              <p class="m-0" [innerHTML]='question.question | safeHTML'></p>
+              <p class="m-0" [innerHTML]='question.answer | safeHTML'></p>
+            </div>
+
+            <div class=" pl-4 feedback-radio" *ngIf="question.questionType == 'customer_phone'">
+              <p class="m-0" [innerHTML]='question.question | safeHTML'></p>
+              <p class="m-0" [innerHTML]='question.answer | safeHTML'></p>
+            </div>
+
+            <div class=" pl-4 feedback-radio" *ngIf="question.questionType == 'customer_date'">
+              <p class="m-0" [innerHTML]='question.question | safeHTML'></p>
+              <p class="m-0"><strong>{{question.answer !='' ? question.answer : "-"}}</strong></p>
+            </div>
+
+            <div class=" pl-4 feedback-radio" *ngIf="question.questionType == 'customer_radio'">
+              <p class="m-0" [innerHTML]='question.question | safeHTML'></p>
+              <p class="m-0" [innerHTML]='question.answer | safeHTML'></p>
+            </div>
+
+
+            <div class=" pl-4 feedback-radio" *ngIf="question.questionType == 'imageupload'">
+              <p class="m-0" [innerHTML]='question.question | safeHTML'></p>
+              <p class="m-0"><strong>Image</strong></p>
+            </div>
+
+            <div class=" pl-4 feedback-radio" *ngIf="question.questionType == 'videoupload'">
+              <p class="m-0" [innerHTML]='question.question | safeHTML'></p>
+              <p class="m-0"><strong>Video</strong></p>
+            </div>
+
+            <div class="row feedback-rating" *ngIf="question.questionType == 'sliderRating'">
+              <div class="col-md-10 feedback-emoji-question">
+                <p class="m-0" [innerHTML]='question.question | safeHTML'></p>
+              </div>
+              <div class="col-md-2 feedback-emoji-answer">
+                <p><strong>{{question.answer}}</strong></p>
+              </div>
+            </div>
+
+            <div class=" pl-4 feedback-radio" *ngIf="question.questionType == 'date'">
+               <p class="m-0" [innerHTML]='question.question | safeHTML'></p>
+              <p class="m-0"><strong>{{question.answer !='' ? question.answer : "-"}}</strong></p>
+            </div>
+            <div class=" pl-4 feedback-radio" *ngIf="question.questionType == 'text'">
+               <p class="m-0" [innerHTML]='question.question | safeHTML'></p>
+               <p class="m-0" [innerHTML]='question.answer | safeHTML'></p>
+            </div>
+            <div class=" pl-4 feedback-radio" *ngIf="question.questionType == 'email'">
+               <p class="m-0" [innerHTML]='question.question | safeHTML'></p>
+               <p class="m-0" [innerHTML]='question.answer | safeHTML'></p>
+            </div>
+            <div class=" pl-4 feedback-radio" *ngIf="question.questionType == 'phone'">
+               <p class="m-0" [innerHTML]='question.question | safeHTML'></p>
+               <p class="m-0" [innerHTML]='question.answer | safeHTML'></p>
+            </div>
+            <div class=" pl-4 feedback-radio" *ngIf="question.questionType == 'autocomplete'">
+               <p class="m-0" [innerHTML]='question.question | safeHTML'></p>
+               <p class="m-0" [innerHTML]='question.answer | safeHTML'></p>
+            </div>
+            <div class="row feedback-emoji" *ngIf="question.questionType == 'emoji'">
+              <div class="col-md-10 feedback-emoji-question">
+                <p class="m-0" [innerHTML]='question.question | safeHTML'></p>
+              </div>
+              <div class="col-md-2 feedback-emoji-answer">
+                <img src="{{imageBaseUrl}}{{question.answer}}" alt="">
+              </div>
+            </div>
+            <div class=" pl-4 feedback-checkbox" *ngIf="question.questionType == 'checkbox'">
+              <p class="m-0" [innerHTML]='question.question | safeHTML'></p>
+              <p class="m-0" [innerHTML]='question.answer | safeHTML'></p>
+            </div>
+
+            <div class="row feedback-rating" *ngIf="question.questionType == 'rating'">
+              <div class="col-md-10 feedback-emoji-question">
+                <p class="m-0" [innerHTML]='question.question | safeHTML'></p>
+              </div>
+              <div class="col-md-2 feedback-emoji-answer">
+                <p><strong>{{question.answer}}</strong></p>
+              </div>
+            </div>
+
+            <div class="row feedback-rating" *ngIf="question.questionType == 'npsMobileRating'">
+              <div class="col-md-10 feedback-emoji-question">
+                <p class="m-0" [innerHTML]='question.question | safeHTML'></p>
+              </div>
+              <div class="col-md-2 feedback-emoji-answer">
+                <p><strong>{{question.answer}}</strong></p>
+              </div>
+            </div>
+
+            <div class="pl-4 pt-2 pr-2" style="overflow-x: auto;" *ngIf="question.questionType == 'popup'">
+              <p class="m-0" [innerHTML]='question.question | safeHTML'></p>
+              <p class="m-0" [innerHTML]="question.answer | safeHTML"></p>
+            </div>
+
+            <div class="pl-4 pt-2 pr-2" *ngIf="question.questionType == 'tnc'">
+              <p class="m-0" [innerHTML]='question.question | safeHTML'></p>
+              <p class="m-0" [innerHTML]="question.answer | safeHTML"></p>
+            </div>
+
+            <div class="pl-4 pb-3 pt-2 pr-2" *ngIf="question.questionType == 'textarea'">
+              <p class="m-0" [innerHTML]='question.question | safeHTML'></p>
+              <p class="m-0" [innerHTML]="question.answer | safeHTML"></p>
+            </div>
+
+            <div class="pl-4 pt-2" *ngIf="question.questionType == 'link'">
+              <p class="m-0" [innerHTML]='question.question | safeHTML'></p>
+              <p class="m-0"><a [href]="question.answer" target="_blank">{{question.answer}}</a></p>
+            </div>
+
+            <div class="pl-4 pt-2" *ngIf="question.questionType == 'label'">
+              <p class="m-0" [innerHTML]='question.question | safeHTML'></p>
+              <p class="m-0"><a [href]="question.answer" target="_blank">{{question.answer}}</a></p>
+            </div>
+
+            <div class="pl-4 pt-2" *ngIf="question.questionType == 'NestedAnswers'">
+              <p class="m-0" [innerHTML]='question.question | safeHTML'></p>
+              <p class="m-0" [innerHTML]="question.answer | safeHTML"></p>
+            </div>
+
+            <div class="pl-4 pt-2" *ngIf="question.questionType == 'Nestedcheckbox'">
+              <p class="m-0" [innerHTML]='question.question | safeHTML'></p>
+              <p class="m-0" [innerHTML]="question.answer | safeHTML"></p>
+            </div>
+
+            <div class="pl-4 pt-2" *ngIf="question.questionType == 'NestedSinglebox'">
+              <p class="m-0" [innerHTML]='question.question | safeHTML'></p>
+              <p class="m-0" [innerHTML]="question.answer | safeHTML"></p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+
+  <div class="representative-response">
+      <h3 class="card-title">Representative Response</h3>
+      <mat-tab-group animationDuration="0ms" class="tabs-align" [selectedIndex]="seletedTabIndex" (selectedTabChange)="tabChanged($event)">
+          <mat-tab>
+              <ng-template mat-tab-label>
+                  <span class="enq-label">Internal Notes</span>
+              </ng-template>
+              <ng-template matTabContent> 
+                  <mat-card class="representative-card response-card customer-reply-card">
+                      <form class="filter-wrap" [formGroup]="createEnquiryResponse" (submit)="addInternalNotes(createEnquiryResponse.value)" #enquiryResponseForm="ngForm">
+                          <div>
+                              <mat-radio-group name="Language Select" formControlName="languageOptions" (change)="changeValidation($event.value)">
+                                  <mat-radio-button *ngFor="let languageVal of languageVals" [checked]="languageVal.checked" value="{{languageVal.value}}">{{languageVal.label}} &nbsp; &nbsp;
+                                  </mat-radio-button>
+                              </mat-radio-group>
+                          </div>
+                          <div class="row enq-card" formArrayName="userResponse">
+                              <div class="col-md-12 enq-card-col" *ngFor="let locale of createEnquiryResponse['controls']['userResponse']['controls'];let i = index;" [formGroupName]="i" (click)="isSelectedItem(i)">
+                                  <mat-card class="faq-card mb-20px view-lang-card" [ngClass]="{
+                  'example-class': condition,
+                  'other-class': !condition}" class="{{alignCssAr[i]}}">
+                                      <div class="lang-field">
+                                          <p>{{languages[i].languageName}}</p>
+                                      </div>
+                                      <div class="row card-mb">
+                                          <div class="col-md-12 text-fields">
+                                              <div class="field-container">
+                                                  <mat-form-field class="{{alignCss[i]}} {{languageDirection[i]}}">
+                                                      <textarea  matInput #responseValue placeholder="Write your response" maxlength="500" formControlName="representativeResponse" (keydown)="removeValidation()"></textarea>
+                                                      <mat-error *ngIf="locale.get('representativeResponse').hasError('pattern')">This special character(s) is not allowed</mat-error>
+                                                  </mat-form-field>
+                                                  <p style="color:red; font-size: 10px;" *ngIf="responseInternalRequired">Please Enter value</p>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </mat-card>
+                              </div>
+                          </div>
+                         
+                          <div class="button-wrap">
+                            <button type="submit" class="button primary-btn" [disabled]='disabled'>
+                              <span class="loading-img-hide" *ngIf="loading">
+                                <img src="assets/images/svg-icons/Blue-loading-200px.svg" alt="">
+                              </span>
+                              <span>ADD</span>
+                            </button>
+                          </div>
+                      </form>
+                      <div class="previous-response" [class.selectTabInternal]="seletedTabIndex == 0">
+                          <h3 class="card-title">Previous Response</h3>
+                          <mat-card class="previous-card "  [class.languagechange]="languageIdVal" >
+                             <div *ngFor="let response of previousresponses;let i = index;">
+                                <div class="row" *ngIf="response.link == 'Internal'">
+                                    <div class="col-md-12 mb-20px" *ngFor="let locale of response.userResponseLocale;let j = index;">
+                                        <mat-card class="faq-card " [class.direction-right]="locale.langauageCode == 'AR'">
+                                            <div class="lang-field">
+                                                <p class="new-line-wrap">{{locale.languageName}}</p>
+                                            </div>
+                                          
+                                            <div class="text-right preview">
+                                                <p>{{response.userName}}</p>
+                                                <div class="info-details">
+                                                    <label>{{response.createdTime}}</label>
+                                                   
+                                                </div>
+                                                
+                                            </div>
+                                            <div class="row card-mb">
+                                                <div class="col-md-12 text-fields">
+                                                    <div class="view-mode {{alignCssResponse[j]}} {{locale.langauageCode=='AR' ? 'direction' : ''}}">
+                                                        <label>Response</label>
+                                                        <p class="new-line-wrap">{{locale.userResponse}}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </mat-card>
+                                    </div>
+                                </div>
+                             </div>
+                            
+                          </mat-card>
+                      </div>
+                  </mat-card>
+              </ng-template>
+          </mat-tab>
+
+          <mat-tab *ngIf="externalCommunicationTab">
+              <ng-template mat-tab-label>
+                  <span class="enq-label">External Notes</span>
+              </ng-template>
+              <ng-template matTabContent>
+                  <mat-card class="representative-card response-card customer-reply-card">
+                      <form class="filter-wrap" [formGroup]="createEnquiryResponsePostOptions" (submit)="addExternalNotes(createEnquiryResponsePostOptions.value)"  #enquiryResponsePostForm="ngForm">
+                          <div>
+                              <mat-radio-group name="Language Select" formControlName="languageOptionsPost" (change)="changeValidationPost($event.value)">
+                                  <mat-radio-button *ngFor="let languageValpost of languageValposts" [checked]="languageValpost.checked" value="{{languageValpost.value}}">{{languageValpost.label}}&nbsp; &nbsp;
+                                  </mat-radio-button>
+                              </mat-radio-group>
+                          </div>
+                          <div class="row" formArrayName="userResponse">
+                              <div class="col-md-12 customer-reply-col" *ngFor="let locale of createEnquiryResponsePostOptions['controls']['userResponse']['controls'];let i = index;" [formGroupName]="i">
+                                  <mat-card class="faq-card mb-20px">
+                                      <div class="lang-field">
+                                          <p>{{languages[i].languageName}}</p>
+                                      </div>
+                                      <div class="row card-mb">
+                                          <div class="col-md-12 text-fields">
+                                              <div class="field-container">
+                                                  <mat-form-field class="{{alignCss[i]}} {{languageDirection[i]}}">
+                                                      <textarea  matInput #responseValue placeholder="Write your response" maxlength="500" formControlName="representativeResponse" (keydown)="removeValidation()" ></textarea>
+                                                      <mat-error *ngIf="locale.get('representativeResponse').hasError('pattern')">This special character(s) is not allowed</mat-error>
+                                                  </mat-form-field>
+                                                  <p style="color:red; font-size: 10px;" *ngIf="responseCustomerRequired">Please Enter value</p>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </mat-card>
+                              </div>
+                          </div>
+                          <div>
+                              <div class="channelType">
+                                <mat-checkbox (change)="CheckType($event)" class="mr-15px" [disabled]="emailEnable" formControlName="email">EMAIL</mat-checkbox>
+                                <mat-checkbox  (change)="CheckType($event)" class="mr-15px" [disabled]="smsEnable" formControlName="sms">SMS</mat-checkbox>
+                                 
+                              </div>
+                              <p class="mat-err" *ngIf="externalChannelErr">Please Select the option</p>
+                            
+                          </div>
+                       
+                          <div class="button-wrap" *ngIf="emailEnable == false || smsEnable == false">
+                            <button type="submit" class="button primary-btn" [disabled]='disabled'>
+                              <span class="loading-img-hide" *ngIf="loading">
+                                <img src="assets/images/svg-icons/Blue-loading-200px.svg" alt="">
+                              </span>
+                              <span>SEND</span>
+                            </button>
+                          </div>
+                      </form>
+                      <div class="previous-response" [class.selectTabCustomer]="seletedTabIndex!=0">
+                          <h3 class="card-title">Previous Response</h3>
+                          <mat-card class="previous-card "  [class.languagechange]="languageIdVal" >
+                            <div *ngFor="let response of previousresponses;let i = index;">
+                                <div class="row" *ngIf="response.link == 'External'">
+                                    <div class="col-md-12 mb-20px" *ngFor="let locale of response.userResponseLocale;let j = index;">
+                                        <mat-card class="faq-card " [class.direction-right]="response.userResponseLocale[j].langauageCode == 'AR'">
+                                            <div class="lang-field">
+                                                <p class="new-line-wrap">{{response.userResponseLocale[j].languageName}}</p>
+                                            </div>
+                                
+                                            <div class="text-right preview">
+                                                <p>{{response.userName}}</p>
+                                                <div class="info-details">
+                                                <span>  {{response?.createdTime}} &nbsp;&nbsp;</span>
+                                                <span *ngIf="response?.email != ''">{{response?.email}}</span>
+                                                <span *ngIf="response?.sms != ''"> {{response?.sms}}</span>
+                                                <span *ngIf="response?.psuh != ''"> {{response?.push}}</span>
+                                                </div>
+                                            </div>
+                                          
+                                            <div class="row card-mb">
+                                                <div class="col-md-12 text-fields">
+                                                    <div class="view-mode {{alignCssResponse[j]}} {{response.userResponseLocale[j].langauageCode=='AR' ? 'direction' : ''}}">
+                                                        <label>Response</label>
+                                                        <p class="new-line-wrap">{{response.userResponseLocale[j].userResponse}}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </mat-card>
+                                    </div>
+                                </div>
+                            </div> 
+                            
+                          </mat-card>
+                      </div>
+                  </mat-card>
+              </ng-template>
+          </mat-tab> 
+      </mat-tab-group>
+  </div>
+
+
+ </div>

@@ -1,0 +1,42 @@
+.page-wrap {
+    padding: 1.8em 1.8em 3em 1.8em;
+    .location-item{
+      background: #eaeaea;
+      /* margin: 10px; */
+      padding-top: 10px;
+    }
+    .brand-msg{
+      color: red;
+      position: relative;
+      bottom: 21px;
+    }
+    .set-error-mssg{
+      color: #f44336;
+      font-size: 10px;
+      margin-bottom: 0px;
+      position: relative;
+      top: -20px;
+    }
+    .create-fieldSet{
+      .language-fieldset{
+        padding: 0px 26px 30px;
+        border: 1px solid #dbdbdb;
+        border-radius: 5px;
+        .fieldset-heading {
+            font-size: 10px;
+            padding-inline-start: 7px;
+            max-width: 40% !important;
+        }
+    }
+    
+    }
+    .disabledCity{
+      cursor: none;
+      opacity: 0.5;
+    }
+    .nonEditable{
+      pointer-events: none;
+      opacity: 0.5;
+    }
+ 
+}

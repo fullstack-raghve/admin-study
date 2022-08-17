@@ -1,0 +1,172 @@
+<div class="bredcrumb-title-wrap">
+  <app-breadcrumb [breadCrumbData]= "breadCrumbData"></app-breadcrumb>
+  <div class="title flex-container">
+    <h1><span class="left-arrow"><img class="left-img" src="assets/images/svg-icons/leftarrow_black.svg" alt="leftArrow"
+          [routerLink]="['/search-locations']"></span>Edit Location</h1>
+
+  </div>
+</div>
+
+<div class="page-wrap" style="padding: 20px;">
+  <form *ngIf="buildFlag" id="addevents" (submit)= "editLocation(editLocationForm.value)"
+  [formGroup]= "editLocationForm">
+
+    <div class="row">
+      <div class="col-md-12">
+        <mat-card class="mb-20px"  style="min-height: 260px;">
+          <div class="row">
+            
+            <div class="col-md-4">
+          
+            <div class="create-fieldSet">
+              <fieldset class="language-fieldset">
+                <legend class="fieldset-heading">Location Name*</legend>
+              <div formArrayName= "giftLanguageList">
+                 
+                  <div
+                  *ngFor="let cardLanguage of editLocationForm['controls']['giftLanguageList']['controls'];let i = index;"
+                  [formGroupName]="i">
+                  <mat-form-field class="{{alignCss[i]}}">
+                    <input matInput placeholder="{{newlocationData['location'][i]['languageName'] | titlecase}}" required
+                      formControlName="locationName" maxlength="150">
+                    <mat-error *ngIf="cardLanguage.get('locationName').hasError('required')">
+                      Please enter location name</mat-error>
+                    <mat-error *ngIf="cardLanguage.get('locationName').hasError('pattern')">
+                      Invalid characters entered</mat-error>
+                  </mat-form-field>
+                </div>
+                </div> 
+                
+              </fieldset>
+            </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="row">
+                  <div class="col-md-6">
+                    <mat-form-field class="field-style field-width">
+                      <mat-select id="country" matInput placeholder="Country Name" #countryInput formControlName="country" (selectionChange)="getAllCities(editLocationForm.get('country').value)" required>
+                          <mat-option value="">Select</mat-option>
+                          <mat-option *ngFor="let country of countries" value="{{country.countryName}}">
+                               {{country.countryName}}
+                          </mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="editLocationForm.get('country').hasError('required')">Please select country</mat-error>
+                  </mat-form-field>
+                  </div>
+                  <div class="col-md-6">
+                    
+                  <mat-form-field class="field-style field-width">
+                    <mat-select id="country" matInput placeholder="City Name" #countryInput formControlName="cityy" (selectionChange)="getAllcity(countryInput.value)"  required>
+                        <mat-option value="">Select</mat-option>
+                        <mat-option *ngFor="let city of Cities" value="{{city.cityName}}">
+                             {{city.cityName}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="editLocationForm.get('cityy').hasError('required')">Please select city</mat-error>
+                </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <mat-form-field class="field-style">
+                      <input matInput placeholder="Address" formControlName="address"
+                       required maxlength="250">
+                      <mat-error *ngIf="editLocationForm.get('address').hasError('required')">
+                          Please enter address</mat-error>
+                      <mat-error *ngIf="editLocationForm.get('address').hasError('maxLength')">
+                          Maximum 50 Characters allowed</mat-error>
+                      <!-- <mat-error *ngIf="editLocationForm.get('eventdesc').hasError('pattern')">
+                          Only numeric values allowed greater than zero</mat-error> -->
+                  </mat-form-field>
+                  </div>
+                
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <mat-form-field class="field-style">
+                      <input type="text" matInput placeholder="Latitude" formControlName="lat"
+                    
+                      maxlength="15"
+                       required   (keyup) = "latValidate(editLocationForm.get('lat').value)">
+                      <mat-error *ngIf="editLocationForm.get('lat').hasError('required')">
+                          Please enter latitude</mat-error>
+                      <mat-error *ngIf="editLocationForm.get('lat').hasError('maxLength')">
+                          Maximum 50 Characters allowed</mat-error>
+                    
+                  </mat-form-field>
+                  <p *ngIf="isLatValid" class="set-error-mssg">
+                    {{latMssg}}
+            </p>
+            <p *ngIf="isInvalidLat2" class="set-error-mssg">
+              Please enter a valid latitude
+      </p>
+                  </div>
+                  <div class="col-md-6">
+                    <mat-form-field class="field-style">
+                      <input type="text" matInput placeholder="Longitude" formControlName="long"
+                      maxlength="15"
+                     
+                       required    (keyup) = "longValidate(editLocationForm.get('long').value)">
+                      <mat-error *ngIf="editLocationForm.get('long').hasError('required')">
+                          Please enter longitude</mat-error>
+                      <mat-error *ngIf="editLocationForm.get('long').hasError('maxLength')">
+                          Maximum 50 Characters allowed</mat-error>
+                     
+                  </mat-form-field>
+                  <p *ngIf="isLongValid" class="set-error-mssg">
+                    {{longMssg}}
+            </p>
+            <p *ngIf="isInvalidLong2" class="set-error-mssg">
+              Please enter a valid longitude
+      </p>
+                  </div>
+                </div>
+              </div>
+          
+               
+                <!-- <div class="col-md-3">
+                  <mat-form-field class="example-full-width">
+                    <input matInput placeholder="City" aria-label="City" [matAutocomplete]="cityAutoComplete" [formControl]="cityCtrl">
+                    <mat-autocomplete #cityAutoComplete="matAutocomplete">
+                        <mat-option *ngFor="let city of filteredCities | async" [value]="city.cityName" (click)="getAllcity(city.cityId)" #cityInput>
+                            <span>{{city.cityName}}</span>
+                        </mat-option>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="cityCtrl.hasError('required')">
+                        Please select value</mat-error>
+                </mat-form-field>
+                  </div> -->
+
+            </div>
+            <div>
+              <!-- [selectedOptions]="selectedCountryOptions" -->
+
+            <!-- <mat-select-autocomplete  name="Country" ngDefaultControl [placeholder]="'COUNTRY'" [options]="countries"
+              [display]="'countryName'" [value]="'value'" [multiple]='true' [labelCount]="1" 
+              [selectedOptions]="selectedCountryOptions"
+               [formControl]="createComboFormGroup.controls['country']"
+              #countryInput>
+            </mat-select-autocomplete>
+            <mat-error *ngIf="createComboFormGroup.get('country').hasError('required') && addComboForm.submitted">
+              Please select value
+            </mat-error> -->
+          </div>
+           
+          </mat-card>
+
+          </div>
+
+          </div>
+          <div class="d-flex justify-content-end">
+            <div class="btm-button-wrap">
+              <button class="button secondary-btn" type="button" [routerLink]="['/search-locations']">CANCEL</button>
+              <button class="button primary-btn" type="submit" >UPDATE</button>
+          </div>
+           </div>
+          </form>
+
+          <div *ngIf="loading" class="page-loader-block full-page-loader">
+            <img src="assets/images/loader-icons/Blue-loading-200px.svg" alt="Loader">
+          </div>
+          </div>
